@@ -20,7 +20,7 @@ How does one construct such a handy query from scratch? Let's break it apart lin
 ```sql
 Usage                               // <--tells us which table to apply this query to. In this case it's the Usage log table.
 
-| where TimeGenerated \> ago(90d)   // <-- how far back the query will look in the table_
+| where TimeGenerated > ago(90d)   // <-- how far back the query will look in the table_
 
 | where IsBillable == true          // <-- filters out non-billable data (we're only worried about data that incurs a cost)
 
