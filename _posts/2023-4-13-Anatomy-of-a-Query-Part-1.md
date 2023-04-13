@@ -5,7 +5,6 @@ Whether you're new on the SOC or a seasoned [Sentinel Ninja](https://techcommuni
 <br/>
 
 # Query Breakdown
-<br/>
 
 So how do you know something is "odd" with your ingestion volume? I look for sudden changes. Let's look at the ingest pattern over the past quarter and graph billable volume via the usage table with the following query for a birds-eye view of what's going on in any environment:
 
