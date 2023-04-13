@@ -35,6 +35,10 @@ Usage                               // <--tells us which table to apply this que
 <br/>
 
 # How Verbose is a Table?
+
+<br/>
+<br/>
+
 ```sql
 AzureDiagnostics        // <--Define the table to query_
 | summarize count() by bin(TimeGenerated,1d)    // <--Return count per day_
@@ -60,6 +64,9 @@ Results:
 
 # Syslog Activity by Device:
 
+<br/>
+<br/>
+
 ```sql
 Syslog      // <--Define the table to query (Syslog)
 | summarize count() by Computer     // <--Return Syslog count per computer
@@ -71,6 +78,10 @@ Syslog      // <--Define the table to query (Syslog)
 <br/>
 
 # Syslog Activity per Day from a Specific Device:
+
+<br/>
+<br/>
+
 ```sql
 Syslog      // <--Define the table to query (Syslog)
 | where TimeGenerated > ago(90d)      // <-- how far back to query the table
