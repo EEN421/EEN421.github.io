@@ -31,7 +31,7 @@ _//<--Convert to GB and return results by day, per ingest solution (LogManagemen
 **| render columnchart**&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<-- **graph** results to a **column chart**_
 
 
-![Usage Table](images/usage_graph.png)
+![Usage Table](/assets/img/AOAQ1/usage_graph.png)
 
 # How Verbose is a Table?
 
@@ -47,11 +47,12 @@ Notes:
 
 - Notice that compared to the previous query, the time frame isn't specified. This was done in the GUI with a custom range as follows:
 
-![](images/Time_Range_GUI.png)
-
+![](/assets/img/AOAQ1/Time_Range_GUI.png)
+<br/>
+<br/>
 Results:
 
-![](images/AZDiag_graph.png)
+![](/assets/img/AOAQ1/AZDiag_graph.png)
 
 
 # Syslog Activity by Device:
@@ -61,7 +62,7 @@ Syslog&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&e
 
 | summarize count() by Computer&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;//\<--Return Syslog count per computer
 
-![](images/Devices.png)
+![](/assets/img/AOAQ1/Devices.png)
 
 
 # Syslog Activity per Day from a Specific Device:
@@ -76,7 +77,7 @@ Syslog&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&e
 
 | render columnchart&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;//\<--Graph results to chart
 
-![](images/syslog_graph.png)
+![](/assets/img/AOAQ1/syslog_graph.png)
 
 # Summary:
 
