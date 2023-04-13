@@ -9,7 +9,7 @@ So how do you know something is "odd" with your ingestion volume? I look for sud
 
 ```sql 
 Usage
-| where TimeGenerated \> ago(90d)
+| where TimeGenerated > ago(90d)
 | where IsBillable == true
 | summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution
 | render columnchart
@@ -24,7 +24,7 @@ Usage                               // <--tells us which table to apply this que
 
 | where IsBillable == true          // <-- filters out non-billable data (we're only worried about data that incurs a cost)
 
-| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution                            // <--Convert to GB and return results by day, per ingest solution (LogManagement, Security, etc.)
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution    // <--Convert to GB and return results by day, per ingest solution (LogManagement, Security, etc.)
 
 | render columnchart                // <-- graph results to a column chart
 ```
@@ -73,10 +73,10 @@ Syslog      // <--Define the table to query (Syslog)
 # Syslog Activity per Day from a Specific Device:
 ```sql
 Syslog      // <--Define the table to query (Syslog)
-| where TimeGenerated \> ago(90d)      // <-- how far back to query the table
+| where TimeGenerated > ago(90d)      // <-- how far back to query the table
 | where Computer == "5604-Barsoom-main"         // <--Query a specific device
 | summarize count() by bin(TimeGenerated,1d)    // <--Return count per day
-| render columnchart     //\<--Graph results to chart
+| render columnchart     //<--Graph results to chart
 ```
 ![](/assets/img/AOAQ1/syslog_graph.png)
 
