@@ -25,31 +25,38 @@ SecurityEvent //\<--Define the table to query
 | render columnchart //\<--Graph a column chart_
 ```
 
-![4663](images/4663_Graph.png)
+![4663](/assets/img/AOAQ2/4663_Graph.png)
+
+<br/>
 
 # Which Devices are Throwing a Specific EventID?
+```sql
+SecurityEvent //\<--Define the table to query
 
-SecurityEvent &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Define the table to query_
+| where EventID == "4663"//\<--Query for specific EventID
 
-| where EventID == "4663"&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query for specific EventID_
-
-| summarize count() by Computer &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Return count per computer_
-
-![4663 Count by Computer](images/4663_byComputer.png)
+| summarize count() by Computer //\<--Return count per computer
+```
+![4663 Count by Computer](/assets/img/AOAQ2/4663_byComputer.png)
+<br/>
+<br/>
 
 # How often does a specific computer throw a specific EventID over a defined timespan?
 
-SecurityEvent&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Define the table to query_
+```sql
+SecurityEvent//\<--Define the table to query
 
-| where EventID == "4663"&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query for specific EventID_
+| where EventID == "4663"//\<--Query for specific EventID
 
-| where Computer == "This Guy" &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query a specific device_
+| where Computer == "This Guy" //\<--Query a specific device
 
-| summarize count() by bin(TimeGenerated,1d) &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Return count per day_
+| summarize count() by bin(TimeGenerated,1d) //\<--Return count per day
 
-| render columnchart&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Graph results to chart_
+| render columnchart //\<--Graph results to chart
+```
+![4663 on ThisGuy](/assets/img/AOAQ2/ThisGuy.png)
 
-![4663 on ThisGuy](images/ThisGuy.png)
+<br/>
 
 # Summary:
 
@@ -62,10 +69,11 @@ In this post, we broke down some helpful, basic KQL queries and syntax:
 - Leveraged the **Summarize** function to manipulate data (break totals up by day etc.)
 - Graphing results to **chart**
 
+<br/>
 
 Official Microsoft References:
 
 - [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/)
-- [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorials/use-aggregation-functions](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorials/use-aggregation-functions)
 - [https://learn.microsoft.com/en-us/azure/data-explorer/kql-quick-reference](https://learn.microsoft.com/en-us/azure/data-explorer/kql-quick-reference)
 - [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/best-practices](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/best-practices)
+- [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorials/use-aggregation-functions](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorials/use-aggregation-functions)
