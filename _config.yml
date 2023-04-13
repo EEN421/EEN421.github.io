@@ -21,6 +21,7 @@ author: Ian D. Hanley
 
 navbar-links:
   About Me: "aboutme"
+    - LinkedIn: "https://www.linkedin.com/in/ianhanley/"
   Resources:
     - Beautiful Jekyll: "https://beautifuljekyll.com"
     - Learn markdown: "https://www.markdowntutorial.com/"
