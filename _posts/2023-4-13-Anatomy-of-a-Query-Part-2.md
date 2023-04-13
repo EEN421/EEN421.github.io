@@ -15,14 +15,15 @@ In my last post, we broke down some helpful, basic KQL queries and syntax:
 - Querying the **Usage table** for **anomalies**
 
 # How verbose is an EventID?
+```sql
+SecurityEvent //\<--Define the table to query
 
-SecurityEvent &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Define the table to query_
+| where EventID == "4663" //\<--Query for specific EventID
 
-| where EventID == "4663" &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query for specific EventID_
+| summarize count() by bin(TimeGenerated,1d) //\<--Return count per day
 
-| summarize count() by bin(TimeGenerated,1d)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Return count per day_
-
-| render columnchart &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Graph a column chart_
+| render columnchart //\<--Graph a column chart_
+```
 
 ![4663](images/4663_Graph.png)
 
