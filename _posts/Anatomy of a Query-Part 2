@@ -1,0 +1,70 @@
+# Introduction and Use Case
+
+Continuing from a previous post, today we'll dissect even more simple but powerful KQL queries that are essential to keep in your threat hunting utility belt.
+
+# Recap:
+
+In my last post, we broke down some helpful, basic KQL queries and syntax:
+
+- Defining **table** to query against
+- Defining **time** periods manually and via GUI
+- Filtering out **non-billable** query results
+- Leveraged the **Summarize** function to manipulate results
+- Graphing results to **chart**
+- Querying specific **devices**
+- Querying the **Usage table** for **anomalies**
+
+# How verbose is an EventID?
+
+SecurityEvent &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Define the table to query_
+
+| where EventID == "4663" &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query for specific EventID_
+
+| summarize count() by bin(TimeGenerated,1d)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Return count per day_
+
+| render columnchart &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Graph a column chart_
+
+![4663](images/4663_Graph.png)
+
+# Which Devices are Throwing a Specific EventID?
+
+SecurityEvent &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Define the table to query_
+
+| where EventID == "4663"&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query for specific EventID_
+
+| summarize count() by Computer &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Return count per computer_
+
+![4663 Count by Computer](images/4663_byComputer.png)
+
+# How often does a specific computer throw a specific EventID over a defined timespan?
+
+SecurityEvent&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Define the table to query_
+
+| where EventID == "4663"&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query for specific EventID_
+
+| where Computer == "This Guy" &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Query a specific device_
+
+| summarize count() by bin(TimeGenerated,1d) &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_//\<--Return count per day_
+
+| render columnchart&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; _//\<--Graph results to chart_
+
+![4663 on ThisGuy](images/ThisGuy.png)
+
+# Summary:
+
+In this post, we broke down some helpful, basic KQL queries and syntax:
+
+- Defining **table** to query against
+- Querying for specific **EventIDs**
+- Querying specific **devices**
+- Combining these to query for **specific EventIDs on specific devices**
+- Leveraged the **Summarize** function to manipulate data (break totals up by day etc.)
+- Graphing results to **chart**
+
+
+Official Microsoft References:
+
+- [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/)
+- [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorials/use-aggregation-functions](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorials/use-aggregation-functions)
+- [https://learn.microsoft.com/en-us/azure/data-explorer/kql-quick-reference](https://learn.microsoft.com/en-us/azure/data-explorer/kql-quick-reference)
+- [https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/best-practices](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/best-practices)
