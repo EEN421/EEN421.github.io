@@ -3,7 +3,9 @@
 Whether you're new on the SOC or a seasoned [Sentinel Ninja](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310), here are some basic queries I keep coming back to when investigating anything odd about my ingest patterns (and thus my overall cost). 
 <br/>
 <br/>
+
 # Query Breakdown
+<br/>
 
 So how do you know something is "odd" with your ingestion volume? I look for sudden changes. Let's look at the ingest pattern over the past quarter and graph billable volume via the usage table with the following query for a birds-eye view of what's going on in any environment:
 
@@ -36,7 +38,7 @@ Usage                               // <--tells us which table to apply this que
 <br/>
 
 # How Verbose is a Table?
-
+ <br/>
 
 ```sql
 AzureDiagnostics        // <--Define the table to query_
@@ -62,7 +64,6 @@ Results:
 <br/>
 
 # Syslog Activity by Device:
-
 <br/>
 
 ```sql
@@ -76,6 +77,7 @@ Syslog      // <--Define the table to query (Syslog)
 <br/>
 
 # Syslog Activity per Day from a Specific Device:
+<br/>
 
 ```sql
 Syslog      // <--Define the table to query (Syslog)
