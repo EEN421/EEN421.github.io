@@ -37,7 +37,6 @@ Usage                               // <--tells us which table to apply this que
 # How Verbose is a Table?
 
 <br/>
-<br/>
 
 ```sql
 AzureDiagnostics        // <--Define the table to query_
@@ -65,7 +64,6 @@ Results:
 # Syslog Activity by Device:
 
 <br/>
-<br/>
 
 ```sql
 Syslog      // <--Define the table to query (Syslog)
@@ -79,7 +77,6 @@ Syslog      // <--Define the table to query (Syslog)
 
 # Syslog Activity per Day from a Specific Device:
 
-<br/>
 <br/>
 
 ```sql
