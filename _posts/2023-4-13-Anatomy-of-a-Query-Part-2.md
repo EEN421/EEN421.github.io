@@ -14,6 +14,8 @@ In my last post, we broke down some helpful, basic KQL queries and syntax:
 - Querying specific **devices**
 - Querying the **Usage table** for **anomalies**
 
+<br/>
+
 # How verbose is an EventID?
 ```sql
 SecurityEvent // <--Define the table to query
