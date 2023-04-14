@@ -16,13 +16,13 @@ In my last post, we broke down some helpful, basic KQL queries and syntax:
 
 # How verbose is an EventID?
 ```sql
-SecurityEvent //\<--Define the table to query
+SecurityEvent // <--Define the table to query
 
-| where EventID == "4663" //\<--Query for specific EventID
+| where EventID == "4663" // <--Query for specific EventID
 
-| summarize count() by bin(TimeGenerated,1d) //\<--Return count per day
+| summarize count() by bin(TimeGenerated,1d) // <--Return count per day
 
-| render columnchart //\<--Graph a column chart_
+| render columnchart // <--Graph a column chart
 ```
 
 ![4663](/assets/img/AOAQ2/4663_Graph.png)
@@ -30,12 +30,13 @@ SecurityEvent //\<--Define the table to query
 <br/>
 
 # Which Devices are Throwing a Specific EventID?
+
 ```sql
-SecurityEvent //\<--Define the table to query
+SecurityEvent // <--Define the table to query
 
-| where EventID == "4663"//\<--Query for specific EventID
+| where EventID == "4663"   // <--Query for specific EventID
 
-| summarize count() by Computer //\<--Return count per computer
+| summarize count() by Computer // <--Return count per computer
 ```
 ![4663 Count by Computer](/assets/img/AOAQ2/4663_byComputer.png)
 <br/>
@@ -44,9 +45,9 @@ SecurityEvent //\<--Define the table to query
 # How often does a specific computer throw a specific EventID over a defined timespan?
 
 ```sql
-SecurityEvent//\<--Define the table to query
+SecurityEvent   // <--Define the table to query
 
-| where EventID == "4663"//\<--Query for specific EventID
+| where EventID == "4663"   //<--Query for specific EventID
 
 | where Computer == "This Guy" //\<--Query a specific device
 
