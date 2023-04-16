@@ -49,13 +49,13 @@ SecurityEvent // <--Define the table to query
 ```sql
 SecurityEvent   // <--Define the table to query
 
-| where EventID == "4663"   //<--Query for specific EventID
+| where EventID == "4663"   // <--Query for specific EventID
 
-| where Computer == "This Guy" //\<--Query a specific device
+| where Computer == "This Guy" // <--Query a specific device
 
-| summarize count() by bin(TimeGenerated,1d) //\<--Return count per day
+| summarize count() by bin(TimeGenerated,1d) // <--Return count per day
 
-| render columnchart //\<--Graph results to chart
+| render columnchart // <--Graph results to chart
 ```
 ![4663 on ThisGuy](/assets/img/AOAQ2/ThisGuy.png)
 
