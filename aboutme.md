@@ -10,5 +10,5 @@ As a demonstrated Cyber Security Architect and leader at a leading MXDR MSSP foc
 
 To learn more, check out my [linkedin](https://www.linkedin.com/in/ianhanley/).
 
-Cheers,
+Cheers,<br/>
 Ian D. Hanley
