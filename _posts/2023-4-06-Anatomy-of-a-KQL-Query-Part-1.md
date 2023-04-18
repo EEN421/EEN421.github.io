@@ -83,7 +83,7 @@ Syslog      // <--Define the table to query (Syslog)
 | where TimeGenerated > ago(90d)      // <-- how far back to query the table
 | where Computer == "5604-Barsoom-main"         // <--Query a specific device
 | summarize count() by bin(TimeGenerated,1d)    // <--Return count per day
-| render columnchart     //<--Graph results to chart
+| render columnchart     // <--Graph results to chart
 ```
 ![](/assets/img/AOAQ1/syslog_graph.png)
 
