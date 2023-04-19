@@ -11,8 +11,8 @@ As mentioned, all you know is that there are significant discrepancies in cost o
 Usage
 | where TimeGenerated \> ago(90d)
 | where IsBillable == true
-| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution_
-| render columnchart_
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution
+| render columnchart
 ```
 
 ![](/assets/img/Detective1/Usage.png)
