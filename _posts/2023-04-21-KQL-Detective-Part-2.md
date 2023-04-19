@@ -88,7 +88,7 @@ SecurityEvent
 
 ![](/assets/img/Detective2/4663_on_ThisGuy.png)
 
-Plugging in the other outlier's FQDN returned the same trend. **_These two machines are responsible for a significant increase in ingest volume because they have started triggering EventID 4663 more frequently since March 21st._** At this time, we need to notify the client and inquire about any changes involving these two machines from this time period. My best guess is that they were spun up on March 20th and configured differently when compared to other machines in the environment, something they will want to know about.
+Plugging in the other outlier's FQDN returned the same trend. **_These two machines are responsible for a significant increase in ingest volume because they have started triggering EventID 4663 more frequently since March 21st._** At this time, we need to notify the administrator and inquire about any changes involving these two machines from this time period. My best guess is that they were spun up on March 20th and configured differently when compared to other machines in the environment, something they will want to know about.
 
 # Summary
 
