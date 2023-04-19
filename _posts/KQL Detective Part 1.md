@@ -17,15 +17,15 @@ As mentioned, all you know is that there are significant discrepancies in cost o
 
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
 
-![](images/Usage.png)
+![](/assets/img/Detective1/Usage.png)
 
 Hover over the colour coded lines to see what they represent. In this case, purple represents LogManagement and the darker colour represents Security log tables, illustrated here:
 
-![](images/Usage1-Purple.png)![](images/Usage2-Dark.png)
+![](/assets/img/Detective1/Usage1-Purple.png)![](/assets/img/Detective1/Usage2-Dark.png)
 
 Take note of any unusual spikes or valleys in ingest. The first thing you should notice is the drop off for ingest volume in January. Next is the sudden increase in ingest volume towards the end of March. In the below screenshot, ingest volume from the LogManagement tables almost completely disappeared in January, and the Security tables grew significantly in March.
 
-![](images/Delta.png)
+![](/assets/img/Detective1/Delta.png)
 <br/>
 <br/>
 <br/>
@@ -33,13 +33,13 @@ Take note of any unusual spikes or valleys in ingest. The first thing you should
 
 The LogManagement tables can be viewed in the UI from the Sentinel workspace, simply expand the LogManagement drop-down to see them, shown below:
 
-![](images/Tables.png)
+![](/assets/img/Detective1/Tables.png)
 
 Something in one or more of these tables within the LogManagement solution has changed and is responsible for the drop in ingest volume.
 
 To find out, we can graph the usage for each solution across the specified time frame. Set the custom time frame as illustrated in the below screenshot that corresponds with the sudden change:
 
-![](images/Date_GUI.png)
+![](/assets/img/Detective1/Date_GUI.png)
 
 To determine which of these tables dropped off during that time, we can run the following queries which hit each table from the LogManagment solution and graphs their ingest volume.
 <br/>
@@ -82,7 +82,7 @@ None of the above correlate or explain what happened. However, the next one, sys
 
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
 
-![](images/syslog_Graph.png)
+![](/assets/img/Detective1/syslog_Graph.png)
 
 Here we can see that the syslog table is responsible for the LogManagment drop off noted earlier on. The next question you should be asking yourself is "where are these coming from/what computers are contributing to syslog volume?" Lets further define the "What" part of this equation.
 
@@ -94,7 +94,7 @@ This next query will return which computers are generating syslog data:
 
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by Computer_
 
-![](images/Syslog_Count_by_Computer.png)
+![](/assets/img/Detective1/Syslog_Count_by_Computer.png)
 
 Note the 3 most verbose machines listed. Running the following query against each machine will tell us if this drop off in ingestion can be wholly or partially attributed to them.
 
@@ -108,7 +108,7 @@ In this next step we plugin the top 3 machines from the previous query to confir
 
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by bin(TimeGenerated,1d)_
 
-![](images/syslog_barsoom.png)
+![](/assets/img/Detective1/syslog_barsoom.png)
 
 This confirms which machines were responsible for the drop off. Take note of these devices and check with the team(s) responsible for their management and maintenance, they'll want to know :D 
 <br/>
