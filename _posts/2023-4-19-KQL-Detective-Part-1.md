@@ -39,7 +39,7 @@ To find out, we can graph the usage for each solution across the specified time 
 
 ![](/assets/img/Detective1/Date_GUI.png)
 
-To determine which of these tables dropped off during that time, we can run the following queries which hit each table from the LogManagment solution and graphs their ingest volume.
+To determine which of these tables dropped off during that time, we can run the following queries which will hit each table from the LogManagment solution and graph their ingest volume.
 <br/>
 <br/>
 
