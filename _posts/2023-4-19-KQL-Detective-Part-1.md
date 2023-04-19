@@ -9,7 +9,7 @@ As mentioned, all you know is that there are significant discrepancies in cost o
 
 ```sql
 Usage
-| where TimeGenerated \> ago(90d)
+| where TimeGenerated > ago(90d)
 | where IsBillable == true
 | summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution
 | render columnchart
@@ -103,7 +103,7 @@ In this next step we plugin the top 3 machines from the previous query to confir
 
 ```sql
 Syslog
-| where TimeGenerated \> ago(90d)
+| where TimeGenerated > ago(90d)
 | where Computer == "5604-Barsoom-main"
 | summarize count() by bin(TimeGenerated,1d)
 ```
