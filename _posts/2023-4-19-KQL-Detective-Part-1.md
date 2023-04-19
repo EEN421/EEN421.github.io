@@ -110,7 +110,7 @@ Syslog
 
 ![](/assets/img/Detective1/syslog_barsoom.png)
 
-This confirms which machines were responsible for the drop off. Take note of these devices and check with the team(s) responsible for their management and maintenance, they'll want to know :smiley:
+This confirms which machines were responsible for the drop off. Take note of these devices and check with the team(s) responsible for their management and maintenance, they'll want to know.
 <br/>
 <br/>
 In my next post, we will explore the sudden increase in billable ingest volume coming from the Security source/solution.
