@@ -7,15 +7,13 @@ So you're a new kid on the SOC and Accounting is freaking out about a massive un
 
 As mentioned, all you know is that there are significant discrepancies in cost over the past quarter (90 days). Let's look at the ingest pattern over the past quarter and graph billable volume via the usage table with the following query for a birds-eye view of what's going on in the environment:
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_Usage_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| where TimeGenerated \> ago(90d)_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| where IsBillable == true_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
+```sql
+Usage
+| where TimeGenerated \> ago(90d)
+| where IsBillable == true
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution_
+| render columnchart_
+```
 
 ![](/assets/img/Detective1/Usage.png)
 
@@ -44,28 +42,31 @@ To find out, we can graph the usage for each solution across the specified time 
 To determine which of these tables dropped off during that time, we can run the following queries which hit each table from the LogManagment solution and graphs their ingest volume.
 <br/>
 <br/>
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_AzureDiagnostics_
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by bin(TimeGenerated,1d)_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
-<br/>
-<br/>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;...<br/>
-<br/>
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_AzureActivity_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by bin(TimeGenerated,1d)_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
+```sql
+AzureDiagnostics
+| summarize count() by bin(TimeGenerated,1d)
+| render columnchart
+```
 <br/>
 <br/>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;...<br/>
 <br/>
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_AuditLogs_
+```sql
+AzureActivity
+| summarize count() by bin(TimeGenerated,1d)
+| render columnchart
+```
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by bin(TimeGenerated,1d)_
+<br/>
+<br/>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;...<br/>
+<br/>
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
+```sql
+AuditLogs
+| summarize count() by bin(TimeGenerated,1d)
+| render columnchart
+```
 
 <br/>
 <br/>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;… … … … …
@@ -76,11 +77,11 @@ To determine which of these tables dropped off during that time, we can run the 
 
 None of the above correlate or explain what happened. However, the next one, syslog, yielded results:
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_Syslog_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by bin(TimeGenerated,1d)_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| render columnchart_
+```sql
+Syslog
+| summarize count() by bin(TimeGenerated,1d)
+| render columnchart
+```
 
 ![](/assets/img/Detective1/syslog_Graph.png)
 
@@ -89,10 +90,10 @@ Here we can see that the syslog table is responsible for the LogManagment drop o
 This next query will return which computers are generating syslog data:
 
 
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_Syslog_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by Computer_
+```sql
+Syslog
+| summarize count() by Computer
+```
 
 ![](/assets/img/Detective1/Syslog_Count_by_Computer.png)
 
@@ -100,13 +101,12 @@ Note the 3 most verbose machines listed. Running the following query against eac
 
 In this next step we plugin the top 3 machines from the previous query to confirm:
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_Syslog_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| where TimeGenerated \> ago(90d)_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| where Computer == **"5604-Barsoom-main"**_
-
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;_| summarize count() by bin(TimeGenerated,1d)_
+```sql
+Syslog
+| where TimeGenerated \> ago(90d)
+| where Computer == "5604-Barsoom-main"
+| summarize count() by bin(TimeGenerated,1d)
+```
 
 ![](/assets/img/Detective1/syslog_barsoom.png)
 
