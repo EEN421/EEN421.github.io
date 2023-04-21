@@ -1,4 +1,4 @@
-# Introduction and Use Case
+# Introduction and Use Case:
 
 Continuing from a previous post, today we'll dissect even more simple but powerful KQL queries that are essential to keep in your threat hunting utility belt.
 
