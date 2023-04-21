@@ -14,7 +14,7 @@ You’ve just deployed sentinel… now what? How do you know this an efficient s
 
 The eventual outcome will differ depending on your priorities.  What we can do right now, is check for the “low hanging fruit” or “easy wins.” You’re going to need a couple weeks’ worth of billable ingest before this will be effective too (we’ll sort out what’s billable and filter out the rest). Let’s look at the ingest pattern over the past quarter and see what’s going on. Navigate to Sentinel:
 
- ![](img/Sentinel.png)
+ ![](/assets/img/Optimization/Sentinel.png)
 
 Go to “Logs” and run the following query:
 
@@ -26,7 +26,7 @@ Usage
 | render columnchart
 ```
 
-![](/img/usage.png)
+![](/assets/img/Optimization/usage.png)
 
 
 		
@@ -36,9 +36,9 @@ Take note of any unusual spikes or valleys in billable ingest from the above gra
 Next we’ll take a look at the short term ingest trend. You can run the same query as above and change out the value in line two from 90 to 30, OR you can navigate to the “Settings” blade in Sentinel (towards the bottom of the list of blades). This will tell you which tier you’re currently subscribed to as well as graph out the last 31 days of billable ingest volume: 
 
 
- ![](img/Sentinel_Settings_Blade.png)
+ ![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
 
- ![](img/Short%20Term%20Ingest.png)
+ ![](/assets/img/Optimization/Short%20Term%20Ingest.png)
 
 
 
@@ -47,36 +47,36 @@ Based off the average billable ingest volume displayed in the above graph, we sh
 
 To determine your LAW commitment tier, navigate to your workspace and select the Usage and estimated costs blade:
  
-![](img/LAW.png)
+![](/assets/img/Optimization/LAW.png)
  
- ![](img/LAW%20Cost%20Blade.png)
+ ![](/assets/img/Optimization/LAW%20Cost%20Blade.png)
 
 This shows you the same 31 days of billable ingest graphed on the right and your current commitment tier in the middle. 
 
 
-![](img/LAW%20Tier.png)
+![](/assets/img/Optimization/LAW%20Tier.png)
 
  
 
 Notice how this time the commitment tier drop-down displays the estimated cost (this is harder to calculate for sentinel, there may be credits based on a Defender for cloud subscription etc.). Again, it’s typically a good idea for both Sentinel and LAW commitment tiers to match up unless there’s a specific use case in play. 
 
-![](img/Sentinel.png)
+![](/assets/img/Optimization/Sentinel.png)
 
-![](img/Sentinel_Settings_Blade.png)
+![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
  
- ![](img/Sentinel%20Tier.png)
+ ![](/assets/img/Optimization/Sentinel%20Tier.png)
 
 
 Lastly, lets check out our retention settings. In my experience, it’s best practice to configure retention for 90 days with a valid Sentinel subscription because it’s included. Anything more than 90 days will incur a cost. Lets see where we’re at. Navigate to the LAW Usage and estimated costs blade, then select “Data Retention” to see what the current policy is set to: 
  
  
-![](img/LAW.png)
+![](/assets/img/Optimization/LAW.png)
 
-![](img/LAW%20Cost%20Blade.png)
+![](/assets/img/Optimization/LAW%20Cost%20Blade.png)
 
-![](img/Retention.png)
+![](/assets/img/Optimization/Retention.png)
 
-![](img/Retnetion%202.png)
+![](/assets/img/Optimization/Retnetion%202.png)
  
 
 
