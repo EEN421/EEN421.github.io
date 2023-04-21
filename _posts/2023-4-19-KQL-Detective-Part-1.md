@@ -1,4 +1,4 @@
-# Introduction and Use Case
+# Introduction and Use Case:
 
 So you're a new kid on the SOC and Accounting is freaking out about a massive unexpected increase in their Sentinel ingest cost (or a sudden decrease, both are covered in detail) - and demanding an explanation. This is a step-by-step guide to leveraging KQL for investigating unexplained dips and spikes in ingest volume and uncovering the when/what/why. Put on your detective hat.
 <br/>
