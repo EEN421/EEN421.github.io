@@ -8,7 +8,7 @@ KQL query to generate the chart referenced above:
 
 ```sql
 Usage
-| where TimeGenerated \> ago(90d)
+| where TimeGenerated > ago(90d)
 | where IsBillable == true
 | summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution
 | render columnchart
@@ -27,7 +27,7 @@ After checking the **SecurityAlert, SecurityEvent,** and **SecurityIncident** ta
 
 ```sql
 SecurityEvent
-| where TimeGenerated \> ago(30d)
+| where TimeGenerated > ago(30d)
 | summarize count() by bin(TimeGenerated,1d)
 | render columnchart
 ```
@@ -40,7 +40,7 @@ This query summarizes the results by EventID and their count (number of times th
 
 ```sql
 SecurityEvent
-| where TimeGenerated \> ago(30d)
+| where TimeGenerated > ago(30d)
 | summarize count() by EventID
  ```
 
