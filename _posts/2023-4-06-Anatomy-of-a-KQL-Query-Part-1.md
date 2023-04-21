@@ -1,4 +1,4 @@
-# Introduction and Use Case
+# Introduction and Use Case:
 
 Whether you're new on the SOC or a seasoned [Sentinel Ninja](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310), here are some basic queries I keep coming back to when investigating anything odd about my ingest patterns (and thus my overall cost). 
 <br/>
