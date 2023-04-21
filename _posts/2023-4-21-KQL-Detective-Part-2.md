@@ -1,4 +1,4 @@
-# Recap
+# Recap:
 
 In my last post, we leveraged the awesome power of KQL to investigate the drop in billable LogManagement ingest volume illustrated below (left side). During this investigation, we noticed a sudden increase in Security ingest volume toward the end of March. In this post, we're going to track down the root cause of this sudden increase.
 
