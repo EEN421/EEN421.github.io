@@ -1,4 +1,4 @@
-# Introduction and Use Case
+# Introduction and Use Case:
 
 You’ve just deployed sentinel… now what? How do you know this an efficient setup? Let’s take a walk on the LEAN side. 
 
@@ -12,7 +12,11 @@ You’ve just deployed sentinel… now what? How do you know this an efficient s
 
 # Where to start? 
 
-The eventual outcome will differ depending on your priorities.  What we can do right now, is check for the “low hanging fruit” or “easy wins.” You’re going to need a couple weeks’ worth of billable ingest before this will be effective too (we’ll sort out what’s billable and filter out the rest). Let’s look at the ingest pattern over the past quarter and see what’s going on. Navigate to Sentinel:
+The eventual outcome will differ depending on your priorities.  What we can do right now, is check for the “low hanging fruit” or “easy wins.” You’re going to need a couple weeks’ worth of billable ingest before this will be effective too (we’ll sort out what’s billable and filter out the rest). Let’s look at the ingest pattern over the past quarter and see what’s going on. 
+
+# Determine Long Term Ingest Trend
+
+Navigate to Sentinel:
 
  ![](/assets/img/Optimization/Sentinel.png)
 
@@ -35,6 +39,7 @@ Take note of any unusual spikes or valleys in billable ingest from the above gra
 
 If your results are different, check out my [KQL Detective series](https://www.hanley.cloud/2023-04-19-KQL-Detective-Part-1/) at [hanley.cloud](https://www.hanley.cloud) in which we track down the root cause of any anomalies in billable ingest (like a suddenly noisy firewall or a device going offline for example). For a more detailed, line-by-line breakdown of a KQL query, please visit my [Anatomy of a KQL Query series](https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/).
 
+# Determine Short Term Ingest Trend
 
 Next we’ll take a look at the short term ingest trend. You can run the same query as above and change out the value in line two from 90 to 30, OR you can navigate to the “Settings” blade in Sentinel (towards the bottom of the list of blades). This will tell you which tier you’re currently subscribed to as well as graph out the last 31 days of billable ingest volume: 
 
@@ -45,7 +50,11 @@ Next we’ll take a look at the short term ingest trend. You can run the same qu
 
 
 
-Based off the average billable ingest volume displayed in the above graph, we should be able to make an educated decision about which commitment tier to move to. Next we need to determine the LAW commitment tier, as they’re configured separately. Both the LAW and Sentinel commitment tiers should generally be the same, unless you’ve got a very complex setup with different ingest volumes, but that’s not typical in my experience and it tends to be easier to manager when Sentinel is deployed to it’s own dedicated LAW (especially from a cost management perspective). 
+Based off the average billable ingest volume displayed in the above graph, we should be able to make an educated decision about which commitment tier to move to.
+
+# Confirm Log Analytics Workspace (LAW) Commitment Tier
+
+Next we need to determine the LAW commitment tier, as they’re configured separately. Both the LAW and Sentinel commitment tiers should generally be the same, unless you’ve got a very complex setup with different ingest volumes, but that’s not typical in my experience and it tends to be easier to manager when Sentinel is deployed to it’s own dedicated LAW (especially from a cost management perspective). 
 
 To determine your LAW commitment tier, navigate to your workspace and select the Usage and estimated costs blade:
  
@@ -62,12 +71,15 @@ This shows you the same 31 days of billable ingest graphed on the right and your
 
 Notice how this time the commitment tier drop-down displays the estimated cost (this is harder to calculate for sentinel, there may be credits based on a Defender for cloud subscription etc.). Again, it’s typically a good idea for both Sentinel and LAW commitment tiers to match up unless there’s a specific use case in play. 
 
+# Confirm Sentinel Commitment Tier
+
 ![](/assets/img/Optimization/Sentinel.png)
 
 ![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
  
  ![](/assets/img/Optimization/Sentinel%20Tier.png)
 
+# Confirm Retention Policy 
 
 Lastly, lets check out our retention settings. In my experience, it’s best practice to configure retention for 90 days with a valid Sentinel subscription because it’s included. Anything more than 90 days will incur a cost. Lets see where we’re at. Navigate to the LAW Usage and estimated costs blade, then select “Data Retention” to see what the current policy is set to: 
  
