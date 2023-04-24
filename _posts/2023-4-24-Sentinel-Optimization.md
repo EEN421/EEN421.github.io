@@ -30,7 +30,10 @@ Usage
 
 
 		
-Take note of any unusual spikes or valleys in billable ingest from the above graph. Also note that the second “where” statement (3rd line) in this query filters out non-billable ingest volume. It’s normal to see a slight decline in volume over the weekends and holidays etc. Nothing crazy going on here in this example, but if your results are different, check out my [KQL Detective series](https://www.hanley.cloud/2023-04-19-KQL-Detective-Part-1/) at [hanley.cloud](https://www.hanley.cloud) in which we track down the root cause of any anomalies in billable ingest (like a suddenly noisy firewall or a device going offline for example). For a more detailed, line-by-line breakdown of a KQL query, please visit my [Anatomy of a KQL Query series](https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/).
+		
+Take note of any unusual spikes or valleys in billable ingest from the above graph. Also note that the second “where” statement (3rd line) in this query filters out non-billable ingest volume. Nothing crazy going on here in this example. It’s normal to see a slight decline in volume over the weekends and holidays etc. 
+
+If your results are different, check out my [KQL Detective series](https://www.hanley.cloud/2023-04-19-KQL-Detective-Part-1/) at [hanley.cloud](https://www.hanley.cloud) in which we track down the root cause of any anomalies in billable ingest (like a suddenly noisy firewall or a device going offline for example). For a more detailed, line-by-line breakdown of a KQL query, please visit my [Anatomy of a KQL Query series](https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/).
 
 
 Next we’ll take a look at the short term ingest trend. You can run the same query as above and change out the value in line two from 90 to 30, OR you can navigate to the “Settings” blade in Sentinel (towards the bottom of the list of blades). This will tell you which tier you’re currently subscribed to as well as graph out the last 31 days of billable ingest volume: 
@@ -39,7 +42,6 @@ Next we’ll take a look at the short term ingest trend. You can run the same qu
  ![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
 
  ![](/assets/img/Optimization/Short%20Term%20Ingest.png)
-
 
 
 
