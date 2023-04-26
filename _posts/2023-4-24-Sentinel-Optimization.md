@@ -51,6 +51,7 @@ Next we’ll take a look at the short term ingest trend. You can run the same qu
 
 
 Based off the average billable ingest volume displayed in the above short term and long term graphs, we should be able to make an educated decision about which commitment tier to move to.
+> **_NOTE:_**   I like to see a surplus above the next commitment tier requirement in order to insulate against holidays and weekends which will inevitably bring down the average daily ingest before upgrading to the next tier.
 
 # Confirm Sentinel Commitment Tier
 
@@ -62,7 +63,7 @@ Based off the average billable ingest volume displayed in the above short term a
 
 # Confirm Log Analytics Workspace (LAW) Commitment Tier
 
-Next we need to determine the Log Analytics Workspace commitment tier, as it's separately from Sentinel. Both the LAW and Sentinel commitment tiers should generally be the same, unless you’ve got a very complex setup with different ingest volumes, but that’s not typical in my experience and it tends to be easier to manage when Sentinel is deployed to it’s own dedicated workspace (especially from a cost management perspective). 
+Next we need to determine the Log Analytics Workspace commitment tier, as it's separately from Sentinel. Both the LAW and Sentinel commitment tiers should generally be the same, unless you’ve got a very complex setup with different ingest volumes, but that’s not typical in my experience. 
 
 To determine your LAW commitment tier, navigate to your workspace and select the Usage and estimated costs blade:
  
