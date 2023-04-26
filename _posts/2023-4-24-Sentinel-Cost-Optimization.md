@@ -79,7 +79,7 @@ Notice how this time the commitment tier drop-down displays the estimated cost (
 
 # Confirm Retention Policy 
 
-Lastly, lets check out our retention settings. In my experience, it’s best practice to configure retention for 90 days with a valid Sentinel subscription because it’s included. Anything more than 90 days will incur a cost. Lets see where we’re at. Navigate to the LAW Usage and estimated costs blade, then select “Data Retention” to see what the current policy is set to: 
+Lastly, lets check out our retention settings. ***Anything more than 90 days will incur a cost.*** Navigate to the LAW Usage and estimated costs blade, then select “Data Retention” to see what the current policy is set to: 
  
  
 ![](/assets/img/Optimization/LAW.png)
@@ -90,7 +90,7 @@ Lastly, lets check out our retention settings. In my experience, it’s best pra
 
 ![](/assets/img/Optimization/Retnetion%202.png)
  
-
+> **_NOTE:_**   In my experience, it’s best practice to configure retention for 90 days with a valid Sentinel subscription because it’s included.
 
 # Conclusion:
 The easiest ways to optimize your overall billable ingest cost are to ask yourself the following questions first: 
