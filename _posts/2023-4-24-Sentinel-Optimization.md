@@ -1,7 +1,8 @@
 # Introduction and Use Case:
 
 You’ve just deployed sentinel… now what? How do you know this an efficient setup? Let’s take a walk on the LEAN side. 
-
+<br/>
+<br/>
 # In this post we will: 
 
 - Determine long term ingest trend
