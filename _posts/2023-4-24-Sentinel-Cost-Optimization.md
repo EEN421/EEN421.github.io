@@ -1,5 +1,4 @@
 # Introduction and Use Case:
-
 You’ve just deployed Microsoft Sentinel to your Log Analytics Workspace… now what? How do you know this an efficient setup? Let’s take a walk on the LEAN side. 
 
 # In this post we will: 
@@ -32,8 +31,6 @@ Usage
 
 ![](/assets/img/Optimization/usage.png)
 
-
-		
 		
 Take note of any unusual spikes or valleys in billable ingest from the above graph. Also note that the second “where” statement (3rd line) in this query filters out non-billable ingest volume. Nothing crazy going on here in this example. It’s normal to see a slight decline in volume over the weekends and holidays etc. 
 
