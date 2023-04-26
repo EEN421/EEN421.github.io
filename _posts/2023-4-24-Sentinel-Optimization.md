@@ -37,7 +37,7 @@ Usage
 		
 Take note of any unusual spikes or valleys in billable ingest from the above graph. Also note that the second “where” statement (3rd line) in this query filters out non-billable ingest volume. Nothing crazy going on here in this example. It’s normal to see a slight decline in volume over the weekends and holidays etc. 
 
-If your results are different, check out my [KQL Detective series](https://www.hanley.cloud/2023-04-19-KQL-Detective-Part-1/) at [hanley.cloud](https://www.hanley.cloud) in which we track down the root cause of any anomalies in billable ingest (like a suddenly noisy firewall or a device going offline for example). For a more detailed, line-by-line breakdown of a KQL query, please visit my [Anatomy of a KQL Query series](https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/).
+If your results are different, check out my [KQL Detective series](https://www.hanley.cloud/2023-04-19-KQL-Detective-Part-1/) at [hanley.cloud](https://www.hanley.cloud) in which we track down the root cause of cost anomalies in billable ingest (like a suddenly noisy firewall or a device going offline for example). For a more detailed, line-by-line breakdown of a KQL query, please visit my [Anatomy of a KQL Query series](https://www.hanley.cloud/2023-04-06-Anatomy-of-a-KQL-Query-Part-1/).
 
 # Determine Short Term Ingest Trend
 
@@ -50,11 +50,11 @@ Next we’ll take a look at the short term ingest trend. You can run the same qu
 
 
 
-Based off the average billable ingest volume displayed in the above graph, we should be able to make an educated decision about which commitment tier to move to.
+Based off the average billable ingest volume displayed in the above short term and long term graphs, we should be able to make an educated decision about which commitment tier to move to.
 
 # Confirm Log Analytics Workspace (LAW) Commitment Tier
 
-Next we need to determine the LAW commitment tier, as they’re configured separately. Both the LAW and Sentinel commitment tiers should generally be the same, unless you’ve got a very complex setup with different ingest volumes, but that’s not typical in my experience and it tends to be easier to manager when Sentinel is deployed to it’s own dedicated LAW (especially from a cost management perspective). 
+Next we need to determine the Log Analytics Workspace commitment tier, as it's separately from Sentinel. Both the LAW and Sentinel commitment tiers should generally be the same, unless you’ve got a very complex setup with different ingest volumes, but that’s not typical in my experience and it tends to be easier to manage when Sentinel is deployed to it’s own dedicated workspace (especially from a cost management perspective). 
 
 To determine your LAW commitment tier, navigate to your workspace and select the Usage and estimated costs blade:
  
