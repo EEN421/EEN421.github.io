@@ -6,8 +6,8 @@ You’ve just deployed sentinel… now what? How do you know this an efficient s
 
 - Determine long term ingest trend
 - Determine short term ingest trend
-- Confirm Log Analytics Workspace (LAW) commitment tier
 - Confirm Sentinel commitment tier
+- Confirm Log Analytics Workspace (LAW) commitment tier
 - Confirm Retention policy
 
 # Where to start? 
@@ -43,14 +43,22 @@ If your results are different, check out my [KQL Detective series](https://www.h
 
 Next we’ll take a look at the short term ingest trend. You can run the same query as above and change out the value in line two from 90 to 30, OR you can navigate to the “Settings” blade in Sentinel (towards the bottom of the list of blades). This will tell you which tier you’re currently subscribed to as well as graph out the last 31 days of billable ingest volume: 
 
+ ![](/assets/img/Optimization/Sentinel.png)
 
  ![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
 
  ![](/assets/img/Optimization/Short%20Term%20Ingest.png)
 
 
-
 Based off the average billable ingest volume displayed in the above short term and long term graphs, we should be able to make an educated decision about which commitment tier to move to.
+
+# Confirm Sentinel Commitment Tier
+
+![](/assets/img/Optimization/Sentinel.png)
+
+![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
+ 
+ ![](/assets/img/Optimization/Sentinel%20Tier.png)
 
 # Confirm Log Analytics Workspace (LAW) Commitment Tier
 
@@ -70,14 +78,6 @@ This shows you the same 31 days of billable ingest graphed on the right and your
  
 
 Notice how this time the commitment tier drop-down displays the estimated cost (this is harder to calculate for sentinel, there may be credits based on a Defender for cloud subscription etc.). Again, it’s typically a good idea for both Sentinel and LAW commitment tiers to match up unless there’s a specific use case in play. 
-
-# Confirm Sentinel Commitment Tier
-
-![](/assets/img/Optimization/Sentinel.png)
-
-![](/assets/img/Optimization/Sentinel_Settings_Blade.png)
- 
- ![](/assets/img/Optimization/Sentinel%20Tier.png)
 
 # Confirm Retention Policy 
 
@@ -105,6 +105,6 @@ The easiest ways to optimize your overall billable ingest cost are to ask yourse
 In this post, we optimized our LAW and Sentinel billable ingest volume by:
 - Determining long term ingest trend
 - Determining short term ingest trend
-- Confirming Log Analytics Workspace (LAW) commitment tier
 - Confirming Sentinel commitment tier
+- Confirming Log Analytics Workspace (LAW) commitment tier
 - Confirming Retention policy
