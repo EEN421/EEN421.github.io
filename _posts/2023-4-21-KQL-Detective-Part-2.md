@@ -66,7 +66,8 @@ This next query shows which machines are throwing EventID 4663 so we can try to 
 
 ```sql
 SecurityEvent
-| where EventID == "4663"| summarize count() by Computer
+| where EventID == "4663"
+| summarize count() by Computer
 ```
 
 ![](/assets/img/Detective2/4663_by_Computer.png)
