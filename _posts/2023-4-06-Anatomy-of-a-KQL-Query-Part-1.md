@@ -46,7 +46,7 @@ AzureDiagnostics        // <--Define the table to query
 ```
 Notes:
 
-- By changing Line 1, you can run the query against difference tables without re-writing the entire query
+- By changing Line 1, you can run the query against different tables without re-writing the entire query
 
 - Notice that compared to the previous query, the time frame isn't specified. This was done in the GUI with a custom range as follows:
 
