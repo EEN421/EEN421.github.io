@@ -12,6 +12,7 @@ So you read my [Sentinel Cost Optimization post](https://www.hanley.cloud/2023-0
 
 # 1.  What query should you run to graph the last 90 days of billable ingest volume?
 > **_Answer:_** 
+
 ```sql
 Usage       	//<--tells us which table to apply this query to. In this case it’s the Usage log table.
 
