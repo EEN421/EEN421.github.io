@@ -46,7 +46,7 @@ Usage       	//<--tells us which table to apply this query to. In this case itâ€
 > **_Answer:_**  
 ![](/assets/img/Optimization/Exercise/BadRetention.png)
 
-In the above example, data retention beyond 90 days is accountable for half of total ingest volume cost. Lets bring it back down to 90 to save the day:
+In the above example, data retention beyond 30 days is accountable for half of total ingest volume cost. Lets bring it back down to 90 to save the day:
 
 ![](/assets/img/Optimization/Exercise/LAWTier1.png)<br/>
 ![](/assets/img/Optimization/Exercise/LAWTier2.png)<br/>
