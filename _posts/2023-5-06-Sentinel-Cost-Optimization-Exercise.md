@@ -28,28 +28,28 @@ Usage       	//<--tells us which table to apply this query to. In this case itâ€
 
 # 2.	How do you find the commitment tier for Sentinel?
 > **_Answer:_** <br/>
-![](/img/Exercise/SentinelTier1.png)<br/>
-![](/img/Exercise/SentinelTier2.png)<br/>
+![](/assets/img/Optimization/Exercise/SentinelTier1.png)<br/>
+![](/assets/img/Optimization/Exercise/SentinelTier2.png)<br/>
 
 # 3.	How do you find the commitment tier for your Log Analytics Workspace? 
 > **_Answer:_** <br/>
-![](/img/Exercise/LAWTier1.png)<br/>
-![](/img/Exercise/LAWTier2.png)<br/>
+![](/assets/img/Optimization/Exercise/LAWTier1.png)<br/>
+![](/assets/img/Optimization/Exercise/LAWTier2.png)<br/>
 
 # 4.	Are you on the right commitment tier? 
 > **_Answer:_** 
-![](/img/Exercise/Right_Tier.png)
+![](/assets/img/Optimization/Exercise/Right_Tier.png)
 
 
 # 5.	Is your retention policy bleeding you dry?
 > **_Answer:_**  
-![](/img/Exercise/BadRetention.png)
+![](/assets/img/Optimization/Exercise/BadRetention.png)
 
 In the above example, data retention beyond 90 days is accountable for half of total ingest volume cost. Lets bring it back down to 90 to save the day:
 
-![](/img/Exercise/LAWTier1.png)<br/>
-![](/img/Exercise/LAWTier2.png)<br/>
-![](img/Exercise/RetentionSetting.png)<br/>
+![](/assets/img/Optimization/Exercise/LAWTier1.png)<br/>
+![](/assets/img/Optimization/Exercise/LAWTier2.png)<br/>
+![](/assets/img/Optimization/Exercise/RetentionSetting.png)<br/>
 
 
 
