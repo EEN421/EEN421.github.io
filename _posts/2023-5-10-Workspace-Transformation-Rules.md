@@ -7,7 +7,6 @@ Workspace Transformation Rules are a very effective way to fine tune your ingest
 - Determine which machines are throwing this EventID and how often
 - Build a DCR Transformation rule to filter out a verbose EventID that does not contribute any detection or investigation value.
 
-
 # Find the Most Voluminous Table:
 Lets craft a KQL query to return EventIDs from the SecurityEvent table and their respective count (number of times they’ve fired over a given period) to figure out which EventIDs are the loudest, and more importantly, how much it’s costing you. 
 ```sql
@@ -110,7 +109,8 @@ In this post, we learned how to:
 - Determine which machines are throwing this EventID and how often
 - Build a DCR Transformation rule to filter out a verbose EventID that does not contribute any detection or investigation value.
 
-
+<br/>
+<br/>
 
 # References: 
 - https://devsecopsdad.com
