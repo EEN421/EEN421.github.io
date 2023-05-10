@@ -33,7 +33,7 @@ SecurityEvent						//<-- Query the SecurityEvent table
 18GB / hour is pretty steep. From my experience, EventID 8002 offers little to no detection (ability to detect malicious activity) or investigation value (post-breach). Let’s filter 18GB of 8002 / hour from our billable ingest volume and save the day! 
 
 
-Notes:
+**Notes:**
 
 •	You can change the last line in the above query to the following if you’re a stickler for Gibibytes (GB) versus Gigabytes(GiB): 
 ```sql
