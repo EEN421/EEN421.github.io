@@ -35,8 +35,7 @@ SecurityEvent						//<-- Query the SecurityEvent table
 
 
 **Notes:**
-
-•	You can change the last line in the above query to the following if you’re a stickler for Gibibytes (GB) versus Gigabytes(GiB): 
+- You can change the last line in the above query to the following if you’re a stickler for Gibibytes (GB) versus Gigabytes(GiB): 
 ```sql
 | summarize GB=sum(_BilledSize)/1024/1024/1024	//<-- Summarize billable volume in GiB
 ```
