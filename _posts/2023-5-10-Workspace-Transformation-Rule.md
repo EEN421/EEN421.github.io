@@ -110,7 +110,7 @@ In this post, we learned how to:
 
 
 
-References: 
+# References: 
 - https://devsecopsdad.com
 - https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/  
 - https://learn.microsoft.com/en-us/azure/data-explorer/kql-quick-reference
