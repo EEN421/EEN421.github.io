@@ -17,7 +17,7 @@ SecurityEvent				//<-- Query the SecurityEvent table
 | where TimeGenerated > ago(30d)	//<-- Query the last 30 days
 | summarize count() by EventID	        //<-- Summarize EventIDs by number of times they fire
 ```
-![](/img/Picture1.png)
+![](/assets/img/Transform/Picture1.png)
 <br/>
 <br/>
 
@@ -28,11 +28,11 @@ SecurityEvent						//<-- Query the SecurityEvent table
 | where EventID == 8002					//<-- Query for EventID 8002
 | summarize GB=sum(_BilledSize)/1000/1000/1000	        //<-- Summarize billable volume in GB
 ```
- ![](/img/Picture2.png)
+![](/assets/img/Transform/Picture2.png)
 <br/>
 <br/>
 
-18GB / day is pretty steep. From my experience, EventID 8002 offers little to no detection (ability to detect malicious activity) or investigation value (post-breach). Let’s filter 18GB of 8002 / day from our billable ingest volume. 
+18GB / hour is pretty steep. From my experience, EventID 8002 offers little to no detection (ability to detect malicious activity) or investigation value (post-breach). Let’s filter 18GB of 8002 / hour from our billable ingest volume and save the day! 
 
 
 Notes:
@@ -42,7 +42,7 @@ Notes:
 | summarize GB=sum(_BilledSize)/1024/1024/1024	//<-- Summarize billable volume in GiB
 ```
 <br/>
-•	The _BilledSize table column is a standard column in Azure Monitor Logs, but not explicitly listed to the left of the query GUI for you to choose from. You can find out [more about _BilledSize and other Standard columns](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns#_billedsize)
+•	The _BilledSize table column is a standard column in Azure Monitor Logs, but not explicitly listed to the left of the query GUI for you to choose from. You can find out more about _BilledSize and other [Standard columns](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns#_billedsize).
 
 •	Before implementing a Workspace Transformation Rule, it may be worth [figuring out which devices are throwing this EventID](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql). If this is a single problem device, then it may make more sense to troubleshoot locally before tuning out this event. In this scenario however, this EventID provides no value regardless, and so can be safely dropped from this environment in this specific example. 
 
@@ -51,48 +51,48 @@ Notes:
 # Implementing a DCR Transformation Rule:
 
 1.	First, go to your Log Analytics Workspace: <br/>
- ![](/img/Picture3.png)
+![](/assets/img/Transform/Picture3.png)
  <br/>
  <br/>
 
 2.	Select the Tables blade: <br/>
- ![](/img/Picture4.png)
+![](/assets/img/Transform/Picture4.png)
  <br/>
  <br/>
 
 3.	Search for the SecurityEvent table: <br/>
-![](/img/Picture5.png)
+![](/assets/img/Transform/Picture5.png)
  <br/>
  <br/> 
 
 4.	Click on the “…” for that table and then on “Create transformation.” <br/>
- ![](/img/Picture6.png)
+![](/assets/img/Transform/Picture6.png)
  <br/>
  <br/>
 
 5.	Name the transformation rule: <br/>
-![](/img/Picture7.png)
+![](/assets/img/Transform/Picture7.png)
  <br/>
  <br/>
 
 6.	Click on “</> Transformation editor” <br/>
-![](/img/Picture8.png)
+![](/assets/img/Transform/Picture8.png)
  <br/>
  <br/>
 
 7.	Use KQL to define ‘everything except 8002’ for collection as illustrated below: <br/>
-![](/img/Picture9.png)
+![](/assets/img/Transform/Picture9.png)
  <br/>
  <br/>
 
 8.	Review and confirm: <br/>
-![](/img/Picture10.png)
+![](/assets/img/Transform/Picture10.png)
  <br/>
  <br/>
  
 9.	To test, we can query the SecurityEvent table for EventID 8002 after the workspace transformation rule was deployed (just over 5 minutes ago): <br/>
  
- ![](/img/Picture11.png)
+![](/assets/img/Transform/Picture11.png)
  
  <br/>
  <br/>
