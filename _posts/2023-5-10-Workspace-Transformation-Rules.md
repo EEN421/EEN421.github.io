@@ -50,7 +50,7 @@ SecurityEvent						//<-- Query the SecurityEvent table
 <br/>
 <br/>
 
-# Implementing a DCR Transformation Rule:
+# Implementing a Workspace Transformation Rule:
 1.	First, go to your **Log Analytics Workspace**: <br/>
 ![](/assets/img/Transform/Picture3.png)
  <br/>
