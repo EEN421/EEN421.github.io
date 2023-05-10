@@ -48,7 +48,8 @@ Notes:
 - Before implementing a Workspace Transformation Rule, it may be worth [figuring out which devices are throwing this EventID](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql). If this is a single problem device, then it may make more sense to troubleshoot locally before tuning out this event. In this scenario however, this EventID provides no value regardless, and so can be safely dropped from this environment in this specific example. 
 
 - Please confirm with your administrator or supervisor prior to implementing a Workspace Transformation Rule, as they can result in catastrophic results if implemented incorrectly. 
- 
+ <br/>
+
 # Implementing a DCR Transformation Rule:
 
 1.	First, go to your Log Analytics Workspace: <br/>
