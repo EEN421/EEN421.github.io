@@ -42,7 +42,7 @@ Notes:
 | summarize GB=sum(_BilledSize)/1024/1024/1024	//<-- Summarize billable volume in GiB
 ```
 <br/>
-•	The _BilledSize table column is a standard column in Azure Monitor Logs, but not explicitly listed to the left of the query GUI for you to choose from. You can find out more about _BilledSize and other [Standard columns](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns#_billedsize).
+•	The \_BilledSize table column is a standard column in Azure Monitor Logs, but not explicitly listed to the left of the query GUI for you to choose from. You can find out more about \_BilledSize and other [Standard columns](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns#_billedsize).
 
 •	Before implementing a Workspace Transformation Rule, it may be worth [figuring out which devices are throwing this EventID](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql). If this is a single problem device, then it may make more sense to troubleshoot locally before tuning out this event. In this scenario however, this EventID provides no value regardless, and so can be safely dropped from this environment in this specific example. 
 
