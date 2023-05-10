@@ -1,13 +1,13 @@
 # Introduction and Use Case:
 Workspace Transformation Rules are a very effective way to fine tune your ingest volume. Perhaps you need data from the SecurityEvent table but not ALL of the EventIDs that go with it? Let’s take out the trash!
-<br/>
+<br/><br/>
 
 # In this post we will:
 - Identify the most voluminous table
 - Identify the most frequently thrown EventID in that table
 - Determine which machines are throwing this EventID and how often
 - Build a DCR Transformation rule to filter out a verbose EventID that does not contribute any detection or investigation value.
-<br/>
+<br/><br/>
 
 # Find the Most Voluminous Table:
 Lets craft a KQL query to return EventIDs from the SecurityEvent table and their respective count (number of times they’ve fired over a given period) to figure out which EventIDs are the loudest, and more importantly, how much it’s costing you. 
@@ -101,7 +101,6 @@ SecurityEvent						//<-- Query the SecurityEvent table
 EventID 8002 has effectively been excluded from ingest volume, saving 18GB / hour and therefore lots of $$$ over the course of a month or quarter. Make sure you check in with accounting whenever you successfully knock one of these out and forever secure your legacy as THE KQL ninja in your network. 
 
 <br/>
-<br/>
 
 # Summary: 
 In this post, we learned how to:
@@ -111,7 +110,6 @@ In this post, we learned how to:
 - Determine which machines are throwing this EventID and how often
 - Build a DCR Transformation rule to filter out a verbose EventID that does not contribute any detection or investigation value.
 
-<br/>
 <br/>
 
 # References: 
