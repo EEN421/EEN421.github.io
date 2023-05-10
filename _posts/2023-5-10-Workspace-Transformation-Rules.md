@@ -1,5 +1,6 @@
 # Introduction and Use Case:
 Workspace Transformation Rules are a very effective way to fine tune your ingest volume. Perhaps you need data from the SecurityEvent table but not ALL of the EventIDs that go with it? Let’s take out the trash!
+<br/>
 
 # In this post we will:
 - Identify the most voluminous table
