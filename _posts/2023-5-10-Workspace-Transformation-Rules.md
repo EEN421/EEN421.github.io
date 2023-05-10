@@ -1,9 +1,7 @@
 # Introduction and Use Case:
-
 Workspace Transformation Rules are a very effective way to fine tune your ingest volume. Perhaps you need data from the SecurityEvent table but not ALL of the EventIDs that go with it? Let’s take out the trash!
 
 In this post we will:
-
 - Identify the most voluminous table
 - Identify the most frequently thrown EventID in that table
 - Determine which machines are throwing this EventID and how often
@@ -11,7 +9,6 @@ In this post we will:
  <br/><br/>
 
 # Find the Most Voluminous Table:
-
 Lets craft a KQL query to return EventIDs from the SecurityEvent table and their respective count (number of times they’ve fired over a given period) to figure out which EventIDs are the loudest, and more importantly, how much it’s costing you. 
 ```sql
 SecurityEvent				//<-- Query the SecurityEvent table
@@ -53,7 +50,6 @@ Notes:
 <br/>
 
 # Implementing a DCR Transformation Rule:
-
 1.	First, go to your Log Analytics Workspace: <br/>
 ![](/assets/img/Transform/Picture3.png)
  <br/>
