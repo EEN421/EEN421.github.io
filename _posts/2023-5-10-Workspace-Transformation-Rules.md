@@ -51,22 +51,22 @@ SecurityEvent						//<-- Query the SecurityEvent table
 <br/>
 
 # Implementing a DCR Transformation Rule:
-1.	First, go to your Log Analytics Workspace: <br/>
+1.	First, go to your **Log Analytics Workspace**: <br/>
 ![](/assets/img/Transform/Picture3.png)
  <br/>
  <br/>
 
-2.	Select the Tables blade: <br/>
+2.	Select the **Tables** blade: <br/>
 ![](/assets/img/Transform/Picture4.png)
  <br/>
  <br/>
 
-3.	Search for the SecurityEvent table: <br/>
+3.	Search for the **SecurityEvent** table: <br/>
 ![](/assets/img/Transform/Picture5.png)
  <br/>
  <br/> 
 
-4.	Click on the “…” for that table and then on “Create transformation.” <br/>
+4.	Click on the **“…”** for that table and then on **Create transformation.** <br/>
 ![](/assets/img/Transform/Picture6.png)
  <br/>
  <br/>
@@ -76,17 +76,17 @@ SecurityEvent						//<-- Query the SecurityEvent table
  <br/>
  <br/>
 
-6.	Click on “</> Transformation editor” <br/>
+6.	Click on **</> Transformation editor** <br/>
 ![](/assets/img/Transform/Picture8.png)
  <br/>
  <br/>
 
-7.	Use KQL to define ‘everything except 8002’ for collection as illustrated below: <br/>
+7.	Use KQL to define _‘everything except 8002’_ for collection as illustrated below: <br/>
 ![](/assets/img/Transform/Picture9.png)
  <br/>
  <br/>
 
-8.	Review and confirm: <br/>
+8.	Review and **confirm**: <br/>
 ![](/assets/img/Transform/Picture10.png)
  <br/>
  <br/>
