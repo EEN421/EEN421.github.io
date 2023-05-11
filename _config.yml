@@ -58,7 +58,7 @@ social-network-links:
 # facebook: deanattali
   github: EEN421
   linkedin: ianhanley
-# twitter: daattali
+  twitter: IanDHanley
 # patreon: DeanAttali
 # youtube: c/daattali
 #  medium: yourname
@@ -92,7 +92,7 @@ rss-description: This website is a virtual proof that I'm awesome
 
 # Select which social network share links to show in posts
 share-links-active:
-  twitter: false
+  twitter: true
   facebook: false
   linkedin: true
   vk: false
