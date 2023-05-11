@@ -23,6 +23,7 @@ navbar-links:
   About:
     - About Me: "aboutme"
     - LinkedIn: "https://www.linkedin.com/in/ianhanley/"
+    - Twitter:  "https://twitter.com/IanDHanley"
   Resources:
     - My KQL Query Repository: "https://github.com/EEN421/KQL-Queries"
     - Sentinel Ninja Training: "https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310"
