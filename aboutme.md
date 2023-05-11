@@ -10,7 +10,7 @@ As a demonstrated leader and Cyber Security Architect at a leading MXDR MSSP foc
 
 As a father of two daughters, I know a thing or two about risk management too.
 
-To learn more, check out my [linkedin](https://www.linkedin.com/in/ianhanley/).
+To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [twitter](https://twitter.com/IanDHanley).
 
 Cheers,<br/>
 Ian D. Hanley
