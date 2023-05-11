@@ -27,7 +27,6 @@ navbar-links:
     - Sentinel Ninja Training: "https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310"
     - Defender Ninja Training: "https://techcommunity.microsoft.com/t5/microsoft-365-defender-blog/become-a-microsoft-365-defender-ninja/ba-p/1789376"
     - Beautiful Jekyll: "https://beautifuljekyll.com"
-    - Learn markdown: "https://www.markdowntutorial.com/"
 #  Author's home: "https://deanattali.com"
 
 ################
@@ -54,7 +53,7 @@ round-avatar: true
 # Uncomment the links you want to show and add your information to each one.
 social-network-links:
 # email: "someone@example.com"
-  rss: true  # remove this line if you don't want to show an RSS link at the bottom
+# rss: true  # remove this line if you don't want to show an RSS link at the bottom
 # facebook: deanattali
   github: EEN421
   linkedin: ianhanley
@@ -122,7 +121,7 @@ edit_page_button: false
 navbar-var-length: false
 
 # The keywords to associate with your website, for SEO purposes
-#keywords: "my,list,of,keywords"
+keywords: "Microsoft,Sentinel,Defender,Azure,Cloud,Cyber,Security,DevSecOps,KQL"
 
 ######################################
 # --- Colours / background image --- #
