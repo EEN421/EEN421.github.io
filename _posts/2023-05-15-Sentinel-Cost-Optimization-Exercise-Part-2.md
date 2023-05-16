@@ -1,11 +1,7 @@
-Sentinel Cost Optimization Challenge Part 2
-
-So you read my [Dead Link - Update URL](https://www.hanley.cloud/2023-04-24-Sentinel-Cost-Optimization/), _now what?_ Let’s test those fresh new skills you just picked up! See if you can [ninja](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310) your way through the following situation.
-
+# Introduction and Use Case:
 You have recently deployed Microsoft Defender for Endpoint. Before this, your workstations were reporting directly to Sentinel. Now that your workstations have 30 days of retention in the Defender for Endpoint product, why duplicate those workstation logs into your Sentienl ingest volume and pay twice? From a Defense in Depth perspective, that's nice to have the added layer, however that's not always practical. For added complexity, your Sentinel and Log Analytics Workspace commitment tiers are different/don't match up.
 
 What should you do?
-
 
 > **_1.	Identify **deployment region** for both Sentinel and Log Analytics Workspace (LAW)_**  <br/>
 > **_2.	Identify the Sentinel and Log Analytics Workspace **Commitment Tiers**_** <br/>
@@ -44,10 +40,12 @@ Then you can go directly to the **Usage and estimated costs** blade:
 In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **100GB / day**, the **effective per GB rate is \$3.96**
 
 **Log Analytics Workspace:**<br/>
-$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB}=\$1.96 /GB $$
+<!--$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB}=\$1.96 /GB $$-->
+($196/~~day~~) % (100GB/~~day~~) = ($196 % 100GB) = **$1.96 / GB**
 
 All we have to do next is **combine** this with the **Sentinel** cost per GB for a total **Effective Per GB Price:**<br/>
-$$ Sentinel (\$2.00/GB) + LAW (\$1.96) = Effective Per GB Price (\$3.96) $$
+<!--$$ Sentinel (\$2.00/GB) + LAW (\$1.96) = Effective Per GB Price (\$3.96) $$-->
+Sentinel ($2.00/GB) + LAW ($1.96) = Effective Per GB Price (**$3.96**)
 
 
 # 4. Query for Workstations
@@ -81,3 +79,12 @@ Heartbeat
 | summarize GB=sum(_BilledSize)/1000/1000/1000
 | extend cost = GB*rate                                                         //<-- Multiply total GB by the effective per GB rate
 ``` 
+
+# Summary:
+In this exercise, we identified the **region** and **commitment tiers** for our environment in order to calculate the **effective per GB price** and plug it into a **KQL query** to see exactly how much duplicate cost these workstations logging to Defender and Sentinel were running up.
+
+# Resources:
+- [https://github.com/EEN421/KQL-Queries](https://github.com/EEN421/KQL-Queries)
+- [https://github.com/rod-trent/MustLearnKQL](https://github.com/rod-trent/MustLearnKQL)
+- [https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference](https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference)
+- [https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310)
