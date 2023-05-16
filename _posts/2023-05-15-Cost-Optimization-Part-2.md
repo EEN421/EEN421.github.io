@@ -14,9 +14,9 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 
 # Identify deployment region for both Sentinel and Log Analytics Workspace (LAW)
 
-![](img/Sentinel.png)
+![](/assets/img/Optimization2/Sentinel.png)
 <br/><br/>
-![](img/Region.png)
+![](/assets/img/Optimization2/Region.png)
 
 >***_Take note of the location, we'll need it later_***
 <br/>
@@ -24,25 +24,25 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 # Identify Sentinel and Log Analytics Workspace Commitment Tiers
 
 To determine your Sentinel commitment tier, **search "Sentinel" in the top navbar** then **select your workspace** and click on the **Settings** blade, illustrated in the following screenshots:<br/>
-![](img/Sentinel.png)<br/>
-![](img/workspace.png)<br/>
-![](img/Sentinel_Settings_Blade.png)<br/>
+![](/assets/img/Optimization2/Sentinel.png)<br/>
+![](/assets/img/Optimization2/workspace.png)<br/>
+![](/assets/img/Optimization2/Sentinel_Settings_Blade.png)<br/>
 
 > ***_Note:_*** Shortcut to LAW from Settings blade in Sentinel:
  To skip searching for LAW in the navbar and several subsequent clicks to get to the same place. While in Sentinel, you can quickly swith to LAW using this shortcut in the **Settings** blade:
 
-![](/img/LAWTierShortcut.png)
+![](/assets/img/Optimization2/LAWTierShortcut.png)
 
 Then you can go directly to the **Usage and estimated costs** blade:
 
  
-![](img/LAW%20Cost%20Blade.png)
+![](/assets/img/Optimization2/LAW%20Cost%20Blade.png)
 
 # Identify and Calculate the Sentinel and Log Analytics Workspace Effective per GB Rates
 
 In a browser, navigate to [Microsoft Sentinel Pricing | Microsoft Azure](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) and select the matching region from the dropdown: 
 
-![](/img/Region%26CurrencyDropdown.png)
+![](/assets/img/Optimization2/Region%26CurrencyDropdown.png)
 
 If both Sentinel and Log Analytics Workspace are set to the same commitment tiers (both are Pay-as-you-go or 100GB for example), then this next part is easy. If you were on Pay-as-you-go, you could determine Sentinel and Log Analytics Workspace costs separately using their respective _per GB_ rates, or you could calculate your overal ingest cost using the combined _effective rate per GB_ value for your region. 
 
@@ -59,7 +59,7 @@ To prove these rates are accurate, we can independently calculate the total _eff
 **Effective per GB rate:**<br/>
 $$ (Sentinel rate + LAW rate) = (\$1.00 + \$1.96) = \$2.96 $$
 
-![](/img/Confirmation.png)
+![](/assets/img/Optimization2/Confirmation.png)
 
 
 # What if Commitment Tiers Don't Match/My Price isn't Listed?
