@@ -104,7 +104,7 @@ EventID 8002 has effectively been excluded from ingest volume, saving 18GB / hou
 **_WARNING:_**   While transformations themselves don't incur direct costs, the following scenarios [can result in additional charges](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-transformations#cost-for-transformations):
 - If a transformation increases the size of the incoming data, such as by adding a calculated column, you'll be charged the standard ingestion rate for the extra data.
 
-- If a transformation reduces the incoming data by more than 50%, _you will be charged for the amount of filtered data above 50%._
+- If a transformation reduces the incoming data by more than 50% and Sentinel is **NOT** deployed, _you will be charged for the amount of filtered data above 50%._
 
 <br/>
 
