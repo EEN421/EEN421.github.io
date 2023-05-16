@@ -63,7 +63,7 @@ To prove these rates are accurate, we can independently calculate the total _eff
 
 **Effective per GB rate:**<br/>
 <!--$$ (Sentinel rate + LAW rate) = (\$1.00 + \$1.96) = \$2.96 $$-->
-(Sentinel rate + LAW rate) = ($1.00 + $1.96) = **$2.96**
+- (Sentinel rate + LAW rate) = ($1.00 + $1.96) = **$2.96**
 
 ![](/assets/img/Optimization2/Confirmation.png)
 <br/>
