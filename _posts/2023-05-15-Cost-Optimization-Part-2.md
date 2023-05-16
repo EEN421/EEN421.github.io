@@ -105,12 +105,12 @@ SecurityEvent		             		        //<-- Query the SecurityEvent table
 Check out [my KQL Repo](https://github.com/EEN421/KQL-Queries) for more KQL queries where you can plug in the rate to calculate cost, and more!
 
 # Summary:
-
-- Identify **deployment region** for both Sentinel and Log Analytics Workspace (LAW)
-- Identify the Sentinel and Log Analytics Workspace **Commitment Tiers**
-- Identify and Calculate the Sentinel and LAW **Effective per GB** rates
+In this post, we 
+- Identified our **deployment region** for both Sentinel and Log Analytics Workspace (LAW)
+- Identified our Sentinel and Log Analytics Workspace **Commitment Tiers**
+- Calculated the Sentinel and LAW **Effective per GB** rates
 - What if Sentinel and LAW are on **Different Commitment Tiers?** 
-- Plug Rates into **KQL Queries** to Calculate Costs
+- Plugged Rates into **KQL Queries** to Calculate Costs
 
 # Resources:
 - [https://github.com/EEN421/KQL-Queries](https://github.com/EEN421/KQL-Queries)
