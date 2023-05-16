@@ -1,9 +1,7 @@
 # Introduction and Use Case
-
 Effective Per GB Price is a crucial part of any cost optimization exercise against your environment, 
 
 # In this post we will: 
-
 - Identify **deployment region** for both Sentinel and Log Analytics Workspace (LAW)
 - Identify the Sentinel and Log Analytics Workspace **Commitment Tiers**
 - Identify and Calculate the Sentinel and LAW **Effective per GB** rates
@@ -13,7 +11,6 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 
 
 # Identify deployment region for both Sentinel and Log Analytics Workspace (LAW)
-
 ![](/assets/img/Optimization2/Sentinel.png)
 <br/><br/>
 ![](/assets/img/Optimization2/Region.png)
@@ -22,7 +19,6 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 <br/>
 
 # Identify Sentinel and Log Analytics Workspace Commitment Tiers
-
 To determine your Sentinel commitment tier, **search "Sentinel" in the top navbar** then **select your workspace** and click on the **Settings** blade, illustrated in the following screenshots:<br/>
 ![](/assets/img/Optimization2/Sentinel.png)<br/>
 ![](/assets/img/Optimization2/workspace.png)<br/>
@@ -38,8 +34,7 @@ Then you can go directly to the **Usage and estimated costs** blade:
  
 ![](/assets/img/Optimization2/LAW%20Cost%20Blade.png)
 
-# Identify and Calculate the Sentinel and Log Analytics Workspace Effective per GB Rates
-
+# Calculate the Sentinel and Log Analytics Workspace Effective per GB Rates
 In a browser, navigate to [Microsoft Sentinel Pricing](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) and select the matching region from the dropdown: 
 
 ![](/assets/img/Optimization2/Region%26CurrencyDropdown.png)
