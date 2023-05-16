@@ -8,14 +8,16 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 - What if Sentinel and LAW are on **Different Commitment Tiers?** 
 - Plug Rates into **KQL Queries** to Calculate Costs
 <br/>
-
+<br/>
 
 # Identify deployment region for both Sentinel and Log Analytics Workspace (LAW)
 ![](/assets/img/Optimization2/Sentinel.png)
-<br/><br/>
+<br/>
+<br/>
 ![](/assets/img/Optimization2/Region.png)
 
 >***Take note of the location, we'll need it later***
+<br/>
 <br/>
 
 # Identify Sentinel and Log Analytics Workspace Commitment Tiers
@@ -33,6 +35,8 @@ Then you can go directly to the **Usage and estimated costs** blade:
 
  
 ![](/assets/img/Optimization2/LAW%20Cost%20Blade.png)
+<br/>
+<br/>
 
 # Calculate the Sentinel and Log Analytics Workspace Effective per GB Rates
 In a browser, navigate to [Microsoft Sentinel Pricing](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) and select the matching region from the dropdown: 
@@ -62,7 +66,8 @@ To prove these rates are accurate, we can independently calculate the total _eff
 (Sentinel rate + LAW rate) = ($1.00 + $1.96) = **$2.96**
 
 ![](/assets/img/Optimization2/Confirmation.png)
-
+<br/>
+<br/>
 
 # What if Commitment Tiers Don't Match/My Price isn't Listed?
 
@@ -82,6 +87,8 @@ Sentinel ($2.00/GB) + LAW ($1.96) = Effective Per GB Price (**$3.96**)
 <br/>
 <br/>
 In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **100GB / day**, the **effective per GB rate is \$3.96**
+<br/>
+<br/>
 
 # Plug Rates into KQL Queries to Calculate Costs
 
@@ -106,6 +113,8 @@ In this post, we
 - Calculated the Sentinel and LAW **Effective per GB** rates
 - What if Sentinel and LAW are on **Different Commitment Tiers?** 
 - Plugged Rates into **KQL Queries** to Calculate Costs
+<br/>
+<br/>
 
 # Resources:
 - [https://github.com/EEN421/KQL-Queries](https://github.com/EEN421/KQL-Queries)
