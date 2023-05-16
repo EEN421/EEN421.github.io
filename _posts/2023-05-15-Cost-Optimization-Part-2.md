@@ -18,7 +18,7 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 <br/><br/>
 ![](/assets/img/Optimization2/Region.png)
 
->***_Take note of the location, we'll need it later_***
+>***Take note of the location, we'll need it later***
 <br/>
 
 # Identify Sentinel and Log Analytics Workspace Commitment Tiers
@@ -28,7 +28,7 @@ To determine your Sentinel commitment tier, **search "Sentinel" in the top navba
 ![](/assets/img/Optimization2/workspace.png)<br/>
 ![](/assets/img/Optimization2/Sentinel_Settings_Blade.png)<br/>
 
-> ***_Note:_*** Shortcut to LAW from Settings blade in Sentinel:
+> ***Pro Tip:*** Shortcut to LAW from Settings blade in Sentinel:
  To skip searching for LAW in the navbar and several subsequent clicks to get to the same place. While in Sentinel, you can quickly swith to LAW using this shortcut in the **Settings** blade:
 
 ![](/assets/img/Optimization2/LAWTierShortcut.png)
@@ -40,7 +40,7 @@ Then you can go directly to the **Usage and estimated costs** blade:
 
 # Identify and Calculate the Sentinel and Log Analytics Workspace Effective per GB Rates
 
-In a browser, navigate to [Microsoft Sentinel Pricing | Microsoft Azure](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) and select the matching region from the dropdown: 
+In a browser, navigate to [Microsoft Sentinel Pricing](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) and select the matching region from the dropdown: 
 
 ![](/assets/img/Optimization2/Region%26CurrencyDropdown.png)
 
@@ -78,7 +78,7 @@ In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **1
 # Plug Rates into KQL Queries to Calculate Costs
 
 You can now plug in the above rates to confidently calculate either the Sentinel or LAW cost of say, a [table](https://github.com/EEN421/KQL-Queries/blob/Main/Cost%20of%20a%20Table.kql) or an [EventID](https://github.com/EEN421/KQL-Queries/blob/Main/Cost%20of%20EventID.kql) etc. 
-Here's an example query breakdown that uses the custom rate we calculated earlier to calculate the ingest cost of the SecurityEvent table (you can swap out SecurityEvent and aplpy this to other tables to see what else you're spending your money on):
+Here's an example query breakdown that uses the custom rate we calculated earlier to calculate the ingest cost of the SecurityEvent table (you can swap out SecurityEvent and apply this to other tables to see what else you're spending your money on):
 
 ```sql
 let rate = 3.96;                            //<-- Effective Cost per GB
