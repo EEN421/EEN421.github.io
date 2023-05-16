@@ -1,5 +1,5 @@
 # Introduction and Use Case
-Effective Per GB Price is a crucial part of any cost optimization exercise against your environment, 
+Effective Per GB Price is a crucial part of any cost optimization exercise against your environment. How do you find your Effective Per GB Price and how do you use it to calculate how much stuff costs? 
 
 # In this post we will: 
 - Identify **deployment region** for both Sentinel and Log Analytics Workspace (LAW)
