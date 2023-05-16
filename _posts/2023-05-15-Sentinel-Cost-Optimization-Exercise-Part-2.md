@@ -18,27 +18,27 @@ What should you do?
 <br/><br/>
 
 # 1. Identify Deployment Region for Workspace
-![](img/Sentinel.png)
+![](/assets/img/Optimization2/Sentinel.png)
 <br/><br/>
-![](img/Region.png)
+![](/assets/img/Optimization2/Region.png)
 
 >***_Take note of the location, we'll need it later_***
 
 # 2. Identify Commitment Tiers
 To determine your Sentinel commitment tier, **search "Sentinel" in the top navbar** then **select your workspace** and click on the **Settings** blade, illustrated in the following screenshots:<br/>
-![](img/Sentinel.png)<br/>
-![](img/workspace.png)<br/>
-![](img/Sentinel_Settings_Blade.png)<br/>
+![](/assets/img/Optimization2/Sentinel.png)<br/>
+![](/assets/img/Optimization2/workspace.png)<br/>
+![](/assets/img/Optimization2/Sentinel_Settings_Blade.png)<br/>
 
 > ***_Note:_*** Shortcut to LAW from Settings blade in Sentinel:
  To skip searching for LAW in the navbar and several subsequent clicks to get to the same place. While in Sentinel, you can quickly swith to LAW using this shortcut in the **Settings** blade:
 
-![](/img/LAWTierShortcut.png)
+![](/assets/img/Optimization2/LAWTierShortcut.png)
 
 Then you can go directly to the **Usage and estimated costs** blade:
 
  
-![](img/LAW%20Cost%20Blade.png)
+![](/assets/img/Optimization2/LAW%20Cost%20Blade.png)
 
 # 3. Calculate Effective Per GB Rates
 In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **100GB / day**, the **effective per GB rate is \$3.96**
