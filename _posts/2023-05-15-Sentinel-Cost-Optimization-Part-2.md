@@ -109,7 +109,7 @@ Check out [my KQL Repo](https://github.com/EEN421/KQL-Queries) for more KQL quer
 
 # Summary:
 In this post, we 
-- Identified our **deployment region** for both Sentinel and Log Analytics Workspace (LAW)
+- Identified our **deployment region** for both Sentinel and Log Analytics Workspace
 - Identified our Sentinel and Log Analytics Workspace **Commitment Tiers**
 - Calculated the Sentinel and LAW **Effective per GB** rates
 - What if Sentinel and LAW are on **Different Commitment Tiers?** 
