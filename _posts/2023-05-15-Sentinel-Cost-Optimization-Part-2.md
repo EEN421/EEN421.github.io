@@ -77,17 +77,17 @@ This isn't typical, but it happens. Suppose your Sentinel Commitment Tier is Pay
 **Log Analytics Workspace:**<br/>
 
 <!--$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB}=\$1.96 / GB $$-->
-($196/day % 100GB/day) = ($196 % 100GB) = **$1.96 / GB**
+- ($196/day % 100GB/day) = ($196 % 100GB) = **$1.96 / GB**
 <br/>
 <br/>
 
 All we have to do next is **combine** this with the **Sentinel** cost per GB for a total **Effective Per GB Price:**<br/>
 
 <!--$$ Sentinel (\$2.00/GB) + LAW (\$1.96) = Effective Per GB Price (\$3.96) $$-->
-Sentinel ($2.00/GB) + LAW ($1.96) = Effective Per GB Price (**$3.96**)
+- Sentinel ($2.00/GB) + LAW ($1.96) = Effective Per GB Price (**$3.96**)
 <br/>
 <br/>
-In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **100GB / day**, the **effective per GB rate is \$3.96**
+In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **100GB / day**, the **effective per GB rate is $3.96**
 <br/>
 <br/>
 
