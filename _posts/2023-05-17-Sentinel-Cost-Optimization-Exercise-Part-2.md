@@ -79,6 +79,8 @@ Heartbeat
 | summarize GB=sum(_BilledSize)/1000/1000/1000
 | extend cost = GB*rate                                                         //<-- Multiply total GB by the effective per GB rate
 ``` 
+![](/assets/img/Optimization2/Workstation_Cost.png)
+
 
 # Summary:
 In this exercise, we identified the **region** and **commitment tiers** for our environment in order to calculate the **effective per GB price** and plug it into a **KQL query** to see exactly how much duplicate cost these workstations logging to Defender and Sentinel were running up.
