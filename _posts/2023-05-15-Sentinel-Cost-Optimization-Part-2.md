@@ -59,7 +59,7 @@ If both tiers are set to 100GB per Day, then divide the cost per day by the numb
 <br/>
 <br/>
 
-To prove these rates are accurate, we can independently calculate the total _effective per GB rate_ and verify it against the offical [Microsoft Sentinel Pricing | Microsoft Azure](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) page, illustrated below:
+To prove these rates are accurate, we can independently calculate the total _effective per GB rate_ and verify it against the offical [Microsoft Sentinel Pricing](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) page, illustrated below:
 
 **Effective per GB rate:**<br/>
 <!--$$ (Sentinel rate + LAW rate) = (\$1.00 + \$1.96) = \$2.96 $$-->
