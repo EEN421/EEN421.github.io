@@ -82,6 +82,7 @@ This isn't typical, but it happens. Suppose your Sentinel Commitment Tier is Pay
 <br/>
 
 All we have to do next is **combine** this with the **Sentinel** cost per GB for a total **Effective Per GB Price:**<br/>
+
 <!--$$ Sentinel (\$2.00/GB) + LAW (\$1.96) = Effective Per GB Price (\$3.96) $$-->
 Sentinel ($2.00/GB) + LAW ($1.96) = Effective Per GB Price (**$3.96**)
 <br/>
