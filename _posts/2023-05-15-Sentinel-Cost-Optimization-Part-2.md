@@ -49,7 +49,7 @@ If both tiers are set to 100GB per Day, then divide the cost per day by the numb
 <br/>
 **Sentinel:**<br/>
 <!--$$ {\$100/day \over 100GB/day} = {\$100 \over 100GB} = \$1.00 / GB $$-->
-- ($100/~~day~~) % (100GB/~~day~~} = ($100 % 100GB) = **$1.00 / GB**
+- ($100/~~day~~) % (100GB/~~day~~) = ($100 % 100GB) = **$1.00 / GB**
 <br/>
 <br/>
 
