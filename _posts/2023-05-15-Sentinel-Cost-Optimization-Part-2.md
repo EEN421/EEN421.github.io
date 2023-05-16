@@ -10,7 +10,7 @@ Effective Per GB Price is a crucial part of any cost optimization exercise again
 <br/>
 <br/>
 
-# Identify deployment region for both Sentinel and Log Analytics Workspace (LAW)
+# Identify deployment region for both Sentinel and Log Analytics Workspace
 ![](/assets/img/Optimization2/Sentinel.png)
 <br/>
 <br/>
