@@ -46,33 +46,46 @@ In a browser, navigate to [Microsoft Sentinel Pricing](https://azure.microsoft.c
 
 If both Sentinel and Log Analytics Workspace are set to the same commitment tiers (both are Pay-as-you-go or 100GB for example), then this next part is easy. If you were on Pay-as-you-go, you could determine Sentinel and Log Analytics Workspace costs separately using their respective _per GB_ rates, or you could calculate your overal ingest cost using the combined _effective rate per GB_ value for your region. 
 
-If both tiers are set to 100GB per Day, then divide the cost per day by the number of GBs for that tier. For example:
-
+If both tiers are set to 100GB per Day, then divide the cost per day by the number of GBs for that tier. For example: <br/>
+<br/>
 **Sentinel:**<br/>
-$$ {\$100/day \over 100GB/day} = {\$100 \over 100GB} = \$1.00 / GB $$
+<!--$$ {\$100/day \over 100GB/day} = {\$100 \over 100GB} = \$1.00 / GB $$-->
+- ($100/~~day~~) % (100GB/~~day~~} = ($100 % 100GB) = **$1.00 / GB**
+<br/>
+<br/>
 
 **Log Analytics Workspace:**<br/>
-$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB} = \$1.96 / GB $$
+<!--$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB} = \$1.96 / GB $$-->
+- ($196/~~day~~) % (100GB/~~day~~) = ($196 % 100GB) = **$1.96 / GB** 
+<br/>
+<br/>
 
 To prove these rates are accurate, we can independently calculate the total _effective per GB rate_ and verify it against the offical [Microsoft Sentinel Pricing | Microsoft Azure](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) page, illustrated below:
 
 **Effective per GB rate:**<br/>
-$$ (Sentinel rate + LAW rate) = (\$1.00 + \$1.96) = \$2.96 $$
+<!--$$ (Sentinel rate + LAW rate) = (\$1.00 + \$1.96) = \$2.96 $$-->
+(Sentinel rate + LAW rate) = ($1.00 + $1.96) = **$2.96**
 
 ![](/assets/img/Optimization2/Confirmation.png)
 
 
 # What if Commitment Tiers Don't Match/My Price isn't Listed?
 
-This isn't typical, but it happens. Suppose your Sentinel Commitment Tier is Pay-as-you-go and your Log Analytics Workspace is on the 100GB / day commitment tier. Obviously the Sentinel per GB cost is $2 because they're on the Pay-as-you-go plan. The Log Analytics Workspace rate is per day and needs to be converted to per GB. Just like we did in the previous example, we divide the cost per day by the number of GBs for the Log Analytics price:
+This isn't typical, but it happens. Suppose your Sentinel Commitment Tier is Pay-as-you-go and your Log Analytics Workspace is on the 100GB / day commitment tier. Obviously the **Sentinel per GB cost is $2** because they're on the Pay-as-you-go plan. The Log Analytics Workspace rate is per day and needs to be converted to per GB. Just like we did in the previous example, we divide the cost per day by the number of GBs for the Log Analytics price:<br/>
+<br/>
 
 **Log Analytics Workspace:**<br/>
-$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB}=\$1.96 /GB $$
 
+<!--$$ {\$196/day \over 100GB/day} = {\$196 \over 100GB}=\$1.96 / GB $$-->
+($196/day % 100GB/day) = ($196 % 100GB) = **$1.96 / GB**
+<br/>
+<br/>
 
 All we have to do next is **combine** this with the **Sentinel** cost per GB for a total **Effective Per GB Price:**<br/>
-$$ Sentinel (\$2.00/GB) + LAW (\$1.96) = Effective Per GB Price (\$3.96) $$
-
+<!--$$ Sentinel (\$2.00/GB) + LAW (\$1.96) = Effective Per GB Price (\$3.96) $$-->
+Sentinel ($2.00/GB) + LAW ($1.96) = Effective Per GB Price (**$3.96**)
+<br/>
+<br/>
 In this example where Sentinel is set to **Pay-as-you-go** and LAW is set to **100GB / day**, the **effective per GB rate is \$3.96**
 
 # Plug Rates into KQL Queries to Calculate Costs
