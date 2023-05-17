@@ -3,12 +3,12 @@ You have recently deployed Microsoft Defender for Endpoint. Before this, your wo
 
 _What should you do?_
 
-> **_1.	Identify **deployment region** for both Sentinel and Log Analytics Workspace (LAW)_**  <br/>
+> **_1.	Identify deployment region for both Sentinel and Log Analytics Workspace (LAW)_**  <br/>
 > **_2.	Identify the Sentinel and Log Analytics Workspace **Commitment Tiers**_** <br/>
-> **_3.	Calculate **Effective per GB** rates_** <br/>
-> **_4. Leverage **KQL** to query for workstations logging directly to Sentinel_**
+> **_3.	Calculate Effective per GB rates_** <br/>
+> **_4. Leverage KQL to query for workstations logging directly to Sentinel_**
 > **_5.	**Join** results to another query against a different table_** <br/>
-> **_5.	Plug Rates into **KQL Query** to Calculate Cost_** <br/>
+> **_5.	Plug Rates into KQL Query to Calculate Cost_** <br/>
 
  
 <br/><br/>
