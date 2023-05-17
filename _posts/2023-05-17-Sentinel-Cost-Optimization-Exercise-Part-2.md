@@ -1,7 +1,7 @@
 # Introduction and Use Case:
 You have recently deployed Microsoft Defender for Endpoint. Before this, your workstations were reporting directly to Sentinel. Now that your workstations have 30 days of retention in the Defender for Endpoint product, why duplicate those workstation logs into your Sentienl ingest volume and pay twice? From a Defense in Depth perspective, that's nice to have the added layer, however that's not always practical. For added complexity, your Sentinel and Log Analytics Workspace commitment tiers are different/don't match up.
 
-What should you do?
+_What should you do?_
 
 > **_1.	Identify **deployment region** for both Sentinel and Log Analytics Workspace (LAW)_**  <br/>
 > **_2.	Identify the Sentinel and Log Analytics Workspace **Commitment Tiers**_** <br/>
