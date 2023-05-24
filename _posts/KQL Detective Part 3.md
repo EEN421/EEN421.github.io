@@ -11,23 +11,23 @@ Usage                                                     // <--Query the Usage 
 | render columnchart                                      // <--Graph the results
 ```
 The results reveal the scene of the crime...
-![](img/crime.png)
+![](/assets/img/Detective3/crime.png)
 
 # Saboteur! 
 The crime we're investigating today, is the take down (abeit temporary) of mission critical systems. To determine 'source' of the drop off, hover the mouse over the dark blue sections of the column graph:
 
-![](/img/SecuritySolution.png)
+![](/assets/img/Detective3/SecuritySolution.png)
 
 # Identify the Suspects...
 The results of this next Query show us that the SecurityEvent table specifically is what contributed to the overall outage. We arrived at this by cycling the first line of the query through the available tables under "Microsoft Sentinel" (which is comprised mainly of log sources that make up the "Security" solution from the previous queries) until we found a match to account for the drop in ingest volume:
-![](/img/SecurityEventTable.png)
+![](/assets/img/Detective3/SecurityEventTable.png)
 ```sql
 SecurityEvent                                           // <--Define the table to query
 | where TimeGenerated > ago(90d)                        // <--Query the last 90 days into the table
 | summarize count() by bin(TimeGenerated,1d)            // <--Return count per day
 | render columnchart                                    // <--Graph a column chart
 ```
-![](/img/culprit.png)
+![](/assets/img/Detective3/culprit.png)
 
 # Innocent, Until Proven Guilty...
 This is the same query as above, but with the dates set in the GUI to when the outage occurred. There is also an extra parameter at the end of the **summarize** line to show us the count per day, but this time **by computer** as well. This will help us narrow down _which devices went offline and which ones remained online during the "outage"_:
@@ -37,7 +37,7 @@ SecurityEvent
 | render columnchart                                       // <--Graph the results 
 ```
 > **_NOTE: The only machine that remained online while everything else went offline, was TESTNODE.cyberdyne.cloud...illustrated below:_**
-![](/img/innocent.png)
+![](/assets/img/Detective3/innocent.png)
 
 # Judgement... 
 This next Query returns all computers that reported in before, during, and after the outage.  
@@ -46,7 +46,7 @@ SecurityEvent                                   // <--Define the table to query
 | where TimeGenerated > ago(90d)                // <--Query the last 90 days into the table
 | summarize count() by Computer                 // <--Summarize Count by Computer
 ```
-![](/img/Judgement.png)
+![](/assets/img/Detective3/Judgement.png)
 
 The entire network went offline, except TESTNODE.cyberdyne.cloud, for a brief period back in April.
 <br/>
