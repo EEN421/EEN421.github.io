@@ -53,5 +53,6 @@ The entire network went offline, except TESTNODE.cyberdyne.cloud, for a brief pe
 > **_Someone should get with Cyberdyne DevSecOps about this before this thing goes rogue..._**
 
 Resources:
+- [Test workspace to try out KQL (just sign in with your MS account)[https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView]
 - [Cyber Security Blog (hanley.cloud)](https://www.hanley.cloud/)
 - [EEN421/KQL-Queries: Ian Hanley's deceptively simple KQL queries (GitHub.com)](https://github.com/EEN421/KQL-Queries)
