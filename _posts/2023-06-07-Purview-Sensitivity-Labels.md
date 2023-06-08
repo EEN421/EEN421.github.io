@@ -89,7 +89,7 @@ Leave this disabled for now.
 ![](/assets/img/SensitivityLabels/Auto-Label.png)
 
 # Define Protection Settings for Groups and Sites:
-We didn’t configure anything for Groups and Sites, this is a newer feature that does not impact this use-case. These can be left unchecked. Select NEXT
+We didn’t configure anything for Groups and Sites, this is a newer feature that does not impact this use-case. These can be left unchecked. Select **Next**
 
 ![](/assets/img/SensitivityLabels/Groups&Sites.png)
 
