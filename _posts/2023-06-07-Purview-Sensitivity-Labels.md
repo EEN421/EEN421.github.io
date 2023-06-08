@@ -1,5 +1,5 @@
 # Introduction and Use Case: 
-Contoso Co. is kicking off a new top-secret project loaded with IP that’s going to give them an edge if they can get to market before the competitors figure out what they’ve got. They’ve code-named this Project AWESOME and need to protect any/all data and communications related to this project inside, and outside the network. Let’s leverage the tools at our disposal included with Microsoft Purview to extract a favourable security outcome.
+Contoso Co. is kicking off a new top-secret project loaded with IP that’s going to give them an edge if they can get to market before the competitors figure out what they’ve got. They’ve code-named this **_Project AWESOME_** and need to protect any/all data and communications related to this project inside, and outside the network. Let’s leverage the tools at our disposal included with Microsoft Purview to extract a favourable security outcome.
 
 # Pre-Requisites:
 Who’s working on this project? Who do we need to restrict the flow of information to? The best way to facilitate this is to create a Microsoft 365 Group and add employees who will be assigned to Project AWESOME as members. A group **Owner** will need to be assigned. The owner can add/remove members. 
