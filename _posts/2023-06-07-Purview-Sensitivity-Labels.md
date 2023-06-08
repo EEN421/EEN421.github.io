@@ -118,10 +118,10 @@ In this post, we leveraged **Microsoft Purview** to create a **Sensitivity Label
 # Resources and Official Portal URLs:
 
 - [More Microsoft Sentinel Use-Cases and KQL Exercises](https://hanley.cloud)
-- [My KQL Repository on GitHub](https://github.com/EEN421/KQL-Queries)
 - [Hanley.cloud/DevSecOpsDad on Twitter](https://twitter.com/IanDHanley)
+- [My KQL Repository on GitHub](https://github.com/EEN421/KQL-Queries)
+- [Purview Portal](https://compliance.microsoft.com)
 - [https://learn.microsoft.com/en-us/purview/purview](https://learn.microsoft.com/en-us/purview/purview)
-- [https://compliance.microsoft.com](https://compliance.microsoft.com)
 - [https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide](https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide)
 
 
