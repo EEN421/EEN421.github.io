@@ -35,7 +35,7 @@ This is where you control who can access data with the Project AWESOME label app
 # Assign Permissions Now or Let Users Decide?
 Let’s reduce the exposed surface area for user error by taking the user out of the picture. I like to define permissions rather than let a user do so when they manually apply the label, for example. I don't trust users and I like to maintain control. 
 
-![](/assets/img/SensitivityLabels/encryption1.png)
+![](/assets/img/SensitivityLabels/Encryption1.png)
 
 # Content Expiry? 
 We all remember the trope from the Mission Impossible franchise’s classic _"...This message will self destruct...”_ and this is exactly the same premise, just without the _“destruct”_ part. User access is simply cut off after the expiration until another invitation is issued by the owner of the data being shared. In this example, we will allow access for up to 2 weeks before collaborators will need to re-apply for permissions. 
@@ -73,10 +73,8 @@ This is where you can granularly determine exactly what members of Project AWESO
 Illustrated below are some examples of pre-configured permissions sets. You can always create a custom set of your own to meet your specific needs. 
 
 ![](/assets/img/SensitivityLabels/Permissions1.png)
-
-![](/assets/img/SensitivityLabels/permissions2.png)
-
-![](/assets/img/SensitivityLabels/permissions3.png)
+![](/assets/img/SensitivityLabels/Permissions2.png)
+![](/assets/img/SensitivityLabels/Permissions3.png)
 
 # Content Marking: 
 To add custom headers, footers, and/or watermarks to content that has this label applied, check all the boxes in the next prompt (illustrated below):
