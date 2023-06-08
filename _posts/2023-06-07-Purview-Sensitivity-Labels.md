@@ -2,7 +2,7 @@
 Contoso Co. is kicking off a new top-secret project loaded with IP that’s going to give them an edge if they can get to market before the competitors figure out what they’ve got. They’ve code-named this Project AWESOME and need to protect any/all data and communications related to this project inside, and outside the network. Let’s leverage the tools at our disposal included with Microsoft Purview to extract a favourable security outcome.
 
 # Pre-Requisites:
-Who’s working on this project? Who do we need to restrict the flow of information to? The best way to facilitate this is to create a Microsoft 365 Group and add employees who will be assigned to Project AWESOME as members. A group OWNER will need to be assigned. The owner can add/remove members. 
+Who’s working on this project? Who do we need to restrict the flow of information to? The best way to facilitate this is to create a Microsoft 365 Group and add employees who will be assigned to Project AWESOME as members. A group **Owner** will need to be assigned. The owner can add/remove members. 
 
 ![](/assets/img/SensitivityLabels/GroupCreate.png)
 
@@ -10,12 +10,12 @@ Who’s working on this project? Who do we need to restrict the flow of informat
 ![](/assets/img/SensitivityLabels/Dynamic.png)_** 
 
 # Sensitivity Labels:
-Navigate to https://compliance.microsoft.com/ and expand the INFORMATION PROTECTION blade, then select LABELS
+Navigate to [](https://compliance.microsoft.com) and expand the **Information protection** blade, then select **Labels**
 
 ![](/assets/img/SensitivityLabels/Labels.png)
 
 # Create a New Label:
-Click on + CREATE LABEL
+Click on **+ CREATE LABEL**
 
 ![](/assets/img/SensitivityLabels/CreateLabel.png)
 
@@ -30,20 +30,20 @@ I love these, let’s check both boxes. Any documents that this label is applied
 ![](/assets/img/SensitivityLabels/Encryption&Marking.png)
 
 # Encryption:
-This is where you control who can access data with the Project AWESOME label applied, and for how long, whether it’s available for download offline, etc. For this use-case, we’re opting for the following parameters for the following Zero-Trust principles:
+This is where you control who can access data with the Project AWESOME label applied, and for how long, whether it’s available for download offline, etc. For this use-case, we’re opting for the following parameters for the following **Zero-Trust** principles:
 
 # Assign Permissions Now or Let Users Decide?
-Let’s reduce the exposed surface area for user error by taking the user out of the picture. I like to define permissions rather than let a user do so when they manually apply the label, for example. I like to maintain control. 
+Let’s reduce the exposed surface area for user error by taking the user out of the picture. I like to define permissions rather than let a user do so when they manually apply the label, for example. I don't trust users and I like to maintain control. 
 
 ![](/assets/img/SensitivityLabels/encryption1.png)
 
 # Content Expiry? 
-We all remember the trope from the Mission Impossible franchise’s classic “…This message will self destruct...” and this is exactly the same premise, just without the “destruct” part. User access is simply cut off until another invitation is issued by the owner of the data being shared. In this example, we will allow access for up to 2 weeks before collaborators will need to re-apply for permissions. 
+We all remember the trope from the Mission Impossible franchise’s classic _"...This message will self destruct...”_ and this is exactly the same premise, just without the _“destruct”_ part. User access is simply cut off after the expiration until another invitation is issued by the owner of the data being shared. In this example, we will allow access for up to 2 weeks before collaborators will need to re-apply for permissions. 
 
 ![](/assets/img/SensitivityLabels/Encryption2.png)
 
 # Allow Offline Access?
-Never. 
+Never. Following the **Principle of Least Privilege,** they _don't need_ to download the data to work with it.
 
 ![](/assets/img/SensitivityLabels/Encryption3.png)
 
@@ -51,7 +51,7 @@ Never.
 ![](/assets/img/SensitivityLabels/Encryption)_**
 
 # Assign Permissions:
-Only the users or groups you choose will be assigned permissions to use the content that has this label applied. You can choose from existing permissions (such as Co-Owner, Co-Author, and Reviewer) or customize them to meet your needs. Select ASSIGN PERMISSIONS, then + ADD USERS OR GROUPS
+Only the users or groups you choose will be assigned permissions to use the content that has this label applied. You can choose from existing permissions (such as Co-Owner, Co-Author, and Reviewer) or customize them to meet your needs. Select **Assign permissions,** then **+ Add users or groups**
 
 ![](/assets/img/SensitivityLabels/AssignPermissions.png)
 
@@ -106,12 +106,12 @@ Review and select “Save Label” when ready.
 ![](/assets/img/SensitivityLabels/Review.png)
 
 # Publishing the Label for Use:
-This is super important. Once published, members of the Project AWESOME group will start seeing the CONFIDENTIAL | Project AWESOME sensitivity label available for them to apply to documents in Microsoft Word, Excel, Outlook, etc. It’s imperative that this label is ONLY published the team members intended to know about Project AWESOME. If the Project AWESOME sensitivity label gets published for everybody, then users that are not a part of Project AWESOME will see the label available to them for use and the cat’s out of the bag. Plan accordingly.  
+This is _super important._ Once published, members of the Project AWESOME group will start seeing the **CONFIDENTIAL | Project AWESOME** sensitivity label available for them to apply to documents in Microsoft Word, Excel, Outlook, etc. It’s imperative that this label is ONLY published the team members intended to know about Project AWESOME. If the Project AWESOME sensitivity label gets published for everybody, then users that are not a part of Project AWESOME will see the label available to them for use and the cat’s out of the bag. You have been warned, plan accordingly.  
 
 ![](/assets/img/SensitivityLabels/LabelCreated.png)
 
 # Confirmation
-Navigate to the INFORMATION PROTECTION blade, then select LABELS to confirm your new sensitivity label.
+Navigate to the **Information protection** blade, then select **Labels** to confirm your new sensitivity label.
 ![](/assets/img/SensitivityLabels/Confirm.png)
 
 
