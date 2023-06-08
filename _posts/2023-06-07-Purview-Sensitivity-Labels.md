@@ -27,7 +27,7 @@ This is where you define what the label can apply to. In this use-case, we’re 
 # Choose Protection Settings:
 I love these, let’s check both boxes. Any documents that this label is applied to will be automatically encrypted, and also have a custom watermark, header, and/or footer applied. You can get as creative as you like with the header and footer, and even upload an image (think company logo etc. or project insignia, depending on your company’s level of incorporation) for a custom watermark. 
 
-![](/assets/img/SensitivityLabels/Encryption&Marking.png)
+![](/assets/img/SensitivityLabels/Encryption%26Marking.png)
 
 # Encryption:
 This is where you control who can access data with the Project AWESOME label applied, and for how long, whether it’s available for download offline, etc. For this use-case, we’re opting for the following parameters for the following **Zero-Trust** principles:
@@ -72,7 +72,7 @@ This is where you can granularly determine exactly what members of Project AWESO
 
 Illustrated below are some examples of pre-configured permissions sets. You can always create a custom set of your own to meet your specific needs. 
 
-![](/assets/img/SensitivityLabels/permissions1.png)
+![](/assets/img/SensitivityLabels/Permissions1.png)
 
 ![](/assets/img/SensitivityLabels/permissions2.png)
 
