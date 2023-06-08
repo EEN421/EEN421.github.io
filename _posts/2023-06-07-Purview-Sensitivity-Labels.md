@@ -116,14 +116,13 @@ Navigate to the **Information protection** blade, then select **Labels** to conf
 In this post, we leveraged **Microsoft Purview** to create a **Sensitivity Label,** keeping the **Principle of Least Privilege** and **Zero Trust** mode of thought to improve our security posture and protect against sensitive data leaks, both internal and external. Follow me on Twitter [@IanDHanley](https://twitter.com/IanDHanley) for more insights into leveraging the Microsoft Security fabric to achieve favourable information security outcomes. 
 
 # Resources and Official Portal URLs:
-- [https://learn.microsoft.com/en-us/purview/purview](https://learn.microsoft.com/en-us/purview/purview)
-- [https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide](https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide)
-- [https://compliance.microsoft.com](https://compliance.microsoft.com)
+
 - [More Microsoft Sentinel Use-Cases and KQL Exercises](https://hanley.cloud)
 - [My KQL Repository on GitHub](https://github.com/EEN421/KQL-Queries)
 - [Hanley.cloud/DevSecOpsDad on Twitter](https://twitter.com/IanDHanley)
-
-
+- [https://learn.microsoft.com/en-us/purview/purview](https://learn.microsoft.com/en-us/purview/purview)
+- [https://compliance.microsoft.com](https://compliance.microsoft.com)
+- [https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide](https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide)
 
 
 
