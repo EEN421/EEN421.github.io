@@ -108,9 +108,18 @@ This is _super important._ Once published, members of the Project AWESOME group 
 
 ![](/assets/img/SensitivityLabels/LabelCreated.png)
 
-# Confirmation
+# Confirmation:
 Navigate to the **Information protection** blade, then select **Labels** to confirm your new sensitivity label.
 ![](/assets/img/SensitivityLabels/Confirm.png)
+
+# Summary:
+In this post, we leveraged **Microsoft Purview** to create a **Sensitivity Label,** keeping the **Principle of Least Privilege** and **Zero Trust** mode of thought to improve our security posture and protect against sensitive data leaks, both internal and external. Follow me on Twitter [@IanDHanley](https://twitter.com/IanDHanley) for more insights into leveraging the Microsoft Security fabric to achieve favourable information security outcomes. 
+
+# Resources and Official Portal URLs:
+- [](https://learn.microsoft.com/en-us/purview/purview)
+- [](https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide)
+- [](https://compliance.microsoft.com)
+
 
 
 
