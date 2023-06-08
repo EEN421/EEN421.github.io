@@ -6,8 +6,8 @@ Who’s working on this project? Who do we need to restrict the flow of informat
 
 ![](/assets/img/SensitivityLabels/GroupCreate.png)
 
-> **_Pro-Tip: Use Dynamic group types to auto-assign users to groups based on their user or device profile.
-![](/assets/img/SensitivityLabels/Dynamic.png)_** 
+[Redacted]:<>(>> **_Pro-Tip: Use Dynamic group types to auto-assign users to groups based on their user or device profile.
+![](/assets/img/SensitivityLabels/Dynamic.png)_**)
 
 # Sensitivity Labels:
 Navigate to [](https://compliance.microsoft.com) and expand the **Information protection** blade, then select **Labels**
