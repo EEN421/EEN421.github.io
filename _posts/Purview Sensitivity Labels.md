@@ -4,30 +4,30 @@ Contoso Co. is kicking off a new top-secret project loaded with IP that’s goin
 # Pre-Requisites:
 Who’s working on this project? Who do we need to restrict the flow of information to? The best way to facilitate this is to create a Microsoft 365 Group and add employees who will be assigned to Project AWESOME as members. A group OWNER will need to be assigned. The owner can add/remove members. 
 
-![](/img/GroupCreate.png)
+![](/assets/img/SensitivityLabels/GroupCreate.png)
 
 > **_Pro-Tip: Use Dynamic group types to auto-assign users to groups based on their user or device profile.
-![](/img/Dynamic.png)_** 
+![](/assets/img/SensitivityLabels/Dynamic.png)_** 
 
 # Sensitivity Labels:
 Navigate to https://compliance.microsoft.com/ and expand the INFORMATION PROTECTION blade, then select LABELS
 
-![](/img/Labels.png)
+![](/assets/img/SensitivityLabels/Labels.png)
 
 # Create a New Label:
 Click on + CREATE LABEL
 
-![](/img/CreateLabel.png)
+![](/assets/img/SensitivityLabels/CreateLabel.png)
 
 # Define Scope:
 This is where you define what the label can apply to. In this use-case, we’re going to check all the boxes for maximum coverage. 
 
-![](/img/DefineScope.png)
+![](/assets/img/SensitivityLabels/DefineScope.png)
 
 # Choose Protection Settings:
 I love these, let’s check both boxes. Any documents that this label is applied to will be automatically encrypted, and also have a custom watermark, header, and/or footer applied. You can get as creative as you like with the header and footer, and even upload an image (think company logo etc. or project insignia, depending on your company’s level of incorporation) for a custom watermark. 
 
-![](/img/Encryption&Marking.png)
+![](/assets/img/SensitivityLabels/Encryption&Marking.png)
 
 # Encryption:
 This is where you control who can access data with the Project AWESOME label applied, and for how long, whether it’s available for download offline, etc. For this use-case, we’re opting for the following parameters for the following Zero-Trust principles:
@@ -35,35 +35,35 @@ This is where you control who can access data with the Project AWESOME label app
 # Assign Permissions Now or Let Users Decide?
 Let’s reduce the exposed surface area for user error by taking the user out of the picture. I like to define permissions rather than let a user do so when they manually apply the label, for example. I like to maintain control. 
 
-![](/img/encryption1.png)
+![](/assets/img/SensitivityLabels/encryption1.png)
 
 # Content Expiry? 
 We all remember the trope from the Mission Impossible franchise’s classic “…This message will self destruct...” and this is exactly the same premise, just without the “destruct” part. User access is simply cut off until another invitation is issued by the owner of the data being shared. In this example, we will allow access for up to 2 weeks before collaborators will need to re-apply for permissions. 
 
-![](/img/Encryption2.png)
+![](/assets/img/SensitivityLabels/Encryption2.png)
 
 # Allow Offline Access?
 Never. 
 
-![](/img/Encryption3.png)
+![](/assets/img/SensitivityLabels/Encryption3.png)
 
 > **_Pro-Tip: Following the principle of least privilege, my users are E5 licensed so we can take full advantage of the Microsoft security fabric and guarantee more predictable and thus favourable security outcomes. Consistency is key in this domain. 
-![](/img/Encryption)_**
+![](/assets/img/SensitivityLabels/Encryption)_**
 
 # Assign Permissions:
 Only the users or groups you choose will be assigned permissions to use the content that has this label applied. You can choose from existing permissions (such as Co-Owner, Co-Author, and Reviewer) or customize them to meet your needs. Select ASSIGN PERMISSIONS, then + ADD USERS OR GROUPS
 
-![](/img/AssignPermissions.png)
+![](/assets/img/SensitivityLabels/AssignPermissions.png)
 
-![](/img/GroupAssign.png)
+![](/assets/img/SensitivityLabels/GroupAssign.png)
 
 Select the Project AWESOME Microsoft365 group, then SAVE, and NEXT
 
-![](/img/GroupAssign2.png)
+![](/assets/img/SensitivityLabels/GroupAssign2.png)
 
-![](/img/Save.png)
+![](/assets/img/SensitivityLabels/Save.png)
 
-![](/img/Next.png)
+![](/assets/img/SensitivityLabels/Next.png)
 
 # Choose Permissions:
 This is where you can granularly determine exactly what members of Project AWESOME can do with project data that has the Project AWESOME label assigned. 
@@ -72,47 +72,47 @@ This is where you can granularly determine exactly what members of Project AWESO
 
 Illustrated below are some examples of pre-configured permissions sets. You can always create a custom set of your own to meet your specific needs. 
 
-![](/img/permissions1.png)
+![](/assets/img/SensitivityLabels/permissions1.png)
 
-![](/img/permissions2.png)
+![](/assets/img/SensitivityLabels/permissions2.png)
 
-![](/img/permissions3.png)
+![](/assets/img/SensitivityLabels/permissions3.png)
 
 # Content Marking: 
 To add custom headers, footers, and/or watermarks to content that has this label applied, check all the boxes in the next prompt (illustrated below):
 
-![](/img/Marking.png)
+![](/assets/img/SensitivityLabels/Marking.png)
 
-![](/img/MarkingWatermark.png)
+![](/assets/img/SensitivityLabels/MarkingWatermark.png)
 
 # Auto-Labeling for Files and eMails:
 Leave this disabled for now. 
 
-![](/img/Auto-Label.png)
+![](/assets/img/SensitivityLabels/Auto-Label.png)
 
 # Define Protection Settings for Groups and Sites:
 We didn’t configure anything for Groups and Sites, this is a newer feature that does not impact this use-case. These can be left unchecked. Select NEXT
 
-![](/img/Groups&Sites.png)
+![](/assets/img/SensitivityLabels/Groups&Sites.png)
 
 # Auto-Labeling for Schematized Data Assets (Preview):
 This is still in preview, don’t leverage it in production. Use at your own risk. 
 
-![](/img/SchematizedDataAssets.png)
+![](/assets/img/SensitivityLabels/SchematizedDataAssets.png)
 
 # Review & Finish:
 Review and select “Save Label” when ready. 
 
-![](/img/Review.png)
+![](/assets/img/SensitivityLabels/Review.png)
 
 # Publishing the Label for Use:
 This is super important. Once published, members of the Project AWESOME group will start seeing the CONFIDENTIAL | Project AWESOME sensitivity label available for them to apply to documents in Microsoft Word, Excel, Outlook, etc. It’s imperative that this label is ONLY published the team members intended to know about Project AWESOME. If the Project AWESOME sensitivity label gets published for everybody, then users that are not a part of Project AWESOME will see the label available to them for use and the cat’s out of the bag. Plan accordingly.  
 
-![](/img/LabelCreated.png)
+![](/assets/img/SensitivityLabels/LabelCreated.png)
 
 # Confirmation
 Navigate to the INFORMATION PROTECTION blade, then select LABELS to confirm your new sensitivity label.
-![](/img/Confirm.png)
+![](/assets/img/SensitivityLabels/Confirm.png)
 
 
 
