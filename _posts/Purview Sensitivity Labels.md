@@ -1,0 +1,125 @@
+# Introduction and Use Case: 
+Contoso Co. is kicking off a new top-secret project loaded with IP that’s going to give them an edge if they can get to market before the competitors figure out what they’ve got. They’ve code-named this Project AWESOME and need to protect any/all data and communications related to this project inside, and outside the network. Let’s leverage the tools at our disposal included with Microsoft Purview to extract a favourable security outcome.
+
+# Pre-Requisites:
+Who’s working on this project? Who do we need to restrict the flow of information to? The best way to facilitate this is to create a Microsoft 365 Group and add employees who will be assigned to Project AWESOME as members. A group OWNER will need to be assigned. The owner can add/remove members. 
+
+![](/img/GroupCreate.png)
+
+> **_Pro-Tip: Use Dynamic group types to auto-assign users to groups based on their user or device profile.
+![](/img/Dynamic.png)_** 
+
+# Sensitivity Labels:
+Navigate to https://compliance.microsoft.com/ and expand the INFORMATION PROTECTION blade, then select LABELS
+
+![](/img/Labels.png)
+
+# Create a New Label:
+Click on + CREATE LABEL
+
+![](/img/CreateLabel.png)
+
+# Define Scope:
+This is where you define what the label can apply to. In this use-case, we’re going to check all the boxes for maximum coverage. 
+
+![](/img/DefineScope.png)
+
+# Choose Protection Settings:
+I love these, let’s check both boxes. Any documents that this label is applied to will be automatically encrypted, and also have a custom watermark, header, and/or footer applied. You can get as creative as you like with the header and footer, and even upload an image (think company logo etc. or project insignia, depending on your company’s level of incorporation) for a custom watermark. 
+
+![](/img/Encryption&Marking.png)
+
+# Encryption:
+This is where you control who can access data with the Project AWESOME label applied, and for how long, whether it’s available for download offline, etc. For this use-case, we’re opting for the following parameters for the following Zero-Trust principles:
+
+# Assign Permissions Now or Let Users Decide?
+Let’s reduce the exposed surface area for user error by taking the user out of the picture. I like to define permissions rather than let a user do so when they manually apply the label, for example. I like to maintain control. 
+
+![](/img/encryption1.png)
+
+# Content Expiry? 
+We all remember the trope from the Mission Impossible franchise’s classic “…This message will self destruct...” and this is exactly the same premise, just without the “destruct” part. User access is simply cut off until another invitation is issued by the owner of the data being shared. In this example, we will allow access for up to 2 weeks before collaborators will need to re-apply for permissions. 
+
+![](/img/Encryption2.png)
+
+# Allow Offline Access?
+Never. 
+
+![](/img/Encryption3.png)
+
+> **_Pro-Tip: Following the principle of least privilege, my users are E5 licensed so we can take full advantage of the Microsoft security fabric and guarantee more predictable and thus favourable security outcomes. Consistency is key in this domain. 
+![](/img/Encryption)_**
+
+# Assign Permissions:
+Only the users or groups you choose will be assigned permissions to use the content that has this label applied. You can choose from existing permissions (such as Co-Owner, Co-Author, and Reviewer) or customize them to meet your needs. Select ASSIGN PERMISSIONS, then + ADD USERS OR GROUPS
+
+![](/img/AssignPermissions.png)
+
+![](/img/GroupAssign.png)
+
+Select the Project AWESOME Microsoft365 group, then SAVE, and NEXT
+
+![](/img/GroupAssign2.png)
+
+![](/img/Save.png)
+
+![](/img/Next.png)
+
+# Choose Permissions:
+This is where you can granularly determine exactly what members of Project AWESOME can do with project data that has the Project AWESOME label assigned. 
+
+> **_Pro-Tip: This can get as deep into the weeds as you want to go. Consider separate labels for tier one operators versus admins or higher tiered resources that may need additional permissions while maintaining the status quo via the “self destruct” and “available offline” parameters for example. The possibilities are endless!_**
+
+Illustrated below are some examples of pre-configured permissions sets. You can always create a custom set of your own to meet your specific needs. 
+
+![](/img/permissions1.png)
+
+![](/img/permissions2.png)
+
+![](/img/permissions3.png)
+
+# Content Marking: 
+To add custom headers, footers, and/or watermarks to content that has this label applied, check all the boxes in the next prompt (illustrated below):
+
+![](/img/Marking.png)
+
+![](/img/MarkingWatermark.png)
+
+# Auto-Labeling for Files and eMails:
+Leave this disabled for now. 
+
+![](/img/Auto-Label.png)
+
+# Define Protection Settings for Groups and Sites:
+We didn’t configure anything for Groups and Sites, this is a newer feature that does not impact this use-case. These can be left unchecked. Select NEXT
+
+![](/img/Groups&Sites.png)
+
+# Auto-Labeling for Schematized Data Assets (Preview):
+This is still in preview, don’t leverage it in production. Use at your own risk. 
+
+![](/img/SchematizedDataAssets.png)
+
+# Review & Finish:
+Review and select “Save Label” when ready. 
+
+![](/img/Review.png)
+
+# Publishing the Label for Use:
+This is super important. Once published, members of the Project AWESOME group will start seeing the CONFIDENTIAL | Project AWESOME sensitivity label available for them to apply to documents in Microsoft Word, Excel, Outlook, etc. It’s imperative that this label is ONLY published the team members intended to know about Project AWESOME. If the Project AWESOME sensitivity label gets published for everybody, then users that are not a part of Project AWESOME will see the label available to them for use and the cat’s out of the bag. Plan accordingly.  
+
+![](/img/LabelCreated.png)
+
+# Confirmation
+Navigate to the INFORMATION PROTECTION blade, then select LABELS to confirm your new sensitivity label.
+![](/img/Confirm.png)
+
+
+
+
+
+
+
+
+
+
