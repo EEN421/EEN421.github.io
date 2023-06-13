@@ -112,12 +112,12 @@ The syslog table (syslog_cl) is populating too:
 
 
 # In this, post we: 
-- &#10003; Called out and solved for use-case pre-requisites
-- &#10003; Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
-- &#10003; Create a Log Analytics Workspace
-- &#10003; Retrieve WorkspaceID and Primary Key
-- &#10003; Program the config file for log aggregation (FluentD)
-- &#10003; Log auth and syslog tables to a Log Analytics Workspace
+&#10003; Called out and solved for use-case pre-requisites
+&#10003; Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
+&#10003; Create a Log Analytics Workspace
+&#10003; Retrieve WorkspaceID and Primary Key
+&#10003; Program the config file for log aggregation (FluentD)
+&#10003; Log auth and syslog tables to a Log Analytics Workspace
 
 <br/><br/>
 
