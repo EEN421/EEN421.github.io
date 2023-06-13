@@ -61,7 +61,7 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 <br/><br/>
 
-- Select ** +Create **  <br/>
+- Select **+Create**  <br/>
 ![](/assets/img/iot/LAW2.png)
 
 <br/><br/>
