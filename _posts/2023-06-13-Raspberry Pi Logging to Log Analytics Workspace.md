@@ -9,12 +9,12 @@ You're a industrial manufacturing plant manager, you need to _prototype, deploy,
 <br/>
 
 # In this post we will: 
-- [ ] Call out and solve for use-case pre-requisites
-- [ ] Configure our 'unsupported' equipment accordingly (Ruby & FluentD Plugin for Log Analytics)
-- [ ] Create a Log Analytics Workspace
-- [ ] Retrieve WorkspaceID and Primary Key
-- [ ] Program the config file for log aggregation (FluentD)
-- [ ] Log auth and syslog tables to a Log Analytics Workspace
+-[ ] Call out and solve for use-case pre-requisites
+-[ ] Configure our 'unsupported' equipment accordingly (Ruby & FluentD Plugin for Log Analytics)
+-[ ] Create a Log Analytics Workspace
+-[ ] Retrieve WorkspaceID and Primary Key
+-[ ] Program the config file for log aggregation (FluentD)
+-[ ] Log auth and syslog tables to a Log Analytics Workspace
 
 
 <br/>
@@ -110,18 +110,14 @@ The syslog table (syslog_cl) is populating too:
 
 <br/><br/>
 
-# Explore Custom Use-Case Applications (Industrial Moisture and Temperature Sensors)
-- TBD
-
-<br/><br/>
 
 # In this, post we: 
-- [x] Called out and solved for use-case pre-requisites
-- [x] Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
-- [x] Create a Log Analytics Workspace
-- [x] Retrieve WorkspaceID and Primary Key
-- [x] Program the config file for log aggregation (FluentD)
-- [x] Log auth and syslog tables to a Log Analytics Workspace
+-[x] Called out and solved for use-case pre-requisites
+-[x] Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
+-[x] Create a Log Analytics Workspace
+-[x] Retrieve WorkspaceID and Primary Key
+-[x] Program the config file for log aggregation (FluentD)
+-[x] Log auth and syslog tables to a Log Analytics Workspace
 
 <br/><br/>
 
