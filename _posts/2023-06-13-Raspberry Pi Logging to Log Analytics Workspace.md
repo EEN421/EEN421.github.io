@@ -92,8 +92,26 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 
 <br/><br/>
 
-# Program the Configuration File for Log Aggregation (FluentD)
-Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iot/fluent.conf) file with the values we acquired in the previous step. 
+# Built a Configuration File for Log Aggregation (FluentD)
+1. Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iot/fluent.conf) file with the values we acquired in the previous step.
+
+2. Run the following command to start logging to your Log Analytics Workspace:
+
+```python
+sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log
+```
+
+<br/>
+
+Lets break down the above command, there's a lot going on here:
+
+```python
+sudo fluentd #<-- starts fluentd with super user privileges
+
+-c /etc/fluent.conf #<-- the '-c' switch tells us where to look for the config file (I keep mine in /etc/)
+
+--log /var/log/td-agent/fluent.log #<-- the '--log' switch enables verbose logging and specifies where to drop the resulting log output
+```
 
 <br/><br/>
 
