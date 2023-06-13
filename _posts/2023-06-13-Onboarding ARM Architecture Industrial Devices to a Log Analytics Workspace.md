@@ -1,10 +1,12 @@
 # Introduction and Use Case:
-You're a industrial manufacturing plant manager, you need to prototype, deploy, secure, and remotely manage connected electronic devices at scale. You need to be practical and most importantly, cost-effective. Thankfully, you've made good decisions up to this point and have invested in a SIEM such as Azure Sentinel. Most of your sensor and PLC equipment connects through an API or is compatible with the Azure Monitoring Agent. What do you do for your unsupported but critical IoT architecture (your Raspberry Pi based microcontrollers that help automate the line for example)?
+You're a industrial manufacturing plant manager, you need to prototype, deploy, secure, and remotely manage connected electronic devices at scale. You need to be practical and most importantly, cost-effective. Thankfully, you've made good decisions up to this point and have invested in a SIEM such as Azure Sentinel (good job!).
+
+Most of your sensor and PLC equipment connects through an API or is compatible with the Azure Monitoring Agent. What do you do for your **unsupported** but **critical IoT architecture** (in my experience, typically some custom hardware running some flavour of Linux under the hood, think Raspberry Pi based microcontrollers that help automate the line for example)?
 
 <br/>
 
 # In this post we will: 
-- Call out and solve for pre-requisites
+- Call out and solve for use-case pre-requisites
 - Configure our 'unsupported' equipment accordingly (Ruby & FluentD Plugin for Log Analytics)
 - Create a Log Analytics Workspace
 - Retrieve WorkspaceID and Primary Key
@@ -87,20 +89,37 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 <br/><br/>
 
 # Program the Configuration File for Log Aggregation (FluentD)
-Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
-
-Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf) file with the values we acquired in the previous step. 
+Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iot/fluent.conf) file with the values we acquired in the previous step. 
 
 <br/><br/>
 
-# Log Auth and Syslog Tables to a Log Analytics Workspace
-Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
+# Query Auth and Syslog Tables
+Navigate to your Log Analytics Workspace and you should see your custom logs:
+
+![](/assets/img/iot/CustomLogs.png)
+
+&#128161;Once FluentD is cooking without issue on your Pi,try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table: 
+
+![](/assets/img/iot/Auth_CL.png)
+
+The syslog table (syslog_cl) is populating too: 
+![](/assets/img/iot/syslog_cl.png)
 
 <br/><br/>
 
 # Explore Custom Use-Case Applications (Industrial Moisture and Temperature Sensors)
 - TBD
 
+<br/><br/>
+
+# In this, post we: 
+- Called out and solved for use-case pre-requisites
+- Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
+- Create a Log Analytics Workspace
+- Retrieve WorkspaceID and Primary Key
+- Program the config file for log aggregation (FluentD)
+- Log auth and syslog tables to a Log Analytics Workspace
+- Explore custom applications (soil moisture and temperature sensors for example)
 <br/><br/>
 
 # Resources:
