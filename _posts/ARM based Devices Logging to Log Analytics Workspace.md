@@ -9,13 +9,13 @@
 <br/>
 
 # In this post we will: 
-- Call out and solve for use-case pre-requisites
-- Configure our 'unsupported' equipment accordingly (Ruby & FluentD Plugin for Log Analytics)
-- Create a Log Analytics Workspace
-- Retrieve WorkspaceID and Primary Key
-- Program the config file for log aggregation (FluentD)
-- Log auth and syslog tables to a Log Analytics Workspace
-- Explore custom applications (soil moisture and temperature sensors for example)
+- [ ] Call out and solve for use-case pre-requisites
+- [ ] Configure our 'unsupported' equipment accordingly (Ruby & FluentD Plugin for Log Analytics)
+- [ ] Create a Log Analytics Workspace
+- [ ] Retrieve WorkspaceID and Primary Key
+- [ ] Program the config file for log aggregation (FluentD)
+- [ ] Log auth and syslog tables to a Log Analytics Workspace
+- [ ] Explore custom applications (soil moisture and temperature sensors for example)
 
 <br/>
 
@@ -117,12 +117,12 @@ The syslog table (syslog_cl) is populating too:
 
 # In this, post we: 
 - [x] Called out and solved for use-case pre-requisites
-- Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
-- Create a Log Analytics Workspace
-- Retrieve WorkspaceID and Primary Key
-- Program the config file for log aggregation (FluentD)
-- Log auth and syslog tables to a Log Analytics Workspace
-- Explore custom applications (soil moisture and temperature sensors for example)
+- [x] Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
+- [x] Create a Log Analytics Workspace
+- [x] Retrieve WorkspaceID and Primary Key
+- [x] Program the config file for log aggregation (FluentD)
+- [x] Log auth and syslog tables to a Log Analytics Workspace
+- [x] Explore custom applications (soil moisture and temperature sensors for example)
 <br/><br/>
 
 # Resources:
