@@ -37,19 +37,19 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 ```
 
 # Create a Log Analytics Workspace
-1. Navigate to Log Analytics Workspace in Azure Portal:
+1. Navigate to Log Analytics Workspace in Azure Portal: <br/>
 ![](/assets/img/iot/LAW1.png)
 <br/>
 
-2. Select +Create
+2. Select '+Create' <br/>
 ![](/assets/img/iot/LAW2.png)
 <br/>
 
-3. Select Subscription and Resource Group:
+3. Select Subscription and Resource Group: <br/>
 ![](/assets/img/iot/LAW3.png)
 <br/>
 
-4. Select Instance Name and Region:
+4. Select Instance Name and Region: <br/>
 ![](/assets/img/iot/LAW4.png)
 
 5. Commitment / Pricing Tier
