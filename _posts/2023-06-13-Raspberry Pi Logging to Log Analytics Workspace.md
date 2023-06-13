@@ -26,21 +26,21 @@ Typically, the easiest way to send logs to Log Analytics workspace is to leverag
 
 # Configure our 'unsupported' equipment
 
-1. Install Ruby
+- Install Ruby
 ```bash
 sudo aptitude install ruby-dev
 ```
 
 <br/>
 
-2. Check/Confirm Ruby Version:
+- Check/Confirm Ruby Version:
 ```bash
 ruby -ver
 ```
 
 <br/>
 
-3. Install FluentD Unified Log Aggregator & Plugin
+- Install FluentD Unified Log Aggregator & Plugin
 ```bash
 sudo gem install fluentd -v "~> 0.12.0"
 sudo fluent-gem install fluent-plugin-td
@@ -48,7 +48,7 @@ sudo fluent-gem install fluent-plugin-td
 
 <br/>
 
-4. Install FluentD Plugn for Azure Log Analytics
+- Install FluentD Plugn for Azure Log Analytics
 ```bash
 sudo fluent-gem install fluent-plugin-azure-loganalytics
 ```
@@ -56,27 +56,27 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 <br/><br/>
 
 # Create a Log Analytics Workspace
-1. Navigate to Log Analytics Workspace in Azure Portal: <br/>
+- Navigate to Log Analytics Workspace in Azure Portal: <br/>
 ![](/assets/img/iot/LAW1.png)
 
 <br/><br/>
 
-2. Select '+Create' <br/>
+- Select '+Create' <br/>
 ![](/assets/img/iot/LAW2.png)
 
 <br/><br/>
 
-3. Select Subscription and Resource Group: <br/>
+- Select Subscription and Resource Group: <br/>
 ![](/assets/img/iot/LAW3.png)
 
 <br/><br/>
 
-4. Select Instance Name and Region: <br/>
+- Select Instance Name and Region: <br/>
 ![](/assets/img/iot/LAW4.png)
 
 <br/><br/>
 
-5. Commitment / Pricing Tier
+- Commitment / Pricing Tier
 Choose the appropriate commitment tier given your expected daily ingest volume. <br/><br/>
 
 &#128161;
@@ -84,7 +84,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 
 <br/><br/>
 
-6. Click Review & Create
+- Click Review & Create
  ...to Finish Setting up a New Log Analytics Workspace 
 
 # Retrieve WorkspaceID and Primary Key
@@ -93,9 +93,9 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 <br/><br/>
 
 # Built a Configuration File for Log Aggregation (FluentD)
-1. Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iot/fluent.conf) file with the values we acquired in the previous step.
+- Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iot/fluent.conf) file with the values we acquired in the previous step.
 
-2. Run the following command to start logging to your Log Analytics Workspace:
+- Run the following command to start logging to your Log Analytics Workspace:
 
 ```python
 sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log
