@@ -15,7 +15,7 @@
 - [ ] Retrieve WorkspaceID and Primary Key
 - [ ] Program the config file for log aggregation (FluentD)
 - [ ] Log auth and syslog tables to a Log Analytics Workspace
-- [ ] Explore custom applications (soil moisture and temperature sensors for example)
+
 
 <br/>
 
@@ -122,7 +122,7 @@ The syslog table (syslog_cl) is populating too:
 - [x] Retrieve WorkspaceID and Primary Key
 - [x] Program the config file for log aggregation (FluentD)
 - [x] Log auth and syslog tables to a Log Analytics Workspace
-- [x] Explore custom applications (soil moisture and temperature sensors for example)
+
 <br/><br/>
 
 # Resources:
