@@ -25,6 +25,7 @@ Typically, the easiest way to send logs to Log Analytics workspace is to leverag
 <br/>
 
 # Configure our 'unsupported' equipment
+
 1. Install Ruby
 ```bash
 sudo aptitude install ruby-dev
@@ -101,7 +102,7 @@ Navigate to your Log Analytics Workspace and you should see your custom logs:
 
 ![](/assets/img/iot/CustomLogs.png)
 
-&#128161; Once FluentD is cooking without issue on your Pi,try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table:
+&#128161; Once FluentD is cooking without issue on your Pi, try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table &#128071;
 
 ![](/assets/img/iot/Auth_CL.png)
 
