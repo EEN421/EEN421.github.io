@@ -89,6 +89,8 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 # Program the Configuration File for Log Aggregation (FluentD)
 Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
 
+Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf) file with the values we acquired in the previous step. 
+
 <br/><br/>
 
 # Log Auth and Syslog Tables to a Log Analytics Workspace
