@@ -120,9 +120,13 @@ Navigate to your Log Analytics Workspace and you should see your custom logs (lo
 
 ![](/assets/img/iot/CustomLogs.png)
 
+<br/><br/>
+
 &#128161; Once FluentD is cooking without issue on your Pi, try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table &#128071;
 
 ![](/assets/img/iot/Auth_CL.png)
+
+<br/>
 
 The syslog table (syslog_cl) is populating too: 
 ![](/assets/img/iot/syslog_cl.png)
