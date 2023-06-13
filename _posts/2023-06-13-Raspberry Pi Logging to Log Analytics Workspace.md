@@ -93,7 +93,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 
 <br/><br/>
 
-# Built a Configuration File for Log Aggregation (FluentD)
+# Build a Configuration File for FluentD
 - Swap out the WorkspaceID and Primary Key in this [fluent.conf](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iot/fluent.conf) file with the values we acquired in the previous step.
 
 - Run the following command to start logging to your Log Analytics Workspace:
