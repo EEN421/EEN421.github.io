@@ -20,7 +20,7 @@
 <br/>
 
 # Call out and solve for pre-requisites
-Typically, the easiest way to send logs to Log Analytics workspace is to leverage the Microsoft OMS Agent. Microsoft supports Linux and has an OMS agent available _but doesn’t support popular ARM platforms like a Raspberry Pi build._ The existing OMS agent relies on **Ruby,** and **FluentD** to talk to the **Log Analytics Workspace** 
+Typically, the easiest way to send logs to Log Analytics workspace is to leverage the Microsoft OMS Agent. Microsoft supports Linux and has an OMS agent available _but doesn’t support popular ARM platforms like a Raspberry Pi build._ Our setup will rely on **Ruby** and **FluentD** to talk to the **Log Analytics Workspace** 
 
 <br/>
 
@@ -116,7 +116,7 @@ The syslog table (syslog_cl) is populating too:
 <br/><br/>
 
 # In this, post we: 
-- Called out and solved for use-case pre-requisites
+- [x] Called out and solved for use-case pre-requisites
 - Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
 - Create a Log Analytics Workspace
 - Retrieve WorkspaceID and Primary Key
