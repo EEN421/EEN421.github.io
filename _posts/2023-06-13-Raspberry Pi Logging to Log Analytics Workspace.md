@@ -61,26 +61,26 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 <br/><br/>
 
-- Select '+Create' <br/>
+- Select ** +Create **  <br/>
 ![](/assets/img/iot/LAW2.png)
 
 <br/><br/>
 
-- Select Subscription and Resource Group: <br/>
+- Select **Subscription** and **Resource Group:** <br/>
 ![](/assets/img/iot/LAW3.png)
 
 <br/><br/>
 
-- Select Instance Name and Region: <br/>
+- Select Instance **Name** and **Region:** <br/>
 ![](/assets/img/iot/LAW4.png)
 
 <br/><br/>
 
-- Commitment / Pricing Tier
+- Pricing Tier:
 Choose the appropriate commitment tier given your expected daily ingest volume. <br/><br/>
 
 &#128161;
-	&#128073;      **_I like to see roughly 15% more ingest than required for the next commitment / pricing tier to insulate against nights, weekends, and holidays which inherently drag down the daily ingest volume average._** 
+	&#128073;      **_I like to see roughly 15% more ingest than required for the next pricing tier to insulate against nights, weekends, and holidays which inherently drag down the daily ingest volume average._** 
 
 <br/><br/>
 
