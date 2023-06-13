@@ -149,7 +149,8 @@ Navigate to your Log Analytics Workspace and you should see your custom logs (lo
 
 <br/>
 
-The syslog table (syslog_cl) is populating too: 
+The syslog table (syslog_cl) is populating too &#128071;
+
 ![](/assets/img/iot/syslog_cl.png)
 
 <br/><br/>
