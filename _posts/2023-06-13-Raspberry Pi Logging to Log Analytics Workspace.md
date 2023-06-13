@@ -115,6 +115,26 @@ sudo fluentd #<-- starts fluentd with super user privileges
 
 <br/><br/>
 
+>  &#128161;  **_Pro-Tip: save the command to start logging to your workspace as a .bash command so you don't have to re-enter the lengthy paramters every time. Run the following commands to do this:_**
+> ```bash
+> sudo nano start.bash #<-- opens nano text editor and creates file 'start.bash'
+>```
+> Paste the entire start command and parameters and press:
+>```bash
+> CTRL+X followed by 'Y' then Enter to save
+>```
+> Now to run the start command, all you have to do is: 
+>```bash
+>sudo start.bash
+>```
+
+<br/><br/>
+
+>  &#128161;  **_Another Pro-Tip: &#128073; Create a CRON job to start logging on startup_**
+
+
+<br/><br/>
+
 # Query Auth and Syslog Tables
 Navigate to your Log Analytics Workspace and you should see your custom logs (logs ingested this way show up under 'Custom Logs' and have '_CL' appended to their name when they hit the workspace, illusgtrated below):
 
