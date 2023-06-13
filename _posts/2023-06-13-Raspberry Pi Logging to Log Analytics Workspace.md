@@ -10,7 +10,7 @@ You're a industrial manufacturing plant manager, you need to _prototype, deploy,
 
 # In this post we will: 
 - Call out and solve for use-case pre-requisites
-- Configure our 'unsupported' equipment accordingly (Ruby & FluentD Plugin for Log Analytics)
+- Configure our 'unsupported' equipment accordingly (Ruby & FluentD)
 - Create a Log Analytics Workspace
 - Retrieve WorkspaceID and Primary Key
 - Program the config file for log aggregation (FluentD)
