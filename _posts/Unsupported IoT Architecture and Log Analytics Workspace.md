@@ -38,19 +38,19 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 # Create a Log Analytics Workspace
 1. Navigate to Log Analytics Workspace in Azure Portal:
-![](/assets/img/LAW1.png)
+![](/assets/img/iot/LAW1.png)
 <br/>
 
 2. Select +Create
-![](/assets/img/LAW2.png)
+![](/assets/img/iot/LAW2.png)
 <br/>
 
 3. Select Subscription and Resource Group:
-![](/assets/img/LAW3.png)
+![](/assets/img/iot/LAW3.png)
 <br/>
 
 4. Select Instance Name and Region:
-![](/assets/img/LAW4.png)
+![](/assets/img/iot/LAW4.png)
 
 5. Commitment / Pricing Tier
 Choose the appropriate commitment tier given your expected daily ingest volume. <br/><br/>
@@ -64,7 +64,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
  ...to Finish Setting up a New Log Analytics Workspace 
 
 # Retrieve WorkspaceID and Primary Key
-![](/assets/img/WorkspaceIDandKey.png)
+![](/assets/img/iot/WorkspaceIDandKey.png)
 
 # Program the Configuration File for Log Aggregation (FluentD)
 Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
