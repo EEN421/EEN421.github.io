@@ -35,7 +35,7 @@ sudo aptitude install ruby-dev
 
 2. Check/Confirm Ruby Version:
 ```bash
-ruby --ver
+ruby -ver
 ```
 
 <br/>
@@ -116,7 +116,7 @@ sudo fluentd #<-- starts fluentd with super user privileges
 <br/><br/>
 
 # Query Auth and Syslog Tables
-Navigate to your Log Analytics Workspace and you should see your custom logs:
+Navigate to your Log Analytics Workspace and you should see your custom logs (logs ingested this way show up under 'Custom Logs' and have '_CL' appended to their name when they hit the workspace, illusgtrated below):
 
 ![](/assets/img/iot/CustomLogs.png)
 
