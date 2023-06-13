@@ -1,7 +1,10 @@
 # Introduction and Use Case:
-You're a industrial manufacturing plant manager, you need to prototype, deploy, secure, and remotely manage connected electronic devices at scale. You need to be practical and most importantly, cost-effective. Thankfully, you've made good decisions up to this point and have invested in a SIEM such as Azure Sentinel (good job!).
+&#128073; You're a industrial manufacturing plant manager, you need to _prototype, deploy, secure,_ and _remotely manage_ connected electronic devices at _scale._ You need to be practical and most importantly, cost-effective. Thankfully, you've made good decisions up to this point and have invested in a SIEM such as **Azure Sentinel** (_good job!_).
 
-Most of your sensor and PLC equipment connects through an API or is compatible with the Azure Monitoring Agent. What do you do for your **unsupported** but **critical IoT architecture** (in my experience, typically some custom hardware running some flavour of Linux under the hood, think Raspberry Pi based microcontrollers that help automate the line for example)?
+&#128073; Most of your sensor and PLC equipment connects through an API or is compatible with the Azure Monitoring Agent. **What do you do** for your **unsupported** but **critical IoT architecture**?
+
+ 
+>  &#128161;  In my experience, typically some custom hardware running some flavour of Linux under the hood, think Raspberry Pi based microcontrollers that help automate the line for example.
 
 <br/>
 
@@ -17,7 +20,7 @@ Most of your sensor and PLC equipment connects through an API or is compatible w
 <br/>
 
 # Call out and solve for pre-requisites
-Typically, the easiest way to send logs to Log Analytics workspace is to leverage the Microsoft OMS Agent. Microsoft supports Linux and has an OMS agent available for both x86 and x64 Linux OS editions but doesn’t support popular ARM platforms like a Raspberry Pi board. The existing OMS agent relies on Ruby, Fluentd, and OMI (this last is the unsupported component on ARM platform).
+Typically, the easiest way to send logs to Log Analytics workspace is to leverage the Microsoft OMS Agent. Microsoft supports Linux and has an OMS agent available _but doesn’t support popular ARM platforms like a Raspberry Pi build._ The existing OMS agent relies on **Ruby,** and **FluentD** to talk to the **Log Analytics Workspace** 
 
 <br/>
 
