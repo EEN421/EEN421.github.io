@@ -4,7 +4,7 @@ You're a industrial manufacturing plant manager, you need to _prototype, deploy,
 &#128073; Most of your sensor and PLC equipment connects through an API or is compatible with the Azure Monitoring Agent. **What do you do** for your **unsupported** but **critical IoT architecture**?
 
  
->  &#128161;  In my experience, typically some custom hardware running some flavour of Linux under the hood, think Raspberry Pi based microcontrollers that help automate the line for example.
+>  &#128161;  _**In my experience, typically some custom hardware running some flavour of Linux under the hood, think Raspberry Pi based microcontrollers that help automate the line for example._**
 
 <br/>
 
@@ -101,7 +101,7 @@ Navigate to your Log Analytics Workspace and you should see your custom logs:
 
 ![](/assets/img/iot/CustomLogs.png)
 
-&#128161;Once FluentD is cooking without issue on your Pi,try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table: 
+&#128161; **_Once FluentD is cooking without issue on your Pi,try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table:_**
 
 ![](/assets/img/iot/Auth_CL.png)
 
@@ -112,12 +112,12 @@ The syslog table (syslog_cl) is populating too:
 
 
 # In this, post we: 
-&#10003; Called out and solved for use-case pre-requisites
-&#10003; Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
-&#10003; Create a Log Analytics Workspace
-&#10003; Retrieve WorkspaceID and Primary Key
-&#10003; Program the config file for log aggregation (FluentD)
-&#10003; Log auth and syslog tables to a Log Analytics Workspace
+- &#10003; Called out and solved for use-case pre-requisites
+- &#10003; Configured our ARM equipment accordingly (Ruby & Log Analytics Plugin for FluentD)
+- &#10003; Create a Log Analytics Workspace
+- &#10003; Retrieve WorkspaceID and Primary Key
+- &#10003; Program the config file for log aggregation (FluentD)
+- &#10003; Log auth and syslog tables to a Log Analytics Workspace
 
 <br/><br/>
 
