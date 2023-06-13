@@ -82,10 +82,11 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 &#128161;
 	&#128073;      **_I like to see roughly 15% more ingest than required for the next pricing tier to insulate against nights, weekends, and holidays which inherently drag down the daily ingest volume average._** 
 
-<br/><br/>
+<br/>
 
-- Click Review & Create
- ...to Finish Setting up a New Log Analytics Workspace 
+- Click **Review & Create** to finish setting up a new Log Analytics Workspace 
+
+<br/><br/>
 
 # Retrieve WorkspaceID and Primary Key
 ![](/assets/img/iot/WorkspaceIDandKey.png)
