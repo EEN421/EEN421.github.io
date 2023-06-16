@@ -1,5 +1,5 @@
 # Introduction and Use Case:
-You're a industrial manufacturing plant manager, you need to _prototype, deploy, secure,_ and _remotely manage_ connected electronic devices at _scale._ You need to be practical and most importantly, cost-effective. Thankfully, you've made good decisions up to this point and have invested in a SIEM such as **Azure Sentinel** (_good job!_).
+You're an industrial manufacturing plant manager, you need to _prototype, deploy, secure,_ and _remotely manage_ connected electronic devices at _scale._ You need to be practical and most importantly, cost-effective. Thankfully, you've made good decisions up to this point and have invested in a SIEM such as **Azure Sentinel** (_good job!_).
 
 &#128073; Most of your sensor and PLC equipment connects through an API or is compatible with the Azure Monitoring Agent. **What do you do** for your **unsupported** but **critical IoT architecture**?
 
