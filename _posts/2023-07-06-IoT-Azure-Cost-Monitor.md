@@ -40,9 +40,9 @@ az ad sp create-for-rbac --name azure-cost-monitor
 
 - Note the following from the output:
 ```sql
-- AppID
-- Password
-- TenantID
+AppID
+Password
+TenantID
 ```
 <br/>
 
