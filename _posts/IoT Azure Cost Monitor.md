@@ -23,7 +23,6 @@ In this post, we will create and/or leverage the following:
 
 **3. Hardware Requirements:**
 - Connect a battery and magnets so it can run on any magnetic surface (whiteboard, fridge, etc.) completely wirelessly
-- *_Be awesome_*
 
 <br/>
 
@@ -33,7 +32,7 @@ In this post, we will create and/or leverage the following:
 
 2. Select the CloudShell button illustrated below: <br/>
 
-![](/img/CLI.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/CLI.png)
 
 3. Run these commands in the Azure Command Line Interface (CLI):
 ```sql
@@ -48,12 +47,12 @@ az ad sp create-for-rbac --name azure-cost-monitor
 ```
 <br/>
 
-![](/img/az_creds.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/az_creds.png)
 
 5. Navigate to "Subscriptions" in the top search bar, illustrated below:
 <br/>
 
-![](/img/subs.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/subs.png)
 
 - Select your Subscription and navigate to the _Overview_ Blade
 - Grab your _SubscriptionID_
@@ -75,7 +74,7 @@ secrets = {
 
 <br/>
 
-![](/img/subID.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/subID.png)
 
 # Assign Cost Management Reader Role
 Next we have to give our web app permissions to read the cost management information:
@@ -83,24 +82,24 @@ Next we have to give our web app permissions to read the cost management informa
 1. Navigate to your Subscription and select the _Identity & Access Management (IAM)_ Blade:
 <br/>
 
-![](/img/Sub_IAM.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/Sub_IAM.png)
 
 2. Click on _+ Add_ then _Add Role Assignment_:
 <br/>
 
-![](/img/Role_Assignments.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/Role_Assignments.png)
 
 3. Search for, and select _Cost Management Reader_:
 <br/>
 
-![](/img/cost_management_reader.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/cost_management_reader.png)
 
 <br/>
 
 4. Search for, and select the _Azure-Cost-Monitor_ entity we created earlier, then click Next/Save:
 <br/>
 
-![](/img/Select_Memebers.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/Select_Memebers.png)
 
 <br/>
 
@@ -119,7 +118,7 @@ Next we have to give our web app permissions to read the cost management informa
 5. It should look something like this:
 <br/>
 
-![](/img/contents.png)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/contents.png)
 
 <br/>
 
@@ -129,15 +128,15 @@ Next we have to give our web app permissions to read the cost management informa
 - Connect the LiPo battery and screw in the magnetic feet:
 <br/>
 
-![](/img/PKCell.jpg)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/PKCell.jpg)
 
 <br/>
 
-![](/img/Connect.jpg)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/Connect.jpg)
 
 <br/>
 
-![](/img/Wood.jpg)
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/Wood.jpg)
 
 <br/>
 
