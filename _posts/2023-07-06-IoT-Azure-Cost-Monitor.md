@@ -142,6 +142,15 @@ Next we have to give our web app permissions to read the cost management informa
 
 <br/>
 
+# In this post, we accomplished the following:
+- &#10003; Built an Azure Web App & Assigned an RBAC Role
+- &#10003; Built a secrets.py file from retrieved AppID, Password, TenantID, and SubscriptionID data
+- &#10003; Assigned Cost Management Reader Privileges to Subscription
+- &#10003; Deployed Circuit Python locally
+- &#10003; Connected a battery and magnets so it can run on any magnetic surface (whiteboard, fridge, etc.) completely wirelessly
+- &#10003; Connected to Azure cost management API
+- &#10003; Attained a state of **_awesome_**
+
 # Hardware
 - [Adafruit MagTag - 2.9" Grayscale E-Ink WiFi Display (ESP32)](https://www.adafruit.com/product/4800)
 - [Lithium Ion Polymer Battery with Short Cable - 3.7V 420mAh](https://www.adafruit.com/product/4236)
