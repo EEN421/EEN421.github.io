@@ -3,7 +3,7 @@ This project is intended to demonstrate a real-world use-case for leveraging the
 
 In this post, we will create and/or leverage the following:
 
-**1. Azure Requirements:**
+&#128073;**1. Azure Requirements:**
 - An Azure Web App & Assign an RBAC Role
 - AppID
 - Password
@@ -13,13 +13,13 @@ In this post, we will create and/or leverage the following:
 
 <br/>
 
-**2. Software Requirements:**
+&#128073;**2. Software Requirements:**
 - Generate a secrets.py file
 - Deploy Circuit Python locally & Connect to Azure cost management API
 
 <br/>
 
-**3. Hardware Requirements:**
+&#128073;**3. Hardware Requirements:**
 - Connect a battery and magnets so it can run on any magnetic surface (whiteboard, fridge, etc.) completely wirelessly
 
 <br/>
@@ -124,7 +124,7 @@ Next we have to give our web app permissions to read the cost management informa
 
 <br/>
 
-> _Pro-Tip: you can also program this hardware using the [Web Serial ESPTool](https://learn.adafruit.com/adafruit-magtag/web-serial-esptool) and even connect via COM port via [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) (on Windows, check DevMgmt.msc for COM devices and note the COM port). The [REPL Tool](https://learn.adafruit.com/adafruit-metro-esp32-s2/the-repl) is pretty handy for troubleshooting on the fly too._
+> &#128161; _Pro-Tip: you can also program this hardware using the [Web Serial ESPTool](https://learn.adafruit.com/adafruit-magtag/web-serial-esptool) and even connect via COM port via [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) (on Windows, check DevMgmt.msc for COM devices and note the COM port). The [REPL Tool](https://learn.adafruit.com/adafruit-metro-esp32-s2/the-repl) is pretty handy for troubleshooting on the fly too._
 
 # Assembly
 - Connect the LiPo battery and screw in the magnetic feet:
