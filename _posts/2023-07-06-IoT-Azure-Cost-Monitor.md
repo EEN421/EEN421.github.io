@@ -79,26 +79,26 @@ secrets = {
 # Assign Cost Management Reader Role
 Next we have to give our web app permissions to read the cost management information:
 
-- Navigate to your Subscription and select the _Identity & Access Management (IAM)_ Blade:
+- Navigate to your Subscription and select the **_Identity & Access Management (IAM)_** Blade:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Sub_IAM.png)
 <br/>
 
-- Click on _+ Add_ then _Add Role Assignment_:
+- Click on **_+ Add_** then **_Add Role Assignment_**:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Role_Assignments.png)
 <br/>
 
-- Search for, and select _Cost Management Reader_:
+- Search for, and select **_Cost Management Reader_**:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/cost_management_reader.png)
 
 <br/>
 
-- Search for, and select the _Azure-Cost-Monitor_ entity we created earlier, then click Next/Save:
+- Search for, and select the **_Azure-Cost-Monitor_** entity we created earlier, then click Next/Save:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Select_Memebers.png)
