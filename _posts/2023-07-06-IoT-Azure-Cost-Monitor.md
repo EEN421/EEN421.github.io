@@ -3,8 +3,6 @@ This project is intended to demonstrate a real-world use-case for leveraging the
 
 In this post, we will create and/or leverage the following:
 
-<br/>
-
 **1. Azure Requirements:**
 - An Azure Web App & Assign an RBAC Role
 - AppID
@@ -34,10 +32,11 @@ In this post, we will create and/or leverage the following:
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/CLI.png)
 
-3. Run these commands in the Azure Command Line Interface (CLI):
+3. Run this command in the Azure Command Line Interface (CLI):
 ```sql
 az ad sp create-for-rbac --name azure-cost-monitor
 ```
+<br/>
 
 4. Note the following from the output:
 ```sql
@@ -55,6 +54,7 @@ az ad sp create-for-rbac --name azure-cost-monitor
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/subs.png)
 
 - Select your Subscription and navigate to the _Overview_ Blade
+
 - Grab your _SubscriptionID_
 <br/>
 
