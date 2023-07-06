@@ -26,19 +26,19 @@ In this post, we will create and/or leverage the following:
 
 # Create Azure Web App & Assign RBAC Role
 
-1. Login to the [Azure Portal](www.portal.azure.com)
+- Login to the [Azure Portal](www.portal.azure.com)
 
-2. Select the CloudShell button illustrated below: <br/>
+- Select the CloudShell button illustrated below: <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/CLI.png)
 
-3. Run this command in the Azure Command Line Interface (CLI):
+- Run this command in the Azure Command Line Interface (CLI):
 ```sql
 az ad sp create-for-rbac --name azure-cost-monitor
 ```
 <br/>
 
-4. Note the following from the output:
+- Note the following from the output:
 ```sql
 - AppID
 - Password
@@ -48,7 +48,7 @@ az ad sp create-for-rbac --name azure-cost-monitor
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/az_creds.png)
 
-5. Navigate to "Subscriptions" in the top search bar, illustrated below:
+- Navigate to "Subscriptions" in the top search bar, illustrated below:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/subs.png)
@@ -83,11 +83,13 @@ Next we have to give our web app permissions to read the cost management informa
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Sub_IAM.png)
+<br/>
 
 2. Click on _+ Add_ then _Add Role Assignment_:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Role_Assignments.png)
+<br/>
 
 3. Search for, and select _Cost Management Reader_:
 <br/>
