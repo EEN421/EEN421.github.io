@@ -148,7 +148,7 @@ Next we have to give our web app permissions to read the cost management informa
 # Resources
 - [Azure Cloud Shell (CLI)](https://learn.microsoft.com/en-us/azure/cloud-shell/overview)
 - [Azure RBAC](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
-- [Assign Access to Cost management Data](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/assign-access-acm-data)
+- [Assign Access to Cost management Data (Azure)](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/assign-access-acm-data)
 - [REPL interface](https://learn.adafruit.com/adafruit-metro-esp32-s2/the-repl)
 - [Web Serial ESPTool](https://learn.adafruit.com/adafruit-metro-esp32-s2/web-serial-esptool)
 
