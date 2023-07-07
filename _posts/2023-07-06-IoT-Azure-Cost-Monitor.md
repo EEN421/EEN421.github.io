@@ -20,6 +20,7 @@ In this post, we will create and/or leverage the following:
 &#128073;**3. Hardware Requirements:**
 - Connect a battery and magnets so it can run on any magnetic surface (whiteboard, fridge, etc.) completely wirelessly
 <br/>
+<br/>
 
 # Create Azure Web App & Assign RBAC Role
 
@@ -54,6 +55,7 @@ TenantID
 
 - Grab your **_SubscriptionID_**
 <br/>
+<br/>
 
 # Build your secrets.py File
 - Take the information you just gathered and enter it into the [secrets.py file](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/blob/Main/Code/secrets.py) like this: 
@@ -81,11 +83,13 @@ Next we have to give our web app permissions to read the cost management informa
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Sub_IAM.png)
 <br/>
+<br/> 
 
 - Click on **_+ Add_** then **_Add Role Assignment_**:
 <br/>
 
 ![](/assets/img/IoT%20Azure%20Cost%20Monitor/Role_Assignments.png)
+<br/>
 <br/>
 
 - Search for, and select **_Cost Management Reader_**:
@@ -105,14 +109,14 @@ Next we have to give our web app permissions to read the cost management informa
 
 
 # Program the MagTag
-1. Plug your MagTag into your computer using a USB-C cable **_capable of transmitting data and not just charging!_**
-2. Launch [UF2 boot loader by double-clicking the Reset button (the one next to the USB C port). You may have to try a few times to get the timing right](https://learn.adafruit.com/adafruit-magtag/rom-bootloader).  
-3. You will see a new disk drive appear called MAGTAGBOOT or CIRCUITPY (depending on your hardware model)
+1. Plug your MagTag into your computer using a USB-C cable **_capable of transmitting data and not just charging!_** <br/>
+2. Launch [UF2 boot loader by double-clicking the Reset button (the one next to the USB C port). You may have to try a few times to get the timing right](https://learn.adafruit.com/adafruit-magtag/rom-bootloader). <br/> 
+3. You will see a new disk drive appear called MAGTAGBOOT or CIRCUITPY (depending on your hardware model). <br/>
 4. Copy [these files](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/tree/Main/Code) to your device:
 - [azure.py](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/blob/Main/Code/azure.py)
 - [code.py](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/blob/Main/Code/code.py)
 - [secrets.py](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/blob/Main/Code/secrets.py)
-- [lib folder](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/tree/Main/Code/Lib)
+- [lib folder](https://github.com/EEN421/Azure-Cost-Monitor-Fridge-Magnet/tree/Main/Code/Lib) <br/>
 
 5. It should look something like this:
 <br/>
