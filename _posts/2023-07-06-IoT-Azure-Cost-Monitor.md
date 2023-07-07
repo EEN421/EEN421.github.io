@@ -1,4 +1,4 @@
-# Introduction
+# Introduction and Use Case:
 This project is intended to demonstrate a real-world use-case for leveraging the [Azure cost management API](https://learn.microsoft.com/en-us/rest/api/cost-management/) with an [ESP32/wireless enabled EInk IoT display device](https://www.adafruit.com/product/4800) 
 
 In this post, we will create and/or leverage the following:
