@@ -23,7 +23,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 
 5.	| summarize avg(TotalGB)     //<-- Summarize and return the daily average
 ```
-![](/assets/img/potato/original.png)
+![](/assets/img/Potato/original.png)
 
 
 # Fix: 
@@ -40,6 +40,7 @@ The most blatant offense here, is that I’m burning resources crawling through 
    
 5.	| summarize AvgGBPerDay=avg(GB)       //<-- Take the average 
 ```
+![](/assets/img/Potato/plainGB.png.png)
 
 # Continuous Improvement – Now What? Calculate Cost, of Course!:
 Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (this variable holds your _effective cost per GB_ based on your commitment tier. To find your effective cost per GB, check out ![my previous cost optimization blog post where this is covered in greater detail](https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the ![percentiles](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/percentiles-aggfunction) function.
@@ -58,7 +59,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 6.	|extend Cost=GB*rate	//<-- calculate average cost
     | summarize AvgCostPerDay=percentiles(Cost,50),AvgGBPerDay=percentiles(GB,50) //<-- Return the 50th percentile for Cost/Day and GB/Day
 ```
-
+![](/assets/img/Potato/Ugly.png)
 
 
 
@@ -82,7 +83,7 @@ My grievances against the above query are as follows: Leveraging the percentiles
 
 8.	| project AvgGBPerDay=strcat(round(AvgGBPerDay,2), ' GB/Day'), AvgCostPerDay=strcat('$', round(Cost,2), ' /Day')    //<-- This line is tricky. I convert everything to string in order to prepend '$' and append ' /Day' to make the results more presentable
 ```
-
+![](/assets/img/Potato/Formatted.png)
 
 # In this post, we accomplished the following:
 - &#10003; Craft basic a basic, quick n’ dirty query that gets the job done
