@@ -63,7 +63,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 ![](/assets/img/Potato/Ugly.png)
 
 # Continuous Improvement - Underlying Query Logic and Presentation...
-My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! 
+My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! &#128071;
 
 ```sql
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
@@ -84,7 +84,7 @@ My grievances against the above query are as follows: Leveraging the percentiles
 ```
 ![](/assets/img/Potato/Formatted.png)
 
->_Much Better_&#128070
+>_Much Better_&#128070;
 
 # In this post, we accomplished the following:
 - &#10003; Craft basic a basic, quick n’ dirty query that gets the job done
