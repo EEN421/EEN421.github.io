@@ -25,7 +25,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 ![](/assets/img/Potato/Original.png)
 
 
-# Continuous Improvement
+# Continuous Improvement:
 The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
 ```sql
