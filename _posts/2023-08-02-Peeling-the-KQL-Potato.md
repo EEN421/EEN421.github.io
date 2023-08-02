@@ -22,7 +22,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 
 5.	| summarize avg(TotalGB)     //<-- Summarize and return the daily average
 ```
-![](/assets/img/Potato/original.png)
+![](/assets/img/Potato/Original.png)
 
 
 # Continuous Improvement
@@ -39,7 +39,7 @@ The most blatant offense here, is that I’m burning resources crawling through 
    
 5.	| summarize AvgGBPerDay=avg(GB)       //<-- Take the average 
 ```
-![](/assets/img/Potato/plainGB.png.png)
+![](/assets/img/Potato/plainGB.png)
 
 # Continuous Improvement – Now What? Calculate Cost, of Course!
 Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (this variable holds your _effective cost per GB_ based on your commitment tier. To find your effective cost per GB, check out [my previous cost optimization blog post where this is covered in greater detail](https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the [percentiles](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/percentiles-aggfunction) function.
@@ -90,7 +90,6 @@ My grievances against the above query are as follows: Leveraging the percentiles
 - &#10003; Understand the different layers of complexity for future query improvements
 - &#10003; Attained a state of **_awesome_**
 
-Author: Ian D. Hanley | LinkedIn: [/in/ianhanley/](https://www.linkedin.com/in/ianhanley/) | Twitter: [@IanDHanley](https://twitter.com/IanDHanley) | Github: [https://github.com/EEN421](https://github.com/EEN421)
 
 References: 
 - [https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql)
