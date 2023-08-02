@@ -22,7 +22,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 
 5.	| summarize avg(TotalGB)     //<-- Summarize and return the daily average
 ```
-![](/assets/img/Potato/Original.png)
+![](/assets/img/Potato/Original2.png)
 
 
 # Continuous Improvement:
