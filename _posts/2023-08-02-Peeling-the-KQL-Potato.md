@@ -5,7 +5,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 - Craft basic a basic, quick n’ dirty query that gets the job done 
 - Improve the efficiency and thus the time it takes to return results 
 - Improve upon the underlying query logic for more meaningful results 
-- Improve the end result display 
+- Improve the end result presentation 
 - Understand the different layers of complexity for future query improvements
 
 
@@ -25,7 +25,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 ![](/assets/img/Potato/original.png)
 
 
-# Continuous Improvement:
+# Continuous Improvement
 The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
 ```sql
@@ -60,7 +60,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 ```
 ![](/assets/img/Potato/Ugly.png)
 
-
+# Continuous Improvement - Underlying Query Logic and Presentation...
 My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! 
 
 ```sql
