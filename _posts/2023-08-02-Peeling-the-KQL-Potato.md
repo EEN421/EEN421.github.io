@@ -91,6 +91,4 @@ My grievances against the above query are as follows: Leveraging the percentiles
 - &#10003; Attained a state of **_awesome_**
 
 
-References: 
-- [https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql)
 
