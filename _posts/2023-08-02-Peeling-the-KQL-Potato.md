@@ -12,7 +12,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 # Problem:
 This query started out as a quick and dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
 
-&#128073;Let’s break down the first iteration of this query and then discuss how we can clean it up and make it more efficient!
+&#128161;Let’s break down the first iteration of this query and then discuss how we can clean it up and make it more efficient!
 
 ```sql
 1.	search *                     //<-- Query Everything
@@ -63,7 +63,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 
 
 
-My grievances against the above query are as follows: Leveraging the percentiles function to take the 50th percentile is not technically the true average, but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! 
+My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! 
 
 ```sql
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
