@@ -42,7 +42,9 @@ The most blatant offense here, is that I’m burning resources crawling through 
 ![](/assets/img/Potato/plainGB.png)
 
 # Continuous Improvement – Now What? Calculate Cost, of Course!
-Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (this variable holds your _effective cost per GB_ based on your commitment tier. To find your effective cost per GB, check out [my previous cost optimization blog post where this is covered in greater detail](https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/)) and leveraging the [percentiles](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/percentiles-aggfunction) function.
+Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” &#129297
+
+&#128161;This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (this variable holds your _effective cost per GB_ based on your commitment tier. To find your effective cost per GB, check out [my previous cost optimization blog post where this is covered in greater detail](https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/)) and leveraging the [percentiles](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/percentiles-aggfunction) function.
 
 ```sql
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
@@ -81,6 +83,8 @@ My grievances against the above query are as follows: Leveraging the percentiles
 8.	| project AvgGBPerDay=strcat(round(AvgGBPerDay,2), ' GB/Day'), AvgCostPerDay=strcat('$', round(Cost,2), ' /Day')    //<-- This line is tricky. I convert everything to string in order to prepend '$' and append ' /Day' to make the results more presentable
 ```
 ![](/assets/img/Potato/Formatted.png)
+
+>_Much Better_&#128070
 
 # In this post, we accomplished the following:
 - &#10003; Craft basic a basic, quick n’ dirty query that gets the job done
