@@ -84,6 +84,8 @@ My grievances against the above query are as follows: Leveraging the percentiles
 ```
 ![](/assets/img/Potato/Formatted.png)
 >_Much Better_&#128070;
+
+<br/>
 <br/>
 
 # In this post, we accomplished the following:
