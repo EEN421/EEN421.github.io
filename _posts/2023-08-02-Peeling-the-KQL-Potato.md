@@ -9,7 +9,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 - Understand the different layers of complexity for future query improvements
 
 
-&#128161;Let’s break down the first iteration of this query and then discuss _how we can clean it up and make it **more efficient.**_ This started out as a quick n' dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
+&#128073 Let’s break down the first iteration of this query and then discuss _how we can clean it up and make it **more efficient.**_ This started out as a quick n' dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
 
 ```sql
 1.	search *                     //<-- Query Everything
