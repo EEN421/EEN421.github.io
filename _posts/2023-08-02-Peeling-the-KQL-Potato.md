@@ -26,7 +26,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 
 
 # Continuous Improvement:
-The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
+The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). In the next iteration of this query, we query the **Usage* table instead to achieve the same results in less time. Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
 ```sql
 1.	Usage   //<-- Query the USAGE table (instead of "search *" to query everything)
