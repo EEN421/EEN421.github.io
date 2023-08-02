@@ -1,6 +1,7 @@
 # Introduction and Use Case:
 The sheer versatility of KQL as a query language is staggering. The fact that there are so many query variations that ultimately deliver to the same results, leads me to think how one query could be more beneficial than another in a given circumstance. Today we'll explore a crude KQL example that works, but then improve it in more ways than one (think not only compute requirements and time spent crunching, but how the output could be improved upon as well). 
 
+<br/>
 # In this post we will:
 - Craft basic a basic, quick n’ dirty query that gets the job done 
 - Improve the efficiency and thus the time it takes to return results 
@@ -24,7 +25,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 ```
 ![](/assets/img/Potato/Original3.png)
 
-
+<br/>
 # Continuous Improvement:
 The most blatant offense here, is that I’m burning resources crawling through **everything** using **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). In the next iteration of this query, we query the **Usage** table instead to achieve the same results in less time. Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
@@ -41,6 +42,7 @@ The most blatant offense here, is that I’m burning resources crawling through 
 ```
 ![](/assets/img/Potato/plainGB.png)
 
+<br/>
 # Continuous Improvement – Now What? Calculate Cost, of Course!
 Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” &#129297;
 
@@ -62,6 +64,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 ```
 ![](/assets/img/Potato/Ugly.png)
 
+<br/>
 # Continuous Improvement - Underlying Query Logic and Presentation...
 My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost to the median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! &#128071;
 
