@@ -26,7 +26,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 
 
 # Continuous Improvement:
-The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). In the next iteration of this query, we query the **Usage** table instead to achieve the same results in less time. Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
+The most blatant offense here, is that I’m burning resources crawling through **everything** using **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). In the next iteration of this query, we query the **Usage** table instead to achieve the same results in less time. Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
 ```sql
 1.	Usage   //<-- Query the USAGE table (instead of "search *" to query everything)
@@ -63,7 +63,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 ![](/assets/img/Potato/Ugly.png)
 
 # Continuous Improvement - Underlying Query Logic and Presentation...
-My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! &#128071;
+My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost to the median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! &#128071;
 
 ```sql
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
