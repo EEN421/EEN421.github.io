@@ -9,10 +9,8 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 - Improve the end result display 
 - Understand the different layers of complexity for future query improvements
 
-# Problem:
-This query started out as a quick and dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
 
-&#128161;Let’s break down the first iteration of this query and then discuss how we can clean it up and make it more efficient!
+&#128161;Let’s break down the first iteration of this query and then discuss how we can clean it up and make it more efficient. This started out as a quick n' dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
 
 ```sql
 1.	search *                     //<-- Query Everything
@@ -26,8 +24,10 @@ This query started out as a quick and dirty way to grab your daily average inges
 5.	| summarize avg(TotalGB)     //<-- Summarize and return the daily average
 ```
 
+
+
 # Fix: 
-The most blatant offense here, is that I’m burning resources crawling through #everything# using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the **free demonstration workspace** available here and see the difference: https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView 
+The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the ![free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
 ```sql
 1.	Usage   //<-- Query the USAGE table (instead of "search *" to query everything)
@@ -42,7 +42,7 @@ The most blatant offense here, is that I’m burning resources crawling through 
 ```
 
 # Continuous Improvement – Now What? Calculate Cost, of Course!:
-Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m almost always immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (effective cost per GB based on commitment tier, to learn more about finding your effective cost per GB, check out my previous cost optimization blog post: https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the percentiles function.
+Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (this variable holds your _effective cost per GB_ based on your commitment tier. To find your effective cost per GB, check out ![my previous cost optimization blog post where this is covered in greater detail](https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the ![percentiles](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/percentiles-aggfunction) function.
 
 ```sql
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
@@ -92,8 +92,8 @@ My grievances against the above query are as follows: Leveraging the percentiles
 - &#10003; Understand the different layers of complexity for future query improvements
 - &#10003; Attained a state of **_awesome_**
 
-Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley | Github: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
+Author: Ian D. Hanley | LinkedIn: ![/in/ianhanley/](https://www.linkedin.com/in/ianhanley/) | Twitter: ![@IanDHanley](https://twitter.com/IanDHanley) | Github: ![https://github.com/EEN421](https://github.com/EEN421)
 
 References: 
-https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql
+- ![https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Efficiency%20Exercise.kql)
 
