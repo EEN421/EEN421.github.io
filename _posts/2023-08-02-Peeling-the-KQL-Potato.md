@@ -1,6 +1,5 @@
 # Introduction and Use Case:
-
-The sheer versatility of KQL as a query language is staggering. The fact that there are so many query variations that ultimately lead to the same results, leads me to think how one query could be more beneficial than another in a given circumstance. Let’s explore some crude KQL examples that work, but could be improved upon in more ways than one (think not only compute requirements and time spent crunching, but how the output could be improved upon as well). 
+The sheer versatility of KQL as a query language is staggering. The fact that there are so many query variations that ultimately deliver to the same results, leads me to think how one query could be more beneficial than another in a given circumstance. Today we'll explore a crude KQL example that works, but then improve it in more ways than one (think not only compute requirements and time spent crunching, but how the output could be improved upon as well). 
 
 # In this post we will:
 - Craft basic a basic, quick n’ dirty query that gets the job done 
@@ -26,7 +25,7 @@ The sheer versatility of KQL as a query language is staggering. The fact that th
 ![](/assets/img/Potato/original.png)
 
 
-# Fix: 
+# Continuous Improvement:
 The most blatant offense here, is that I’m burning resources crawling through **everything** using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the [free demonstration workspace](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView) and see the difference:  
 
 ```sql
@@ -42,7 +41,7 @@ The most blatant offense here, is that I’m burning resources crawling through 
 ```
 ![](/assets/img/Potato/plainGB.png.png)
 
-# Continuous Improvement – Now What? Calculate Cost, of Course!:
+# Continuous Improvement – Now What? Calculate Cost, of Course!
 Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m _almost always_ immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (this variable holds your _effective cost per GB_ based on your commitment tier. To find your effective cost per GB, check out [my previous cost optimization blog post where this is covered in greater detail](https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the [percentiles](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/percentiles-aggfunction) function.
 
 ```sql
@@ -60,8 +59,6 @@ Now we have an efficient query to return the daily average ingest, but **why sto
     | summarize AvgCostPerDay=percentiles(Cost,50),AvgGBPerDay=percentiles(GB,50) //<-- Return the 50th percentile for Cost/Day and GB/Day
 ```
 ![](/assets/img/Potato/Ugly.png)
-
-
 
 
 My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! 
