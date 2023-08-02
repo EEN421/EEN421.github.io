@@ -1,16 +1,16 @@
-#Introduction and Use Case:#
+# Introduction and Use Case:
 
 The sheer versatility of KQL as a query language is staggering. The fact that there are so many query variations that ultimately lead to the same results, leads me to think how one query could be more beneficial than another in a given circumstance. Let’s explore some crude KQL examples that work, but could be improved upon in more ways than one (think not only compute requirements and time spent crunching, but how the output could be improved upon as well). 
 
-#In this post we will:#
+# In this post we will:
 •	Craft basic a basic, quick n’ dirty query that gets the job done
 •	Improve the efficiency and thus the time it takes to return results
 •	Improve upon the underlying query logic for more meaningful results
 •	Improve the end result display
 •	Understand the different layers of complexity for future query improvements
 
-#Problem:#
-This query started out as a quick and dirty way to grab your daily average ingest, but as we’re about to learn, #there’s more than one way to peel this KQL potato!#
+# Problem:
+This query started out as a quick and dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
 
 &#128073;Let’s break down the first iteration of this query and then discuss how we can clean it up and make it more efficient!
 
@@ -26,8 +26,8 @@ This query started out as a quick and dirty way to grab your daily average inges
 5.	| summarize avg(TotalGB)     //<-- Summarize and return the daily average
 
 
-#Fix:#
-The most blatant offense here, is that I’m burning resources crawling through #everything# using the #“search *”# in #line 1# instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the #free demonstration workspace# available here and see the difference: https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView 
+# Fix: 
+The most blatant offense here, is that I’m burning resources crawling through #everything# using the **_“search *”_** in **line 1** instead of specifying a table. This means that this query can take forever and even time-out in larger environments (after about 10 minutes). Try it out yourself in the **free demonstration workspace** available here and see the difference: https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView 
 
 
 1.	Usage   //<-- Query the USAGE table (instead of "search *" to query everything)
@@ -41,8 +41,8 @@ The most blatant offense here, is that I’m burning resources crawling through 
 5.	| summarize AvgGBPerDay=avg(GB)       //<-- Take the average 
  
 
-#Continuous Improvement – Now What? Calculate Cost, of Course!:#
-Now we have an efficient query to return the daily average ingest, but #why stop there?# The next question I’m almost always immediately asked next is “but what does that cost?” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (effective cost per GB based on commitment tier, to learn more about finding your effective cost per GB, check out my previous cost optimization blog post: https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the percentiles function.
+# Continuous Improvement – Now What? Calculate Cost, of Course!:
+Now we have an efficient query to return the daily average ingest, but **why stop there?** The next question I’m almost always immediately asked next is “but what does that **_cost?_**” This next iteration includes an attempt to calculate average cost, and does so by introducing a rate variable (effective cost per GB based on commitment tier, to learn more about finding your effective cost per GB, check out my previous cost optimization blog post: https://www.hanley.cloud/2023-05-15-Sentinel-Cost-Optimization-Part-2/) and leveraging the percentiles function.
 
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
    
@@ -62,7 +62,7 @@ Now we have an efficient query to return the daily average ingest, but #why stop
 
 
 
-My grievances against the above query are as follows: Leveraging the percentiles function to take the 50th percentile is not technically the true average, but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just #ugly# too. #Let’s fix that# in our next query! 
+My grievances against the above query are as follows: Leveraging the percentiles function to take the 50th percentile is not technically the true average, but the cost closest to median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! 
 
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
 2.	Usage   //<-- Query the USAGE table (instead of "search *" to query everything)
