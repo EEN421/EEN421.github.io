@@ -83,8 +83,8 @@ My grievances against the above query are as follows: Leveraging the percentiles
 8.	| project AvgGBPerDay=strcat(round(AvgGBPerDay,2), ' GB/Day'), AvgCostPerDay=strcat('$', round(Cost,2), ' /Day')    //<-- This line is tricky. I convert everything to string in order to prepend '$' and append ' /Day' to make the results more presentable
 ```
 ![](/assets/img/Potato/Formatted.png)
-
 >_Much Better_&#128070;
+<br/>
 
 # In this post, we accomplished the following:
 - &#10003; Craft basic a basic, quick n’ dirty query that gets the job done
@@ -92,7 +92,7 @@ My grievances against the above query are as follows: Leveraging the percentiles
 - &#10003; Improve upon the underlying query logic for more meaningful results
 - &#10003; Improve the end result presentation
 - &#10003; Understand the different layers of complexity for future query improvements
-- &#10003; Attained a state of **_awesome_**
+- &#10003; Build something **_awesome_** &#128526;
 
 
 
