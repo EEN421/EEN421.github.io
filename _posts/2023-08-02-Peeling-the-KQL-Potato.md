@@ -70,7 +70,7 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 <br/>
 
 # Continuous Improvement - Underlying Query Logic and Presentation...
-My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the cost to the median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! &#128071;
+My grievances against the above query are as follows: Leveraging the percentiles function to take **the 50th percentile is not technically the true average,** but the closest actual cost to the median. Depending on the size of your environment, this can amount to a significant deviation from the true average. Last but not least, the output is just **ugly** too. **_Let’s fix that_** in our next query! &#128071;
 
 ```sql
 1.	let rate = 4.30;         //<-- Effective $ per GB rate for East US
