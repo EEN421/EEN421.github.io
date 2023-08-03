@@ -1,27 +1,48 @@
 # Introduction and Use Case:
-The sheer versatility of KQL as a query language is staggering. The fact that there are so many query variations that ultimately deliver to the same results, leads me to think how one query could be more beneficial than another in a given circumstance. Today we'll explore a crude KQL example that works, but then improve it in more ways than one (think not only compute requirements and time spent crunching, but how the output could be improved upon as well). 
+Retention policies define when to remove or archive data in a Log Analytics workspace. Archiving lets you keep older, less used data in your workspace at a reduced cost. You're a Sentinel Ninja and your organization needs to adjust their interactive and archive retention settings across the board to remain in compliance with the latest industry regulations. 
 
 <br/>
 
 # In this post we will:
-- Craft basic a basic, quick n’ dirty query that gets the job done 
-- Improve the efficiency and thus the time it takes to return results 
-- Improve upon the underlying query logic for more meaningful results 
-- Improve the end result presentation 
-- Understand the different layers of complexity for future query improvements
+- Explore manually adjusting interactive and archive retention settings
+- Leverage an automation script in Azure CLI
+- Create a custom .json file to hold your secrets/unique information
+- Adjust both interactive and archive retention across multiple tables 
+- Save yourself time and stress 
 
 
-&#128073; Let’s break down the first iteration of this query and then discuss _how we can clean it up and make it **more efficient.**_ This started out as a quick and dirty way to grab your daily average ingest, but as we’re about to learn, **_there’s more than one way to peel this KQL potato!_**
+# Manual Process:
+Each workspace has a default retention policy that's applied to all tables. You can set a different retention policy on individual tables, one at a time in the portal's GUI.
+- Navigate to the **Tables** blade under **Settings** in your Log Analytics Workspace.
+![](Blade.png)
 
-```sql
-1.	search *                     //<-- Query Everything
+- Select a table and click on the **"..."**
+- Select **"Manage Table"** to see the current retention settings
 
-2.	| where TimeGenerated > (30d)          //<-- Check the past 30 days
+- Interactive Retention can be set to a range of values from 30 days to 2 years.
+- Archive Retention can be set to a much wider ranger of values from 30 days to 7 years.
+- Archive Retention cannot be less than the Interactive Retention period.
+- Archiving can be effectively turned off by setting it equivalent to the Interactive Retention:
 
-3.	| where _IsBillable == true  //<-- Only include billable ingest volume
 
-4.	| summarize TotalGB = round(sum(_BilledSize/1000/1000/1000)) by bin(TimeGenerated, 1d)       //<-- Summarize billable volume in GB using the _BilledSize table column
-
-5.	| summarize avg(TotalGB)     //<-- Summarize and return the daily average
+```json
+{
+  "TenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "SubscriptionId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "LogAnalyticsResourceGroup": "rg-hanley-demonstration",
+  "LogAnalyticsWorkspaceName":  "test-workspace",
+  "TablePlan": "Analytics",
+  "SetEntireLogAnalyticsWorkspace": "YES",  
+  "WorkspaceRetentionInDays": 90,
+  "ArchiveRetentionInDays": 270,
+  "TotalRetentionInDays": 365,
+}
 ```
-![](/assets/img/Potato/Original3.png)
+
+# Create Azure Web App & Assign RBAC Role
+
+- Login to the [Azure Portal](www.portal.azure.com)
+
+- Select the CloudShell button illustrated below: <br/>
+
+![](/assets/img/IoT%20Azure%20Cost%20Monitor/CLI.png)
