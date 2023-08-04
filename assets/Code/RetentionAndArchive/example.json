@@ -1,0 +1,11 @@
+{
+  "TenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "SubscriptionId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "LogAnalyticsResourceGroup": "rg-hanley-demonstration",
+  "LogAnalyticsWorkspaceName":  "test-workspace",
+  "TablePlan": "Analytics",
+  "SetEntireLogAnalyticsWorkspace": "YES",  
+  "WorkspaceRetentionInDays": 90,
+  "ArchiveRetentionInDays": 270,
+  "TotalRetentionInDays": 365,
+}
