@@ -90,7 +90,7 @@ Lastly, lets check out our retention settings. ***Anything more than 90 days wil
 
 ![](/assets/img/Optimization/Retnetion%202.png)
  
-> **_NOTE:_**   In my experience, it’s best practice to configure retention for 90 days with a valid Sentinel subscription because it’s included.
+> **_&#128161;_**   In my experience, it’s best practice to configure retention for 90 days with a valid Sentinel subscription because it’s included.
 
 # Conclusion:
 The easiest ways to optimize your overall billable ingest cost are to ask yourself the following questions first: 
