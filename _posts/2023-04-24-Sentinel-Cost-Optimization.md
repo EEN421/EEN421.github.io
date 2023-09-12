@@ -48,7 +48,7 @@ Next we’ll take a look at the short term ingest trend. You can run the same qu
 
 
 Based off the average billable ingest volume displayed in the above short term and long term graphs, we should be able to make an educated decision about which commitment tier to move to.
-> **_NOTE:_**   Commitment Tiers are tricky, as they come with different discounts for Sentinel and your Log Analytics workspace separately. For example, it's cost effective to move to the 100GB/Day commitment tier from Pay-As-You-Go when you get to 50GB+/Day because of the 50% Sentinel discount, but the Analytics workspace discount is 15%, so it's not cost effective until roughly 85-90GB/Day or more (I like to a little more to insulate from nights and weekends).
+> **_&#128161; NOTE:_**   Commitment Tiers are tricky, as they come with different discounts for Sentinel and your Log Analytics workspace separately. For example, it's cost effective to move to the 100GB/Day commitment tier from Pay-As-You-Go when you get to 50GB+/Day because of the 50% Sentinel discount, but the Analytics workspace discount is 15%, so it's not cost effective until roughly 85-90GB/Day or more (I like to a little more to insulate from nights and weekends).
 
 # Confirm Sentinel Commitment Tier
 
