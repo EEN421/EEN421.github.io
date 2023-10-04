@@ -4,9 +4,9 @@ Have you ever wondered how to take your LLM (Language Model) to the next level? 
 <br/>
 
 # In this post we will:
-- configuring an LLM with Azure OpenAI Studio
-- taking your natural language processing capabilities to new heights
-- easily build and deploy an LLM that can understand the nuances of language like never before
+- Configure an LLM with Azure OpenAI Studio
+- Take your natural language processing capabilities to new heights
+- Easily build and deploy an LLM that can understand the nuances of language like never before
 - Leverage your LLM to write better KQL queries!
 
 
