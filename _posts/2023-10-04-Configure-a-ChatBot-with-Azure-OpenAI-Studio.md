@@ -14,10 +14,15 @@ Have you ever wondered how to take your LLM (Language Model) to the next level? 
 
 
 # In this post we will:
-- &#128073;Configure an LLM with Azure OpenAI Studio
-- &#128073;Take your natural language processing capabilities to new heights
-- &#128073;Easily build and deploy an LLM that can understand the nuances of language like never before
-- &#128073;Leverage your LLM to write better KQL queries!
+- &#128073;Address **Pre-Requisites**
+- &#128073;Deploy an LLM Model using **Azure OpenAI Studio**
+- &#128073;Handle the **Basics**
+- &#128073;Cover **Networking** 
+- &#128073;Touch on **Tags**
+- &#128073;Fine Tune our Deployment's **Parameters** and **Deployment** Configuration
+- &#128073;Generate Sample Code for **App Integration**
+- &#128073;Have some **Fun** with our Deployment &#128526;	
+- &#128073;Discuss **Common Issues/Troubleshooting**
 
 <br/>
 
@@ -68,7 +73,7 @@ This next window has several fields we need to populate, shown below:
 
 <br/>
 
- > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) &#128020; to quickly find your public IP address_ &#128020;
+ > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) &#128020; to quickly find your public IP address_
 
  <br/>
 
@@ -231,10 +236,23 @@ Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
 ...then your most effective, time-saving approach is to just nuke your deployment and start over (it really doesn't take that long). There are alternative methods available to reset the provisioning state listed here: [https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state](https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state) 
 
 # In this post we:
-- &#10003;Configure an LLM with Azure OpenAI Studio
-- &#10003;Take your natural language processing capabilities to new heights
-- &#10003;Easily build and deploy an LLM that can understand the nuances of language like never before
-- &#10003;Leverage your LLM to write better KQL queries!
+- &#128073;Addressed **Pre-Requisites**
+- &#128073;Deployed an LLM Model using **Azure OpenAI Studio**
+- &#128073;Handled the **Basics**
+- &#128073;Covered **Networking** 
+- &#128073;Touched on **Tags**
+- &#128073;Fine Tuned our Deployment's **Parameters** and **Deployment** Configuration
+- &#128073;Generated Sample Code for **App Integration**
+- &#128073;Had some **Fun** with our Deployment &#128526;	
+- &#128073;Discussed **Common Issues/Troubleshooting**
 
 # Resources: 
 - [https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
+
+- [https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state](https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state) 
+
+- [IP Chicken](www.ipchicken.com) &#128020;
+
+- [learn more about Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/)
+
+- [Azure free account](https://azure.microsoft.com/en-us/free/cognitive-services/)
