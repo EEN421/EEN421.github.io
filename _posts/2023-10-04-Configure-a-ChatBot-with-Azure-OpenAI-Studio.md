@@ -150,13 +150,13 @@ Once you select a **Model,** it will ask you for which **model version** you wan
 
 # Now for the FUN part... 
 
-Tailor your deployment to your liking. For example, how many prior messages in the conversation should it remember when generating it's next response? It's 10 by default. 
+Tailor your deployment to your liking. For example, how many prior messages in the conversation should it remember when generating it's next response? It's 10 by default in the **Deployment Configuration** tab. 
 
 ![](/assets/img/OpenAI/Setup/23_config.png)
 
 <br/>
 
-Here you can _flavour_ your ChatBot's response as follows:
+Moving over to the **Parameters Configuration** tab, you can _flavour_ your ChatBot's response:
 
 - **Max Response:** Set a limit on the number of tokens per model response. The API supports a maximum of 4000 tokens shared between the prompt (including system message, examples, message history, and user query) and the model's response. One token is roughly 4 characters for typical English text. 
 
@@ -182,6 +182,7 @@ Here's a fun one, you can choose between different pre-defined purposes. Writing
 
 The _next step is making the deployment available._ Click on the **View Code** button to view sample python integration code you can use to start integrating your current prompt and settings into your application:
 
+![](/assets/img/OpenAI/Setup/ViewCode.png)
 ![](/assets/img/OpenAI/Setup/26_api.png)
 
 <br/>
@@ -218,6 +219,7 @@ Maybe you caught an engineer wasting time on a logic app for a specific client r
 &#128736; If you can get into Azure OpenAI Studio and open the chat interface, but your inquiries are refused, check your Public IP and update the settings in the Networking blade under your new OpenAI resource in the Azure portal 
 
 ![](/assets/img/OpenAI/Setup/11.png)
+![](/assets/img/OpenAI/Setup/PublicIP.png)
 
 &#128736; If you are unable to make any changes to your networking settings and receive the following type of error: 
 
