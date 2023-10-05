@@ -8,7 +8,16 @@ Have you ever wondered how to take your LLM (Language Model) to the next level? 
 
 <br/>
 
-&#x26A1; The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_ &#x26A1;
+&#x26A1; The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_ &#128071;
+
+<br/>
+
+
+# In this post we will:
+- &#128073;Configure an LLM with Azure OpenAI Studio
+- &#128073;Take your natural language processing capabilities to new heights
+- &#128073;Easily build and deploy an LLM that can understand the nuances of language like never before
+- &#128073;Leverage your LLM to write better KQL queries!
 
 <br/>
 
@@ -20,13 +29,6 @@ Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/
 - [Official MS Blog - Start Building with Azure Cognitive Services for Free](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
 
 <br/>
-
-# In this post we will:
-- &#128073;Configure an LLM with Azure OpenAI Studio
-- &#128073;Take your natural language processing capabilities to new heights
-- &#128073;Easily build and deploy an LLM that can understand the nuances of language like never before
-- &#128073;Leverage your LLM to write better KQL queries!
-
 
 # Step-by-Step:
 Log into your [Azure Portal](https://www.portal.azure.com) and search for **Azure Open AI** as illustrated below:
@@ -62,12 +64,13 @@ This next window has several fields we need to populate, shown below:
 - Create or Select a **virtual network** and **subnet**
 - Define your public IP address 
 
- &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_
-
-
 ![](/assets/img/OpenAI/Setup/4.png)
 
 <br/>
+
+ &#128161; >_Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_
+
+ <br/>
 
 # 3. Tags (Optional)
 This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical **json** format (**Name:Value**) and can be leveraged to consolidate billing to categorized/tagged resources.
@@ -89,7 +92,7 @@ Click on **Create** when you're ready.
 
 <br/>
 
-Wait 5 minutes for your deployment to complete:
+&#9201; Wait 5 minutes for your deployment to complete:
 
 ![](/assets/img/OpenAI/Setup/10.png)
 
@@ -139,7 +142,7 @@ Once you select a **Model,** it will ask you for which **model version** you wan
 
 <br/>
 
-Wait for your deployment to complete:
+&#9201; Wait for your deployment to complete:
 
 ![](/assets/img/OpenAI/Setup/21.png)
 
@@ -212,11 +215,11 @@ Maybe you caught an engineer wasting time on a logic app for a specific client r
 
 # Troubleshooting
 
-&#128736; If you can get into Azure OpenAI Studio and open the chat interface, but your inquiries are refused, check your Public IP and update the settings in the Networking blade under your new OpenAI resource in the Azure portal &#128736;
+&#128736; If you can get into Azure OpenAI Studio and open the chat interface, but your inquiries are refused, check your Public IP and update the settings in the Networking blade under your new OpenAI resource in the Azure portal 
 
 ![](/assets/img/OpenAI/Setup/11.png)
 
-If you are unable to make any changes to your networking settings and receive the following type of error: 
+&#128736; If you are unable to make any changes to your networking settings and receive the following type of error: 
 
 ```sql
 Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/OpenAI/providers/Microsoft.CognitiveServices/accounts/testai001' because the resource entity provisioning state is not terminal. Please wait for the provisioning state to become terminal and then retry the request.
