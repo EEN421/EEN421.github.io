@@ -1,7 +1,7 @@
 # Introduction and Use Case:
 Have you ever wondered how to take your LLM (Language Model) to the next level? Look no further, because we have got you covered. In this blog post, we will **guide you through the process of configuring an LLM with Azure OpenAI Studio,** taking your natural language processing capabilities to new heights. With the power of Azure OpenAI Studio, you can easily build and deploy an LLM that can understand the nuances of language like never before. So, fasten your seatbelts, and get ready to explore!
 
-Spinning up your own Chat Bot/LLM is _**way easier**_ than you might think. Would you believe that the preceding paragraph above was written by one?
+ &#128161; Spinning up your own Chat Bot/LLM is _**way easier**_ than you might think. Would you believe that the preceding paragraph above was written by one?
 
 
 ![](/assets/img/OpenAI/Setup/27_introduction%20paragraph.png)
@@ -61,7 +61,7 @@ This next part is very important from a **security perspective:**
 - Create or Select a **virtual network** and **subnet**
 - Define your public IP address 
 
-> &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_
+ &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_
 
 
 ![](/assets/img/OpenAI/Setup/4.png)
@@ -187,6 +187,25 @@ Ask general trivia:
 ![](/assets/img/OpenAI/Setup/22.png)
 
 Use it to help build useful KQL queries:
+![](/assets/img/OpenAI/Setup/KQL1.png)
+
+If you've set it to remember your last inquiry, you can built on top of it like this: 
+
+![](/assets/img/OpenAI/Setup/KQL2.png)
+
+Maybe you completely missed some important lore from a recent blockbuster, but don't have time to re-watch it, try asking your new assistant:
+
+![](/assets/img/OpenAI/Setup/KQL3.png)
+
+Maybe you're new to the SOC and need to come up with a plan to protect your organization against that pesky _log4j_ some of us lost sleep over a while back... 
+
+![](/assets/img/OpenAI/Setup/KQL4.png)
+
+Maybe you caught an engineer wasting time on a logic app for a specific client request that could be solved more efficiently another way using existing tools... 
+
+![](/assets/img/OpenAI/Setup/KQL5.png)
+
+ &#128161; _Pro-Tip: Take whatever answers it gives you with some restraint. It's an LLM chat bot after all... it's not a person capable of simple fact/logic checking. It can just as easily provide a counter argument to an argument it just gave you, totally contradicting itself. It's given me some goofy answers to some pretty straight forward prompts sometimes too, so you can't rely on it **but you can use it to get a step ahead** of the game if used with caution.
 
 <br/>
 
