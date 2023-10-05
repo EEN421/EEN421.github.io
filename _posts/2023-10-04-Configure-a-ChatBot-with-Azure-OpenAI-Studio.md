@@ -8,7 +8,7 @@ Have you ever wondered how to take your LLM (Language Model) to the next level? 
 
 <br/>
 
-&#x26A1; The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_
+&#x26A1; The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_ &#x26A1;
 
 <br/>
 
@@ -22,10 +22,10 @@ Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/
 <br/>
 
 # In this post we will:
-&#128073;Configure an LLM with Azure OpenAI Studio
-&#128073;Take your natural language processing capabilities to new heights
-&#128073;Easily build and deploy an LLM that can understand the nuances of language like never before
-&#128073;Leverage your LLM to write better KQL queries!
+- &#128073;Configure an LLM with Azure OpenAI Studio
+- &#128073;Take your natural language processing capabilities to new heights
+- &#128073;Easily build and deploy an LLM that can understand the nuances of language like never before
+- &#128073;Leverage your LLM to write better KQL queries!
 
 
 # Step-by-Step:
@@ -55,8 +55,9 @@ This next window has several fields we need to populate, shown below:
 <br/>
 
 # 2. Networking
-&#128273; This next part is very important from a **security perspective:**
-- Select _All networks, **including the internet,** can access this resource_ **at your own risk.**
+&#128273; This next part is very important from a **security perspective:**	&#128274;
+
+- Select _All networks, **including the internet,** can access this resource_ **at your own risk.** 
 - It's _more secure_ to lock this resource down and create an exception on the firewall for your public IP address. 
 - Create or Select a **virtual network** and **subnet**
 - Define your public IP address 
@@ -211,13 +212,15 @@ Maybe you caught an engineer wasting time on a logic app for a specific client r
 
 # Troubleshooting
 
-If you can get into Azure OpenAI Studio and open the chat interface, but your inquiries are refused, check your Public IP and update the settings in the Networking blade under your new OpenAI resource in the Azure portal &#128736;
+&#128736; If you can get into Azure OpenAI Studio and open the chat interface, but your inquiries are refused, check your Public IP and update the settings in the Networking blade under your new OpenAI resource in the Azure portal &#128736;
 
 ![](/assets/img/OpenAI/Setup/11.png)
 
 If you are unable to make any changes to your networking settings and receive the following type of error: 
 
+```sql
 Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/OpenAI/providers/Microsoft.CognitiveServices/accounts/testai001' because the resource entity provisioning state is not terminal. Please wait for the provisioning state to become terminal and then retry the request.
+```
 
 ...then your most effective, time-saving approach is to just nuke your deployment and start over (it really doesn't take that long). There are alternative methods available to reset the provisioning state listed here: [https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state](https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state) 
 
