@@ -31,13 +31,13 @@ Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/
 <br/>
 
 # Step-by-Step:
-Log into your [Azure Portal](https://www.portal.azure.com) and search for **Azure Open AI** as illustrated below:
+- Log into your [Azure Portal](https://www.portal.azure.com) and search for **Azure Open AI** as illustrated below:
 
 ![](/assets/img/OpenAI/Setup/1_search.png)
 
 <br/>
 
-Select **+Create**
+- Select **+Create**
 
 ![](/assets/img/OpenAI/Setup/2.png)
 
@@ -57,7 +57,7 @@ This next window has several fields we need to populate, shown below:
 <br/>
 
 # 2. Networking
-&#128273; This next part is very important from a **security perspective:**	&#128274;
+&#10071; This next part is very important from a **security perspective:** &#128272;
 
 - Select _All networks, **including the internet,** can access this resource_ **at your own risk.** 
 - It's _more secure_ to lock this resource down and create an exception on the firewall for your public IP address. 
@@ -68,7 +68,7 @@ This next window has several fields we need to populate, shown below:
 
 <br/>
 
- &#128161; >_Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_
+ > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_ &#128020;
 
  <br/>
 
@@ -86,7 +86,7 @@ Review the **Basics, Network,** and **Tags** for typos etc. and make sure to rea
 
 <br/>
 
-Click on **Create** when you're ready.
+- Click on **Create** when you're ready.
 
 ![](/assets/img/OpenAI/Setup/7.png)
 
@@ -174,13 +174,13 @@ Here you can _flavour_ your ChatBot's response as follows:
 
 <br/>
 
-Here's a fun one, you can choose between different pre-defined purposes. Writing a screenplay? Try the Shakespeare writing assistant! Working on your taxes? Try the IRS tax chatbot (but definitely don't rely solely on this when filing your taxes, you've been warned!)
+Here's a fun one, you can choose between different pre-defined purposes. Writing a screenplay? Try the Shakespeare writing assistant! Working on your taxes? Try the IRS tax chatbot (but definitely don't rely solely on this when filing your taxes, you've been warned! &#129297; )
 
 ![](/assets/img/OpenAI/Setup/25.png)
 
 <br/>
 
-The next step is making the deployment available. Click on the **View Code** button to view sample python integration code you can use to start integrating your current prompt and settings into your application:
+The _next step is making the deployment available._ Click on the **View Code** button to view sample python integration code you can use to start integrating your current prompt and settings into your application:
 
 ![](/assets/img/OpenAI/Setup/26_api.png)
 
