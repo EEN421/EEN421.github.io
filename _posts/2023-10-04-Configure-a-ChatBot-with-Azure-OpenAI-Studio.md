@@ -200,11 +200,11 @@ Ask general trivia:
 Use it to help build useful KQL queries:
 ![](/assets/img/OpenAI/Setup/KQL1.png)
 
-If you've set it to remember your last inquiry, you can built on top of it like this: 
+If you've set it to remember your last inquiry, you can build on top of it like this: 
 
 ![](/assets/img/OpenAI/Setup/KQL2.png)
 
-Maybe you completely missed some important lore from a recent blockbuster, but don't have time to re-watch it, try asking your new assistant:
+Maybe you completely forgot to read that book for book club, and don't have time to catch the movie adaptation, try asking your new assistant for key points:
 
 ![](/assets/img/OpenAI/Setup/KQL3.png)
 
