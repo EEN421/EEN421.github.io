@@ -8,7 +8,7 @@ Have you ever wondered how to take your LLM (Language Model) to the next level? 
 
 <br/>
 
-&#x26A1; The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_ &#128071;
+&#x26A1; The possibilities are nearly endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_ &#128071;
 
 <br/>
 
@@ -57,7 +57,7 @@ This next window has several fields we need to populate, shown below:
 <br/>
 
 # 2. Networking
-&#10071; This next part is very important from a **security perspective:** &#128272;
+&#10071; &#10071; &#10071; This next part is very important from a **security perspective:** &#128272;
 
 - Select _All networks, **including the internet,** can access this resource_ **at your own risk.** 
 - It's _more secure_ to lock this resource down and create an exception on the firewall for your public IP address. 
@@ -68,19 +68,19 @@ This next window has several fields we need to populate, shown below:
 
 <br/>
 
- > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_ &#128020;
+ > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) &#128020; to quickly find your public IP address_ &#128020;
 
  <br/>
 
 # 3. Tags (Optional)
-This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical **json** format (**Name:Value**) and can be leveraged to consolidate billing to categorized/tagged resources.
+This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical **json** format (**Name:Value**) and can be leveraged to consolidate billing to _categorized/tagged_ resources.
 
 ![](/assets/img/OpenAI/Setup/5.png)
 
 <br/>
 
 # 4. Review + Submit
-Review the **Basics, Network,** and **Tags** for typos etc. and make sure to read the fine print, because clicking **Create** means you _agree to all the legal terms and privacy statement(s)._
+Review the **Basics, Network,** and **Tags** for typos etc. and make sure to read the fine print, because clicking **Create** means you _agree to all the legal terms and privacy statement(s)._&#128270;
 
 ![](/assets/img/OpenAI/Setup/6.png)
 
@@ -105,9 +105,10 @@ Lets take it for a test drive! Click on **Explore** to load the **Azure OpenAI S
 <br/>
 
 There are several kinds of OpenAI Chat Bots you can deploy:
+
 - **Chat Playground** is great for generating content (ask it to write something for you)
-- **Completions Playground** is great for analyizing and summarizing content you feed it (ie. 'completing' it)
 - **DALL-E** is still in _Preview_ but is great for generating images
+- **Completions Playground** is great for analyizing and summarizing content you feed it (ie. 'completing' it)
 
 Lets start with **Chat Playground:**
 
