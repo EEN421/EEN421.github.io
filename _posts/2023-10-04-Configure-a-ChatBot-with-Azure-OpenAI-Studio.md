@@ -136,7 +136,7 @@ Here are the _model_ options from the dropdown in the above screenshot:
 ![](/assets/img/OpenAI/Setup/17_models.png)
 
 <br/>
-If you select and expand the **Advanced options** drop down menu, only the **Default** Content Filter available at the time of this article, illustrated below:
+If you select and expand the **Advanced options** drop down menu, only the **Default** Content Filter is available at the time of this article, illustrated below:
 
 ![](/assets/img/OpenAI/Setup/19.png)
 
