@@ -73,7 +73,7 @@ This next window has several fields we need to populate, shown below:
 
 <br/>
 
- > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) &#128020; to quickly find your public IP address_
+ > &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) &#128020; to quickly find your public IP address. Refer to the **Troubleshooting** section below if this happens to you._
 
  <br/>
 
