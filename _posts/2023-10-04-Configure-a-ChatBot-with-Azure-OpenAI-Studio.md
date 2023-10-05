@@ -17,7 +17,7 @@ Join the 1.3 million developers who have been using Cognitive Services to build 
 
 Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/cognitive-services/) today, and [learn more about Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/). 
 
-- [https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
+- [Official MS Blog - Start Building with Azure Cognitive Services for Free](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
 
 <br/>
 
@@ -61,7 +61,7 @@ This next part is very important from a **security perspective:**
 - Create or Select a **virtual network** and **subnet**
 - Define your public IP address 
 
-Note: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address
+> &#128161; _Pro-Tip: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address_
 
 
 ![](/assets/img/OpenAI/Setup/4.png)
@@ -69,14 +69,14 @@ Note: Unless you have a persistent public IP address through your ISP, your publ
 <br/>
 
 # 3. Tags (Optional)
-This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical json format (Name:Value) and can be leveraged to consolidate billing to categorized/tagged resources.
+This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical **json** format (**Name:Value**) and can be leveraged to consolidate billing to categorized/tagged resources.
 
 ![](/assets/img/OpenAI/Setup/5.png)
 
 <br/>
 
 # 4. Review + Submit
-Review the **Basics, Network,** and **Tags** for typos etc. and make sure to read the fine print, because clicking **Create** means you agree to all the legal terms and privacy statement(s). 
+Review the **Basics, Network,** and **Tags** for typos etc. and make sure to read the fine print, because clicking **Create** means you _agree to all the legal terms and privacy statement(s)._
 
 ![](/assets/img/OpenAI/Setup/6.png)
 
@@ -132,7 +132,7 @@ If you select and expand the **Advanced options** drop down menu, only the **Def
 
 <br/>
 
-Once you select a **Model,** it will ask you for which **model version** you want to use. I went with the default (0301). Next, select **Create** 
+Once you select a **Model,** it will ask you for which **model version** you want to use. I went with the **default (0301)**. Next, select **Create** 
 
 ![](/assets/img/OpenAI/Setup/20.png)
 
@@ -160,7 +160,7 @@ Here you can _flavour_ your ChatBot's response as follows:
 
 - **Top P:** Similar to temperature, this controls randomness but uses a different method. Lowering Top P will narrow the model’s token selection to likelier tokens. Increasing Top P will let the model choose from tokens with both high and low likelihood. Try adjusting temperature or Top P but not both.
 
-- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using <|im_end|> ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
+- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using **<|im_end|>** ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
 
 - **Frequency Penalty:** Reduce the chance of repeating a token proportionally based on how often it has appeared in the text so far. This decreases the likelihood of repeating the exact same text in a response.
 
