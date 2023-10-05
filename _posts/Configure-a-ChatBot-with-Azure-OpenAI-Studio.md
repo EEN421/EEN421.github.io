@@ -1,7 +1,21 @@
 # Introduction and Use Case:
 Have you ever wondered how to take your LLM (Language Model) to the next level? Look no further, because we have got you covered. In this blog post, we will **guide you through the process of configuring an LLM with Azure OpenAI Studio,** taking your natural language processing capabilities to new heights. With the power of Azure OpenAI Studio, you can easily build and deploy an LLM that can understand the nuances of language like never before. So, fasten your seatbelts, and get ready to explore!
 
-Spinning up your own Chat Bot/LLM is _**way easier**_ than you might think. Would you believe that the preceding paragraph above was written by one? The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_
+Spinning up your own Chat Bot/LLM is _**way easier**_ than you might think. Would you believe that the preceding paragraph above was written by one?
+
+
+![](/assets/img/OpenAI/Setup/27_introduction%20paragraph.png)
+
+<br/>
+
+The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_
+
+<br/>
+
+# Pre-Requisites
+Join the 1.3 million developers who have been using Cognitive Services to build AI powered apps to date. With the broadest offering of AI services in the market, Azure Cognitive Services can unlock AI for more scenarios than other cloud providers. Give your apps, websites, and bots the ability to see, understand, and interpret people’s needs — all it takes is an API call — by using natural methods of communication. Businesses in various industries have transformed how they operate using the very same Cognitive Services now available to you with an Azure free account.
+
+Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/cognitive-services/) today, and [learn more about Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/). 
 
 <br/>
 
@@ -25,7 +39,7 @@ Select **+Create**
 
 <br/>
 
-# Basics
+# 1. Basics
 This next window has several fields we need to populate, shown below: 
 
 1. Select which **Subscription** you'd like to build this under
@@ -38,7 +52,7 @@ This next window has several fields we need to populate, shown below:
 
 <br/>
 
-# Networking
+# 2. Networking
 This next part is very important from a **security perspective:**
 - Select _All networks, **including the internet,** can access this resource_ **at your own risk.**
 - It's _more secure_ to lock this resource down and create an exception on the firewall for your public IP address. 
@@ -48,94 +62,133 @@ This next part is very important from a **security perspective:**
 Note: Unless you have a persistent public IP address through your ISP, your public IP will change from time to time. When this happens, you will not be able to access your chatbot in Azure OpenAI Studio. You can go to [IP Chicken](www.ipchicken.com) to quickly find your public IP address
 
 
-
 ![](/assets/img/OpenAI/Setup/4.png)
 
 <br/>
+
+# 3. Tags (Optional)
+This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical json format (Name:Value) and can be leveraged to consolidate billing to categorized/tagged resources.
 
 ![](/assets/img/OpenAI/Setup/5.png)
 
 <br/>
 
+# 4. Review + Submit
+Review the **Basics, Network,** and **Tags** for typos etc. and make sure to read the fine print, because clicking **Create** means you agree to all the legal terms and privacy statement(s). 
+
 ![](/assets/img/OpenAI/Setup/6.png)
 
 <br/>
+
+Click on **Create** when you're ready.
 
 ![](/assets/img/OpenAI/Setup/7.png)
 
 <br/>
 
-![](/assets/img/OpenAI/Setup/8.png)
-
-<br/>
+Wait 5 minutes for your deployment to complete:
 
 ![](/assets/img/OpenAI/Setup/10.png)
 
-<br/>
-
-![](/assets/img/OpenAI/Setup/11.png)
-
-<br/>
-
-![](/assets/img/OpenAI/Setup/12.png)
-
+# Deployment Complete... What Now? 
+Lets take it for a test drive! Click on **Explore** to load the **Azure OpenAI Studio.**
 <br/>
 
 ![](/assets/img/OpenAI/Setup/13.png)
 
 <br/>
 
+There are several kinds of OpenAI Chat Bots you can deploy:
+- **Chat Playground** is great for generating content (ask it to write something for you)
+- **Completions Playground** is great for analyizing and summarizing content you feed it (ie. 'completing' it)
+- **DALL-E** is still in _Preview_ but is great for generating images
+
+Lets start with **Chat Playground:**
+
 ![](/assets/img/OpenAI/Setup/14.png)
 
 <br/>
+
+Select **Create New Deployment**
 
 ![](/assets/img/OpenAI/Setup/15.png)
 
 <br/>
 
+Select a model to use from the dropdown list and give your deployment a unique name:
 ![](/assets/img/OpenAI/Setup/16.png)
 
 <br/>
+Here are the _model_ options from the dropdown in the above screenshot: 
 
 ![](/assets/img/OpenAI/Setup/17_models.png)
 
 <br/>
+If you select and expand the **Advanced options** drop down menu, only the **Default** Content Filter available at the time of this article, illustrated below:
 
 ![](/assets/img/OpenAI/Setup/19.png)
 
 <br/>
 
+Once you select a **Model,** it will ask you for which **model version** you want to use. I went with the default (0301). Next, select **Create** 
+
 ![](/assets/img/OpenAI/Setup/20.png)
 
 <br/>
+
+Wait for your deployment to complete:
 
 ![](/assets/img/OpenAI/Setup/21.png)
 
 <br/>
 
+# Now for the FUN part... 
+
+Tailor your deployment to your liking. For example, how many prior messages in the conversation should it remember when generating it's next response? It's 10 by default. 
+
 ![](/assets/img/OpenAI/Setup/23_config.png)
 
 <br/>
+
+Here you can _flavour_ your ChatBot's response as follows:
+
+- **Max Response:** Set a limit on the number of tokens per model response. The API supports a maximum of 4000 tokens shared between the prompt (including system message, examples, message history, and user query) and the model's response. One token is roughly 4 characters for typical English text. 
+
+- **Temperature:** Controls randomness. Lowering the temperature means that the model will produce more repetitive and deterministic responses. Increasing the temperature will result in more unexpected or creative responses. Try adjusting temperature or Top P but not both.
+
+- **Top P:** Similar to temperature, this controls randomness but uses a different method. Lowering Top P will narrow the model’s token selection to likelier tokens. Increasing Top P will let the model choose from tokens with both high and low likelihood. Try adjusting temperature or Top P but not both.
+
+- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using <|im_end|> ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
+
+- **Frequency Penalty:** Reduce the chance of repeating a token proportionally based on how often it has appeared in the text so far. This decreases the likelihood of repeating the exact same text in a response.
+
+- **Presence Penalty:** Reduce the chance of repeating any token that has appeared in the text at all so far. This increases the likelihood of introducing new topics in a response.
 
 ![](/assets/img/OpenAI/Setup/24_parameters.png)
 
 <br/>
 
+Here's a fun one, you can choose between different pre-defined purposes. Writing a screenplay? Try the Shakespeare writing assistant! Working on your taxes? Try the IRS tax chatbot (but definitely don't rely solely on this when filing your taxes, you've been warned!)
+
 ![](/assets/img/OpenAI/Setup/25.png)
 
 <br/>
+
+The next step is making the deployment available. Click on the **View Code** button to view sample python integration code you can use to start integrating your current prompt and settings into your application:
 
 ![](/assets/img/OpenAI/Setup/26_api.png)
 
 <br/>
 
-![](/assets/img/OpenAI/Setup/27_introduction%20paragraph.png)
-
-<br/>
-
+# Have FUN with it! 
+Ask general trivia:
 ![](/assets/img/OpenAI/Setup/22.png)
 
+Use it to help build useful KQL queries:
+
 <br/>
 
 
 
+# Resources: 
+- [https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
