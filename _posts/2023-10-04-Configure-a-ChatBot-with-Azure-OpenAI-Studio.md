@@ -204,6 +204,10 @@ If you've set it to remember your last inquiry, you can build on top of it like 
 
 ![](/assets/img/OpenAI/Setup/KQL2.png)
 
+ > &#128161; _Pro-Tip: The effective cost per GB rate isn't $0.01 / GB for any commitment tier in the Central US region. This is an easy fix though, just look up your effective cost per GB based on your region and commitment tier [here](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/?ef_id=_k_87d6d4833d811f6a1c33b19d833b6887_k_&OCID=AIDcmm5edswduu_SEM__k_87d6d4833d811f6a1c33b19d833b6887_k_&msclkid=87d6d4833d811f6a1c33b19d833b6887) and plug it in. It should be noted that I didn't give it enough information to infer which commitment tier, so it gave me an example._ 
+
+ <br/>
+
 Maybe you completely forgot to read that book for book club, and don't have time to catch the movie adaptation, try asking your new assistant for key points:
 
 ![](/assets/img/OpenAI/Setup/KQL3.png)
