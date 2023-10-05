@@ -164,7 +164,7 @@ Here you can _flavour_ your ChatBot's response as follows:
 
 - **Top P:** Similar to temperature, this controls randomness but uses a different method. Lowering Top P will narrow the model’s token selection to likelier tokens. Increasing Top P will let the model choose from tokens with both high and low likelihood. Try adjusting temperature or Top P but not both.
 
-- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using \<|im_end|> ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
+- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using <\|im_end\|> ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
 
 - **Frequency Penalty:** Reduce the chance of repeating a token proportionally based on how often it has appeared in the text so far. This decreases the likelihood of repeating the exact same text in a response.
 
