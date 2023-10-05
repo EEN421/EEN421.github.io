@@ -17,6 +17,8 @@ Join the 1.3 million developers who have been using Cognitive Services to build 
 
 Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/cognitive-services/) today, and [learn more about Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/). 
 
+- [https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
+
 <br/>
 
 # In this post we will:
