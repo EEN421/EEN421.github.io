@@ -1,5 +1,5 @@
 # Introduction and Use Case:
-Have you ever wondered how to take your LLM (Language Model) to the next level? Look no further, because we have got you covered. In this blog post, we will **guide you through the process of configuring an LLM with Azure OpenAI Studio,** taking your natural language processing capabilities to new heights. With the power of Azure OpenAI Studio, you can easily build and deploy an LLM that can understand the nuances of language like never before. So, fasten your seatbelts, and get ready to explore!
+Have you ever wondered how to take your LLM (Language Model) to the next level? Look no further, because we have got you covered. In this blog post, we will **guide you through the process of configuring an LLM with Azure OpenAI Studio,** taking your natural language processing capabilities to new heights. With the power of Azure OpenAI Studio, you can easily build and deploy an LLM that can understand the nuances of language like never before. So, fasten your seatbelts, and get ready to explore! 
 
  &#128161; Spinning up your own Chat Bot/LLM is _**way easier**_ than you might think. Would you believe that the preceding paragraph above was written by one?
 
@@ -8,7 +8,7 @@ Have you ever wondered how to take your LLM (Language Model) to the next level? 
 
 <br/>
 
-The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_
+&#x26A1; The possibilities are nigh endless; I've even used mine to help come up with some complicated KQL queries. Check out my below guide to getting your own up and running _quick!_
 
 <br/>
 
@@ -22,10 +22,10 @@ Get started with an [Azure free account](https://azure.microsoft.com/en-us/free/
 <br/>
 
 # In this post we will:
-- Configure an LLM with Azure OpenAI Studio
-- Take your natural language processing capabilities to new heights
-- Easily build and deploy an LLM that can understand the nuances of language like never before
-- Leverage your LLM to write better KQL queries!
+&#128073;Configure an LLM with Azure OpenAI Studio
+&#128073;Take your natural language processing capabilities to new heights
+&#128073;Easily build and deploy an LLM that can understand the nuances of language like never before
+&#128073;Leverage your LLM to write better KQL queries!
 
 
 # Step-by-Step:
@@ -55,7 +55,7 @@ This next window has several fields we need to populate, shown below:
 <br/>
 
 # 2. Networking
-This next part is very important from a **security perspective:**
+&#128273; This next part is very important from a **security perspective:**
 - Select _All networks, **including the internet,** can access this resource_ **at your own risk.**
 - It's _more secure_ to lock this resource down and create an exception on the firewall for your public IP address. 
 - Create or Select a **virtual network** and **subnet**
@@ -160,7 +160,7 @@ Here you can _flavour_ your ChatBot's response as follows:
 
 - **Top P:** Similar to temperature, this controls randomness but uses a different method. Lowering Top P will narrow the model’s token selection to likelier tokens. Increasing Top P will let the model choose from tokens with both high and low likelihood. Try adjusting temperature or Top P but not both.
 
-- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using **<|im_end|>** ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
+- **Stop Sequence:** Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using \<|im_end|> ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.
 
 - **Frequency Penalty:** Reduce the chance of repeating a token proportionally based on how often it has appeared in the text so far. This decreases the likelihood of repeating the exact same text in a response.
 
@@ -205,11 +205,27 @@ Maybe you caught an engineer wasting time on a logic app for a specific client r
 
 ![](/assets/img/OpenAI/Setup/KQL5.png)
 
- &#128161; _Pro-Tip: Take whatever answers it gives you with some restraint. It's an LLM chat bot after all... it's not a person capable of simple fact/logic checking. It can just as easily provide a counter argument to an argument it just gave you, totally contradicting itself. It's given me some goofy answers to some pretty straight forward prompts sometimes too, so you can't rely on it **but you can use it to get a step ahead** of the game if used with caution.
+ &#128161; _Pro-Tip: Take whatever answers it gives you with some restraint. It's an LLM chat bot after all... it's not a person capable of simple fact/logic checking. It can just as easily provide a counter argument to an argument it just gave you, totally contradicting itself. It's given me some goofy answers to some pretty straight forward prompts sometimes too, so you can't rely on it **but you can use it to get a step ahead** of the game if used with caution._
 
 <br/>
 
+# Troubleshooting
 
+If you can get into Azure OpenAI Studio and open the chat interface, but your inquiries are refused, check your Public IP and update the settings in the Networking blade under your new OpenAI resource in the Azure portal &#128736;
+
+![](/assets/img/OpenAI/Setup/11.png)
+
+If you are unable to make any changes to your networking settings and receive the following type of error: 
+
+Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/OpenAI/providers/Microsoft.CognitiveServices/accounts/testai001' because the resource entity provisioning state is not terminal. Please wait for the provisioning state to become terminal and then retry the request.
+
+...then your most effective, time-saving approach is to just nuke your deployment and start over (it really doesn't take that long). There are alternative methods available to reset the provisioning state listed here: [https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state](https://learn.microsoft.com/en-us/azure/networking/troubleshoot-failed-state) 
+
+# In this post we:
+- &#10003;Configure an LLM with Azure OpenAI Studio
+- &#10003;Take your natural language processing capabilities to new heights
+- &#10003;Easily build and deploy an LLM that can understand the nuances of language like never before
+- &#10003;Leverage your LLM to write better KQL queries!
 
 # Resources: 
 - [https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 
