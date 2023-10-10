@@ -78,7 +78,7 @@ This next window has several fields we need to populate, shown below:
  <br/>
 
 # 3. Tags (Optional)
-This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical **json** format (**Name:Value**) and can be leveraged to consolidate billing to _categorized/tagged_ resources. This is _awesome_ for _Cost Optimization_ exercises &#128176; &#128176; &#128176;
+This is pretty self-explanatory, use something that makes sense to you. Tags follow a typical **json** format (**Name:Value**) and can be leveraged to consolidate billing to _categorized/tagged_ resources. This is _awesome_ for _Cost Optimization_ exercises &#128176; &#128176;
 
 ![](/assets/img/OpenAI/Setup/5.png)
 
