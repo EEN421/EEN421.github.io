@@ -29,9 +29,7 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
 
 <br/><br/>
 
-For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
-
-<br/><br/>
+&#128073; For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 
  > &#128161; Pro Tip:
   Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries for solving complicated conundrums](https://github.com/EEN421/KQL-Queries/tree/Main)
@@ -54,7 +52,7 @@ For this report, lets include ingest trends from the Usage table for the past 90
 
 <br/><br/>
 
-5.  &#128073; *Hang onto this*&#10071;
+5. *Hang onto this*&#10071;
 
 <br/><br/><br/><br/>
 
