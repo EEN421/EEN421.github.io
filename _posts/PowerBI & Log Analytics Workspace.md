@@ -50,7 +50,7 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
   
 ![](/assets/img/PowerBI%20Reports/2.png)
 
-<br/><br/>
+
 
 5. *Hang onto this*&#10071;
 
@@ -116,7 +116,9 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
 <br/><br/>
 
  > &#128161; Real Talk:
-Right about now you’re probably asking yourself *“So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI? What a DRAG!”* …and you’d be right… **so lets streamline this!**
+Right about now you’re probably asking yourself *“So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI every time? **... that’s not optimial..."** …and you’d be right, so lets **streamline this!***
+
+
 
 <br/><br/>
 
