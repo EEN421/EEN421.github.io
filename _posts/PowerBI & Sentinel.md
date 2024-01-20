@@ -85,26 +85,26 @@ For this report, lets include ingest trends from the Usage table for the past 90
 
 1.	Now that we’ve imported our dataset, lets do something with it! Select the Visuals tab on the right and choose **Clustered Column Chart**
 
-![](/assets/img/PowerBI%20Reports/8.png)
+![](/assets/img/PowerBI%20Reports/9.png)
 
 
 
 
 3.	Select All of the data sources from the **Data** tab on the right under our 90 Day billable Ingest Trend dataset.
 
-![](/assets/img/PowerBI%20Reports/9.png)
+![](/assets/img/PowerBI%20Reports/10.png)
 
 
 
 
 5.	The bar chart renders with data from the selected dataset.
 
-![](/assets/img/PowerBI%20Reports/10.png)
+![](/assets/img/PowerBI%20Reports/11.png)
  
 
 7.	Rename the page and create additional pages as illustrated below:
 
-![](/assets/img/PowerBI%20Reports/11.png)
+![](/assets/img/PowerBI%20Reports/12.png)
  
 
  > &#128161; Real Talk:
