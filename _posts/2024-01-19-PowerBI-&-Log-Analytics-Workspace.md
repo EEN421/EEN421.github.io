@@ -31,8 +31,6 @@ In my experience, usage and cost trends are almost always brought up during quar
 
 &#128073; For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 
-<br/><br/>
-
  > &#128161; Pro Tip:
   Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries for solving complicated conundrums](https://github.com/EEN421/KQL-Queries/tree/Main)
  
@@ -113,7 +111,7 @@ In my experience, usage and cost trends are almost always brought up during quar
 <br/><br/>
 
  > &#128161; Real Talk:
-Right about now you’re probably asking yourself *"So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI every time? **... that’s not optimial..." **…and you’d be right, so lets **streamline this!***
+Right about now you’re probably asking yourself *"So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI every time? **... that’s not optimial..." …and you’d be right, so lets streamline this!***
 
 
 
