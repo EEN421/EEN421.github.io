@@ -30,12 +30,12 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
 
 Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace.
 
-For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: KQL-Queries/90 Day Billable Ingest Volume.kql at Main · EEN421/KQL-Queries (github.com)
+For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 
 <br/><br/>
 
  > &#128161; Pro Tip:
-  Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: Ian Hanley's deceptively simple KQL queries. (github.com)
+  Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
  
  <br/><br/>
 
@@ -169,7 +169,7 @@ In my experience, 90, 60, and 30 day trends tend to lend themselves pretty well 
 - [Role Based Access Control (RBAC) Roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
 - [PowerBI Licensing/Pricing](https://powerbi.microsoft.com/en-us/pricing/)
 -	[Create a Log Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace?tabs=azure-portal)
--	[90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
+-	[90 Day Billable Ingest Volume.kql]](https://github.com/EEN421/KQL-Queries/tree/Main)
 -	[Ian Hanley's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
 -	[Azure Portal](https://portal.azure.com/)
 
