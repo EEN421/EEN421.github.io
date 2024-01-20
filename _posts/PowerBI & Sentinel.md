@@ -19,7 +19,7 @@ In this Post We Will:
 -	[Log Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace?tabs=azure-portal)
 -	[Security Reader Role](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
 
-# Define our report and the underlying KQL:
+# Define our Report and the Underlying KQL:
 Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table. In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace with KQL every quarter and paste the results into a PowerPoint deck or whatever, but that’s a drag on your time… Let’s automate this!
 
  > &#128161; Pro Tip:
@@ -45,10 +45,11 @@ For this report, lets include ingest trends from the Usage table for the past 90
 
 
 
-4.	A **PowerBIQuery.txt file** will populate in your Downloads folder. *Hang onto this.*
+4.	A **PowerBIQuery.txt file** will populate in your Downloads folder.
   
 ![](/assets/img/PowerBI%20Reports/2.png)
 
+5. *Hang onto this*&#10071;
 
 # Import our M Query into PowerBI:
 
@@ -109,7 +110,7 @@ For this report, lets include ingest trends from the Usage table for the past 90
  > &#128161; Real Talk:
 Right about now you’re probably asking yourself *“So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI? What a DRAG!”* …and you’d be right… **so lets streamline this!**
 
-You can re-use the original **PowerBIQuery.txt** for the rest, here’s how to adjust the time frame on the fly:
+&#x26A1; You can re-use the original **PowerBIQuery.txt** for the rest, here’s how to adjust the time frame on the fly:
 
 5.	Open a new page, rename it to **60 Day Billable Ingest** and select **Get Data** just like we did earlier and import your original **PowerBIQuery.txt** file, only this time *before clicking on **Close & Apply***, look in the query window for **“P90D”** and swap it out for **“P60D”** to change the timeframe that this M query will apply to without having to regenerate the whole **M query**, illustrated below:
   
@@ -148,7 +149,6 @@ In my experience, 90, 60, and 30 day trends tend to lend themselves pretty well 
 -	[90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
 -	[Ian Hanley's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
 -	[Azure Portal](https://portal.azure.com/)
--	
--	
+
 
 
