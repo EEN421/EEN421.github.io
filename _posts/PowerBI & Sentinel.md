@@ -4,43 +4,42 @@
 2.	Paste the 90 Day Billable Ingest Volume.kql query into the query window and run it.
 3.	Once the query has finished running, the --> Export button will become available. Click on it and select PowerBI (as an M query), illustrated below.
 
-[1]
- 
+![](/assets/img/PowerBI%20Reports/1.png)
 
 
 
 4.	A PowerBIQuery.txt file will populate in your Downloads folder. Hang onto this.
   
-[2]
+![](/assets/img/PowerBI%20Reports/2.png)
 
 
 #Import our M Query into PowerBI#
 
 1.	Spin up the PowerBI Desktop App (PowerBI WebApp does NOT support importing M Queries) and go to Home > Get data > Blank Query (displayed in screenshot on right).
 
-[3]
+![](/assets/img/PowerBI%20Reports/3.png)
 
 
 
 3.	A new window will pop up. Select Advanced Editor (shown below).
 
-[4]
+![](/assets/img/PowerBI%20Reports/4.png)
  
 
 5.	Paste the contents of the PowerBIQuery.txt from earlier into the Advanced Editor and click on Done
 
-[5]
+![](/assets/img/PowerBI%20Reports/5.png)
  
 
 7.	A preview of your data will populate in a table for verification.
 
-[6]
+![](/assets/img/PowerBI%20Reports/6.png)
  
 
 
 10.	Rename your Query in the Advanced Editor, then select Close & Apply
 
-[7]
+![](/assets/img/PowerBI%20Reports/7.png)
 
 
 
@@ -48,26 +47,26 @@
 
 1.	Now that we’ve imported our dataset, lets do something with it! Select the Visuals tab on the right and choose Clustered Column Chart
 
-[8]
+![](/assets/img/PowerBI%20Reports/8.png)
 
 
 
 
 3.	Select All of the data sources from the Data tab on the right under our 90 Day billable Ingest Trend dataset.
 
-[9]
-
+![](/assets/img/PowerBI%20Reports/9.png)
 
 
 
 
 5.	The bar chart renders with data from the selected dataset.
-[10]
+
+![](/assets/img/PowerBI%20Reports/10.png)
  
 
 7.	Rename the page and create additional pages as illustrated below:
 
-[11]
+![](/assets/img/PowerBI%20Reports/11.png)
  
 
 Real Talk:
@@ -77,7 +76,7 @@ You can re-use the original PowerBIQuery.txt for the rest, here’s how to adjus
 
 5.	Open a new page, rename it to 60 Day Billable Ingest and select Get Data just like we did earlier and import your original PowerBIQuery.txt file, only this time before clicking on Close & Apply, look in the query window for “P90D” and swap it out for “P60D” to change the timeframe that this M query will apply to, illustrated below:
   
-[12]
+![](/assets/img/PowerBI%20Reports/12.png)
 
  
 
