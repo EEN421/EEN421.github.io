@@ -165,7 +165,7 @@ In my experience, 90, 60, and 30 day trends tend to lend themselves pretty well 
 - [Role Based Access Control (RBAC) Roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
 - [PowerBI Licensing/Pricing](https://powerbi.microsoft.com/en-us/pricing/)
 -	[Create a Log Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace?tabs=azure-portal)
--	[90 Day Billable Ingest Volume.kql]](https://github.com/EEN421/KQL-Queries/tree/Main)
+-	[90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 -	[Ian Hanley's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
 -	[Azure Portal](https://portal.azure.com/)
 
