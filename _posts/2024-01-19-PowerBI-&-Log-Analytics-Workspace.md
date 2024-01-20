@@ -1,5 +1,3 @@
-<br/><br/>
-
 # Introduction and Use Case: 
 Microsoft Sentinel is a powerful tool that enables security teams to detect, investigate, and respond to threats across their entire organization. However, when it comes to presenting this data to clients, it can be challenging to make sense of the raw data, and it can take time to manually query the data you might need.
 
