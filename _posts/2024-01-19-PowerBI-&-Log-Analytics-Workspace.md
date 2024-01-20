@@ -25,7 +25,9 @@ This is where PowerBI comes in: a business analytics service that provides inter
 <br/><br/>
 
 # Define our Report and the Underlying KQL:
-Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table. Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace. In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace for this infor every quarter and paste the results into a PowerPoint deck or whatever, **but that’s not optimial...** *Let’s automate this!*
+Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table; Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace!
+
+In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace for this infor every quarter and paste the results into a PowerPoint deck or whatever, *but that’s **not optimial...** *Let’s **automate this!***
 
 &#128073; For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 
@@ -46,13 +48,9 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
 
 <br/><br/>
 
-4.	A **PowerBIQuery.txt file** will populate in your Downloads folder.
+4.	A **PowerBIQuery.txt file** will populate in your Downloads folder. *Hang onto this*&#10071;
   
 ![](/assets/img/PowerBI%20Reports/2.png)
-
-
-
-5. *Hang onto this*&#10071;
 
 <br/><br/><br/><br/>
 
@@ -116,7 +114,7 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
 <br/><br/>
 
  > &#128161; Real Talk:
-Right about now you’re probably asking yourself *“So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI every time? **... that’s not optimial..."** …and you’d be right, so lets **streamline this!***
+Right about now you’re probably asking yourself *"So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI every time? **... that’s not optimial..." **…and you’d be right, so lets **streamline this!***
 
 
 
