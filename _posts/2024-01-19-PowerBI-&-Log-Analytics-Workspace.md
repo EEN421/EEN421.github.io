@@ -29,12 +29,15 @@ Lets keep it simple and report on our Ingest tends for this exercise and query t
 
 In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace for this infor every quarter and paste the results into a PowerPoint deck or whatever, *but that’s **not optimial...** Let’s **automate this!***
 
+<br/>
+
 &#128073; For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 
- > &#128161; Pro Tip:
-  Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries for solving complicated conundrums](https://github.com/EEN421/KQL-Queries/tree/Main)
+<br/>
+
+&#128161; Pro Tip:  Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries for solving complicated conundrums](https://github.com/EEN421/KQL-Queries/tree/Main)
  
- <br/><br/>
+<br/><br/>
 
 # Run and export our KQL to a PowerBI M Query
 
