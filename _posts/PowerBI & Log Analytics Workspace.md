@@ -135,7 +135,7 @@ Right about now you’re probably asking yourself *“So I have to edit line 2 i
 
 <br/><br/>
 
-3.	Create a new page and rename it to **30 Day Billable Ingest**, and repeat previous steps for 30 days, then 7, or even as far as you’d like; up to the last 30 minutes or as far back as your retention allows.
+3.	Create a new page and rename it to **30 Day Billable Ingest**, and repeat previous steps for 30 days, then 7, or up to the last 30 minutes, or as far back as your retention allows.
 
 <br/><br/>
 
