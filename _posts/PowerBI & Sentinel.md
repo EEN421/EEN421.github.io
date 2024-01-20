@@ -75,7 +75,7 @@ For this report, lets include ingest trends from the Usage table for the past 90
  
 
 
-10.	Rename your Query in the **Advanced Editor**, then select **Close & Apply**
+10.	Rename your Query to **90 Day Billable Ingest** in the **Advanced Editor**, then select **Close & Apply**
 
 ![](/assets/img/PowerBI%20Reports/7.png)
 
