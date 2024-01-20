@@ -35,7 +35,7 @@ For this report, lets include ingest trends from the Usage table for the past 90
 <br/><br/>
 
  > &#128161; Pro Tip:
-  Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
+  Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: [Ian's deceptively simple KQL queries for solving complicated conundrums](https://github.com/EEN421/KQL-Queries/tree/Main)
  
  <br/><br/>
 
