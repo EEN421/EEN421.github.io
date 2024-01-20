@@ -1,7 +1,7 @@
 # Introduction and Use Case: 
 Microsoft Sentinel is a powerful tool that enables security teams to detect, investigate, and respond to threats across their entire organization. However, when it comes to presenting this data to clients, it can be challenging to make sense of the raw data, and it can take time to manually query the data you might need.
 
-This is where PowerBI comes in - a business analytics service that provides interactive visualizations and business intelligence capabilities with an interface simple enough for end users to create their own reports and dashboards. In this post, we will explore how to automate a custom **ingest usage trend** report, delivering added value while saving time and streamlining your reporting process &#129297; 
+This is where PowerBI comes in: a business analytics service that provides interactive visualizations and business intelligence capabilities with an interface simple enough for end users to create their own reports and dashboards. In this post, we will explore how to automate a custom **ingest usage trend** report, delivering added value while saving time and streamlining your reporting process &#129297; 
 
 <br/><br/>
 
@@ -25,10 +25,9 @@ This is where PowerBI comes in - a business analytics service that provides inte
 <br/><br/>
 
 # Define our Report and the Underlying KQL:
-Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table. In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace with KQL every quarter and paste the results into a PowerPoint deck or whatever, but that’s a drag on your time… Let’s automate this!
+Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table. Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace. In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace for this infor every quarter and paste the results into a PowerPoint deck or whatever, **but that’s not optimial...** *Let’s automate this!*
 
-
-Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace.
+<br/><br/>
 
 For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
 
