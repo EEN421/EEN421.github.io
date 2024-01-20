@@ -22,14 +22,14 @@ In this Post We Will:
 # Define our report and the underlying KQL:
 Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table. In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace with KQL every quarter and paste the results into a PowerPoint deck or whatever, but that’s a drag on your time… Let’s automate this!
 
- > &#128161; _Pro Tip:
+ > &#128161; Pro Tip:
 Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace.
 
 
 For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: KQL-Queries/90 Day Billable Ingest Volume.kql at Main · EEN421/KQL-Queries (github.com)
 
 
- > &#128161; _Pro Tip:
+ > &#128161; Pro Tip:
   Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: Ian Hanley's deceptively simple KQL queries. (github.com)
  
  
@@ -106,7 +106,7 @@ For this report, lets include ingest trends from the Usage table for the past 90
 ![](/assets/img/PowerBI%20Reports/11.png)
  
 
- > &#128161; _Real Talk:
+ > &#128161; Real Talk:
 Right about now you’re probably asking yourself *“So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI? What a DRAG!”* …and you’d be right… **so lets streamline this!**
 
 You can re-use the original **PowerBIQuery.txt** for the rest, here’s how to adjust the time frame on the fly:
@@ -128,6 +128,27 @@ You can re-use the original **PowerBIQuery.txt** for the rest, here’s how to a
 
 # Re-run our report with 1-click!
 -	Save your PowerBI report to easily generate again next quarter.
-    
 
+# Achieve Awesome-ness
 In my experience, 90, 60, and 30 day trends tend to lend themselves pretty well to Quarterly Business Reviews and deliver added value. What sort of reports will YOU automate? 
+
+# In this Post We:
+- &#128073;Defined our report and the underlying KQL
+- &#128073;Ran and exported our KQL to a PowerBI M Query
+- &#128073;Imported our M Query into PowerBI
+- &#128073;Manipulated Data Sets and Rendered Visuals
+- &#128073;Saved and Exported our Report to PDF
+- &#128073;Re-ran our report with 1-click!
+- &#128073;Achieved a State of Awesome-ness 😎
+    
+# References & Resources:
+- [Role Based Access Control (RBAC) Roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
+- [PowerBI Licensing/Pricing](https://powerbi.microsoft.com/en-us/pricing/)
+-	[Create a Log Analytics Workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace?tabs=azure-portal)
+-	[90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
+-	[Ian Hanley's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
+-	[Azure Portal](https://portal.azure.com/)
+-	
+-	
+
+
