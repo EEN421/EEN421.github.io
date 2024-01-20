@@ -1,7 +1,7 @@
 # Introduction and Use Case: 
-Microsoft Sentinel is a powerful tool that enables security teams to detect, investigate, and respond to threats across their entire organization. However, when it comes to presenting this data to clients, it can be challenging to make sense of the raw data. 
+Microsoft Sentinel is a powerful tool that enables security teams to detect, investigate, and respond to threats across their entire organization. However, when it comes to presenting this data to clients, it can be challenging to make sense of the raw data, and it can take time to manually query the data you might need.
 
-This is where PowerBI comes in - a business analytics service that provides interactive visualizations and business intelligence capabilities with an interface simple enough for end users to create their own reports and dashboards. In this post, we will explore how to automate Sentinel report generation using PowerBI, allowing you to save time and streamline your reporting process.
+This is where PowerBI comes in - a business analytics service that provides interactive visualizations and business intelligence capabilities with an interface simple enough for end users to create their own reports and dashboards. In this post, we will explore how to automate a custom **ingest usage trend** report, delivering added value while saving time and streamlining your reporting process &#x1F4AA; 
 
 <br/><br/>
 
