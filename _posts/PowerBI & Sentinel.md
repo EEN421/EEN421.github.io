@@ -44,7 +44,7 @@
 
 
 
-Manipulate Data Sets and Render Visuals
+#Manipulate Data Sets and Render Visuals#
 
 1.	Now that we’ve imported our dataset, lets do something with it! Select the Visuals tab on the right and choose Clustered Column Chart
 
