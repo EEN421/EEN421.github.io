@@ -149,7 +149,7 @@ Right about now you’re probably asking yourself *"So I have to edit line 2 in 
 # Achieve Awesome-ness
 In my experience, 90, 60, and 30 day trends tend to lend themselves pretty well to Quarterly Business Reviews and deliver added value. *What sort of reports will **YOU** automate?* 
 
-Thanks for reading! Follow me on [LinkedIn](https://www.linkedin.com/in/ianhanley/) or [Twitter @IanDHanley](https://twitter.com/IanDHanley) for more insights into leveraging the Microsoft Security fabric to achieve favourable security outcomes. Don't forget to check out my [KQL Query library](https://github.com/EEN421/KQL-Queries) and other projects on my [GitHub](https://github.com/een421)!
+Thanks for reading! Follow me on [LinkedIn](https://www.linkedin.com/in/ianhanley/) or [Twitter @IanDHanley](https://twitter.com/IanDHanley) for more insights into leveraging the Microsoft Security fabric for favourable security outcomes. Don't forget to check out my [KQL Query library](https://github.com/EEN421/KQL-Queries) and other projects on my [GitHub](https://github.com/een421)!
 
 <br/><br/>
 
