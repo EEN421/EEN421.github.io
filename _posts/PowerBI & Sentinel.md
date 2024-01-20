@@ -4,13 +4,13 @@ Microsoft Sentinel is a powerful tool that enables security teams to detect, inv
 This is where PowerBI comes in - a business analytics service that provides interactive visualizations and business intelligence capabilities with an interface simple enough for end users to create their own reports and dashboards. In this post, we will explore how to automate Sentinel report generation using PowerBI, allowing you to save time and streamline your reporting process.
 
 In this Post We Will:
-👉Define our report and the underlying KQL
-👉Run and export our KQL to a PowerBI M Query
-👉Import our M Query into PowerBI
-👉Manipulate Data Sets and Render Visuals
-👉Save and Export our Report to PDF
-👉Re-run our report with 1-click!
-👉Achieve Awesome-ness 😎
+- &#128073;Define our report and the underlying KQL
+- &#128073;Run and export our KQL to a PowerBI M Query
+- &#128073;Import our M Query into PowerBI
+- &#128073;Manipulate Data Sets and Render Visuals
+- &#128073;Save and Export our Report to PDF
+- &#128073;Re-run our report with 1-click!
+- &#128073;Achieve Awesome-ness 😎
 
 
 # Pre-Requisites:
@@ -22,14 +22,14 @@ In this Post We Will:
 # Define our report and the underlying KQL:
 Lets keep it simple and report on our Ingest tends for this exercise and query the Usage table. In my experience, usage and cost trends are almost always brought up during quarterly business reviews. You could manually query your workspace with KQL every quarter and paste the results into a PowerPoint deck or whatever, but that’s a drag on your time… Let’s automate this!
 
-# Pro Tip:
-	Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace.
+ > &#128161; _Pro Tip:
+Everybody’s got a Usage table right? Depending on what you’ve got in your environment, maybe you could involve firewall logs via the commonsecuritylog or syslog tables for quarterly security meetings etc. You’re only limited to what’s in your workspace.
 
 
 For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: KQL-Queries/90 Day Billable Ingest Volume.kql at Main · EEN421/KQL-Queries (github.com)
 
 
-# Pro Tip:
+ > &#128161; _Pro Tip:
   Check out my full catalogue of useful KQL queries ready to copy and paste here: EEN421/KQL-Queries: Ian Hanley's deceptively simple KQL queries. (github.com)
  
  
@@ -106,7 +106,7 @@ For this report, lets include ingest trends from the Usage table for the past 90
 ![](/assets/img/PowerBI%20Reports/11.png)
  
 
-Real Talk:
+ > &#128161; _Real Talk:
 Right about now you’re probably asking yourself *“So I have to edit line 2 in the original query and re-run it, export the M query, then import each data set into PowerBI? What a DRAG!”* …and you’d be right… **so lets streamline this!**
 
 You can re-use the original **PowerBIQuery.txt** for the rest, here’s how to adjust the time frame on the fly:
