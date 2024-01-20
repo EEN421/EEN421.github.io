@@ -144,7 +144,7 @@ Right about now you’re probably asking yourself *“So I have to edit line 2 i
 <br/><br/>
 
 # Re-run our report with 1-click!
--	Save your PowerBI report to easily generate again next quarter.
+-	Save your PowerBI report to easily generate again next quarter. As long as you're signed into PowerBI with an account that has sufficient privileges to read from your workspace next quarter, that's all there is to it! 
 
 <br/><br/>
 
