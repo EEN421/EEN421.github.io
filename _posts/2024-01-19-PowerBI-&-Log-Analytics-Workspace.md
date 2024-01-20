@@ -46,7 +46,6 @@ In my experience, usage and cost trends are almost always brought up during quar
 
 ![](/assets/img/PowerBI%20Reports/1.png)
 
-<br/><br/>
 
 4 -	A **PowerBIQuery.txt file** will populate in your Downloads folder. *Hang onto this*&#10071;
   
@@ -85,7 +84,7 @@ In my experience, usage and cost trends are almost always brought up during quar
 
 ![](/assets/img/PowerBI%20Reports/7.png)
 
-<br/><br/>
+<br/><br/><br/><br/> 
 
 # Manipulate Data Sets and Render Visuals:
 
