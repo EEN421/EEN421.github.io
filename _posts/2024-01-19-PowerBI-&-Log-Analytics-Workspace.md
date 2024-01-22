@@ -31,7 +31,7 @@ In my experience, usage and cost trends are almost always brought up during quar
 
 <br/>
 
-&#128073; For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/tree/Main)
+&#128073; For this report, lets include ingest trends from the Usage table for the past 90, 60, 30, and 7 days. You can copy and paste the KQL from my GitHub repo here: [90 Day Billable Ingest Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
 
 <br/>
 
