@@ -27,6 +27,8 @@ Click to learn more about each component...
 - [Jumper Cables](https://a.co/d/3A3MSpy)
 
 <br/><br/>
+![](/assets/img/SoilSensor/ReadMe0.jpg)
+<br/><br/>
 
 
 # Pre-Requisites:
@@ -168,7 +170,7 @@ Once you run the OLED script, you should see the display populate as such:
 ![](/assets/img/SoilSensor/ReadMe1.jpg)
 <br/>
 
-> &#128073; [Pro-Tip]...Change the Hostname of the Raspberry Pi in the /etc/hostname file to the name of the plant you're monitoring
+> &#128073; Pro-Tip: Change the Hostname of the Raspberry Pi in the /etc/hostname file to the name of the plant you're monitoring
 <br/><br/>
 
 # Integration with Microsoft Sentinel
@@ -222,12 +224,12 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 ![](/assets/img/SoilSensor/LAW4.png)
 <br/>
 
-- Commitment / Pricing Tier
-Choose the appropriate commitment tier given your expected daily ingest volume. 
+# Commitment / Pricing Tier
+- Choose the appropriate commitment tier given your expected daily ingest volume. 
 
 <br/><br/>
 
-> &#128161; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
+> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
 
 > &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste_** 
 
@@ -302,6 +304,12 @@ sudo nano /etc/rc.local
 	sudo python3 main.py && sudo python3 OLEDstats.py && sudo Start_FluentD.bash
 ```
 
+# Add Water...
+
+When I add moisture to my soil sample, I can see the moisture reading adjust:
+
+![](/assets/img/SoilSensor/ReadMe3.jpg)
+
 <br/><br/>
 
 # In this Post We: 
@@ -314,3 +322,6 @@ sudo nano /etc/rc.local
 - &#128073; Sent Sensor Data to Microsoft Sentinel
 - &#128073; Automated/Configured Start on Boot 
 - &#128073; Accomplished something AWESOME 
+
+![](/assets/img/SoilSensor/ReadMe4.jpg)
+![](/assets/img/SoilSensor/ReadMe5.jpg)
