@@ -62,8 +62,8 @@ sudo raspi-config
 sudo raspi-config
   > Advanced Options > Expand FileSystem
 ```
-![](/assets/img/Disk1.png)
-![](/assets/img/Disk2.png)
+![](/assets/img/SoilSensor/Disk1.png)
+![](/assets/img/SoilSensor/Disk2.png)
 
 <br/><br/>
 
@@ -97,8 +97,8 @@ sudo reboot -n
 sudo raspi-config
 	> Interfacing Options > I2C > Enable > OK
 ```
-![](/assets/img/I2C1.png)
-![](/assets/img/I2C2.png)
+![](/assets/img/SoilSensor/I2C1.png)
+![](/assets/img/SoilSensor/I2C2.png)
 
 ```python
 sudo pip3 install RPI.GPIO
@@ -115,7 +115,7 @@ sudo i2cdetect -y 1
 #Soil Sensor should populate on x36
 #OLED Display shows up on x3c (see next section for OLED setup)
 ```
-![](/assets/img/HardwareAddress.png)
+![](/assets/img/SoilSensor/HardwareAddress.png)
 
 
 <br/><br/>
