@@ -180,38 +180,89 @@ sudo fluent-gem install fluent-plugin-td
 ```bash
 sudo fluent-gem install fluent-plugin-azure-loganalytics
 ```
+
+<br/><br/>
+
 # Create a Log Analytics Workspace
 - If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal:
-![](/assets/img/LAW1.png)
+![](/assets/img/SoilSensor/LAW1.png)
 <br/>
 
 - Select +Create
-![](/assets/img/LAW2.png)
+![](/assets/img/SoilSensor/LAW2.png)
 <br/>
 
 - Select Subscription and Resource Group:
-![](/assets/img/LAW3.png)
+![](/assets/img/SoilSensor/LAW3.png)
 <br/>
 
 - Select Instance Name and Region:
-![](/assets/img/LAW4.png)
+![](/assets/img/SoilSensor/LAW4.png)
 
 - Commitment / Pricing Tier
-Choose the appropriate commitment tier given your expected daily ingest volume. <br/><br/>
+Choose the appropriate commitment tier given your expected daily ingest volume. 
+
+<br/><br/>
 
 > &#128161; &#128073; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of th 50% discount...for example. Check out my my cost optimization blog series and GitHub repository choc-full of ready-made queries you can copy and paste_** 
 
 <br/><br/>
 
 
-# Click Review & Create
+- Click Review & Create
  ...to Finish Setting up a New Log Analytics Workspace 
 
+<br/><br/>
+
+# Grab WorkspaceID and Primary Key:
+![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
+
+# Plug ID and Key into your fluent.conf file
+Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
+
+<br/><br/>
+
+# Launch the sensor application
+```python
+sudo python3 main.py &
+```
+<br/>
+
+Confirm logs are working locally
+```python
+tail /var/log/soil.log -f
+```
+<br/>
+<br/>
+
+# Launch FluentD
 
 
+```python
+sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
+```
 
 
+<br/><br/>
+ 
 
+ > &#128161;[Pro-Tip]&#128161; Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
+```
+sudo nano Start_FluentD.bash
+```
+Paste the following into nano, save and close: 
+```python
+sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
+```
+&#128073; Now you can start FluentD with the following command:
+```python
+sudo bash Start_FluentD.bash &
+```
+<br/>
+
+# Confirm logs are flowing to Log Analytics Workspace
+```python
+tail /var/log/td-agent/fluent.log -f 
 
 
 
