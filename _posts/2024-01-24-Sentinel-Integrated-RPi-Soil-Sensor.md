@@ -8,10 +8,15 @@ In this blog article, we will explore how to build and onboard a Raspberry Pi-ba
 <br/><br/>
 
 # In this Post We Will: 
-- &#128073;Built a Raspberry Pi based Soil Sensor
-- &#128073;Configure an OLED Display to Output Results in Real Time
-- &#128073;Onboard Sensor to Sentinel
-- &#128073;Be Cool like Fonzie 😎
+- &#128073; Review Hardward and Pre-Requisites
+- &#128073; Perform a "Headless" Raspberry Pi Setup
+- &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
+- &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
+- &#128073; Test and Confirm Hardware
+- &#128073; Create a Log Analytics Workspace
+- &#128073; Send Sensor Data to Microsoft Sentinel
+- &#128073; Automate/Configure Start on Boot 
+- &#128073; Accomplish something AWESOME today! 
 
 <br/><br/>
 
@@ -268,4 +273,13 @@ sudo nano /etc/rc.local
 ```
 
 
-
+# In this Post We: 
+- &#128073; Reviewed Hardware and Pre-Requisites
+- &#128073; Performed a "Headless" Raspberry Pi Setup
+- &#128073; Configured an I2C Capacitive STEMMA Soil Sensor
+- &#128073; Configured an OLED Display to Output Sensor Readings in Real Time
+- &#128073; Tested and Confirmed Hardware
+- &#128073; Created a Log Analytics Workspace
+- &#128073; Sent Sensor Data to Microsoft Sentinel
+- &#128073; Automated/Configured Start on Boot 
+- &#128073; Accomplished something AWESOME 
