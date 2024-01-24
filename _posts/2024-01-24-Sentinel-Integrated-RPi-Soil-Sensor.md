@@ -14,7 +14,7 @@ In this blog article, we will explore how to build and onboard a Raspberry Pi-ba
 - &#128073; Create a Log Analytics Workspace
 - &#128073; Send Sensor Data to Microsoft Sentinel
 - &#128073; Automate/Configure Start on Boot 
-- &#128073; Accomplish something AWESOME today! 
+- &#128073; Accomplish something AWESOME today! &#128526;
 
 <br/><br/>
 
@@ -69,7 +69,9 @@ sudo raspi-config
 sudo raspi-config
   > Advanced Options > Expand FileSystem
 ```
+
 ![](/assets/img/SoilSensor/Disk1.png)
+
 ![](/assets/img/SoilSensor/Disk2.png)
 
 <br/><br/>
@@ -171,6 +173,7 @@ Once you run the OLED script, you should see the display populate as such:
 <br/>
 
 > &#128073; Pro-Tip: Change the Hostname of the Raspberry Pi in the /etc/hostname file to the name of the plant you're monitoring
+
 <br/><br/>
 
 # Integration with Microsoft Sentinel
@@ -229,8 +232,7 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 <br/><br/>
 
-> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
-
+> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example. <br/>
 > &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste_** 
 
 <br/><br/>
@@ -242,6 +244,7 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 <br/><br/>
 
 # Connect to Workspace:
+<br/>
 
 - Grab **WorkspaceID** and **Primary Key**:
 ![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
@@ -304,6 +307,8 @@ sudo nano /etc/rc.local
 	sudo python3 main.py && sudo python3 OLEDstats.py && sudo Start_FluentD.bash
 ```
 
+<br/><br/>
+
 # Add Water...
 
 When I add moisture to my soil sample, I can see the moisture reading adjust:
@@ -321,7 +326,8 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 - &#128073; Created a Log Analytics Workspace
 - &#128073; Sent Sensor Data to Microsoft Sentinel
 - &#128073; Automated/Configured Start on Boot 
-- &#128073; Accomplished something AWESOME 
+- &#128073; Accomplished something AWESOME &#128526;
+
 
 ![](/assets/img/SoilSensor/ReadMe4.jpg)
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
