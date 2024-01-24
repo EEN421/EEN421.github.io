@@ -158,6 +158,72 @@ sudo i2cdetect -y 1
 
 <br/><br/>
 
+# Integration with Microsoft Sentinel
+
+- Install Ruby 
+```bash
+sudo aptitude install ruby-dev
+```
+
+- Check/Confirm Ruby Version:
+```bash
+ruby --ver
+```
+
+- Install FluentD Unified Log Aggregator & Plugin
+```bash
+sudo gem install fluentd -v "~> 0.12.0"
+sudo fluent-gem install fluent-plugin-td
+```
+
+- Install FluentD Plugn for Azure Log Analytics
+```bash
+sudo fluent-gem install fluent-plugin-azure-loganalytics
+```
+# Create a Log Analytics Workspace
+- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal:
+![](/assets/img/LAW1.png)
+<br/>
+
+- Select +Create
+![](/assets/img/LAW2.png)
+<br/>
+
+- Select Subscription and Resource Group:
+![](/assets/img/LAW3.png)
+<br/>
+
+- Select Instance Name and Region:
+![](/assets/img/LAW4.png)
+
+- Commitment / Pricing Tier
+Choose the appropriate commitment tier given your expected daily ingest volume. <br/><br/>
+
+> &#128161; &#128073; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of th 50% discount...for example. Check out my my cost optimization blog series and GitHub repository choc-full of ready-made queries you can copy and paste_** 
+
+<br/><br/>
+
+
+# Click Review & Create
+ ...to Finish Setting up a New Log Analytics Workspace 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Start on Boot:
 - Append the above command to /etc/rc.local to start on boot:
@@ -165,3 +231,6 @@ sudo i2cdetect -y 1
 sudo nano /etc/rc.local
 	sudo python3 main.py && sudo python3 OLEDstats.py && sudo Start_FluentD.bash
 ```
+
+
+
