@@ -131,7 +131,7 @@ sudo pip3 install requests
 
 <br/>
 
-- [Optional] Grab and unzip silkscreen font to clean up txt display (cleaner font for this type of OLED display):
+- [Optional] Grab and unzip silkscreen font to clean up txt display (cleaner font for this type of small OLED display):
 ```python
 wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
 unzip silkscreen.zip
@@ -162,7 +162,13 @@ sudo i2cdetect -y 1
 ```
 ![](/assets/img/SoilSensor/HardwareAddress.png)
 
+<br/>
+Once you run the OLED script, you should see the display populate as such:
+<br/>
+![](/assets/img/SoilSensor/ReadMe1.jpg)
+<br/>
 
+> &#128073; [Pro-Tip]...Change the Hostname of the Raspberry Pi in the /etc/hostname file to the name of the plant you're monitoring
 <br/><br/>
 
 # Integration with Microsoft Sentinel
@@ -221,24 +227,26 @@ Choose the appropriate commitment tier given your expected daily ingest volume.
 
 <br/><br/>
 
-> &#128161; &#128073; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example. Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for ready-made queries for all kinds of situations that you can simply copy and paste_** 
+> &#128161; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
+
+> &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste_** 
 
 <br/><br/>
 
 
-- Click Review & Create
+- Click **Review & Create**
  ...to Finish Setting up a New Log Analytics Workspace 
 
 <br/><br/>
 
 # Connect to Workspace:
 
-- Grab WorkspaceID and Primary Key:
+- Grab **WorkspaceID** and **Primary Key**:
 ![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
 
 <br/>
 
-- Plug ID and Key into your fluent.conf file
+- Plug ID and Key into your **fluent.conf** file
 Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
 
 <br/>
@@ -294,6 +302,7 @@ sudo nano /etc/rc.local
 	sudo python3 main.py && sudo python3 OLEDstats.py && sudo Start_FluentD.bash
 ```
 
+<br/><br/>
 
 # In this Post We: 
 - &#128073; Reviewed Hardware and Pre-Requisites
