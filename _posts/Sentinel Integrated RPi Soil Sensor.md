@@ -111,7 +111,6 @@ sudo pip3 install adafruit-circuitpython-seesaw
 
 <br/><br/>
 
-==============================
 # OLED Screen Install:
 
 - Install the following packages:
@@ -123,7 +122,7 @@ sudo pip3 install requests
 
 <br/>
 
-- Grab and unzip silkscreen font to clean up txt display (cleaner font for this type of OLED display):
+- [Optional] Grab and unzip silkscreen font to clean up txt display (cleaner font for this type of OLED display):
 ```python
 wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
 unzip silkscreen.zip
@@ -131,7 +130,7 @@ unzip silkscreen.zip
 
 <br/>
 
-- Build your main.py file
+- Build your [main.py](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/main.py) file
 ```python
 sudo nano main.py
 ```
@@ -187,7 +186,7 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 ![](/assets/img/SoilSensor/LAW1.png)
 <br/>
 
-- Select +Create
+- Select **+Create**
 ![](/assets/img/SoilSensor/LAW2.png)
 <br/>
 
@@ -242,12 +241,13 @@ sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 
 <br/><br/>
  
- > &#128161;[Pro-Tip]&#128161; Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
+ > &#128161;Pro-Tip&#128161; Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
 ```
 sudo nano Start_FluentD.bash
 ```
 <br/>
-Paste the following into nano, save and close: 
+
+> Paste the following into nano, save and close: 
 ```python
 sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 ```
