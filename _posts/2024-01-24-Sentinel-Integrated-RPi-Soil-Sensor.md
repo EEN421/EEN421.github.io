@@ -96,6 +96,7 @@ sudo apt-get install -y python-smbus
 sudo apt-get install -y i2c-tools
 ```
 
+<br/>
 
 - Enable i2c interface (reboot first!):
 ```python
@@ -180,7 +181,7 @@ ruby --ver
 
 <br/>
 
-- Install FluentD Unified Log Aggregator & Plugin
+- Install **FluentD Unified Log Aggregator & Plugin**
 ```bash
 sudo gem install fluentd -v "~> 0.12.0"
 sudo fluent-gem install fluent-plugin-td
@@ -188,7 +189,7 @@ sudo fluent-gem install fluent-plugin-td
 
 <br/>
 
-- Install FluentD Plugn for Azure Log Analytics
+- Install **FluentD Plugn** for Azure Log Analytics
 ```bash
 sudo fluent-gem install fluent-plugin-azure-loganalytics
 ```
@@ -206,9 +207,12 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 ![](/assets/img/SoilSensor/LAW2.png)
 <br/>
 
-- Select Subscription and Resource Group: ![](/assets/img/SoilSensor/LAW3.png)
+- Select **Subscription** and **Resource Group**:
 <br/>
-- Select Instance Name and Region:
+![](/assets/img/SoilSensor/LAW3.png)
+<br/>
+
+- Select **Instance Name** and **Region**:
 ![](/assets/img/SoilSensor/LAW4.png)
 <br/>
 
@@ -228,13 +232,16 @@ Choose the appropriate commitment tier given your expected daily ingest volume.
 <br/><br/>
 
 # Connect to Workspace:
+
 - Grab WorkspaceID and Primary Key:
 ![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
+
+<br/>
 
 - Plug ID and Key into your fluent.conf file
 Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
 
-<br/><br/>
+<br/>
 
 - Launch the sensor application
 ```python
@@ -246,7 +253,6 @@ sudo python3 main.py &
 ```python
 tail /var/log/soil.log -f
 ```
-<br/>
 <br/>
 
 - Launch FluentD
@@ -280,7 +286,9 @@ tail /var/log/td-agent/fluent.log -f
 <br/>
 
 # Start on Boot:
+
 - Append the above command to /etc/rc.local to start on boot:
+
 ```python
 sudo nano /etc/rc.local
 	sudo python3 main.py && sudo python3 OLEDstats.py && sudo Start_FluentD.bash
