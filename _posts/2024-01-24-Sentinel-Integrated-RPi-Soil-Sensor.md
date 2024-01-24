@@ -197,19 +197,20 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 # Create a Log Analytics Workspace
 - If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal:
+<br/>
 ![](/assets/img/SoilSensor/LAW1.png)
 <br/>
 
 - Select **+Create**
+<br/>
 ![](/assets/img/SoilSensor/LAW2.png)
 <br/>
 
-- Select Subscription and Resource Group:
-![](/assets/img/SoilSensor/LAW3.png)
+- Select Subscription and Resource Group: ![](/assets/img/SoilSensor/LAW3.png)
 <br/>
-
 - Select Instance Name and Region:
 ![](/assets/img/SoilSensor/LAW4.png)
+<br/>
 
 - Commitment / Pricing Tier
 Choose the appropriate commitment tier given your expected daily ingest volume. 
