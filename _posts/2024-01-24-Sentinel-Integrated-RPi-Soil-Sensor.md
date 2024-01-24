@@ -5,10 +5,6 @@ As the agricultural industry continues to evolve and embrace new technologies, c
 
 In this blog article, we will explore how to build and onboard a Raspberry Pi-based soil sensor to Microsoft Sentinel, a cloud-native security information and event management (SIEM) system, in order to improve both security and operations with enhanced scalability, automation, and peace of mind knowing that valuable data is protected and can be easily monitored, analyzed, and acted upon.
 
-<br/>
-
-Fun Fact: this project was inspired while I was growing a fruits and veggies in my back yard in Colorado. At the time, lake Meade, the primary source of irrigation for much of the state, was drying up and forest fires loomed over Boulder. Colorado is the only place I’ve ever seen it snow in the morning, then rain smoke and burning pine in the afternoon. 
-
 <br/><br/>
 
 # In this Post We Will: 
@@ -227,7 +223,7 @@ sudo python3 main.py &
 ```
 <br/>
 
-Confirm logs are working locally
+- Confirm logs are working locally
 ```python
 tail /var/log/soil.log -f
 ```
@@ -246,8 +242,7 @@ sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 sudo nano Start_FluentD.bash
 ```
 <br/>
-
-> Paste the following into nano, save and close: 
+Paste the following into nano, save and close: 
 ```python
 sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 ```
@@ -256,6 +251,7 @@ sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 ```python
 sudo bash Start_FluentD.bash &
 ```
+
 <br/><br/>
 
 - Confirm logs are flowing to Log Analytics Workspace
