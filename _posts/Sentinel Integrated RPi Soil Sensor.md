@@ -109,28 +109,10 @@ sudo git clone https://github.com/adafruit/Adafruit_CircuitPython_seesaw.git
 sudo pip3 install adafruit-circuitpython-seesaw
 ```
 
-To test hardware detection and return hardware addresses:
-```python
-sudo i2cdetect -y 1
-#Soil Sensor should populate on x36
-#OLED Display shows up on x3c (see next section for OLED setup)
-```
-![](/assets/img/SoilSensor/HardwareAddress.png)
-
-
 <br/><br/>
 
-
+==============================
 # OLED Screen Install:
-- To test hardware detection and return hardware addresses:
-```python
-sudo i2cdetect -y 1
-```
-- Soil Sensor should populate on x3c
-
-<br/>
-
-<br/>
 
 - Install the following packages:
 ```python
@@ -149,19 +131,33 @@ unzip silkscreen.zip
 
 <br/>
 
-- Build your OLEDstats.py file
+- Build your main.py file
+> &#128073; ...This program will run the Sensor as well as the OLED Display. This is because separate .py files for sensor reading and OLED output through a GPIO splitter will inevitably cause a collision sooner or later. Coding both functions into the same program will force them to initiate sequentially and thus, never collide.
+
 ```python
-sudo nano OLEDstats.py
+sudo nano main.py
 ```
 
 <br/>
 
-- Run this file when you want to start the display:
+- Run this file when you want to start the display along with the sensor with one command:
 ```python
-sudo python3 OLEDstats.py
+sudo python3 main.py
 ```
 
 <br/><br/>
+
+# Test hardware detection and return hardware addresses:
+```python
+sudo i2cdetect -y 1
+#Soil Sensor should populate on x36
+#OLED Display shows up on x3c (see next section for OLED setup)
+```
+![](/assets/img/SoilSensor/HardwareAddress.png)
+
+
+<br/><br/>
+
 
 # Start on Boot:
 - Append the above command to /etc/rc.local to start on boot:
