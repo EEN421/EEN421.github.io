@@ -225,7 +225,8 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 - Select **Instance Name** and **Region**:
 ![](/assets/img/SoilSensor/LAW4.png)
-<br/>
+
+<br/><br/>
 
 # Commitment / Pricing Tiers
 - Choose the appropriate commitment tier given your expected daily ingest volume. 
@@ -243,7 +244,6 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 <br/><br/>
 
 # Connect to Workspace:
-<br/>
 
 - Grab **WorkspaceID** and **Primary Key**:
 ![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
