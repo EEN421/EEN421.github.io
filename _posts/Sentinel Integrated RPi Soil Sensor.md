@@ -132,11 +132,10 @@ unzip silkscreen.zip
 <br/>
 
 - Build your main.py file
-> &#128073; ...This program will run the Sensor as well as the OLED Display. This is because separate .py files for sensor reading and OLED output through a GPIO splitter will inevitably cause a collision sooner or later. Coding both functions into the same program will force them to initiate sequentially and thus, never collide.
-
 ```python
 sudo nano main.py
 ```
+> &#128073; ...This program will run the Sensor as well as the OLED Display. This is because separate .py files for sensor reading and OLED output through a GPIO splitter will inevitably cause a collision sooner or later. Coding both functions into the same program will force them to initiate sequentially and thus, never collide.
 
 <br/>
 
@@ -204,7 +203,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume.
 
 <br/><br/>
 
-> &#128161; &#128073; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of th 50% discount...for example. Check out my my cost optimization blog series and GitHub repository choc-full of ready-made queries you can copy and paste_** 
+> &#128161; &#128073; **_It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example. Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for ready-made queries for all kinds of situations that you can simply copy and paste_** 
 
 <br/><br/>
 
@@ -214,15 +213,16 @@ Choose the appropriate commitment tier given your expected daily ingest volume.
 
 <br/><br/>
 
-# Grab WorkspaceID and Primary Key:
+# Connect to Workspace:
+- Grab WorkspaceID and Primary Key:
 ![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
 
-# Plug ID and Key into your fluent.conf file
+- Plug ID and Key into your fluent.conf file
 Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
 
 <br/><br/>
 
-# Launch the sensor application
+- Launch the sensor application
 ```python
 sudo python3 main.py &
 ```
@@ -235,46 +235,34 @@ tail /var/log/soil.log -f
 <br/>
 <br/>
 
-# Launch FluentD
-
-
+- Launch FluentD
 ```python
 sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 ```
 
-
 <br/><br/>
  
-
  > &#128161;[Pro-Tip]&#128161; Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
 ```
 sudo nano Start_FluentD.bash
 ```
+<br/>
 Paste the following into nano, save and close: 
 ```python
 sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 ```
+<br/>
 &#128073; Now you can start FluentD with the following command:
 ```python
 sudo bash Start_FluentD.bash &
 ```
-<br/>
+<br/><br/>
 
-# Confirm logs are flowing to Log Analytics Workspace
+- Confirm logs are flowing to Log Analytics Workspace
 ```python
 tail /var/log/td-agent/fluent.log -f 
-
-
-
-
-
-
-
-
-
-
-
-
+```
+<br/>
 
 # Start on Boot:
 - Append the above command to /etc/rc.local to start on boot:
