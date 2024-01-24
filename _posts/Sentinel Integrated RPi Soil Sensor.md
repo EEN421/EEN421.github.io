@@ -49,6 +49,7 @@ sudo apt-get upgrade --fix-missing
 sudo raspi-config
 	> Localisation Options > TimeZone > US > Eastern > OK
 ```
+![](/assets/img/)
 ![](/assets/img/Localization1.png)
 ![](/assets/img/Localization2.png)
 ![](/assets/img/Localization3.png)
