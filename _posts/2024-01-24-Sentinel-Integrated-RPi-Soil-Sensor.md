@@ -92,13 +92,17 @@ sudo apt-get install -y python-smbus
 sudo apt-get install -y i2c-tools
 ```
 
+<br/>
+
 - Enable i2c interface (reboot first!):
 ```python
 sudo reboot -n
 sudo raspi-config
 	> Interfacing Options > I2C > Enable > OK
 ```
+
 ![](/assets/img/SoilSensor/I2C1.png)
+
 ![](/assets/img/SoilSensor/I2C2.png)
 
 ```python
@@ -150,7 +154,7 @@ sudo python3 main.py
 ```python
 sudo i2cdetect -y 1
 #Soil Sensor should populate on x36
-#OLED Display shows up on x3c (see next section for OLED setup)
+#OLED Display shows up on x3c 
 ```
 ![](/assets/img/SoilSensor/HardwareAddress.png)
 
@@ -242,7 +246,7 @@ sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
 
 <br/><br/>
  
- > &#128161;Pro-Tip&#128161; Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
+ > &#128161;Pro-Tip: Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
 ```
 sudo nano Start_FluentD.bash
 ```
