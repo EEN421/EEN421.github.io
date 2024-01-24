@@ -1,11 +1,9 @@
 # Introduction and Use Case:
 As the agricultural industry continues to evolve and embrace new technologies, cost-effective and reliable IoT devices such as Raspberry Pi-based soil sensors have emerged as critical tools for farmers and growers. These sensors provide real-time data on soil conditions, enabling both large scale farmers and small-time growers to make informed decisions about irrigation, fertilization, and other key processes. However, as the use of IoT devices increases, so does the need for enhanced security and automation.
 
-<br/>
-
 In this blog article, we will explore how to build and onboard a Raspberry Pi-based soil sensor to Microsoft Sentinel, a cloud-native security information and event management (SIEM) system, in order to improve both security and operations with enhanced scalability, automation, and peace of mind knowing that valuable data is protected and can be easily monitored, analyzed, and acted upon.
 
-<br/><br/>
+<br/>
 
 # In this Post We Will: 
 - &#128073; Review Hardward and Pre-Requisites
@@ -21,7 +19,7 @@ In this blog article, we will explore how to build and onboard a Raspberry Pi-ba
 <br/><br/>
 
 # Hardware Details: 
-
+Click to learn more about each component...
 - [I2C OLED Display](https://a.co/d/cjIjMv2)
 - [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
 - [I2C Soil Moisture & Temperature Sensor](https://a.co/d/biWvUO2)
@@ -39,11 +37,16 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
+<br/>
+
+
 - (Optional) If either of the above complete but with errors, try again with:
 ```python 
 sudo apt-get update --fix-missing
 sudo apt-get upgrade --fix-missing
 ```
+
+<br/>
 
 - Set Localisation Options:
 ```python
@@ -57,6 +60,7 @@ sudo raspi-config
 
 ![](/assets/img/SoilSensor/Localization3.png)
 
+<br/>
 
 - Expand your storage
 ```python
@@ -92,7 +96,6 @@ sudo apt-get install -y python-smbus
 sudo apt-get install -y i2c-tools
 ```
 
-<br/>
 
 - Enable i2c interface (reboot first!):
 ```python
@@ -168,16 +171,22 @@ sudo i2cdetect -y 1
 sudo aptitude install ruby-dev
 ```
 
+<br/>
+
 - Check/Confirm Ruby Version:
 ```bash
 ruby --ver
 ```
+
+<br/>
 
 - Install FluentD Unified Log Aggregator & Plugin
 ```bash
 sudo gem install fluentd -v "~> 0.12.0"
 sudo fluent-gem install fluent-plugin-td
 ```
+
+<br/>
 
 - Install FluentD Plugn for Azure Log Analytics
 ```bash
