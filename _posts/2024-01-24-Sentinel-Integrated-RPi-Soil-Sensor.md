@@ -6,7 +6,7 @@ In this blog article, we will explore how to build and onboard a Raspberry Pi-ba
 <br/>
 
 # In this Post We Will: 
-- &#128073; Review Hardward and Pre-Requisites
+- &#128073; Review Hardware and Pre-Requisites
 - &#128073; Perform a "Headless" Raspberry Pi Setup
 - &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
 - &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
