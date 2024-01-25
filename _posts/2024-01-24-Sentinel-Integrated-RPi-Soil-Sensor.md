@@ -320,7 +320,7 @@ tail /var/log/td-agent/fluent.log -f
 
 - Navigate to your Log Analytics Workspace to query the logs coming into your workspace.
 ![](/assets/img/SoilSensor/Soil%20Readings.png)
-<br/><br/>
+<br/><br/><br/>
 
 
 # Query Auth and Syslog Tables
@@ -330,7 +330,7 @@ If you've setup your FluentD config file correctly, you've got Auth and Syslogs 
 Navigate to your Log Analytics Workspace and you should see your custom logs :
 
 ![](/assets/img/iot/CustomLogs.png)
-<br/><br/>
+<br/><br/><br/>
 
 # Added Security
 
@@ -343,7 +343,7 @@ Navigate to your Log Analytics Workspace and you should see your custom logs :
 The syslog table (syslog_cl) is populating too &#128071;
 
 ![](/assets/img/iot/syslog_cl.png)
-<br/><br/>
+<br/><br/><br/>
 
 # Start on Boot:
 
