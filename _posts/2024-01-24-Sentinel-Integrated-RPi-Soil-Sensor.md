@@ -216,6 +216,10 @@ sudo fluent-gem install fluent-plugin-td
 sudo fluent-gem install fluent-plugin-azure-loganalytics
 ```
 
+<br/> 
+
+Click here to learn more about [FluentD](https://docs.fluentd.org/how-to-guides/raspberrypi-cloud-data-logger)
+
 <br/><br/>
 
 # Create a Log Analytics Workspace
