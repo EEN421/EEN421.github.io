@@ -26,6 +26,10 @@ Click to learn more about each component...
 - [GPIO Splitter](https://shop.pimoroni.com/products/hat-hacker-hat?variant=31812879056979)
 - [Jumper Cables](https://a.co/d/3A3MSpy)
 
+# Sofware | OS Details:
+- I used the last RaspiOS that supported this kind of headless setup (Buster or earlier) for this build. 
+- I know, I know... I'll cover a more modern "headless" setup for the latest RaspiOS ("Bookworm", at the time of this article) in a separate blog article and link back here. &#128517;
+
 <br/><br/>
 ![](/assets/img/SoilSensor/ReadMe0.jpg)
 <br/><br/>
@@ -176,7 +180,7 @@ Once you run the OLED script, you should see the display populate as such:
 
 <br/><br/>
 
-# Integration with Microsoft Sentinel
+# Integration with Microsoft Sentinel Workspace
 
 - Install Ruby 
 ```bash
@@ -295,7 +299,36 @@ sudo bash Start_FluentD.bash &
 ```python
 tail /var/log/td-agent/fluent.log -f 
 ```
+![](/assets/img/SoilSensor/Test1.png)
+
 <br/>
+
+- Navigate to your Log Analytics Workspace to query the logs coming into your sensor.
+![](/assets/img/SoilSensor/Soil%20Readings.png)
+<br/><br/>
+
+
+# Query Auth and Syslog Tables
+
+If you've setup your FluentD config file correctly, you've got Auth and Syslogs coming into Sentinel as Custom Logs (_CL) as well as your Soil data. You can Query the Auth Logs for failed sign-in attempts etc., illustrated below... 
+
+Navigate to your Log Analytics Workspace and you should see your custom logs (logs ingested this way show up under 'Custom Logs' and have '_CL' appended to their name when they hit the workspace, illusgtrated below):
+
+![](/assets/img/iot/CustomLogs.png)
+<br/><br/>
+
+# Added Security
+
+&#128161; Once FluentD is cooking without issue on your Pi, try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table &#128071;
+
+![](/assets/img/iot/Auth_CL.png)
+<br/><br/>
+
+
+The syslog table (syslog_cl) is populating too &#128071;
+
+![](/assets/img/iot/syslog_cl.png)
+<br/><br/>
 
 # Start on Boot:
 
