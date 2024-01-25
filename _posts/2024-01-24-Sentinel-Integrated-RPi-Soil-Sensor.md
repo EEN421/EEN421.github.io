@@ -13,6 +13,7 @@ In this blog article, we will explore how to build and onboard a Raspberry Pi-ba
 - &#128073; Test and Confirm Hardware
 - &#128073; Create a Log Analytics Workspace
 - &#128073; Send Sensor Data to Microsoft Sentinel
+- &#128073; Query custom logs for operations, security, and soil data
 - &#128073; Automate/Configure Start on Boot 
 - &#128073; Accomplish something AWESOME today! &#128526;
 
@@ -26,14 +27,20 @@ Click to learn more about each component...
 - [GPIO Splitter](https://shop.pimoroni.com/products/hat-hacker-hat?variant=31812879056979)
 - [Jumper Cables](https://a.co/d/3A3MSpy)
 
+<br/><br/>
+
 # Sofware | OS Details:
 - I used the last RaspiOS that supported this kind of headless setup (Buster or earlier) for this build. 
+
+<br/>
+
 - I know, I know... I'll cover a more modern "headless" setup for the latest RaspiOS ("Bookworm", at the time of this article) in a separate blog article and link back here. &#128517;
 
 <br/><br/>
-![](/assets/img/SoilSensor/ReadMe0.jpg)
-<br/><br/>
 
+![](/assets/img/SoilSensor/ReadMe0.jpg)
+
+<br/><br/><br/>
 
 # Pre-Requisites:
 
@@ -180,7 +187,7 @@ Once you run the OLED script, you should see the display populate as such:
 
 <br/><br/>
 
-# Integration with Microsoft Sentinel Workspace
+# FluentD Configuration:
 
 - Install Ruby 
 ```bash
@@ -303,16 +310,16 @@ tail /var/log/td-agent/fluent.log -f
 
 <br/>
 
-- Navigate to your Log Analytics Workspace to query the logs coming into your sensor.
+- Navigate to your Log Analytics Workspace to query the logs coming into your workspace.
 ![](/assets/img/SoilSensor/Soil%20Readings.png)
 <br/><br/>
 
 
 # Query Auth and Syslog Tables
 
-If you've setup your FluentD config file correctly, you've got Auth and Syslogs coming into Sentinel as Custom Logs (_CL) as well as your Soil data. You can Query the Auth Logs for failed sign-in attempts etc., illustrated below... 
+If you've setup your FluentD config file correctly, you've got Auth and Syslogs coming into Sentinel as Custom Logs (_CL) as well as your Soil data. Logs ingested this way show up under 'Custom Logs' and have '_CL' appended to their name when they hit the workspace. You can Query the Auth Logs for failed sign-in attempts etc., illustrated below... 
 
-Navigate to your Log Analytics Workspace and you should see your custom logs (logs ingested this way show up under 'Custom Logs' and have '_CL' appended to their name when they hit the workspace, illusgtrated below):
+Navigate to your Log Analytics Workspace and you should see your custom logs :
 
 ![](/assets/img/iot/CustomLogs.png)
 <br/><br/>
@@ -357,6 +364,7 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 - &#128073; Tested and Confirmed Hardware
 - &#128073; Created a Log Analytics Workspace
 - &#128073; Sent Sensor Data to Microsoft Sentinel
+- &#128073; Queried custom logs for operations, security, and soil data
 - &#128073; Automated/Configured Start on Boot 
 - &#128073; Accomplished something AWESOME &#128526;
 
