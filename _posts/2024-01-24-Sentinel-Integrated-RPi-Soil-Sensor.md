@@ -280,6 +280,9 @@ sudo python3 main.py &
 ```python
 tail /var/log/soil.log -f
 ```
+
+![](/assets/img/SoilSensor/Test1.png)
+
 <br/>
 
 - Launch FluentD
@@ -306,11 +309,12 @@ sudo bash Start_FluentD.bash &
 
 <br/><br/>
 
-- Confirm logs are flowing to Log Analytics Workspace
+- Confirm FluentD is forwarding to Log Analytics Workspace
 ```python
 tail /var/log/td-agent/fluent.log -f 
 ```
-![](/assets/img/SoilSensor/Test1.png)
+
+![](/assets/img/SoilSensor/confirmation.png)
 
 <br/>
 
