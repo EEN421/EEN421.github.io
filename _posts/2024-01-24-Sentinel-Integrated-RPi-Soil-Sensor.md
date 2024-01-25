@@ -249,8 +249,7 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 > &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste_** 
 
-<br/><br/>
-
+<br/>
 
 - Click **Review & Create**
  ...to Finish Setting up a New Log Analytics Workspace 
