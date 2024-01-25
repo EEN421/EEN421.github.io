@@ -240,12 +240,13 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 <br/><br/>
 
 # Commitment / Pricing Tiers
-
 <br/>
 
 - Choose the appropriate commitment tier given your expected daily ingest volume. 
 
-> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example. <br/>
+> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
+<br/>
+
 > &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste_** 
 
 <br/><br/>
@@ -258,9 +259,9 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 
 # Connect to Workspace:
 
+- Grab **WorkspaceID** and **Primary Key**:
 <br/>
 
-- Grab **WorkspaceID** and **Primary Key**:
 ![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
 
 <br/>
