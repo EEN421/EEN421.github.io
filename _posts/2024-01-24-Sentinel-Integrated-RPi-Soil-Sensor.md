@@ -19,11 +19,13 @@ In this blog article, we will explore how to build and onboard a Raspberry Pi-ba
 
 <br/><br/>
 
+
+
 # Hardware Details: 
 Click to learn more about each component...
-- [I2C OLED Display](https://a.co/d/cjIjMv2)
+- [I2C OLED Display](https://www.adafruit.com/product/3527)
 - [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
-- [I2C Soil Moisture & Temperature Sensor](https://a.co/d/biWvUO2)
+- [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
 - [GPIO Splitter](https://shop.pimoroni.com/products/hat-hacker-hat?variant=31812879056979)
 - [Jumper Cables](https://a.co/d/3A3MSpy)
 
