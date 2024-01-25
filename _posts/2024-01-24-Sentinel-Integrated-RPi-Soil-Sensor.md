@@ -242,6 +242,7 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 # Commitment / Pricing Tiers
 
 - Choose the appropriate commitment tier given your expected daily ingest volume. 
+<br/>
 
 > &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
 <br/>
