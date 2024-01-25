@@ -347,7 +347,7 @@ The syslog table (syslog_cl) is populating too &#128071;
 
 ```python
 sudo nano /etc/rc.local
-	sudo python3 main.py && sudo python3 OLEDstats.py && sudo Start_FluentD.bash
+	sudo python3 main.py && sudo Start_FluentD.bash
 ```
 
 <br/><br/>
