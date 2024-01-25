@@ -41,7 +41,7 @@ In my experience, usage and cost trends are almost always brought up during quar
 
 # Run and export our KQL to a PowerBI M Query
 
-1 -	Fire up your favourite browser, navigate to the [Azure portal](https://portal.azure.com) and load your Log Analytics Workspace or choice. <br/><br/>
+1 -	Fire up your favourite browser, navigate to the [Azure portal](https://portal.azure.com) and load your Log Analytics Workspace of choice. <br/><br/>
 2 -	Paste the *90 Day Billable Ingest Volume.kql* query into the query window and run it. <br/><br/>
 3 -	Once the query has finished running, the **--> Export** button will become available. Click on it and select **PowerBI (as an M query)**, illustrated below.
 
