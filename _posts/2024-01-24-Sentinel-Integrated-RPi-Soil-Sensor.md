@@ -240,7 +240,6 @@ sudo fluent-gem install fluent-plugin-azure-loganalytics
 <br/><br/>
 
 # Commitment / Pricing Tiers
-<br/>
 
 - Choose the appropriate commitment tier given your expected daily ingest volume. 
 
