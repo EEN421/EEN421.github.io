@@ -1,0 +1,58 @@
+# Raspberry PI OS config.toml
+# This file is used for the initial setup of the system on the first boot, if
+# it's s present in the boot partition of the installation.
+#
+# This file is loaded by firstboot, parsed by init_config and ends up
+# as several calls to imager_custom.
+# The example below has all current fields.
+#
+# References:
+# - https://github.com/RPi-Distro/raspberrypi-sys-mods/blob/master/usr/lib/raspberrypi-sys-mods/firstboot
+# - https://github.com/RPi-Distro/raspberrypi-sys-mods/blob/master/usr/lib/raspberrypi-sys-mods/init_config
+# - https://github.com/RPi-Distro/raspberrypi-sys-mods/blob/master/usr/lib/raspberrypi-sys-mods/imager_custom
+
+# Required:
+config_version = 1
+
+[system]
+hostname = "pi3b"
+
+[user]
+# If present, the default "rpi" user gets renamed to this "name"
+name = "user1"
+# The password can be encrypted or plain. To encrypt, I used "openssl passwd -5 'passphrase'"
+password = "$5$.a5ZBaowRScmDTFq$8YmmEl.mo.iUx5HCTq48v6amoVTMcpb1YEhTsO0qg60"
+password_encrypted = true
+
+[ssh]
+# ssh_import_id = "gh:user" # import public keys from github
+enabled = true
+password_authentication = true
+# We can also seed the ssh public keys configured for the default user:
+# authorized_keys = [ "ssh-rsa ... user@host", ... ]
+
+[wlan]
+ssid = "Your-Wifi-SSID"
+password = "$5$MVKhbyOyJVxuwepN$Qh5yyrnOI5MxvdDIBpu5OgfbRd7QoT4FAbS7k2ibskA"
+password_encrypted = true
+hidden = false
+# The country is written to /etc/default/crda
+# Reference: https://wireless.wiki.kernel.org/en/developers/Regulatory
+country = "US"
+
+[locale]
+keymap = "US"
+timezone = "America/New_York"
+
+
+
+
+
+
+
+
+
+
+
+
+
