@@ -1,6 +1,18 @@
 # Introduction and Use Case:
 
-This post follows up on a couple of previous posts where I [deployed a raspberry pi headlessly and onboarded syslog and auth logs to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), and then [added an I2C soil moisture and temperature sensor and streamed the data to a workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) an will address several new security updates and improvement to the processes described. 
+This post follows up on a couple of previous posts where I [deployed a raspberry pi headlessly and onboarded syslog and auth logs to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), and then [added an I2C soil moisture and temperature sensor and streamed the data to a workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and will address several new security updates and improvement to the processes described. 
+
+<br/>
+
+# Security Updates - What's New?
+
+Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. Reducing our attack surface area with this simple change is a welcome feature. However, as the case with most things security related, it can come at a cost if you don't know what you're doing. 
+
+Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (yuck!) to a wpa_supplicant.conf file for example. This is no longer the case (huzzah)! 
+
+Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (gross). 
+
+Now you can streamline your workflow and improve your overall productivity, safely and securely! And the benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time, energy, and reducing your overal attack surface area. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today!
 
 <br/>
 
@@ -21,17 +33,6 @@ This post follows up on a couple of previous posts where I [deployed a raspberry
 
 <br/><br/>
 
-# Security Updates - What's New?
-
-Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. Reducing our attack surface area with this simple change is a welcome feature. However, as the case with most things security related, it can come at a cost if you don't know what you're doing. 
-
-Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (yuck!) to a wpa_supplicant.conf file for example. This is no longer the case (huzzah)! 
-
-Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (gross). 
-
-Now you can streamline your workflow and improve your overall productivity, safely and securely! And the benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time, energy, and reducing your overal attack surface area. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today!
-
-
 # Hardware Details: 
 Click to learn more about each component...
 - [I2C OLED Display](https://www.adafruit.com/product/3527)
@@ -43,11 +44,10 @@ Click to learn more about each component...
 <br/><br/>
 
 # Sofware | OS Details:
-- These steps have been tested with Raspbian Bookworm OS. 
+- These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
 
 <br/><br/>
 
-![](/assets/img/SoilSensor/ReadMe0.jpg)
 
 <br/><br/><br/>
 
