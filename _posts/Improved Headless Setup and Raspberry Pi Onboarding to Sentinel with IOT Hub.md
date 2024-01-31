@@ -54,7 +54,7 @@ Click to learn more about each component...
 
 # Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
 
-Before burning our SD card with the latest Raspbian OS, we need to create a custom.toml file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**).
+Before burning our SD card with the latest Raspbian OS, we need to create a [custom.toml](/assets/Code/) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**).
 
 Build yours with this template and make it yours. Here are the sections you need to update: 
 
