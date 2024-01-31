@@ -44,7 +44,20 @@ Click to learn more about each component...
 
 <br/><br/><br/>
 
-# Pre-Requisites:
+# Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
+After burning your SD card with Raspbian OS, you can configure it to automagically join the network and enable SSH with the following steps: 
+- Unplug/plug back in your SD card into your computer after burning the OS
+<br/><br/>
+- Navigate to SD storage
+<br/><br/>
+- Create blank file (no extension) named "SSH" (this file is detected and deleted on boot, and SSH is enabled)
+<br/><br/>
+- Copy and paste the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file containing your country/region, wireless SSID and Key 
+<br/><br/>
+- Boot up and wait for it to appear on your network and be available over SSH
+
+<br/><br/>
+# Raspberry Pi Setup:
 
 - Update your system:
 ```python
@@ -53,7 +66,6 @@ sudo apt-get upgrade
 ```
 
 <br/>
-
 
 - (Optional) If either of the above complete but with errors, try again with:
 ```python 
@@ -89,19 +101,6 @@ sudo raspi-config
 
 <br/><br/>
 
-# Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
-After burning your SD card with Raspbian OS, you can configure it to automagically join the network and enable SSH with the following steps: 
-- Unplug/plug back in your SD card into your computer after burning the OS
-<br/><br/>
-- Navigate to SD storage
-<br/><br/>
-- Create blank file (no extension) named "SSH" (this file is detected and deleted on boot, and SSH is enabled)
-<br/><br/>
-- Copy and paste the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file containing your country/region, wireless SSID and Key 
-<br/><br/>
-- Boot up and wait for it to appear on your network and be available over SSH
-
-<br/><br/>
 
 # Soil Sensor Setup:
 
