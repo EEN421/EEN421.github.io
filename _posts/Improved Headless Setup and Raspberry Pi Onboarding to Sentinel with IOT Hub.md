@@ -1,25 +1,35 @@
 # Introduction and Use Case:
 
-As the agricultural industry continues to evolve and embrace new technologies, cost-effective and reliable IoT devices such as Raspberry Pi-based soil sensors have emerged as critical tools for farmers and growers. These sensors provide real-time data on soil conditions, enabling both large scale farmers and small-time growers to make informed decisions about irrigation, fertilization, and other key processes. However, as the use of IoT devices increases, so does the need for enhanced security and automation.
-
-In this blog article, we will explore how to build and onboard a Raspberry Pi-based soil sensor to Microsoft Sentinel, a cloud-native security information and event management (SIEM) system, in order to improve both security and operations with enhanced scalability, automation, and peace of mind knowing that valuable data is protected and can be easily monitored, analyzed, and acted upon.
+This post follows up on a couple of previous posts where I [deployed a raspberry pi headlessly and onboarded syslog and auth logs to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), and then [added an I2C soil moisture and temperature sensor and streamed the data to a workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) an will address several new security updates and improvement to the processes described. 
 
 <br/>
 
 # In this Post We Will: 
+- &#128073; Review Security Updates
 - &#128073; Review Hardware and Pre-Requisites
 - &#128073; Perform a "Headless" Raspberry Pi Setup
 - &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
 - &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
 - &#128073; Test and Confirm Hardware
+- &#128073; Create an IoT Hub in Azure
 - &#128073; Create a Log Analytics Workspace
-- &#128073; Send Sensor Data to Microsoft Sentinel
+- &#128073; Onboard Raspberry Pi to IoT Hub
+- &#128073; Configure Azure Streaming Agent
 - &#128073; Query custom logs for operations, security, and soil data
 - &#128073; Automate/Configure Start on Boot 
-- &#128073; Accomplish something AWESOME today! &#128526;
+- &#128073; Accomplish something AWESOME today x2! &#128526;
 
 <br/><br/>
 
+# Security Updates - What's New?
+
+Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. Reducing our attack surface area with this simple change is a welcome feature. However, as the case with most things security related, it can come at a cost if you don't know what you're doing. 
+
+Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (yuck!) to a wpa_supplicant.conf file for example. This is no longer the case (huzzah)! 
+
+Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (gross). 
+
+Now you can streamline your workflow and improve your overall productivity, safely and securely! And the benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time, energy, and reducing your overal attack surface area. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today!
 
 
 # Hardware Details: 
@@ -33,11 +43,7 @@ Click to learn more about each component...
 <br/><br/>
 
 # Sofware | OS Details:
-- I used the last RaspiOS that supported this kind of headless setup (Buster or earlier) for this build. 
-
-<br/>
-
-- I know, I know... I'll cover a more modern "headless" setup for the latest RaspiOS ("Bookworm", at the time of this article) in a separate blog article and link back here. &#128517;
+- These steps have been tested with Raspbian Bookworm OS. 
 
 <br/><br/>
 
@@ -45,7 +51,34 @@ Click to learn more about each component...
 
 <br/><br/><br/>
 
-# Pre-Requisites:
+
+# Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
+
+Before burning our SD card with the latest Raspbian OS, we need to create a custom.toml file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**).
+
+Build yours with this template and make it yours. Here are the sections you need to update: 
+
+![](/assets/img/IoT%20Hub/Headless%20Setup/hostname.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/user.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/SSH.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/WLAN.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/locale.png)
+
+
+After burning your SD card with Raspbian OS (I use [Belena Etcher](https://etcher.balena.io/)), you can configure it to automagically join the network and enable SSH with the following steps: 
+- Unplug/plug back in your SD card into your computer after burning the OS
+<br/><br/>
+- Navigate to SD storage / Boot
+<br/><br/>
+- Create blank file (no extension) named "SSH" (this file is detected and deleted on boot, and SSH is enabled)
+<br/><br/>
+- Copy and paste the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file containing your country/region, wireless SSID and Key 
+<br/><br/>
+- Boot up and wait for it to appear on your network and be available over SSH
+
+<br/><br/>
+
+# Raspberry Pi Setup:
 
 - Update your system:
 ```python
