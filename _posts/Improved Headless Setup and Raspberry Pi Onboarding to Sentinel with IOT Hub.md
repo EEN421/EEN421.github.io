@@ -54,25 +54,35 @@ Click to learn more about each component...
 
 # Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
 
-Before burning our SD card with the latest Raspbian OS, we need to create a [custom.toml](/assets/Code/) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**).
-
-Build yours with this template and make it yours. Here are the sections you need to update: 
+Before burning our SD card with the latest Raspbian OS, we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
 
 ![](/assets/img/IoT%20Hub/Headless%20Setup/hostname.png)
+
+<br/>
+
 ![](/assets/img/IoT%20Hub/Headless%20Setup/user.png)
+
+<br/>
+
 ![](/assets/img/IoT%20Hub/Headless%20Setup/SSH.png)
+
+<br/>
+
 ![](/assets/img/IoT%20Hub/Headless%20Setup/WLAN.png)
+
+<br/>
+
 ![](/assets/img/IoT%20Hub/Headless%20Setup/locale.png)
 
+<br/><br/>
 
 After burning your SD card with Raspbian OS (I use [Belena Etcher](https://etcher.balena.io/)), you can configure it to automagically join the network and enable SSH with the following steps: 
+
 - Unplug/plug back in your SD card into your computer after burning the OS
 <br/><br/>
 - Navigate to SD storage / Boot
 <br/><br/>
-- Create blank file (no extension) named "SSH" (this file is detected and deleted on boot, and SSH is enabled)
-<br/><br/>
-- Copy and paste the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file containing your country/region, wireless SSID and Key 
+- Copy and paste the [custom.toml](/assets/Code/iothub/custom.toml) file containing your Hostname, user, SSH, WLAN, and country/region settings. 
 <br/><br/>
 - Boot up and wait for it to appear on your network and be available over SSH
 
@@ -82,32 +92,17 @@ After burning your SD card with Raspbian OS (I use [Belena Etcher](https://etche
 
 - Update your system:
 ```python
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get update && sudo apt-get upgrade
 ```
 
 <br/>
 
 
-- (Optional) If either of the above complete but with errors, try again with:
+- (Optional) If the above command completes but with errors, try again with:
 ```python 
 sudo apt-get update --fix-missing
 sudo apt-get upgrade --fix-missing
 ```
-
-<br/>
-
-- Set Localisation Options:
-```python
-sudo raspi-config
-	> Localisation Options > TimeZone > US > Eastern > OK
-```
-
-![](/assets/img/SoilSensor/Localization1.png)
-
-![](/assets/img/SoilSensor/Localization2.png)
-
-![](/assets/img/SoilSensor/Localization3.png)
 
 <br/>
 
@@ -120,20 +115,6 @@ sudo raspi-config
 ![](/assets/img/SoilSensor/Disk1.png)
 
 ![](/assets/img/SoilSensor/Disk2.png)
-
-<br/><br/>
-
-# Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
-After burning your SD card with Raspbian OS, you can configure it to automagically join the network and enable SSH with the following steps: 
-- Unplug/plug back in your SD card into your computer after burning the OS
-<br/><br/>
-- Navigate to SD storage
-<br/><br/>
-- Create blank file (no extension) named "SSH" (this file is detected and deleted on boot, and SSH is enabled)
-<br/><br/>
-- Copy and paste the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file containing your country/region, wireless SSID and Key 
-<br/><br/>
-- Boot up and wait for it to appear on your network and be available over SSH
 
 <br/><br/>
 
@@ -223,40 +204,9 @@ Once you run the OLED script, you should see the display populate as such:
 
 <br/><br/>
 
-# FluentD Configuration:
+# Create an IoT Hub in Azure
 
-- Install Ruby 
-```bash
-sudo aptitude install ruby-dev
-```
 
-<br/>
-
-- Check/Confirm Ruby Version:
-```bash
-ruby --ver
-```
-
-<br/>
-
-- Install **FluentD Unified Log Aggregator & Plugin**
-```bash
-sudo gem install fluentd -v "~> 0.12.0"
-sudo fluent-gem install fluent-plugin-td
-```
-
-<br/>
-
-- Install **FluentD Plugn** for Azure Log Analytics
-```bash
-sudo fluent-gem install fluent-plugin-azure-loganalytics
-```
-
-<br/> 
-
-- Click here to learn more about [FluentD](https://docs.fluentd.org/how-to-guides/raspberrypi-cloud-data-logger)
-
-<br/><br/>
 
 # Create a Log Analytics Workspace
 - If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal:
