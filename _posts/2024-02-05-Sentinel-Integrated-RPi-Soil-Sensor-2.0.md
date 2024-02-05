@@ -47,7 +47,7 @@ Click to learn more about each component...
 # Sofware | OS Details:
 - These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm.jpg)
+![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm_01-768x518.jpg)
 
 <br/><br/>
 
