@@ -81,7 +81,7 @@ Navigate back to the **Devices** blade, then to your newly registered device and
 
 After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.com/software/), we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
 
-![in this example i used a Pi 3 model B, change this to whatever plant you plan to monitor](/assets/img/IoT%20Hub/Headless%20Setup/hostname.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/hostname.jpg)
 
 <br/>
 
