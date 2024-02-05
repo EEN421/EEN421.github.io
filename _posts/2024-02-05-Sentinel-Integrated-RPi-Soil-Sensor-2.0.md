@@ -1,5 +1,5 @@
 # Introduction and Use Case:
-This post follows up on a couple of previous posts where we [deployed a raspberry pi headlessly and onboarded syslog and auth logs to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), and then [added an I2C soil moisture and temperature sensor and streamed the data to a workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and will address several new security updates and improvement to the processes described. 
+This post follows up on a couple of previous posts where we [deployed a raspberry pi headlessly and onboarded syslog and auth logs to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), and then [added an I2C soil moisture and temperature sensor and streamed the data to a workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and will address several new **security updates** and **improvements** to the original processes described. 
 
 <br/>
 
@@ -7,11 +7,13 @@ This post follows up on a couple of previous posts where we [deployed a raspberr
 
 Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. Reducing our attack surface area with this simple change is a welcome feature. However, as the case with most things security related, it can come at a cost if you don't know what you're doing. 
 
-Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (**yuck!**) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**)! 
+Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (**yuck!**&#129300;) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**&#128571;)! 
 
-Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (**gross**). 
+Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (**gross**&#129314;). 
 
-Now you can streamline your workflow and improve your overall productivity, safely and securely! And the benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time, energy, and reducing your overal attack surface area. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today!
+Now you can streamline your workflow and improve your overall productivity, safely and securely! &#128526; <br/>
+
+The benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time &#9201;, energy &#x26A1;, and reducing your overal attack surface area &#128272;. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today! &#128170;
 
 <br/>
 
@@ -100,7 +102,7 @@ After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.
 
 <br/><br/>
 
-Once the initial burn is done (I use [Belena Etcher](https://etcher.balena.io/)), you can configure it to **automagically** join the network and enable SSH by dropping your **custom.toml** file into the boot drive: 
+Once the initial burn is done (I use [Belena Etcher](https://etcher.balena.io/) ![Belena Etcher](/assets/img/IoT%20Hub/Headless%20Setup/Belena.png)), you can configure your Pi to **automagically** join the network and enable SSH by dropping your **custom.toml** file into the boot drive: 
 
 - Unplug/plug back in your SD card into your computer after burning the OS
 <br/><br/>
