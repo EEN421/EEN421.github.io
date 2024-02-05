@@ -1,19 +1,19 @@
 # Introduction and Use Case:
-This post follows up on a couple of previous posts where we [deployed a raspberry pi headlessly and onboarded syslog and auth logs to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), and then [added an I2C soil moisture and temperature sensor and streamed the data to a workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and will address several new **security updates** and **improvements** to the original processes described. 
+This post follows up on a couple of previous posts where we [deployed a raspberry pi headlessly and onboarded syslog and auth logs (for security) to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), then [added an I2C soil moisture & temperature sensor and streamed the sensor data to the workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/). Today, we will address several **NEW security updates** and **improvements** to the original processes described. 
 
 <br/>
 
 # Security Updates - What's New?
 
-Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. Reducing our attack surface area with this simple change is a welcome feature. However, as the case with most things security related, it can come at a cost if you don't know what you're doing. 
+Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. **Reducing our attack surface area** with this simple change is a welcome feature. However, as the case with most things security related, **it can come at a cost if you don't know what you're doing.**
 
-Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (**yuck!**&#129300;) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**&#128571;)! 
+Another important feature that has since been added, is the **ability to encrypt your sensitive information**. The older method I've used relied on hard-coding wifi keys etc. in plain text (**yuck!**&#129300;) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**&#128571;)! 
 
-Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (**gross**&#129314;). 
+**Lastly**, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (**gross**&#129314;). 
 
-Now you can streamline your workflow and improve your overall productivity, safely and securely! &#128526; <br/>
+Now you can **streamline** your workflow and **improve** your overall productivity, **safely** and **securely!** &#128526; <br/>
 
-The benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time &#9201;, energy &#x26A1;, and reducing your overal attack surface area &#128272;. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today! &#128170;
+_The benefits don't stop there_ - by leveraging **Azure IoT Hub**, you'll be able to ditch the old combination of FluentD and Ruby, saving you **time** &#9201;, **energy** &#x26A1;, and **reducing your overal attack surface area** &#128272;. So why wait? Dive into this blog post and learn how to **optimize** your Raspberry Pi **IoT setup today!** &#128170;
 
 <br/>
 
@@ -24,13 +24,12 @@ The benefits don't stop there - by leveraging the Azure Streaming Agent via IoT 
 # In this Post We Will: 
 - &#128073; Review Security Updates
 - &#128073; Review Hardware Changes and Pre-Requisites
-- &#128073; Perform a "Headless" Raspberry Pi Setup (Latest "Bookworm" OS)
+- &#128073; Perform the New "Headless" Raspberry Pi Setup (Latest "Bookworm" OS)
 - &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
 - &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
 - &#128073; Test and Confirm Hardware
 - &#128073; Create an IoT Hub in Azure
 - &#128073; Onboard Raspberry Pi to IoT Hub
-- &#128073; Automate/Configure Start on Boot 
 - &#128073; Accomplish something AWESOME today x2! &#128526;
 
 <br/><br/>
@@ -82,7 +81,7 @@ Navigate back to the **Devices** blade, then to your newly registered device and
 
 After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.com/software/), we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/hostname.png)
+![in this example i used a Pi 3 model B, change this to whatever plant you plan to monitor](/assets/img/IoT%20Hub/Headless%20Setup/hostname.png)
 
 <br/>
 
@@ -102,7 +101,7 @@ After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.
 
 <br/><br/>
 
-Once the initial burn is done (I use [Belena Etcher](https://etcher.balena.io/) ![Belena Etcher](/assets/img/IoT%20Hub/Headless%20Setup/Belena.png)), you can configure your Pi to **automagically** join the network and enable SSH by dropping your **custom.toml** file into the boot drive: 
+Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Pi to **automagically** join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
 
 - Unplug/plug back in your SD card into your computer after burning the OS
 <br/><br/>
@@ -113,7 +112,7 @@ Once the initial burn is done (I use [Belena Etcher](https://etcher.balena.io/) 
 - Copy and paste the [custom.toml](/assets/Code/iothub/custom.toml) file containing your Hostname, user, SSH, WLAN, and country/region settings. 
 <br/><br/>
 
-- Boot up and wait for it to appear on your network and be available over SSH
+- Boot up and wait for it to appear on your network and be available over SSH (this can take up to 10 minutes on first boot, check your router for the IP address).
 
 <br/><br/>
 
@@ -185,7 +184,7 @@ Once you run the OLED script, you should see the display populate as such:
 
 <br/>
 
-> &#128073; Pro-Tip: Change the Hostname of the Raspberry Pi in the /etc/hostname file to the name of the plant you're monitoring
+> &#128073; Pro-Tip: If you didn't change the Hostname to the name of the plant you're monitoring in the [custom.toml](/assets/Code/iothub/custom.toml) file, then edit the /etc/hostname file once you SSH in. I'm using this unit to grow [Goat Horn Peppers ](https://www.roysfarm.com/goat-horn-pepper/)
 
 <br/><br/>
 
@@ -235,7 +234,6 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 - &#128073; Test and Confirm Hardware
 - &#128073; Create an IoT Hub in Azure
 - &#128073; Onboard Raspberry Pi to IoT Hub
-- &#128073; Automate/Configure Start on Boot 
 - &#128073; Accomplish something AWESOME today x2! &#128526;
 
 
@@ -246,6 +244,9 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 This time around (2.0) we improved upon our previous Headless Raspberry Pi ARM Device onboarding process in the following ways: 
 
 - Encrypted WiFi and User Credentials (no more plain text "secrets.py" hard-coded credentials!)
+<br/>
+
 - Onboarded Sensor to IoT Hub with Azure Native tools and Transmitted Messages/Sensor Data (No need for 3rd party syslog forwarder ([fluentD](https://docs.fluentd.org/how-to-guides/raspberrypi-cloud-data-logger) for example)).
+<br/>
 
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
