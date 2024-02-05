@@ -57,21 +57,21 @@ Login to the Azure portal and click **+Create a Resource** button, then select *
 
 ![](/assets/img/IoT%20Hub/Headless%20Setup/mktplace.png)
 
-Select **IoT Hub** then **Create**
+- Select **IoT Hub** then **Create**
 
-Select your **Sub**, **Resource Group**, **Region**, and **Name** for your **IoT Hub**
+- Select your **Sub**, **Resource Group**, **Region**, and **Name** for your **IoT Hub**
 
-In the **Tier** section, select **Free**
+- In the **Tier** section, select **Free**
 
 <br/><br/>
 
 # Grab the Connection String
 
-Navigate to your new **IoT Hub** and select **Devices**, then **+ Add Device**
+- Navigate to your new **IoT Hub** and select **Devices**, then **+ Add Device**
 
-Provide a **Name** for your device and select **Save**
+- Provide a **Name** for your device and select **Save**
 
-Navigate back to the **Devices** blade, then to your newly registered device and take note of the **Primary connection string**
+- Navigate back to the **Devices** blade, then to your newly registered device and take note of the **Primary connection string**
 
 ![](/assets/img/IoT%20Hub/Headless%20Setup/cnxn_string.png)
 
@@ -105,10 +105,9 @@ To encrypt your password and generate the encryption key, I used the following c
 ```python
 openssl passwd -5 'yourPWD'
 ```
-<br/>
 
 **Copy** the **output** and insert it as your **'password' string** in the [custom.toml](/assets/Code/iothub/custom.toml) file
-<br/>
+<br/><br/>
 
 Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Pi to ** &#127775; automagically &#127775;** join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
 
@@ -161,7 +160,7 @@ sudo git clone https://github.com/adafruit/Adafruit_CircuitPython_seesaw.git
 sudo pip3 install adafruit-circuitpython-seesaw
 ```
 
-<br/><br/>
+<br/>
 
 - Install OLED Hardware Dependencies:
 ```pythong
@@ -170,13 +169,14 @@ sudo apt-get install python3-pil
 sudo pip3 install requests
 ```
 
-<br/><br/>
+<br/>
 
 - Install Azure IoT Hub Dependencies:
 ```python
 sudo pip3 install azure-iot-device  
 sudo pip3 install azure-iot-hub  
 ```
+<br/><br/>
 
 # Test hardware detection and return hardware addresses:
 ```python
