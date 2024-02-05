@@ -163,7 +163,7 @@ sudo pip3 install adafruit-circuitpython-seesaw
 <br/>
 
 - Install OLED Hardware Dependencies:
-```pythong
+```python
 sudo pip3 install adafruit-circuitpython-ssd1306
 sudo apt-get install python3-pil
 sudo pip3 install requests
