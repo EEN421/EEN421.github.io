@@ -168,8 +168,9 @@ sudo i2cdetect -y 1
 
 <br/>
 Once you run the OLED script, you should see the display populate as such:
-<br/>
+
 ![](/assets/img/SoilSensor/ReadMe1.jpg)
+
 <br/>
 
 > &#128073; Pro-Tip: Change the Hostname of the Raspberry Pi in the /etc/hostname file to the name of the plant you're monitoring
@@ -179,17 +180,29 @@ Once you run the OLED script, you should see the display populate as such:
 # Build out your Azure IoT Hub python program
 
 - If you did **NOT** install an OLED screen, then use the [Sensor-2-IoT_Hub.py file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/Sensor-2-IoT_Hub.py)
+
 <br/>
+
 - If you **DID** install an OLED screen, then use the [Sensor-2-IoT_Hub+OLED.py file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/Sensor-2-IoT_Hub%2BOLED.py)
+
 <br/>
+
 - Make sure to swap out the **Connection String** we noted earlier when registering our sensor device to our **IoT Hub**
+
 ```python
 CONNECTION_STRING = "HostName=XXXXXX.azure-devices.net;DeviceId=XXXXXX;SharedAccessKey=XXXXXXXXXXXX"  
 ```
+
 <br/>
 
 # Run it!
 
+![I named my script "new_sensor.py" in this screenshot](/assets/img/IoT%20Hub/Headless%20Setup/IoT_Connect.png)
+
+<br/>
+
+- Confirm messages are flowing in Azure IoT Hub:
+[](/assets/img/IoT%20Hub/Headless%20Setup/Messages.png)
 
 
 # Add Water...
