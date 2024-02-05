@@ -8,26 +8,27 @@ This post follows up on a couple of previous posts where I [deployed a raspberry
 
 Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. Reducing our attack surface area with this simple change is a welcome feature. However, as the case with most things security related, it can come at a cost if you don't know what you're doing. 
 
-Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (yuck!) to a wpa_supplicant.conf file for example. This is no longer the case (huzzah)! 
+Another important feature that has since been added, is the ability to encrypt your sensitive information. The older method I've used relied on hard-coding wifi keys etc. in plain text (**yuck!**) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**)! 
 
-Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (gross). 
+Lastly, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (**gross**). 
 
 Now you can streamline your workflow and improve your overall productivity, safely and securely! And the benefits don't stop there - by leveraging the Azure Streaming Agent via IoT Hub, you'll be able to ditch the old combination of FluentD and Ruby, saving you time, energy, and reducing your overal attack surface area. So why wait? Dive into this blog post and learn how to optimize your Raspberry Pi IoT setup today!
 
 <br/>
 
+![](/assets/img/IoT%20Hub/Headless%20Setup/prototype_2.0.png)
+
+<br/><br/>
+
 # In this Post We Will: 
 - &#128073; Review Security Updates
-- &#128073; Review Hardware and Pre-Requisites
-- &#128073; Perform a "Headless" Raspberry Pi Setup
+- &#128073; Review Hardware Changes and Pre-Requisites
+- &#128073; Perform a "Headless" Raspberry Pi Setup (Latest "Bookworm" OS)
 - &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
 - &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
 - &#128073; Test and Confirm Hardware
 - &#128073; Create an IoT Hub in Azure
-- &#128073; Create a Log Analytics Workspace
 - &#128073; Onboard Raspberry Pi to IoT Hub
-- &#128073; Configure Azure Streaming Agent
-- &#128073; Query custom logs for operations, security, and soil data
 - &#128073; Automate/Configure Start on Boot 
 - &#128073; Accomplish something AWESOME today x2! &#128526;
 
@@ -225,18 +226,17 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 <br/><br/>
 
 # In this Post We: 
-- &#128073; Reviewed Hardware and Pre-Requisites
-- &#128073; Performed a "Headless" Raspberry Pi Setup
-- &#128073; Configured an I2C Capacitive STEMMA Soil Sensor
-- &#128073; Configured an OLED Display to Output Sensor Readings in Real Time
-- &#128073; Tested and Confirmed Hardware
-- &#128073; Created a Log Analytics Workspace
-- &#128073; Sent Sensor Data to Microsoft Sentinel
-- &#128073; Queried custom logs for operations, security, and soil data
-- &#128073; Automated/Configured Start on Boot 
-- &#128073; Accomplished something AWESOME &#128526;
+- &#128073; Review Security Updates
+- &#128073; Review Hardware Changes and Pre-Requisites
+- &#128073; Perform a "Headless" Raspberry Pi Setup (Latest "Bookworm" OS)
+- &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
+- &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
+- &#128073; Test and Confirm Hardware
+- &#128073; Create an IoT Hub in Azure
+- &#128073; Onboard Raspberry Pi to IoT Hub
+- &#128073; Automate/Configure Start on Boot 
+- &#128073; Accomplish something AWESOME today x2! &#128526;
 
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/prototype)
-![](/assets/img/IoT%20Hub/Headless%20Setup/prototype)
+![](/assets/img/IoT%20Hub/Headless%20Setup/prototype_2.0_2.png)
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
