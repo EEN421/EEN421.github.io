@@ -36,7 +36,7 @@ Click to learn more about each component...
 
 <br/>
 
-- I know, I know... I'll cover a more modern "headless" setup for the latest RaspiOS ("Bookworm", at the time of this article) in a separate blog article and link back here. &#128517;
+- I know, I know... I'll cover a [more modern "headless" setup for the latest RaspiOS ("Bookworm", at the time of this article) in a separate blog article and link back here. &#128517;](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/)
 
 <br/><br/>
 
