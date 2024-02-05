@@ -210,8 +210,9 @@ CONNECTION_STRING = "HostName=XXXXXX.azure-devices.net;DeviceId=XXXXXX;SharedAcc
 <br/>
 
 - Confirm messages are flowing in Azure IoT Hub:
-[](/assets/img/IoT%20Hub/Headless%20Setup/Messages.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/Messages.png)
 
+<br/><br/>
 
 # Add Water...
 
