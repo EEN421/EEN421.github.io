@@ -51,6 +51,23 @@ Click to learn more about each component...
 
 <br/><br/><br/>
 
+# Azure IoT Hub Setup
+
+Login to the Azure portal and click **+Create a Resource** button, then select **IoT Hub** in the **Search the Marketplace** field. 
+
+Select **IoT Hub** then **Create**
+
+Select your **Sub**, **Resource Group**, **Region**, and **Name** for your **IoT Hub**
+
+In the **TIer** section, select **Free**
+
+# Grab the Connection String
+
+Navigate to your new **IoT Hub** and select **Devices**, then **+ Add Device**
+
+Provide a **Name** for your device and select **Save**
+
+Navigate back to the **Devices** blade, then to your newly registered device and take note of the **Primary connection string**
 
 # Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
 
@@ -97,15 +114,6 @@ sudo apt-get update && sudo apt-get upgrade
 
 <br/>
 
-
-- (Optional) If the above command completes but with errors, try again with:
-```python 
-sudo apt-get update --fix-missing
-sudo apt-get upgrade --fix-missing
-```
-
-<br/>
-
 - Expand your storage
 ```python
 sudo raspi-config
@@ -118,30 +126,13 @@ sudo raspi-config
 
 <br/><br/>
 
-# Soil Sensor Setup:
+- Install Sensor Hardware Dependencies:
 
-- Soil Sensor Setup:
 ```python
 sudo apt-get install python3-pip
 sudo pip3 install --upgrade setuptools
 sudo apt-get install -y python-smbus
 sudo apt-get install -y i2c-tools
-```
-
-<br/>
-
-- Enable i2c interface (reboot first!):
-```python
-sudo reboot -n
-sudo raspi-config
-	> Interfacing Options > I2C > Enable > OK
-```
-
-![](/assets/img/SoilSensor/I2C1.png)
-
-![](/assets/img/SoilSensor/I2C2.png)
-
-```python
 sudo pip3 install RPI.GPIO
 sudo pip3 install adafruit-blinka
 sudo pip3 install adafruit-circuitpython-busdevice
@@ -152,39 +143,20 @@ sudo pip3 install adafruit-circuitpython-seesaw
 
 <br/><br/>
 
-# OLED Screen Install:
-
-- Install the following packages:
-```python
+- Install OLED Hardware Dependencies:
+```pythong
 sudo pip3 install adafruit-circuitpython-ssd1306
 sudo apt-get install python3-pil
 sudo pip3 install requests
 ```
 
-<br/>
-
-- [Optional] Grab and unzip silkscreen font to clean up txt display (cleaner font for this type of small OLED display):
-```python
-wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
-unzip silkscreen.zip
-```
-
-<br/>
-
-- Build your [main.py](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/main.py) file
-```python
-sudo nano main.py
-```
-> &#128073; ...This program will run the Sensor as well as the OLED Display. This is because separate .py files for sensor reading and OLED output through a GPIO splitter will inevitably cause a collision sooner or later. Coding both functions into the same program will force them to initiate sequentially and thus, never collide.
-
-<br/>
-
-- Run this file when you want to start the display along with the sensor with one command:
-```python
-sudo python3 main.py
-```
-
 <br/><br/>
+
+- Install Azure IoT Hub Dependencies:
+```python
+sudo pip3 install azure-iot-device  
+sudo pip3 install azure-iot-hub  
+```
 
 # Test hardware detection and return hardware addresses:
 ```python
@@ -204,147 +176,9 @@ Once you run the OLED script, you should see the display populate as such:
 
 <br/><br/>
 
-# Create an IoT Hub in Azure
 
 
 
-# Create a Log Analytics Workspace
-- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal:
-<br/>
-![](/assets/img/SoilSensor/LAW1.png)
-<br/>
-
-- Select **+Create**
-<br/>
-![](/assets/img/SoilSensor/LAW2.png)
-<br/>
-
-- Select **Subscription** and **Resource Group**:
-<br/>
-![](/assets/img/SoilSensor/LAW3.png)
-<br/>
-
-- Select **Instance Name** and **Region**:
-![](/assets/img/SoilSensor/LAW4.png)
-
-<br/><br/>
-
-# Commitment / Pricing Tiers
-
-- Choose the appropriate commitment tier given your expected daily ingest volume. 
-<br/>
-
-> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
-<br/>
-
-> &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste. 
-
-<br/>
-
-- Click **Review & Create**
- ...to Finish Setting up a New Log Analytics Workspace 
-
-<br/><br/>
-
-# Connect to Workspace:
-
-- Grab **WorkspaceID** and **Primary Key**:
-<br/>
-
-![](/assets/img/SoilSensor/WorkspaceIDandKey.png)
-
-<br/>
-
-- Plug ID and Key into your **fluent.conf** file
-Template located here: [fluent.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/fluent.conf)
-
-<br/>
-
-- Launch the sensor application
-```python
-sudo python3 main.py &
-```
-<br/>
-
-- Confirm logs are working locally
-```python
-tail /var/log/soil.log -f
-```
-
-![](/assets/img/SoilSensor/Test1.png)
-
-<br/>
-
-- Launch FluentD
-```python
-sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
-```
-
-<br/><br/>
- 
- > &#128161;Pro-Tip: Create a bash file to launch FluentD with the appropriate parameters so you don't have to type it out every time:
-```
-sudo nano Start_FluentD.bash
-```
-<br/>
-Paste the following into nano, save and close: 
-```python
-sudo fluentd -c /etc/fluent.conf --log /var/log/td-agent/fluent.log &
-```
-<br/>
-&#128073; Now you can start FluentD with the following command:
-```python
-sudo bash Start_FluentD.bash &
-```
-
-<br/><br/>
-
-- Confirm FluentD is forwarding to Log Analytics Workspace
-```python
-tail /var/log/td-agent/fluent.log -f 
-```
-
-![](/assets/img/SoilSensor/confirmation.png)
-
-<br/>
-
-- Navigate to your Log Analytics Workspace to query the logs coming into your workspace.
-![](/assets/img/SoilSensor/Soil%20Readings.png)
-<br/><br/><br/>
-
-
-# Query Auth and Syslog Tables
-
-If you've setup your FluentD config file correctly, you've got Auth and Syslogs coming into Sentinel as Custom Logs (_CL) as well as your Soil data. Logs ingested this way show up under 'Custom Logs' and have '_CL' appended to their name when they hit the workspace. You can Query the Auth Logs for failed sign-in attempts etc., illustrated below... 
-
-Navigate to your Log Analytics Workspace and you should see your custom logs :
-
-![](/assets/img/iot/CustomLogs.png)
-<br/><br/><br/>
-
-# Added Security
-
-&#128161; Once FluentD is cooking without issue on your Pi, try logging in with an **incorrect password** to trigger an entry in the new custom log _'auth_cl'_ then query the table &#128071;
-
-![](/assets/img/iot/Auth_CL.png)
-<br/><br/>
-
-
-The syslog table (syslog_cl) is populating too &#128071;
-
-![](/assets/img/iot/syslog_cl.png)
-<br/><br/><br/>
-
-# Start on Boot:
-
-- Append the above command to /etc/rc.local to start on boot:
-
-```python
-sudo nano /etc/rc.local
-	sudo python3 main.py && sudo Start_FluentD.bash
-```
-
-<br/><br/>
 
 # Add Water...
 
