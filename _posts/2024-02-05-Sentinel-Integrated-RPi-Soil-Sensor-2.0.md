@@ -101,7 +101,16 @@ After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.
 
 <br/><br/>
 
-Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Pi to **automagically** join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
+To encrypt your password and generate the encryption key, I used the following command on another linux box with OpenSSL: 
+```python
+openssl passwd -5 'yourPWD'
+```
+<br/>
+
+**Copy** the **output** and insert it as your **'password' string** in the [custom.toml](/assets/Code/iothub/custom.toml) file
+<br/>
+
+Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Pi to ** &#127775; automagically &#127775;** join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
 
 - Unplug/plug back in your SD card into your computer after burning the OS
 <br/><br/>
