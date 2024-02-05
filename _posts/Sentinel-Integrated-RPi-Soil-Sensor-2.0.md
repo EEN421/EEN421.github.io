@@ -39,7 +39,7 @@ Click to learn more about each component...
 - [I2C OLED Display](https://www.adafruit.com/product/3527)
 - [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
 - [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
-- [GPIO Splitter](https://www.amazon.com/GeeekPi-Connectors-Raspberry-Expansion-Compatible/dp/B0888W3XN4/ref=sr_1_5?crid=4U70H8TJQGX9&keywords=gpio+splitter&qid=1707110682&sprefix=gpio+splitte%2Caps%2C70&sr=8-5)
+- [GPIO Splitter (smaller form factor than previous prototype)](https://www.amazon.com/GeeekPi-Connectors-Raspberry-Expansion-Compatible/dp/B0888W3XN4/ref=sr_1_5?crid=4U70H8TJQGX9&keywords=gpio+splitter&qid=1707110682&sprefix=gpio+splitte%2Caps%2C70&sr=8-5)
 - [Jumper Cables](https://a.co/d/3A3MSpy)
 
 <br/><br/>
@@ -50,8 +50,6 @@ Click to learn more about each component...
 ![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm.jpg)
 
 <br/><br/>
-
-
 
 # Azure IoT Hub Setup
 
@@ -64,6 +62,8 @@ Select **IoT Hub** then **Create**
 Select your **Sub**, **Resource Group**, **Region**, and **Name** for your **IoT Hub**
 
 In the **Tier** section, select **Free**
+
+<br/><br/>
 
 # Grab the Connection String
 
@@ -239,4 +239,12 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 
 
 ![](/assets/img/IoT%20Hub/Headless%20Setup/prototype_2.0_2.png)
+
+# Recapitulation:
+
+This time around (2.0) we improved upon our previous Headless Raspberry Pi ARM Device onboarding process in the following ways: 
+
+- Encrypted WiFi and User Credentials (no more plain text "secrets.py" hard-coded credentials!)
+- Onboarded Sensor to IoT Hub with Azure Native tools and Transmitted Messages/Sensor Data (No need for 3rd party syslog forwarder ([fluentD](https://docs.fluentd.org/how-to-guides/raspberrypi-cloud-data-logger) for example)).
+
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
