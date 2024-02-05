@@ -7,9 +7,9 @@ This post follows up on a couple of previous posts where we [deployed a raspberr
 
 Since the release of Bullseye OS for Raspberry Pi, the default 'pi' account was removed. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. **Reducing our attack surface area** with this simple change is a welcome feature. However, as the case with most things security related, **it can come at a cost if you don't know what you're doing.**
 
-Another important feature that has since been added, is the **ability to encrypt your sensitive information**. The older method I've used relied on hard-coding wifi keys etc. in plain text (**yuck!**&#129300;) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**&#128571;)! 
+Another important feature that has since been added, is the **ability to encrypt your sensitive information**. The older method I've used relied on **hard-coding wifi keys** etc. in **plain text** (**yuck!**&#129300;) to a wpa_supplicant.conf file for example. This is no longer the case (**huzzah**&#128571;)! 
 
-**Lastly**, ARM based architecture such as Raspbery Pi boards weren't previously supported without the added overhead of installing Ruby and FluentD, which required the workspaceID to be hard-coded to another config file (**gross**&#129314;). 
+**Lastly**, ARM based architecture such as Raspbery Pi boards were **not previously supported** without the added overhead of installing Ruby and FluentD, which required the **workspaceID to be hard-coded** to another config file (**gross**&#129314;). 
 
 Now you can **streamline** your workflow and **improve** your overall productivity, **safely** and **securely!** &#128526; <br/>
 
