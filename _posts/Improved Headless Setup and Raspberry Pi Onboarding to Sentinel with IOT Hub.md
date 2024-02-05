@@ -49,17 +49,18 @@ Click to learn more about each component...
 <br/><br/>
 
 
-<br/><br/><br/>
 
 # Azure IoT Hub Setup
 
 Login to the Azure portal and click **+Create a Resource** button, then select **IoT Hub** in the **Search the Marketplace** field. 
 
+![](/assets/img/IoT%20Hub/Headless%20Setup/mktplace.png)
+
 Select **IoT Hub** then **Create**
 
 Select your **Sub**, **Resource Group**, **Region**, and **Name** for your **IoT Hub**
 
-In the **TIer** section, select **Free**
+In the **Tier** section, select **Free**
 
 # Grab the Connection String
 
@@ -69,9 +70,13 @@ Provide a **Name** for your device and select **Save**
 
 Navigate back to the **Devices** blade, then to your newly registered device and take note of the **Primary connection string**
 
+![](/assets/img/IoT%20Hub/Headless%20Setup/cnxn_string.png)
+
+<br/><br/><br/>
+
 # Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
 
-Before burning our SD card with the latest Raspbian OS, we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
+After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.com/software/), we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
 
 ![](/assets/img/IoT%20Hub/Headless%20Setup/hostname.png)
 
@@ -93,14 +98,17 @@ Before burning our SD card with the latest Raspbian OS, we need to create a [cus
 
 <br/><br/>
 
-After burning your SD card with Raspbian OS (I use [Belena Etcher](https://etcher.balena.io/)), you can configure it to automagically join the network and enable SSH with the following steps: 
+Once the initial burn is done (I use [Belena Etcher](https://etcher.balena.io/)), you can configure it to **automagically** join the network and enable SSH by dropping your **custom.toml** file into the boot drive: 
 
 - Unplug/plug back in your SD card into your computer after burning the OS
 <br/><br/>
+
 - Navigate to SD storage / Boot
 <br/><br/>
+
 - Copy and paste the [custom.toml](/assets/Code/iothub/custom.toml) file containing your Hostname, user, SSH, WLAN, and country/region settings. 
 <br/><br/>
+
 - Boot up and wait for it to appear on your network and be available over SSH
 
 <br/><br/>
