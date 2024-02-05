@@ -38,13 +38,15 @@ Click to learn more about each component...
 - [I2C OLED Display](https://www.adafruit.com/product/3527)
 - [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
 - [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
-- [GPIO Splitter](https://shop.pimoroni.com/products/hat-hacker-hat?variant=31812879056979)
+- [GPIO Splitter](https://www.amazon.com/GeeekPi-Connectors-Raspberry-Expansion-Compatible/dp/B0888W3XN4/ref=sr_1_5?crid=4U70H8TJQGX9&keywords=gpio+splitter&qid=1707110682&sprefix=gpio+splitte%2Caps%2C70&sr=8-5)
 - [Jumper Cables](https://a.co/d/3A3MSpy)
 
 <br/><br/>
 
 # Sofware | OS Details:
 - These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
+
+![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm.jpg)
 
 <br/><br/>
 
@@ -235,5 +237,6 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 - &#128073; Accomplished something AWESOME &#128526;
 
 
-![](/assets/img/SoilSensor/ReadMe4.jpg)
+![](/assets/img/IoT%20Hub/Headless%20Setup/prototype)
+![](/assets/img/IoT%20Hub/Headless%20Setup/prototype)
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
