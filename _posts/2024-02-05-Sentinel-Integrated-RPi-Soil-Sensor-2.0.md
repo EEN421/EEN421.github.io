@@ -109,7 +109,7 @@ openssl passwd -5 'yourPWD'
 **Copy** the **output** and insert it as your **'password' string** in the [custom.toml](/assets/Code/iothub/custom.toml) file
 <br/><br/>
 
-Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Pi to &#127775; **automagically** &#127775; join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
+Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Raspberry Pi to &#127775; **automagically** &#127775; join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
 
 - Unplug/plug back in your SD card into your computer after burning the OS
 <br/><br/>
