@@ -24,10 +24,12 @@ navbar-links:
     - About Me: "aboutme"
     - LinkedIn: "https://www.linkedin.com/in/ianhanley/"
     - Twitter:  "https://twitter.com/IanDHanley"
+    - Hanley Cloud Solutions: "https://www.hanleycloudsolutions.com"
   Resources:
     - My KQL Query Repository: "https://github.com/EEN421/KQL-Queries"
-    - Sentinel Ninja Training: "https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310"
+        - Sentinel Ninja Training: "https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/become-a-microsoft-sentinel-ninja-the-complete-level-400/ba-p/1246310"
     - Defender Ninja Training: "https://techcommunity.microsoft.com/t5/microsoft-365-defender-blog/become-a-microsoft-365-defender-ninja/ba-p/1789376"
+    - Hanley Cloud Solutions: "https://www.hanleycloudsolutions.com"
     - Beautiful Jekyll: "https://beautifuljekyll.com"
 #  Author's home: "https://deanattali.com"
 
