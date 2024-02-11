@@ -102,7 +102,7 @@ share-links-active:
 
 # How to display the link to your website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "Hanley.cloud"
+url-pretty: "Hanley.cloud | DevSecOpsDad.com"
 
 # Excerpt word length - Truncate the excerpt of each post on the feed page to the specified number of words
 excerpt_length: 50
@@ -122,10 +122,10 @@ edit_page_button: false
 # Allow sub-menu items (second-level navigation menu items) to be longer than the top-level menu
 # If this setting is off, then long sub-menu words might get cut off
 # See https://github.com/daattali/beautiful-jekyll/issues/765 to understand the issue this setting can solve
-navbar-var-length: false
+navbar-var-length: true
 
 # The keywords to associate with your website, for SEO purposes
-keywords: "Microsoft,Sentinel,Defender,Azure,Cloud,Cyber,Security,DevSecOps,KQL"
+keywords: "Microsoft,Sentinel,Defender,Azure,Cloud,Cyber,Security,DevSecOps,KQL,XDR,MXDR,SIEM"
 
 ######################################
 # --- Colours / background image --- #
