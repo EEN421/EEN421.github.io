@@ -1,6 +1,6 @@
 # Introduction and Use Case:
 
-This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). What then? how do we read that data or do anything meaningful with it? &#129300;
+This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). What next? how do we read that data or do anything meaningful with it? &#129300;
 
 Some advanced readers may have thought to make a diagnostics settin in the IoT Hub to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics &#128200;) but not the actual message data make it into the AzureDiagnostics table in a workspace (good guess though, that was my first move too &#128527;). 
 
@@ -8,7 +8,7 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 
 <br/>
 
-&#128233; IOT Hub &#10145; Service-Bus &#10145; Logic-App &#10145; Log-Analytics-Workspace &#128232;
+&#128232; IOT Hub &#10145; Service-Bus &#10145; Logic-App &#10145; Log-Analytics-Workspace &#128201;
 
 <br/>
 <br/>
