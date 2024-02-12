@@ -16,15 +16,9 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 # In this Post We Will: 
 - &#128073; Create an Azure Service Bus &#128233;
 
-<br/>
-
 - &#128073; Setup an Azure Log Analytics Workspace &#128202;
 
-<br/>
-
 - &#128073; Build a Logic App to Parse and send the Message Data &#128232;
-
-<br/>
 
 - &#128073; Accomplish something AWESOME today x3! &#128526;
 
@@ -218,14 +212,8 @@ Navigate to your **Log Analytics Workspace** and query your new custom list:
 
 - &#9989; built an Azure Service Bus to receive message (soil) data from our IoT Hub &#128233;
 
-<br/>
-
 - &#9989; built a Log Analytics Workspace as the final destination for our Soil Sensor message data &#128202;
 
-<br/>
-
 - &#9989; built a Logic App to parse the message data and forward the contents to our Log Analytics Workspace. &#128232;
-
-<br/>
 
 - &#9989; Accomplished something AWESOME today x3! &#128526;
