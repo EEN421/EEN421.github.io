@@ -12,13 +12,17 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 
 <br/>
 
+We'll use the [IoT Explorer](https://learn.microsoft.com/en-us/azure/iot/howto-use-iot-explorer) to connect to our registered device in IoT Hub and view the contents of the transmitted message data. Just download, run, and sign in using an EntraID account with sufficient read privileges to access the IoT Hub message.
+
+![]()
+
 <br/>
 
 # In this Post We Will: 
-- &#128073; Review Security Updates
-- &#128073; Review Hardware Changes and Pre-Requisites
-- &#128073; Perform the New "Headless" Raspberry Pi Setup (Latest "Bookworm" OS)
-- &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
+- &#128073; Confirm Azure IoT Hub Message Data with IoT Explorer
+- &#128073; Create an Azure Service Bus
+- &#128073; Setup an Azure Log Analytics Workspace
+- &#128073; Build a Logic App to Parse and send the Message Data
 - &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
 - &#128073; Test and Confirm Hardware
 - &#128073; Create an IoT Hub in Azure
@@ -27,6 +31,7 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 
 <br/><br/>
 
+# Confirm Azure IoT Hub MEssage Data with IoT Explorer
 
 <br/><br/>
 
@@ -103,61 +108,9 @@ Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.i
 
 <br/><br/>
 
-# Build a DataCollector API Connection for our Logic App
-
-- Update your system:
-```python
-sudo apt-get update && sudo apt-get upgrade
-```
-
-<br/>
-
-- Expand your storage
-```python
-sudo raspi-config
-  > Advanced Options > Expand FileSystem
-```
-
-![](/assets/img/SoilSensor/Disk1.png)
-
-![](/assets/img/SoilSensor/Disk2.png)
-
 <br/><br/>
 
-- Install Sensor Hardware Dependencies:
-
-```python
-sudo apt-get install python3-pip
-sudo pip3 install --upgrade setuptools
-sudo apt-get install -y python-smbus
-sudo apt-get install -y i2c-tools
-sudo pip3 install RPI.GPIO
-sudo pip3 install adafruit-blinka
-sudo pip3 install adafruit-circuitpython-busdevice
-sudo apt install git-all
-sudo git clone https://github.com/adafruit/Adafruit_CircuitPython_seesaw.git
-sudo pip3 install adafruit-circuitpython-seesaw
-```
-
-<br/>
-
-- Install OLED Hardware Dependencies:
-```python
-sudo pip3 install adafruit-circuitpython-ssd1306
-sudo apt-get install python3-pil
-sudo pip3 install requests
-```
-
-<br/>
-
-- Install Azure IoT Hub Dependencies:
-```python
-sudo pip3 install azure-iot-device  
-sudo pip3 install azure-iot-hub  
-```
-<br/><br/>
-
-> &#128073; Pro-Tip: If you didn't change the Hostname to the name of the plant you're monitoring in the [custom.toml](/assets/Code/iothub/custom.toml) file, then edit the /etc/hostname file once you SSH in. I'm using this unit to grow [Goat Horn Peppers ](https://www.roysfarm.com/goat-horn-pepper/)
+> &#128073; xxxxxxxxxxxxxxxxxxxxxx
 
 <br/><br/>
 
