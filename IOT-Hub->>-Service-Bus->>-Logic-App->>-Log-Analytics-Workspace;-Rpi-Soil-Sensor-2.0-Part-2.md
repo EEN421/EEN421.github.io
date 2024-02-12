@@ -1,4 +1,9 @@
 # Introduction and Use Case:
+
+This follows up on a previous post where we built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub. What now? how do we read that data or do anything meaningful with it? Some advanced readers may have thought to make a diagnostics setting to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics) but not the actual message data actually make it into the AzureDiagnostics table in a workspace (good guess though, that was my first move too). 
+
+As our title suggests, the best route to take is from IoT Hub through a Service Bus into a Logic App which can parse the 'message' data, then send it to a Log Analytics Workspace
+
 This post follows up on a couple of previous posts where we [deployed a raspberry pi headlessly and onboarded syslog and auth logs (for security) to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), then [added an I2C soil moisture & temperature sensor and streamed the sensor data to the workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/). Today, we will address several **NEW security updates** and **improvements** to the original processes described. 
 
 <br/>
