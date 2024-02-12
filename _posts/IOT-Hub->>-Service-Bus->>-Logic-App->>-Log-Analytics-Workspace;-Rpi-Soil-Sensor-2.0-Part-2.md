@@ -6,18 +6,7 @@ Some advanced readers may have thought to make a diagnostics setting to forward 
 
 As our title suggests, the best way to get our IoT Sensor messages from IoT Hub into a Log Analytics workspace is from IoT Hub through a Service Bus, and into a Logic App which can parse the 'message' data, then finally send it to a Log Analytics Workspace. &#128232;
 
-&#128526; Shades <br/>
-&#9201; Stopwatch <br/>
-&#x26A1; Lightning <br/> 
-&#128272; Padlock <br/>
-&#128170; Flex <br/>
-&#128268; Plug <br/>
-&#128073; Point Right <br/>
-
-
 <br/>
-
-
 
 # In this Post We Will: 
 - &#128073; Confirm Azure IoT Hub Message Data with IoT Explorer &#128233;
@@ -39,24 +28,34 @@ We'll use the [IoT Explorer](https://learn.microsoft.com/en-us/azure/iot/howto-u
 
 - Login to the Azure portal and click **+Create a Resource** button, then search for **Service Bus** in the **Marketplace**. 
 
-
 - Select **Service Bus** then **Create**
 
 ![](/assets/img/IoT%20Hub%202/servicebus%20create.png)
+<br/>
+<br/>
 
 - Select the **Subscription**, **Resource Group**, **Logic App Name**, **Region**, **Enable Log Analytics**, **Plan**, and **Zone Redundancy** for our **Logic App**
 
 ![](/assets/img/IoT%20Hub%202/Create%20Logic%20App.png)
+<br/>
+<br/>
 
 - For **Enable Log Analytics** section, select **No** because this doesn't pass on the message date, just the diagnostics data and other metrics.
 
 - For **Pricing Tier** choose the **Consumption** plan.
 
+<br/>
+<br/>
+
 > &#128161; A **servicebus-1** API  Connection will be auto-generated when you succesfully create your service bus. ![](/assets/img/IoT%20Hub%202/servicebus%20and%20api.png)
+
+<br/>
+<br/>
 
 - Navigate to the **Queues** blade under **Entities** and select **+ Queue**
 
 ![](/assets/img/IoT%20Hub%202/NewQ.png)
+<br/>
 <br/>
 
 - Name your queue after the pepper/plant you're monitoring. You can leave the other settings alone.
@@ -142,7 +141,7 @@ Step 2: Compose - Write Service Bus Message - Base64ToString
 
 ![](/assets/img/IoT%20Hub%202/Step2.png)
 
-<br/>
+<br/><br/>
 
 - Use the following expression to convert the message to string:
 
@@ -155,7 +154,7 @@ Step 3: Parse JSON - Parse Temperature and Humidity to Update Custom Log
 
 ![](/assets/img/IoT%20Hub%202/Step3.png)
 
-<br/>
+<br/><br/>
 
 - Use the following schema to tell the parser how to read the message data:
 
@@ -191,6 +190,8 @@ Navigate to your **Log Analytics Workspace** and query your new custom list:
 
 ![](/assets/img/IoT%20Hub%202/QueryResult.png)
 
+<br/><br/>
+
 # In this Post We: 
 - &#128073; Confirmed Azure IoT Hub Message Data with IoT Explorer
 - &#128073; Created an Azure Service Bus
@@ -198,6 +199,7 @@ Navigate to your **Log Analytics Workspace** and query your new custom list:
 - &#128073; Built a Logic App to Parse and send the Message Data
 - &#128073; Accomplished something AWESOME today x3! &#128526;
 
+<br/><br/>
 
 # Recapitulation:
 
