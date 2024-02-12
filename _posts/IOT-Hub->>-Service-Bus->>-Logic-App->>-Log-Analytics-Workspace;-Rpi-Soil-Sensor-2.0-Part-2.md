@@ -23,10 +23,6 @@ We'll use the [IoT Explorer](https://learn.microsoft.com/en-us/azure/iot/howto-u
 - &#128073; Create an Azure Service Bus
 - &#128073; Setup an Azure Log Analytics Workspace
 - &#128073; Build a Logic App to Parse and send the Message Data
-- &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
-- &#128073; Test and Confirm Hardware
-- &#128073; Create an IoT Hub in Azure
-- &#128073; Onboard Raspberry Pi to IoT Hub
 - &#128073; Accomplish something AWESOME today x2! &#128526;
 
 <br/><br/>
@@ -63,50 +59,48 @@ Login to the Azure portal and click **+Create a Resource** button, then select *
 
 # Build Logic App
 
-After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.com/software/), we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
+Search for **Logic Apps** in the top search bar and click on the icon, then **+ Add**
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/hostname.jpg)
+On the next page, fill out the required details as shown below. Make sure to select **No** for **Enable log analytics** unless you want **Diagnostics** for the **Logic App** forwarded as well. 
 
-<br/>
+Open the new app in **Logic App Designer** and let's build this out in 4 steps!
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/user.png)
+Step 1: Trigger - When one or more messages arrive in a queue (auto-complete)
 
-<br/>
+Set your connectoin to the Service Bus at the bottom
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/SSH.png)
+Step 2: Compose - Write Service Bus Message - Base64ToString
 
-<br/>
+Use the following expression to convert the message to string:
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/WLAN.png)
-
-<br/>
-
-![](/assets/img/IoT%20Hub/Headless%20Setup/locale.png)
-
-<br/><br/>
-
-To encrypt your password and generate the encryption key, I used the following command on another linux box with OpenSSL: 
 ```python
-openssl passwd -5 'yourPWD'
+base64ToString(triggerBody()?['ContentData'])
 ```
 
-**Copy** the **output** and insert it as your **'password' string** in the [custom.toml](/assets/Code/iothub/custom.toml) file
-<br/><br/>
+Step 3: Parse JSON - Parse Temperature and Humidity to Update Custom Log
 
-Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.io/)), you can configure your Raspberry Pi to &#127775; **automagically** &#127775; join the network and enable SSH by dropping your **custom.toml** file into the boot drive with the following steps: 
+Use the following schema to tell the parser how to read the message data:
 
-- Unplug/plug back in your SD card into your computer after burning the OS
-<br/><br/>
+```json
+{
+    "properties": {
+        "Humidity": {
+            "type": "integer"
+        },
+        "Temperature": {
+            "type": "number"
+        }
+    },
+    "type": "object"
+}
+```
 
-- Navigate to SD storage / Boot
-<br/><br/>
+Step 4: Send Data - Send Data to Log Analytics
 
-- Copy and paste the [custom.toml](/assets/Code/iothub/custom.toml) file containing your Hostname, user, SSH, WLAN, and country/region settings. 
-<br/><br/>
+Fill out the request body as illustrated:
 
-- Boot up and wait for it to appear on your network and be available over SSH (this can take up to 10 minutes on first boot, check your router for the IP address).
 
-<br/><br/>
+
 
 <br/><br/>
 
@@ -127,14 +121,10 @@ Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.i
 <br/><br/>
 
 # In this Post We: 
-- &#128073; Review Security Updates
-- &#128073; Review Hardware Changes and Pre-Requisites
-- &#128073; Perform a "Headless" Raspberry Pi Setup (Latest "Bookworm" OS)
-- &#128073; Configure an I2C Capacitive STEMMA Soil Sensor
-- &#128073; Configure an OLED Display to Output Sensor Readings in Real Time
-- &#128073; Test and Confirm Hardware
-- &#128073; Create an IoT Hub in Azure
-- &#128073; Onboard Raspberry Pi to IoT Hub
+- &#128073; Confirm Azure IoT Hub Message Data with IoT Explorer
+- &#128073; Create an Azure Service Bus
+- &#128073; Setup an Azure Log Analytics Workspace
+- &#128073; Build a Logic App to Parse and send the Message Data
 - &#128073; Accomplish something AWESOME today x2! &#128526;
 
 
