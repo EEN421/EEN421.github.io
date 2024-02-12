@@ -4,8 +4,13 @@ This follows up on a previous post where we [built a Raspberry Pi based soil sen
 
 Some advanced readers may have thought to make a diagnostics settin in the IoT Hub to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics &#128200;) but not the actual message data make it into the AzureDiagnostics table in a workspace (good guess though, that was my first move too &#128527;). 
 
-As our title suggests, the best way to get our IoT Sensor messages from IoT Hub into a Log Analytics workspace is from IoT Hub through a Service Bus, and into a Logic App which can parse the 'message' data, then finally send it to a Log Analytics Workspace. &#128232;
+As our title suggests, the best way to get our IoT Sensor messages from IoT Hub into a Log Analytics workspace is from **IoT Hub** through a **Service Bus**, and into a **Logic App** which can parse the 'message' data, then finally send it to a **Log Analytics Workspace**, like this: 
 
+<br/>
+
+&#128233; IOT Hub &#10145; Service-Bus &#10145; Logic-App &#10145; Log-Analytics-Workspace &#128232;
+
+<br/>
 <br/>
 
 # In this Post We Will: 
