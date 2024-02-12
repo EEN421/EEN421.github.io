@@ -1,30 +1,18 @@
 # Introduction and Use Case:
 
-This follows up on a previous post where we built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub. What now? how do we read that data or do anything meaningful with it? Some advanced readers may have thought to make a diagnostics setting to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics) but not the actual message data actually make it into the AzureDiagnostics table in a workspace (good guess though, that was my first move too). 
+This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). What then? how do we read that data or do anything meaningful with it? Some advanced readers may have thought to make a diagnostics setting to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics) but not the actual message data actually make it into the AzureDiagnostics table in a workspace (good guess though, that was my first move too). 
 
-As our title suggests, the best route to take is from IoT Hub through a Service Bus into a Logic App which can parse the 'message' data, then send it to a Log Analytics Workspace
+As our title suggests, the best way to get our IoT Sensor messages from IoT Hub into a Log Analytics workspace is from IoT Hub through a Service Bus, and into a Logic App which can parse the 'message' data, then finally send it to a Log Analytics Workspace. It sounds like a lot, but it's really easier than you'd think. 
 
-This post follows up on a couple of previous posts where we [deployed a raspberry pi headlessly and onboarded syslog and auth logs (for security) to a log analytics workspace](https://www.hanley.cloud/2023-06-13-Raspberry-Pi-Logging-to-Analytics-Workspace/), then [added an I2C soil moisture & temperature sensor and streamed the sensor data to the workspace too](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/). Today, we will address several **NEW security updates** and **improvements** to the original processes described. 
-
-<br/>
-
-# Security Updates - What's New?
-
-Since the release of Bullseye OS for Raspberry Pi, **the default 'pi' account has been removed**. This account was the most likely to be abused when malicious actors figured out it's enabled by default on all deployments. **Reducing our attack surface area** with this simple change is a welcome feature. However, as the case with most things security related, **it can come at a cost if you don't know what you're doing.**
-
-Another important feature that has since been added, is the **ability to encrypt your sensitive information**. The older method I've used relied on **hard-coding wifi keys** etc. in **plain text** (**yuck!**&#129300;) to a [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file for example. _This is no longer the case (**huzzah**&#128571;)!_ 
-
-**Lastly**, ARM based architecture such as Raspbery Pi boards were **not previously supported** without the added overhead of installing Ruby and FluentD, which required the **workspaceID to be hard-coded** to another config file (**gross**&#129314;). 
-
-Now you can **streamline** your workflow and **improve** your overall productivity, **safely** and **securely!** &#128526; <br/>
-
-_The benefits don't stop there_ - by leveraging **Azure IoT Hub**, you'll be able to ditch the old combination of FluentD and Ruby, saving you **time** &#9201;, **energy** &#x26A1;, and **reducing your overal attack surface area** &#128272;. So why wait? Dive into this blog post and learn how to **optimize** your Raspberry Pi **IoT setup today!** &#128170;
+&#128526; <br/>
+&#9201; <br/>
+&#x26A1; <br/>
+&#128272; <br/>
+&#128170; <br/>
 
 <br/>
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/prototype_2.0.png)
-
-<br/><br/>
+<br/>
 
 # In this Post We Will: 
 - &#128073; Review Security Updates
@@ -39,24 +27,10 @@ _The benefits don't stop there_ - by leveraging **Azure IoT Hub**, you'll be abl
 
 <br/><br/>
 
-# Hardware Details: 
-Click to learn more about each component...
-- [I2C OLED Display](https://www.adafruit.com/product/3527)
-- [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
-- [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
-- [GPIO Splitter (smaller form factor than previous prototype)](https://www.amazon.com/GeeekPi-Connectors-Raspberry-Expansion-Compatible/dp/B0888W3XN4/ref=sr_1_5?crid=4U70H8TJQGX9&keywords=gpio+splitter&qid=1707110682&sprefix=gpio+splitte%2Caps%2C70&sr=8-5)
-- [Jumper Cables](https://a.co/d/3A3MSpy)
 
 <br/><br/>
 
-# Sofware | OS Details:
-- These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
-
-![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm_01-768x518.jpg)
-
-<br/><br/>
-
-# Azure IoT Hub Setup
+# Create Azure Service Bus
 
 Login to the Azure portal and click **+Create a Resource** button, then select **IoT Hub** in the **Search the Marketplace** field. 
 
@@ -70,7 +44,7 @@ Login to the Azure portal and click **+Create a Resource** button, then select *
 
 <br/><br/>
 
-# Grab the Connection String
+# Create Log Analytics Workspace
 
 - Navigate to your new **IoT Hub** and select **Devices**, then **+ Add Device**
 
@@ -82,7 +56,7 @@ Login to the Azure portal and click **+Create a Resource** button, then select *
 
 <br/><br/><br/>
 
-# Raspberry Pi Headless Setup (No Dedicated Mouse/Keyboard/Monitor Necessary):
+# Build Logic App
 
 After burning our SD card with the [latest Raspbian OS](https://www.raspberrypi.com/software/), we need to create a [custom.toml](/assets/Code/iothub/custom.toml) file (this replaces the [WPA_supplicant.conf](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf) file used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale**). For a breakdown of the new configuration file and which sections you need to update, see below:
 
@@ -129,7 +103,7 @@ Once the initial burn is complete (I use [Belena Etcher](https://etcher.balena.i
 
 <br/><br/>
 
-# Raspberry Pi Setup:
+# Build a DataCollector API Connection for our Logic App
 
 - Update your system:
 ```python
@@ -183,21 +157,6 @@ sudo pip3 install azure-iot-hub
 ```
 <br/><br/>
 
-# Test hardware detection and return hardware addresses:
-```python
-sudo i2cdetect -y 1
-#Soil Sensor should populate on x36
-#OLED Display shows up on x3c 
-```
-![](/assets/img/SoilSensor/HardwareAddress.png)
-
-<br/>
-Once you run the OLED script, you should see the display populate as such:
-
-![](/assets/img/SoilSensor/ReadMe1.jpg)
-
-<br/>
-
 > &#128073; Pro-Tip: If you didn't change the Hostname to the name of the plant you're monitoring in the [custom.toml](/assets/Code/iothub/custom.toml) file, then edit the /etc/hostname file once you SSH in. I'm using this unit to grow [Goat Horn Peppers ](https://www.roysfarm.com/goat-horn-pepper/)
 
 <br/><br/>
@@ -210,32 +169,7 @@ Once you run the OLED script, you should see the display populate as such:
 
 - If you **DID** install an OLED screen, then use the [Sensor-2-IoT_Hub+OLED.py file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/Sensor-2-IoT_Hub%2BOLED.py)
 
-<br/>
 
-- Make sure to swap out the **Connection String** we noted earlier when registering our sensor device to our **IoT Hub**
-
-```python
-CONNECTION_STRING = "HostName=XXXXXX.azure-devices.net;DeviceId=XXXXXX;SharedAccessKey=XXXXXXXXXXXX"  
-```
-
-<br/>
-
-# Run it!
-
-![I named my script "new_sensor.py" in this screenshot](/assets/img/IoT%20Hub/Headless%20Setup/IoT_Connect.png)
-
-<br/>
-
-- Confirm messages are flowing in Azure IoT Hub:
-![](/assets/img/IoT%20Hub/Headless%20Setup/Messages.png)
-
-<br/><br/>
-
-# Add Water...
-
-When I add moisture to my soil sample, I can see the moisture reading adjust:
-
-![](/assets/img/SoilSensor/ReadMe3.jpg)
 
 <br/><br/>
 
