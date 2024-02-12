@@ -33,45 +33,101 @@ We'll use the [IoT Explorer](https://learn.microsoft.com/en-us/azure/iot/howto-u
 
 # Create Azure Service Bus
 
-Login to the Azure portal and click **+Create a Resource** button, then select **IoT Hub** in the **Search the Marketplace** field. 
+Login to the Azure portal and click **+Create a Resource** button, then search for **Service Bus** in the **Marketplace**. 
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/mktplace.png)
+![](/assets/img/IoT%20Hub%202/servicebus%20create.png
 
-- Select **IoT Hub** then **Create**
+- Select **Service Bus** then **Create**
 
-- Select your **Sub**, **Resource Group**, **Region**, and **Name** for your **IoT Hub**
+- Select the **Subscription**, **Resource Group**, **Logic App Name**, **Region**, **Enable Log Analytics**, **Plan**, and **Zone Redundancy** for our **Logic App**
 
-- In the **Tier** section, select **Free**
+![](/assets/img/IoT%20Hub%202/Create%20Logic%20App.png)
+
+- For **Enable Log Analytics** section, select **No** because this doesn't pass on the message date, just the diagnostics data and other metrics.
+
+- For **Pricing Tier** choose the **Consumption** plan.
+
+A **servicebus-1** API  Connection will be auto-generated when you succesfully create your service bus. 
+
+![](/assets/img/IoT%20Hub%202/servicebus%20and%20api.png)
+
+- Navigate to the **Queues** blade under **Entities** and select **+ Queue**
+
+- Name your queue after the pepper/plant you're monitoring. You can leave the other settings alone.
+
+![](/assets/img/IoT%20Hub%202/Bus%20Queue.png)
 
 <br/><br/>
 
-# Create Log Analytics Workspace
+# Create a Log Analytics Workspace
+- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal:
+<br/>
+![](/assets/img/SoilSensor/LAW1.png)
+<br/>
 
-- Navigate to your new **IoT Hub** and select **Devices**, then **+ Add Device**
+- Select **+Create**
+<br/>
+![](/assets/img/SoilSensor/LAW2.png)
+<br/>
 
-- Provide a **Name** for your device and select **Save**
+- Select **Subscription** and **Resource Group**:
+<br/>
+![](/assets/img/SoilSensor/LAW3.png)
+<br/>
 
-- Navigate back to the **Devices** blade, then to your newly registered device and take note of the **Primary connection string**
+- Select **Instance Name** and **Region**:
+![](/assets/img/SoilSensor/LAW4.png)
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/cnxn_string.png)
+<br/><br/>
+
+# Commitment / Pricing Tiers
+
+- Choose the appropriate commitment tier given your expected daily ingest volume. 
+<br/>
+
+> &#128161; It makes sense to bump up to the 100GB/day commitment tier even when you hit as little as 50GB/day because of the 50% discount afforded at 100GB/day, for example.
+<br/>
+
+> &#128073; Check out my prior Sentinel Cost Optimization Part 1 and 2 articles at [hanley.cloud](www.hanley.cloud), complete with use-cases and exercises.  While you're at it, don't forget to peruse my GitHub repository for KQL breakdowns and ready-made queries for all kinds of complicated situations that you can simply copy and paste. 
+
+<br/>
+
+- Click **Review & Create**
+ ...to Finish Setting up a New Log Analytics Workspace 
+
+<br/><br/>
 
 <br/><br/><br/>
 
 # Build Logic App
 
-Search for **Logic Apps** in the top search bar and click on the icon, then **+ Add**
+- Search for **Logic Apps** in the top search bar and click on the icon, then **+ Add**
 
-On the next page, fill out the required details as shown below. Make sure to select **No** for **Enable log analytics** unless you want **Diagnostics** for the **Logic App** forwarded as well. 
+- On the next page, fill out the required details as shown below. Make sure to select **No** for **Enable log analytics** unless you want **Diagnostics** for the **Logic App** forwarded as well. 
 
-Open the new app in **Logic App Designer** and let's build this out in 4 steps!
+- Open the new app in **Logic App Designer** and let's build this out in 4 steps!
+
+![](/assets/img/IoT%20Hub%202/4steps.png)
+
+<br/><br/>
 
 Step 1: Trigger - When one or more messages arrive in a queue (auto-complete)
 
-Set your connectoin to the Service Bus at the bottom
+![](/assets/img/IoT%20Hub%202/step1.png)
+
+<br/><br/>
+
+- Set your connectoin to the Service Bus
+
+![](/assets/img/IoT%20Hub%202/Step1%20Connection.png)
+
+<br/><br/>
 
 Step 2: Compose - Write Service Bus Message - Base64ToString
 
-Use the following expression to convert the message to string:
+![](/assets/img/IoT%20Hub%202/Step2.png)
+
+- Use the following expression to convert the message to string:
 
 ```python
 base64ToString(triggerBody()?['ContentData'])
@@ -79,7 +135,9 @@ base64ToString(triggerBody()?['ContentData'])
 
 Step 3: Parse JSON - Parse Temperature and Humidity to Update Custom Log
 
-Use the following schema to tell the parser how to read the message data:
+![](/assets/img/IoT%20Hub%202/Step3.png)
+
+- Use the following schema to tell the parser how to read the message data:
 
 ```json
 {
@@ -97,26 +155,16 @@ Use the following schema to tell the parser how to read the message data:
 
 Step 4: Send Data - Send Data to Log Analytics
 
-Fill out the request body as illustrated:
+- Fill out the request body as illustrated:
 
+![](/assets/img/IoT%20Hub%202/Step4.png)
 
+An **azureloganalyticsdatacollector-1** API Connection will show up auto-magically when you succesfully create your Logic App (just like the **servicebus-1** API connection earlier). 
 
 
 <br/><br/>
 
 > &#128073; xxxxxxxxxxxxxxxxxxxxxx
-
-<br/><br/>
-
-# Build out your Azure IoT Hub python program
-
-- If you did **NOT** install an OLED screen, then use the [Sensor-2-IoT_Hub.py file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/Sensor-2-IoT_Hub.py)
-
-<br/>
-
-- If you **DID** install an OLED screen, then use the [Sensor-2-IoT_Hub+OLED.py file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/Sensor-2-IoT_Hub%2BOLED.py)
-
-
 
 <br/><br/>
 
