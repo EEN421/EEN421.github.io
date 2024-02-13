@@ -30,17 +30,19 @@ THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 
 # Create Azure Service Bus & Service Bus Queue
 
+<br/>
+
 - Login to the Azure portal and click **+Create a Resource** button, then search for **Service Bus** in the **Marketplace**. 
 
 <br/>
 
-- Select **Service Bus** then **Create**
+- Select **Service Bus** then **Create**.
 
 ![](/assets/img/IoT%20Hub%202/servicebus%20create.png)
 <br/>
-<br/>
+<br/><br/>
 
-- Select the **Subscription**, **Resource Group**, **Logic App Name**, **Region**, **Enable Log Analytics**, **Plan**, and **Zone Redundancy** for our **Logic App**
+- Select the **Subscription**, **Resource Group**, **Logic App Name**, **Region**, **Enable Log Analytics**, **Plan**, and **Zone Redundancy** for our **Logic App**.
 
 ![](/assets/img/IoT%20Hub%202/Create%20Logic%20App.png)
 <br/>
@@ -55,7 +57,7 @@ THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 <br/>
 <br/>
 
-> &#128161; A **servicebus-1** API  Connection will be auto-generated when you succesfully create your service bus. ![](/assets/img/IoT%20Hub%202/servicebus%20and%20api.png)
+> &#128073; A **servicebus-1** API  Connection will be auto-generated when you succesfully create your service bus. ![](/assets/img/IoT%20Hub%202/servicebus%20and%20api.png)
 
 <br/>
 <br/>
@@ -63,8 +65,9 @@ THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 - Navigate to the **Queues** blade under **Entities** and select **+ Queue**
 
 ![](/assets/img/IoT%20Hub%202/NewQ.png)
-<br/>
-<br/>
+
+<br/><br/>
+
 
 - Name your queue after the pepper/plant you're monitoring. You can leave the other settings alone.
 
@@ -76,6 +79,8 @@ THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 <br/>
 
 # Create a Log Analytics Workspace
+
+<br/>
 
 - If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal and follow the below steps to get one going (these steps are taken from a [previous post](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and you might notice different resource groups etc. in the following screenshots. For this exercise I kept everything in a resource group called "IoT" and called my worksapce "Peppers"):
 <br/>
@@ -120,7 +125,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume.
 <br/>
 <br/>
 
-> &#128073; Check out my prior Sentinel Cost Optimization articles and exercises Parts 1 and 2 at [hanley.cloud](www.hanley.cloud). While you're at it, don't forget to peruse my [GitHub repository for KQL breakdowns and ready-made queries](https://github.com/EEN421/KQL-Queries) for all kinds of complicated situations that you can simply copy and paste. 
+> &#128161; Check out my prior Sentinel Cost Optimization articles and exercises Parts 1 and 2 at [hanley.cloud](www.hanley.cloud). While you're at it, don't forget to peruse my [GitHub repository for KQL breakdowns and ready-made queries](https://github.com/EEN421/KQL-Queries) for all kinds of complicated situations that you can simply copy and paste. 
 
 <br/>
 
@@ -153,7 +158,7 @@ Step 1: **Trigger - When one or more messages arrive in a queue (auto-complete)*
 <br/>
 <br/>
 
-> &#128161; You can send multiple sensors across multiple queues on a single service bus to a log analytics workspace. I named my Service Bus **Peppers** and have 2 queues at the time of writing this article: **Goat Horn** and **Szechuan** 🌶🌶🌶
+> &#128073; You can send multiple sensors across multiple queues on a single service bus to a log analytics workspace. I named my Service Bus **Peppers** and have 2 queues at the time of writing this article: **Goat Horn** and **Szechuan** 🌶🌶🌶
 
 <br/><br/>
 
@@ -213,7 +218,7 @@ Step 4: **Send Data - Send Data to Log Analytics**
 
 ![](/assets/img/IoT%20Hub%202/Step4.png)
 
-> &#128161; An **azureloganalyticsdatacollector-1** API Connection will show up auto-magically when you succesfully create your Logic App (just like the **servicebus-1** API connection earlier). 
+> &#128073; An **azureloganalyticsdatacollector-1** API Connection will show up auto-magically when you succesfully create your Logic App (just like the **servicebus-1** API connection earlier). 
 
 <br/><br/><br/>
 
@@ -225,7 +230,7 @@ Navigate to your **Log Analytics Workspace** and query your new custom list:
 
 <br/>
 
-Here we can see the **Temperate** and **Humidity** by **Pepper**.
+Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 
 <br/>
 
@@ -249,7 +254,7 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**.
 <br/><br/>
 
 # Next Time: 
-- We'll build some automation (playbooks) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts for when my plants are too hot, too cold, or too thirsty.
+- We'll build some automation (playbooks &#128210;) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts &#9888; for when my plants are too hot &#128293;, too cold &#10052;, or too thirsty &#128167;.
 
 <br/>
 
