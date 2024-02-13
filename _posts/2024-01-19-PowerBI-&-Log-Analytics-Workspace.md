@@ -172,5 +172,9 @@ Thanks for reading! Follow me on [LinkedIn](https://www.linkedin.com/in/ianhanle
 -	[Ian Hanley's deceptively simple KQL queries](https://github.com/EEN421/KQL-Queries/tree/Main)
 -	[Azure Portal](https://portal.azure.com/)
 
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
+
 
 
