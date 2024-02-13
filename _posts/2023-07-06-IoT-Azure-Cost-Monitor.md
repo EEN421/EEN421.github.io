@@ -164,3 +164,6 @@ Next we have to give our web app permissions to read the cost management informa
 - [Web Serial ESPTool](https://learn.adafruit.com/adafruit-metro-esp32-s2/web-serial-esptool)
 
 
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
