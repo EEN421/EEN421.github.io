@@ -29,10 +29,7 @@ The best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 
 # Create Azure Service Bus & Service Bus Queue
 
-
 - Login to the Azure portal and click **+Create a Resource** button, then search for **Service Bus** in the **Marketplace**. 
-
-<br/>
 
 - Select **Service Bus** then **Create**.
 
@@ -67,7 +64,7 @@ The best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 <br/><br/>
 
 
-- Name your queue after the pepper/plant you're monitoring. You can leave the other settings alone.
+- Name your queue after the pepper or plant you're monitoring. You can leave the other settings alone.
 
 ![](/assets/img/IoT%20Hub%202/Bus%20Queue.png)
 <br/>
