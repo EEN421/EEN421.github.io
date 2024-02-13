@@ -384,3 +384,7 @@ When I add moisture to my soil sample, I can see the moisture reading adjust:
 
 ![](/assets/img/SoilSensor/ReadMe4.jpg)
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
+
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
