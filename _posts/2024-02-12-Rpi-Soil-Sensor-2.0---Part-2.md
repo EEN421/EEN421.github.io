@@ -221,6 +221,8 @@ Navigate to your **Log Analytics Workspace** and query your new custom list:
 
 Here we can see the **Temperate** and **Humidity** by **Pepper**.
 
+<br/>
+
 &#127793; &#127807; **What will you grow?** &#127804;&#127803;
 
 
@@ -237,7 +239,7 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**.
 <br/><br/>
 
 # Next Time: 
-- We'll build some automation (playbooks) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts for when my plants are thirsty, or even an autoamted signal to trigger a watering valve? The possiblities are myriad.
+- We'll build some automation (playbooks) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts for when my plants are too hot, too cold, or too thirsty.
 
 <br/><br/>
 
