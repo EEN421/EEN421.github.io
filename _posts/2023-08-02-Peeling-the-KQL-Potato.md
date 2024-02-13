@@ -103,5 +103,8 @@ My grievances against the above query are as follows: Leveraging the percentiles
 - &#10003; Understand the different layers of complexity for future query improvements
 - &#10003; Build something **_awesome_** &#128526;
 
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
 
 
