@@ -4,7 +4,7 @@ This follows up on a previous post where we [built a Raspberry Pi based soil sen
 
 Some advanced readers may have thought to make a diagnostics setting in the IoT Hub to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics &#128200;) but _not the actual message data_ make it into the **AzureDiagnostics table** in a workspace (good guess though, that was my first move too &#128527;). 
 
-As our title suggests, the best way to get our IoT Sensor messages from IoT Hub into a Log Analytics workspace is from **IoT Hub** through a **Service Bus**, and into a **Logic App** which can parse the 'message' data, then finally send it to a **Log Analytics Workspace**, like this: 
+THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics workspace is from **IoT Hub** through a **Service Bus** via **Service Bus Queue**, and into a **Logic App** which can **parse** the 'message' data, then finally send it to a **Log Analytics Workspace**, like this: 
 
 <br/>
 
@@ -77,7 +77,7 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 
 # Create a Log Analytics Workspace
 
-- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal (the Analytics Workspace steps are taken from a [previous post](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/):
+- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal and follow the below steps to get one going (these steps are taken from a [previous post](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and you might notice different resource groups etc. in the following screenshots. For this exercise I kept everything in a resource group called "IoT" and called my worksapce "Peppers"):
 <br/>
 <br/>
 
@@ -251,6 +251,10 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**.
 # Next Time: 
 - We'll build some automation (playbooks) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts for when my plants are too hot, too cold, or too thirsty.
 
-<br/><br/>
+<br/>
 
 #microsoftsecurity ⚔ #iotsecurity 🛡 #cloudsecurity ☁ #internetofthings 🔌 #learningeveryday 📚 #azuresecurity ⚡ #gardening 🌼 #peppers 🌶 #iothub &#128736; #azureservicebus &#8596; #logicapp &#128259; #loganalytics &#128161;	
+
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
