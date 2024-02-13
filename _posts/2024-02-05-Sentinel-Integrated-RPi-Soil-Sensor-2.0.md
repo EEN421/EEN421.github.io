@@ -259,3 +259,7 @@ This time around (2.0) we improved upon our previous Headless Raspberry Pi ARM D
 <br/>
 
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
+
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
