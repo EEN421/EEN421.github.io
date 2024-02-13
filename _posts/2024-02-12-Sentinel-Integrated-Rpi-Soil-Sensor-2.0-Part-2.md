@@ -13,7 +13,7 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 <br/>
 <br/>
 
-![](/assets/img/IoT%20Hub%202/BigPicture2.jpg)
+![](/assets/img/IoT%20Hub%202/BigPicture2.png)
 
 <br/>
 <br/>
