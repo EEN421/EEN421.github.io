@@ -260,3 +260,7 @@ Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
 - [learn more about Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/)
 
 - [Azure free account](https://azure.microsoft.com/en-us/free/cognitive-services/)
+
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
