@@ -256,8 +256,4 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 
 <br/>
 
-#microsoftsecurity ⚔ #iotsecurity 🛡 #cloudsecurity ☁ #internetofthings 🔌 #learningeveryday 📚 #azuresecurity ⚡ #gardening 🌼 #peppers 🌶 #iothub &#128736; #azureservicebus &#8596; #logicapp &#128259; #loganalytics &#128161;	
-
-<br/>
-
 ![](/assets/img/IoT%20Hub%202/footer.png)
