@@ -3,7 +3,7 @@ This follows up on a previous post where we [built a Raspberry Pi based soil sen
 
 Some advanced readers may have thought to make a diagnostics setting in the IoT Hub to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics &#128200;) but _not the actual message data_ make it into the **AzureDiagnostics table** in a workspace (good guess though, that was my first move too &#128527;). 
 
-THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics workspace is from **IoT Hub** through a **Service Bus** via **Service Bus Queue**, and into a **Logic App** which can **parse** the 'message' data, then finally send it to a **Log Analytics Workspace**, like this: 
+The best way to get our soil Sensor messages from IoT Hub into a Log Analytics workspace is from **IoT Hub** through a **Service Bus** via **Service Bus Queue**, and into a **Logic App** which can **parse** the 'message' data, then finally send it to a **Log Analytics Workspace**, like this: 
 
 <br/>
 
@@ -22,7 +22,7 @@ THe best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 - &#128073; Create an Azure Service Bus & Service Bus Queue &#128233;
 - &#128073; Setup an Azure Log Analytics Workspace &#128202;
 - &#128073; Build a Logic App to Parse and send the Message Data &#128232;
-- &#128073; Accomplish something AWESOME today x3! &#128526;
+- &#128073; Accomplish something AWESOME today! &#128526;
 
 
 <br/><br/>
@@ -239,10 +239,10 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 
 # In this Post We: 
 
-- &#9989; built an Azure Service Bus & Service Bus Queue to receive message (sensor) data from our IoT Hub &#8596;
-- &#9989; built a Log Analytics Workspace as the final destination for our Soil Sensor message data &#128202;
-- &#9989; built a Logic App to parse the message data and forward the contents to our Log Analytics Workspace. &#128232;
-- &#9989; Accomplished something AWESOME today x3! &#128526;
+- &#10003; built an Azure Service Bus & Service Bus Queue to receive message (sensor) data from our IoT Hub &#8596;
+- &#10003;  built a Log Analytics Workspace as the final destination for our Soil Sensor message data &#128202;
+- &#10003;  built a Logic App to parse the message data and forward the contents to our Log Analytics Workspace. &#128232;
+- &#10003;  Accomplished something **AWESOME** today! &#128526;
 
 <br/><br/>
 
