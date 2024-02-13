@@ -170,3 +170,7 @@ The syslog table (syslog_cl) is populating too &#128071;
 - [FluentD Cloud Data Logging (Raspberry Pi)](https://docs.fluentd.org/v/0.12/articles/raspberrypi-cloud-data-logger)
 - [FluentD configuration file syntax](https://docs.fluentd.org/v/0.12/configuration/config-file)
 - [Create a Log Analytics Workspace - Official Microsoft Documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace?tabs=azure-portal) 
+
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
