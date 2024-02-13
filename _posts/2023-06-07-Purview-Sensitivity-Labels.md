@@ -123,6 +123,9 @@ In this post, we leveraged **Microsoft Purview** to create a **Sensitivity Label
 - [https://learn.microsoft.com/en-us/purview/purview](https://learn.microsoft.com/en-us/purview/purview)
 - [https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide](https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels?view=o365-worldwide)
 
+<br/>
+
+![](/assets/img/IoT%20Hub%202/footer.png)
 
 
 
