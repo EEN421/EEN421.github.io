@@ -1,8 +1,8 @@
 # Introduction and Use Case:
 
-This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). What next? how do we read that data and get it into a Log Analytics Workspace? &#129300;
+This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). What next? How do we read that data and get it into a Log Analytics Workspace? &#129300;
 
-Some advanced readers may have thought to make a diagnostics settin in the IoT Hub to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics &#128200;) but _not the actual message data_ make it into the **AzureDiagnostics table** in a workspace (good guess though, that was my first move too &#128527;). 
+Some advanced readers may have thought to make a diagnostics setting in the IoT Hub to forward telemetry data to a workspace, only to find just the 'telemetry' data (send success/fail and other telemetry metrics &#128200;) but _not the actual message data_ make it into the **AzureDiagnostics table** in a workspace (good guess though, that was my first move too &#128527;). 
 
 As our title suggests, the best way to get our IoT Sensor messages from IoT Hub into a Log Analytics workspace is from **IoT Hub** through a **Service Bus**, and into a **Logic App** which can parse the 'message' data, then finally send it to a **Log Analytics Workspace**, like this: 
 
@@ -14,7 +14,7 @@ As our title suggests, the best way to get our IoT Sensor messages from IoT Hub 
 <br/>
 
 # In this Post We Will: 
-- &#128073; Create an Azure Service Bus &#128233;
+- &#128073; Create an Azure Service Bus & Service Bus Queue &#128233;
 - &#128073; Setup an Azure Log Analytics Workspace &#128202;
 - &#128073; Build a Logic App to Parse and send the Message Data &#128232;
 - &#128073; Accomplish something AWESOME today x3! &#128526;
@@ -217,14 +217,27 @@ Navigate to your **Log Analytics Workspace** and query your new custom list:
 
 ![](/assets/img/IoT%20Hub%202/QueryResult.png)
 
-<br/><br/><br/>
+<br/>
+
+Here we can see the **Temperate** and **Humidity** by **Pepper**.
+
+&#127793; &#127807; **What will you grow?** &#127804;&#127803;
+
+
+
+<br/><br/>
 
 # In this Post We: 
 
-- &#9989; built an Azure Service Bus to receive message (soil) data from our IoT Hub &#128233;
+- &#9989; built an Azure Service Bus & Service Bus Queue to receive message (sensor) data from our IoT Hub &#8596;
 - &#9989; built a Log Analytics Workspace as the final destination for our Soil Sensor message data &#128202;
 - &#9989; built a Logic App to parse the message data and forward the contents to our Log Analytics Workspace. &#128232;
 - &#9989; Accomplished something AWESOME today x3! &#128526;
+
+<br/><br/>
+
+# Next Time: 
+- We'll build some automation (playbooks) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts for when my plants are thirsty, or even an autoamted signal to trigger a watering valve? The possiblities are myriad.
 
 <br/><br/>
 
