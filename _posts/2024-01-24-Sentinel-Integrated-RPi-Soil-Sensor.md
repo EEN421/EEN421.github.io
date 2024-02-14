@@ -27,7 +27,7 @@ Click to learn more about each component...
 - [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
 - [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
 - [GPIO Splitter](https://shop.pimoroni.com/products/hat-hacker-hat?variant=31812879056979)
-- [Jumper Cables](https://a.co/d/3A3MSpy)
+- [JST PH 2mm 4-Pin to Female Socket I2C STEMMA jumper cable](https://www.adafruit.com/product/3950)
 
 <br/><br/>
 
