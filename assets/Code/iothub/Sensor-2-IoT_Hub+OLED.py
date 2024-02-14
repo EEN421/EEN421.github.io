@@ -105,7 +105,7 @@ def iothub_client_telemetry_sample_run():
             print("Sending message: {}".format(message))
             client.send_message(message)
             print("Message successfully sent")
-            time.sleep(3)
+            time.sleep(3)  #<-- runs every 3 seconds. Change this value when done testing to 300 (5 minutes) or 600 (10 minutes) etc.
     except KeyboardInterrupt:
         print("IoTHubClient stopped")
 
