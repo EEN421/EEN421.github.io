@@ -76,7 +76,7 @@ The best way to get our soil Sensor messages from IoT Hub into a Log Analytics w
 # Create a Log Analytics Workspace
 
 
-- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal and follow the below steps to get one going (these steps are taken from a [previous post](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) and you might notice different resource groups etc. in the following screenshots. For this exercise I kept everything in a resource group called "IoT" and called my worksapce "Peppers"):
+- If you don't already have one ready, navigate to Log Analytics Workspace in Azure Portal and follow the below steps to get one going (these steps are taken from a [previous post](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/) so you might notice different resource groups etc. in the following screenshots. For this exercise I kept everything in a resource group called "IoT" and called my workspace "Peppers"):
 <br/>
 <br/>
 
