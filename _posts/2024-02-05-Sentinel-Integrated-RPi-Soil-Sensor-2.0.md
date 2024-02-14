@@ -40,7 +40,7 @@ Click to learn more about each component...
 - [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
 - [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
 - [GPIO Splitter (smaller form factor than previous prototype)](https://www.amazon.com/GeeekPi-Connectors-Raspberry-Expansion-Compatible/dp/B0888W3XN4/ref=sr_1_5?crid=4U70H8TJQGX9&keywords=gpio+splitter&qid=1707110682&sprefix=gpio+splitte%2Caps%2C70&sr=8-5)
-- [Jumper Cables](https://a.co/d/3A3MSpy)
+- [JST PH 2mm 4-Pin to Female Socket I2C STEMMA jumper cable](https://www.adafruit.com/product/3950)
 
 <br/><br/>
 
