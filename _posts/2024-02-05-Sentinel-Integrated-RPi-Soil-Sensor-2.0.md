@@ -186,6 +186,10 @@ Here's the pin-out diagram for connecting your sensor to a raspberry pi zero:
 
 > &#128161; Other Raspberry Pi boards use the same GPIO pin-out, so you can connect this Capacitive I2C STEMMA sensor to any pi by connecting to the same GPIO pins as illustrated above.
 
+<br/>
+
+Use the following command to return the hardward addresses for your sensor and/or OLED display:
+
 ```python
 sudo i2cdetect -y 1
 #Soil Sensor should populate on x36
@@ -194,7 +198,7 @@ sudo i2cdetect -y 1
 ![](/assets/img/SoilSensor/HardwareAddress.png)
 
 <br/>
-Once you run the OLED script, you should see the display populate as such:
+Once you run the main.py / OLED script, you should see the display populate as such:
 
 ![](/assets/img/SoilSensor/ReadMe1.jpg)
 
