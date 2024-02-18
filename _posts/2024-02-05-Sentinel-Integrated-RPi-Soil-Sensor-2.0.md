@@ -150,7 +150,7 @@ sudo raspi-config
 ```python
 sudo apt-get install python3-pip
 sudo pip3 install --upgrade setuptools
-sudo apt-get install -y python-smbus
+sudo apt install python3-smbus
 sudo apt-get install -y i2c-tools
 sudo pip3 install RPI.GPIO
 sudo pip3 install adafruit-blinka
