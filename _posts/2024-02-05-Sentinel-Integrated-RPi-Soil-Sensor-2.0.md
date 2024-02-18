@@ -179,6 +179,13 @@ sudo pip3 install azure-iot-hub
 <br/><br/>
 
 # Test hardware detection and return hardware addresses:
+
+Here's the pin-out diagram for connecting your sensor to a raspberry pi zero: 
+
+![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
+
+> &#128161; Other Raspberry Pi boards use the same GPIO pin-out, so you can connect this Capacitive I2C STEMMA sensor to any pi by connecting to the same GPIO pins as illustrated above.
+
 ```python
 sudo i2cdetect -y 1
 #Soil Sensor should populate on x36
