@@ -104,6 +104,10 @@ sudo raspi-config
 
 # Soil Sensor Setup:
 
+- Connect the sensor according to the following pin-out diagram: 
+
+![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
+
 - Soil Sensor Setup:
 ```python
 sudo apt-get install python3-pip
@@ -137,6 +141,8 @@ sudo pip3 install adafruit-circuitpython-seesaw
 <br/><br/>
 
 # OLED Screen Install:
+
+If you have a GPIO splitter, you can connect the OLED screen and sensor at the same time! 
 
 - Install the following packages:
 ```python
