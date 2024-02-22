@@ -171,6 +171,14 @@ sudo pip3 install requests
 
 <br/>
 
+- [Optional] Grab and unzip silkscreen font to clean up txt display (smoother font for this type of small OLED display):
+```python
+wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
+unzip silkscreen.zip
+```
+
+<br/>
+
 - Install Azure IoT Hub Dependencies:
 ```python
 sudo pip3 install azure-iot-device  
