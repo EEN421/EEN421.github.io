@@ -63,7 +63,8 @@ Now we have an efficient query to return the daily average ingest, but **why sto
 5.	|summarize GB= sum(Quantity)/1000 by bin(TimeGenerated,1d) //<-- Summarize GB/Day 
   
 6.	|extend Cost=GB*rate	//<-- calculate average cost
-    | summarize AvgCostPerDay=percentiles(Cost,50),AvgGBPerDay=percentiles(GB,50) //<-- Return the 50th percentile for Cost/Day and GB/Day
+  
+7.  | summarize AvgCostPerDay=percentiles(Cost,50),AvgGBPerDay=percentiles(GB,50) //<-- Return the 50th percentile for Cost/Day and GB/Day
 ```
 ![](/assets/img/Potato/Ugly.png)
 
