@@ -28,16 +28,17 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
 
  
 # Build a custom **route**
-
+This is the route your data will travel from your *IoT Hub** 
 ![](/assets/img/SoilSensor3/route.png)
 
 # Build a custom **endpoint**
-
+This is the "endpoint" that your data arrives at...
 ![](/assets/img/SoilSensor3/Endpoint.png)
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
 Setup your **Trigger:**
+Depending on your setup, you'll probably want this to trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so setting it to 20 minutes as illustrated below covers most lag. 
 ![](/assets/img/SoilSensor3/ReadApp1.png)
 
 <br/>
@@ -64,6 +65,10 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 <br/>
 
 ![](/assets/img/SoilSensor3/alertApp1.png)
+
+Our thresholds are as follows:
+
+
 
 <br/>
 
