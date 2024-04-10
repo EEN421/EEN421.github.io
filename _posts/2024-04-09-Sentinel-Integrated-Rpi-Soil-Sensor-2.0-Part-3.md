@@ -31,13 +31,13 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
  <br/>
 
 # Build a custom **route**
-This is the route your data will travel from your *IoT Hub** 
+This is the route your data will travel from your **IoT Hub** 
 ![](/assets/img/SoilSensor3/route.png)
 
 <br/>
 
 # Build a custom **endpoint**
-This is the "endpoint" that your data arrives at...
+This is the **endpoint** that your data arrives at...
 ![](/assets/img/SoilSensor3/Endpoint.png)
 
 <br/>
