@@ -1,13 +1,13 @@
 # Introduction & Use Case:
-This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/), then [sent that data to a Log Analytics Workspace](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/). While building a logic app for the above, I came across an conundrum - **the endpoint bottleneck** - and _solved for it_ with (you guessed it) a **logic app!**
+This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/), then [sent that data to a Log Analytics Workspace](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/). While building a logic app for the above, I came across an conundrum that restricted the number of devices for whom I could forward logs to... - **the endpoint bottleneck** - and _solved for it_ with (you guessed it) a **logic app!**
 
-Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and how to solve it, as well as getting **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167;
+Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and **how to solve it**, as well as getting **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167;
 
 <br/>
 
 # Background:
 
-The **bottleneck**; &#10145; Sure, the Azure **free** IoT Hub allows for up to **500 registered IoT devices**, but you need a **custom route** and **endpoint** in order to transmit that data across a service bus to a **workspace**... _I know, tricky stuff..._
+The **bottleneck**; &#10145; Sure, the Azure **free** IoT Hub allows for up to **500 registered IoT devices**, but you need a **custom route** and **endpoint** in order to transmit that data across a **service bus** to a **workspace**... _I know, tricky stuff..._
 
 If we think of this like a simple closed circuit, we're essentially sending _all the sensor data across the **same route**, using the **same endpoint**_. The difference here is that _instead of_ using a separate route and endpoint for **each** sensor's data stream coming across **Azure IoT Hub**, we're sending **everything** together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. 
 
@@ -45,7 +45,7 @@ This is the "endpoint" that your data arrives at...
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
 Setup your **Trigger:**
-Depending on your setup, you'll probably want this to trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so setting it to 20 minutes as illustrated below covers most lag. 
+Depending on your setup, you'll probably want this trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so setting it to 20 minutes as illustrated below covers this scenario. 
 ![](/assets/img/SoilSensor3/ReadApp1.png)
 
 <br/>
@@ -73,8 +73,23 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 
 ![](/assets/img/SoilSensor3/alertApp1.png)
 
-Our thresholds are as follows:
+Our thresholds are as follows for this sensor setup:
 
+<br/>
+
+**Humidity/Moisture Alerts:**
+
+**_"<300 &#10145; too dry"_**
+
+**_">800 &#10145; too wet"_**
+
+<br/>
+<br/>
+
+**Temperature Alerts:**
+<br/>
+
+**_"<45 Degrees C &#10145; too low"_**
 
 
 <br/>
