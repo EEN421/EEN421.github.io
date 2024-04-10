@@ -20,20 +20,27 @@ If we think of this like a simple closed circuit, we're essentially sending _all
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Do something your friends can't (yet) &#128527;
 
+<br/>
+
 # Hardware Setup:
 See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) 
  for hardward setup...
 
  ![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
 
- 
+ <br/>
+
 # Build a custom **route**
 This is the route your data will travel from your *IoT Hub** 
 ![](/assets/img/SoilSensor3/route.png)
 
+<br/>
+
 # Build a custom **endpoint**
 This is the "endpoint" that your data arrives at...
 ![](/assets/img/SoilSensor3/Endpoint.png)
+
+<br/>
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
