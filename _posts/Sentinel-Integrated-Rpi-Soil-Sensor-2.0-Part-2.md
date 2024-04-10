@@ -10,7 +10,7 @@ Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limita
 
 The bottleneck; Sure, the Azure **free** IoT Hub allows for up to **500 registered IoT devices**, but you need a **custom route** and **endpoint** in order to transmit that data across a service bus to a **workspace**... _I know, tricky stuff..._
 
-If we think of this like a simple circuit, we're essentially sending all the sensor data across the same route, using the same endpoint. The difference here is that instead of using a separate route and endpoint for each sensor's data stream coming across Azure IoT Hub, we're sending everything together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the workspace. 
+If we think of this like a simple circuit, we're essentially sending all the sensor data across the same route, using the same endpoint. The difference here is that instead of using a separate route and endpoint for each sensor's data stream coming across Azure IoT Hub, we're sending everything together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. 
 
 
 
@@ -21,3 +21,8 @@ If we think of this like a simple circuit, we're essentially sending all the sen
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Do something your friends can't (yet) &#128527;
 
+# Build a custom **route**
+
+# Build a custom **endpoint**
+
+# Build a Logic App to Parse Message Data for **multiple** devices
