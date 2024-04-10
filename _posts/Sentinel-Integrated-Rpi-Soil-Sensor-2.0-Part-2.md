@@ -30,15 +30,32 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
  
 # Build a custom **route**
 
+![](/assets/img/SoilSensor3/route.png)
+
 # Build a custom **endpoint**
+
+![](/assets/img/SoilSensor3/Endpoint.png)
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
-
+![](/assets/img/SoilSensor3/ReadApp1.png)
+<br/>
+![](/assets/img/SoilSensor3/ReadApp2.png)
+<br/>
+![](/assets/img/SoilSensor3/ReadApp3.png)
+<br/>
+![](/assets/img/SoilSensor3/ReadApp4.png)
+<br/>
+<br/>
 
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty**
 
 <br/>
+
+![](/assets/img/SoilSensor3/alertApp1.png)
+
+<br/>
+
 
 # In this Post We: 
 
