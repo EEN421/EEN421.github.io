@@ -5,20 +5,20 @@ Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limita
 
 <br/>
 
-# Background:
-
-The **bottleneck**; &#10145; Sure, the Azure **free** IoT Hub allows for up to **500 registered IoT devices**, but you need a **custom route** and **endpoint** in order to transmit that data across a **service bus** to a **workspace**... _I know, tricky stuff..._
-
-If we think of this like a simple closed circuit, we're essentially sending _all the sensor data across the **same route**, using the **same endpoint**_. The difference here is that _instead of_ using a separate route and endpoint for **each** sensor's data stream coming across **Azure IoT Hub**, we're sending **everything** together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. 
-
-<br/>
-
 # In this Post We Will: 
 
 - &#128073; Build a custom **route** and **endpoint** for the Message Data &#128200;
 - &#128073; Build a Logic App to Parse Message Data for **multiple** devices &#128202;
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Do something your friends can't (yet) &#128527;
+
+<br/>
+
+# Background:
+
+The **bottleneck**; &#10145; Sure, the Azure **free** IoT Hub allows for up to **500 registered IoT devices**, but you need a **custom route** and **endpoint** in order to transmit that data across a **service bus** to a **workspace**... _I know, tricky stuff..._
+
+If we think of this like a simple closed circuit, we're essentially sending _all the sensor data across the **same route**, using the **same endpoint**_. The difference here is that _instead of_ using a separate route and endpoint for **each** sensor's data stream coming across **Azure IoT Hub**, we're sending **everything** together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. 
 
 <br/>
 
@@ -70,16 +70,10 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty**
 
 <br/>
-
-
 You'll want to follow this setup for a quick win:
-
-<br/>
-
 ![](/assets/img/SoilSensor3/alertApp1.png)
 
 <br/>
-
 Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
 ![](/assets/img/SoilSensor3/recurrance1.png)
 
@@ -88,9 +82,7 @@ In this example, we'll investigate the **Humidity** reading:
 ![](/assets/img/SoilSensor3/recurrance2.png)
 
 <br/>
-
 This is where we configure a **response**
-
 ![](/assets/img/SoilSensor3/Recurrance3.png)
 
 <br/>
