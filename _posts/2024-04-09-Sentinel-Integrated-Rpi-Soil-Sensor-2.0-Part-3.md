@@ -80,12 +80,24 @@ Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
 ![](/assets/img/SoilSensor3/recurrance1.png)
 
 <br/>
-
+In this example, we'll investigate the **Humidity** reading:
 ![](/assets/img/SoilSensor3/recurrance2.png)
 
 <br/>
 
+This is where we configure a **response**
+
 ![](/assets/img/SoilSensor3/Recurrance3.png)
+
+<br/>
+When triggered, return the following KQL results:
+
+```sql
+peppers
+| where todecimal(Humidity) < @{parameters('humidityGreatThan')}
+| project TimeGenerated, Temperature, Humidity
+```
+...illustrated below:
 
 <br/>
 
