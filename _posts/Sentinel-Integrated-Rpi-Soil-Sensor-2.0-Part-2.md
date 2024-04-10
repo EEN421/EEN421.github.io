@@ -28,3 +28,12 @@ If we think of this like a simple circuit, we're essentially sending all the sen
 # Build a Logic App to Parse Message Data for **multiple** devices
 
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty**
+
+<br/>
+
+# In this Post We: 
+
+- &#128073; Built a custom **route** and **endpoint** for the Message Data &#128200;
+- &#128073; Built a Logic App to Parse Message Data for **multiple** devices &#128202;
+- &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
+- &#128073; Did something your friends can't (yet) &#128527;
