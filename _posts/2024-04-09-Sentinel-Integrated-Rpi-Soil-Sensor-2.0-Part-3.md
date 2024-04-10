@@ -85,11 +85,11 @@ Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
 
 <br/>
 
-![](/assets/img/SoilSensor3/recurrance3.png)
+![](/assets/img/SoilSensor3/Recurrance3.png)
 
 <br/>
 
-![](/assets/img/SoilSensor3/recurrance4.png)
+![](/assets/img/SoilSensor3/Recurrance4.png)
 
 <br/>
 
