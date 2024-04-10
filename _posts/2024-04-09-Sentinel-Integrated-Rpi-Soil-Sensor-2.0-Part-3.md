@@ -38,14 +38,26 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
+Setup your **Trigger:**
 ![](/assets/img/SoilSensor3/ReadApp1.png)
+
 <br/>
+
+Formatting your message **Bas64ToString(...)** works for our purposes...
 ![](/assets/img/SoilSensor3/ReadApp2.png)
+
 <br/>
+
+Define your **"Temperature," "Moisture,"** and **"Hostname"** variable types...
 ![](/assets/img/SoilSensor3/ReadApp3.png)
+
 <br/>
+
+Name the **Log table** and Send the Data (include the hostname; in this case it's based on the **"PepperName: Body Hostname x**")
 ![](/assets/img/SoilSensor3/ReadApp4.png)
+
 <br/>
+
 <br/>
 
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty**
