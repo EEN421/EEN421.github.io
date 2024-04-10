@@ -71,10 +71,14 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 
 <br/>
 
-![](/assets/img/SoilSensor3/alertApp1.png)
-
 
 You'll want to follow this setup for a quick win:
+
+<br/>
+
+![](/assets/img/SoilSensor3/alertApp1.png)
+
+<br/>
 
 Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
 ![](/assets/img/SoilSensor3/recurrance1.png)
@@ -111,10 +115,10 @@ Our thresholds are as follows for this sensor setup:
 <br/>
 
 **Humidity/Moisture Alerts:**
-
-**_"<300 &#10145; too dry"_**
-
-**_">800 &#10145; too wet"_**
+```sql
+<300 --> too dry"
+>800 --> too wet"
+```
 
 <br/>
 <br/>
@@ -122,11 +126,11 @@ Our thresholds are as follows for this sensor setup:
 **Temperature Alerts:**
 <br/>
 
-**_"<45 Degrees C &#10145; too low"_**
-
+```sql
+<45 Degrees C --> too low"
+```
 
 <br/>
-
 
 # In this Post We: 
 
