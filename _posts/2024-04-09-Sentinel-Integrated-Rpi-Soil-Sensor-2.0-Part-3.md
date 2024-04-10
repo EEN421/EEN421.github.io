@@ -73,6 +73,27 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 
 ![](/assets/img/SoilSensor3/alertApp1.png)
 
+
+You'll want to follow this setup for a quick win:
+
+Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
+![](/assets/img/SoilSensor3/recurrance1.png)
+
+<br/>
+
+![](/assets/img/SoilSensor3/recurrance2.png)
+
+<br/>
+
+![](/assets/img/SoilSensor3/recurrance3.png)
+
+<br/>
+
+![](/assets/img/SoilSensor3/recurrance4.png)
+
+<br/>
+
+
 Our thresholds are as follows for this sensor setup:
 
 <br/>
