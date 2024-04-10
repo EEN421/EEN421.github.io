@@ -16,8 +16,8 @@ If we think of this like a simple circuit, we're essentially sending all the sen
 
 # In this Post We Will: 
 
-- &#128073; Build a Logic App to Parse Message Data for **multiple** devices &#128202;
 - &#128073; Build a custom **route** and **endpoint** for the Message Data &#128200;
+- &#128073; Build a Logic App to Parse Message Data for **multiple** devices &#128202;
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Do something your friends can't (yet) &#128527;
 
