@@ -67,7 +67,7 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 
 <br/>
 
-# Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty**
+# Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty &#128167;**
 
 <br/>
 You'll want to follow this setup for a quick win:
