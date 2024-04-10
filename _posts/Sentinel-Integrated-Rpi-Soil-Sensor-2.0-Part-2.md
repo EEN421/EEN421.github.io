@@ -21,11 +21,20 @@ If we think of this like a simple circuit, we're essentially sending all the sen
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Do something your friends can't (yet) &#128527;
 
+# Hardware Setup:
+See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) 
+ for hardward setup...
+
+ ![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
+
+ 
 # Build a custom **route**
 
 # Build a custom **endpoint**
 
-# Build a Logic App to Parse Message Data for **multiple** devices
+# Build a Logic App to Parse Message Data for **multiple** devices:
+
+
 
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty**
 
