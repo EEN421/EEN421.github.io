@@ -112,7 +112,7 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 <br/>
 <br/>
 
-> &#128073; Note: I had to adjust the previous python code that runs on the sensor microcontroller so that it sends the hostname along with the sensor data, illustrated in the snippet screen grab below. You can find the updated code here (just swap out your secrets etc.) [SensorCode.py](EEN421/EEN421.github.io/assets/Code/iothub/SensorCode.py) 
+> &#128073; Note: I had to adjust the previous python code that runs on the sensor microcontroller so that it sends the hostname along with the sensor data, illustrated in the snippet screen grab below. You can find the updated code here (just swap out your secrets etc.) [SensorCode.py](/assets/Code/iothub/SensorCode.py) 
 
 ![](/assets/img/SoilSensor3/sensor_code_hostname.png)
 
