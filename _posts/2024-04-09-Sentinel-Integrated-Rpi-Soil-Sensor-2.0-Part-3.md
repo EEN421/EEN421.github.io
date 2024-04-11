@@ -74,7 +74,11 @@ Define your **"Temperature," "Moisture,"** and **"Hostname"** variable types...
 
 Name the **Log table** and Send the Data (include the hostname; in this case it's based on the **"PepperName: Body Hostname x**")
 
+> &#128161; _This part is critical for leveraging multiple sensors, as it allows us to split out the readings per hostname from the service bus and get around the custom endpoint limitiation..._ &#128071; 
+
 ![](/assets/img/SoilSensor3/ReadApp4.png)
+
+<br/>
 
 <br/>
 
@@ -83,25 +87,31 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty &#128167;**
 
 <br/>
+
 You'll want to follow this setup for a quick win:
 
 ![](/assets/img/SoilSensor3/alertApp1.png)
 
 <br/>
+
 Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
 
 ![](/assets/img/SoilSensor3/recurrance1.png)
 
 <br/>
+
 In this example, we'll investigate the **Humidity** reading:
+
 ![](/assets/img/SoilSensor3/recurrance2.png)
 
 <br/>
+
 This is where we configure a **response**
 
 ![](/assets/img/SoilSensor3/Recurrance3.png)
 
 <br/>
+
 When triggered, return the following KQL results:
 
 ```sql
