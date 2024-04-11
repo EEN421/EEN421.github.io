@@ -1,5 +1,4 @@
 # Introduction & Use Case:
-
 Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and **how to solve it**, as well as getting **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167; 
 
 While building a logic app for the above, I came across an conundrum that restricted the number of devices for whom I could forward logs to... - **the endpoint bottleneck** - and _solved for it_ with (you guessed it) a **logic app!**
