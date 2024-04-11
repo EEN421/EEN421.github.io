@@ -33,36 +33,47 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
  <br/>
 
 # Build a custom **route**
-This is the route your data will travel from your **IoT Hub** 
-![](/assets/img/SoilSensor3/route.png)
+
+Create an **IoT route** to direct messages to the Service Bus queue, as illustrated below. See [Create an IoT route and disable Routing Query](https://learn.microsoft.com/en-us/azure/iot-hub/how-to-routing-portal?tabs=servicebusqueue#create-a-route-and-endpoint) for more on **IoT routes**.
+
+![](/assets/img/SoilSensor3/route1.png)
 
 <br/>
 
 # Build a custom **endpoint**
-This is the **endpoint** that your data arrives at...
-![](/assets/img/SoilSensor3/Endpoint.png)
+This is the **endpoint** that your data arrives at. Here's the configuration I used for my soil sensor setup...
+
+![](/assets/img/SoilSensor3/Endpoint1.png)
+
+![](/assets/img/SoilSensor3/Endpoint2.png)
+
+![](/assets/img/SoilSensor3/Endpoint3.png)
 
 <br/>
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
 Setup your **Trigger:**
-Depending on your setup, you'll probably want this trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so setting it to 20 minutes as illustrated below covers this scenario. 
+Depending on your setup, you'll probably want this trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so setting it to 20 minutes as illustrated below covers this scenario:
+
 ![](/assets/img/SoilSensor3/ReadApp1.png)
 
 <br/>
 
 Formatting your message **Bas64ToString(...)** works for our purposes...
+
 ![](/assets/img/SoilSensor3/ReadApp2.png)
 
 <br/>
 
 Define your **"Temperature," "Moisture,"** and **"Hostname"** variable types...
+
 ![](/assets/img/SoilSensor3/ReadApp3.png)
 
 <br/>
 
 Name the **Log table** and Send the Data (include the hostname; in this case it's based on the **"PepperName: Body Hostname x**")
+
 ![](/assets/img/SoilSensor3/ReadApp4.png)
 
 <br/>
@@ -73,10 +84,12 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 
 <br/>
 You'll want to follow this setup for a quick win:
+
 ![](/assets/img/SoilSensor3/alertApp1.png)
 
 <br/>
 Are the **Temperature** and **Humidity/Moisture** readings out of bounds?
+
 ![](/assets/img/SoilSensor3/recurrance1.png)
 
 <br/>
@@ -85,6 +98,7 @@ In this example, we'll investigate the **Humidity** reading:
 
 <br/>
 This is where we configure a **response**
+
 ![](/assets/img/SoilSensor3/Recurrance3.png)
 
 <br/>
