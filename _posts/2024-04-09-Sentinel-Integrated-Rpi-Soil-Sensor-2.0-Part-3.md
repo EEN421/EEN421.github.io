@@ -14,7 +14,7 @@ While building a logic app for the above, I came across an conundrum that restri
 - &#128073; Build a custom **route** and **endpoint** for the Message Data &#128232; 
 - &#128073; Configure IoT Hub **Permissions** &#128272;
 - &#128073; Build a **Logic App** to Parse Message Data for **multiple** devices &#128202;
-- Get **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167; with another **Logic App** &#128200;
+- &#128073; Get **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167; with another **Logic App** &#128200;
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Do something your friends can't (_yet_) &#128527;
 
