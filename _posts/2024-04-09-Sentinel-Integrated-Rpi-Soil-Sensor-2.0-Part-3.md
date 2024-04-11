@@ -41,31 +41,55 @@ Create an **IoT route** to direct messages to the Service Bus queue, as illustra
 <br/>
 
 # Build a custom **endpoint**
-This is the **endpoint** that your data arrives at. Here's the configuration I used for my soil sensor setup...
+This is the **endpoint** that your data arrives at. For additional information around **custom endpoints**, check out  [Create an IoT custom endpoint](https://learn.microsoft.com/en-us/azure/iot-hub/how-to-routing-portal?tabs=servicebusqueue#create-a-route-and-endpoint).
 
-![](/assets/img/SoilSensor3/Endpoint1.png)
+Here's the configuration I used for my soil sensor setup...
 
-![](/assets/img/SoilSensor3/Endpoint2.png)
+![](/assets/img/SoilSensor3/endpoint1.png)
 
-![](/assets/img/SoilSensor3/Endpoint3.png)
+![](/assets/img/SoilSensor3/endpoint2.png)
+
+![](/assets/img/SoilSensor3/endpoint3.png)
 
 <br/>
+
+# Enable IoT Hub Identity
+
+Navigate to your IoT Hub settings, go to Identity, turn it on, and save the changes.
+
+# Permissions Configuration
+
+Set permissions as follows:
+- RBAC: Assign the role of IoTHub Subscription Owner.
+- Expected Permissions: ServiceBus Writer at the Service Bus resource level 
+
+**IoT Hub needs write access** to these service endpoints for message routing to work.
+
+> &#128161;Pro-Tip: If you configure your endpoints through the Azure portal, the necessary permissions are added for you.
+
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
 Setup your **Trigger:**
-Depending on your setup, you'll probably want this trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so setting it to 20 minutes as illustrated below covers this scenario:
+Depending on your setup, you'll probably want this trigger twice as long as your sensors are set to deliver... in this example, my sensors are set to transmit data every 10 minutes, so defining the **Queue Name**, **Type**, and **Max Message Count** as illustrated below will cover our use case:
+
 
 ![](/assets/img/SoilSensor3/ReadApp1.png)
 
 <br/>
 
-Formatting your message **Bas64ToString(...)** works for our purposes...
+Formatting your message **Bas64ToString(...)** works for our purposes, so use the expression to decode the message from Base64 format:
+
+```sql
+base64ToString(triggerBody()?['ContentData'])
+```
+
 
 ![](/assets/img/SoilSensor3/ReadApp2.png)
 
 <br/>
 
+**Parse JSON** - Create a JSON object from the sample JSON data.
 Define your **"Temperature," "Moisture,"** and **"Hostname"** variable types...
 
 ![](/assets/img/SoilSensor3/ReadApp3.png)
@@ -77,6 +101,20 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 > &#128161; _This part is critical for leveraging multiple sensors, as it allows us to split out the readings per hostname from the service bus and get around the custom endpoint limitiation..._ &#128071; 
 
 ![](/assets/img/SoilSensor3/ReadApp4.png)
+
+<br/>
+
+Data is now flowing from our sensors across Azure IoT Hub through a Service Bus and Custom Enpoint, on to a Log Analytics Workspace via Logic App! &#128526;
+
+![](/assets/img/IoT%20Hub%202/BigPicture2.png)
+
+<br/>
+
+# Try it out! 
+
+Navigate to the **Logs** blade in your **Log Analytics Workspace** and run the following query to check on your peppers:
+
+![](/assets/img/SoilSensor3/multiple_sensors.png)
 
 <br/>
 
