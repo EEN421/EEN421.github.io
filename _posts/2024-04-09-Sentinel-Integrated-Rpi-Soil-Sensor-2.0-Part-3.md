@@ -111,18 +111,15 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 ![](/assets/img/SoilSensor3/ReadApp4.png)
 
 <br/>
+<br/>
 
 > &#128073; Note: I had to adjust the previous python code that runs on the sensor microcontroller so that it sends the hostname along with the sensor data, illustrated in the snippet screen grab below. You can find the updated code here (just swap out your secrets etc.) [SensorCode.py](EEN421/EEN421.github.io/assets/Code/iothub/SensorCode.py) 
 
-![](/assets/img/SoilSensor3/assets/img/SoilSensor3/sensor_code_hostname.png)
+![](/assets/img/SoilSensor3/sensor_code_hostname.png)
 
 <br/>
 
-Data is now flowing from our sensors across Azure IoT Hub through a Service Bus and Custom Enpoint, on to a Log Analytics Workspace via Logic App! &#128526;
 
-![](/assets/img/IoT%20Hub%202/BigPicture2.png)
-
-<br/>
 
 # Try it out! 
 
@@ -133,7 +130,16 @@ Kick off the Sensor.py script on your sensor, then navigate to the **Logs** blad
 <br/>
 
 
-> &#128161;Pro-Tip: If you want the script to keep running after closing out your terminal session (because who wants to stare at theterminal and burn that bandwidth right?), use the [nohup command](https://www.geeksforgeeks.org/nohup-command-in-linux-with-examples/)("NO Hang UP (NOHUP) Signal") to kick off you script.
+> &#128161;Pro-Tip: If you want the script to keep running after closing out your terminal session (because who wants to stare at theterminal and burn that bandwidth right?), use the [nohup command](https://www.geeksforgeeks.org/nohup-command-in-linux-with-examples/)("NO Hang UP (NOHUP) Signal") to kick off your script.
+
+
+<br/>
+
+Data is now flowing from our sensors across Azure IoT Hub through a Service Bus and Custom Enpoint, on to a Log Analytics Workspace via Logic App! &#128526;
+
+![](/assets/img/IoT%20Hub%202/BigPicture2.png)
+
+<br/>
 
 <br/>
 
@@ -202,6 +208,10 @@ Our thresholds are as follows for this sensor setup:
 ```
 
 <br/>
+
+<br/>
+
+# Conclusion:
 
 Thanks for reading! With this configuration, you can setup automated email alerts etc. so your crop never goes cold, too hot, or thirsty.
 
