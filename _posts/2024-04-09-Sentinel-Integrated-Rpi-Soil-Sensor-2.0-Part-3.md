@@ -194,7 +194,9 @@ Our thresholds are as follows for this sensor setup:
 
 <br/>
 
-Thanks for reading! With this configuration, you can setup automated email alerts etc. so your crop never goes cold, too hot, or thirsty. &#127793; &#127807; **What will you grow next?** &#127804;&#127803;
+Thanks for reading! With this configuration, you can setup automated email alerts etc. so your crop never goes cold, too hot, or thirsty.
+
+&#127793; &#127807; **What will you grow next?** &#127804;&#127803;
 
 <br/>
 
