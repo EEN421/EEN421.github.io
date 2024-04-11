@@ -1,16 +1,23 @@
 # Introduction & Use Case:
-This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/), then [sent that data to a Log Analytics Workspace](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/). While building a logic app for the above, I came across an conundrum that restricted the number of devices for whom I could forward logs to... - **the endpoint bottleneck** - and _solved for it_ with (you guessed it) a **logic app!**
 
-Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and **how to solve it**, as well as getting **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167;
+Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and **how to solve it**, as well as getting **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167; 
+
+While building a logic app for the above, I came across an conundrum that restricted the number of devices for whom I could forward logs to... - **the endpoint bottleneck** - and _solved for it_ with (you guessed it) a **logic app!**
+
+> &#128073; Note: This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/), then [sent that data to a Log Analytics Workspace](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/). 
+
 
 <br/>
 
 # In this Post We Will: 
 
-- &#128073; Build a custom **route** and **endpoint** for the Message Data &#128200;
-- &#128073; Build a Logic App to Parse Message Data for **multiple** devices &#128202;
+- &#128073; Identify the **Endpoint Bottleneck** &#127870;
+- &#128073; Build a custom **route** and **endpoint** for the Message Data &#128232; 
+- &#128073; Configure IoT Hub **Permissions** &#128272;
+- &#128073; Build a **Logic App** to Parse Message Data for **multiple** devices &#128202;
+- Get **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167; with another **Logic App** &#128200;
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
-- &#128073; Do something your friends can't (yet) &#128527;
+- &#128073; Do something your friends can't (_yet_) &#128527;
 
 <br/>
 
@@ -28,7 +35,7 @@ Typically, you would send data from a registered IoT device to IoTHub, which the
 See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) 
  for hardward setup...
 
-![](/assets/img/IoT Hub 2/BigPicture.jpg)
+![](/assets/img/IoT%20Hub%202/BigPicture.jpg)
 
  <br/>
 
@@ -53,9 +60,7 @@ Here's the configuration I used for my soil sensor setup...
 
 <br/>
 
-# Enable IoT Hub Identity
-
-Navigate to your IoT Hub settings, go to Identity, turn it on, and save the changes.
+<br/>
 
 # Permissions Configuration
 
@@ -67,6 +72,9 @@ Set permissions as follows:
 
 > &#128161;Pro-Tip: If you configure your endpoints through the Azure portal, the necessary permissions are added for you.
 
+<br/>
+
+<br/>
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
 
@@ -159,13 +167,11 @@ peppers
 ```
 ...illustrated below:
 
-<br/>
-
 ![](/assets/img/SoilSensor3/Recurrance4.png)
 
 <br/>
 
-
+# Sensor Thresholds:
 Our thresholds are as follows for this sensor setup:
 
 <br/>
@@ -188,13 +194,23 @@ Our thresholds are as follows for this sensor setup:
 
 <br/>
 
+Thanks for reading! With this configuration, you can setup automated email alerts etc. so your crop never goes cold, too hot, or thirsty. &#127793; &#127807; **What will you grow next?** &#127804;&#127803;
+
+<br/>
+
+<br/>
+
 # In this Post We: 
 
-- &#128073; Built a custom **route** and **endpoint** for the Message Data &#128200;
-- &#128073; Built a Logic App to Parse Message Data for **multiple** devices &#128202;
+- &#128073; Identified the **Endpoint Bottleneck** &#127870;
+- &#128073; Built a custom **route** and **endpoint** for the Message Data &#128232; 
+- &#128073; Configured IoT Hub **Permissions** &#128272;
+- &#128073; Built a **Logic App** to Parse Message Data for **multiple** devices &#128202;
+- &#128073; Configured **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167; with another **Logic App** &#128200;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
-- &#128073; Did something your friends can't (yet) &#128527;
+- &#128073; Did something your friends can't (_yet_) &#128527;
 
+<br/>
 
 <br/>
 
