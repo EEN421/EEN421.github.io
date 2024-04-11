@@ -28,7 +28,7 @@ Typically, you would send data from a registered IoT device to IoTHub, which the
 See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) 
  for hardward setup...
 
- ![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
+![](/assets/img/IoT Hub 2/BigPicture.jpg)
 
  <br/>
 
@@ -146,3 +146,8 @@ Our thresholds are as follows for this sensor setup:
 - &#128073; Built a Logic App to Parse Message Data for **multiple** devices &#128202;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
 - &#128073; Did something your friends can't (yet) &#128527;
+
+
+<br/>
+
+![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
