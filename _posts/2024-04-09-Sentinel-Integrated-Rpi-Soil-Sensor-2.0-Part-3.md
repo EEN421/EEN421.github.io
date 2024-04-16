@@ -330,6 +330,16 @@ This **action** checks the moisture condition for each **pepper**, and sendg an 
 
 ![](/assets/img/SoilSensor3/send_email_V2.png)
 
+<br/>
+<br/>
+
+**13. Re-iteratate for Temperature**
+Repeat steps 9 through 12, but for **Temperature** instead of **Moisture**
+
+<br/>
+<br/>
+
+
 # Sensor Thresholds:
 
 I'm growing a variety of peppers (jalapeno, sichuan, goat horn, etc.) so my thresholds are as follows for this sensor setup (you may want to adjust these based on the moisture requirements for what you're trying to grow. Tomatoes usually need more water than peppers in my experience):
@@ -354,7 +364,6 @@ I'm growing a variety of peppers (jalapeno, sichuan, goat horn, etc.) so my thre
 ```
 
 <br/>
-
 <br/>
 
 # Conclusion:
