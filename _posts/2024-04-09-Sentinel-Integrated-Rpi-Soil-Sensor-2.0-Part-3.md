@@ -1,11 +1,11 @@
 # Introduction & Use Case:
-Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and **how to solve it**, as well as getting **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167; 
+Today, we'll look at the **free tiered Azure IoT Hub**'s most significant limitation - the **custom endpoint** bottleneck - and **how to solve it**!
 
-While building a logic app for the above, I came across an conundrum that restricted the number of devices for whom I could forward logs to... - **the endpoint bottleneck** - and _solved for it_ with (you guessed it) a **logic app!**
+While building a logic app to automate alerting for my IoT devices (see [next article](https://www.hanley.cloud/2024-04-16-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-4/)), I came across a conundrum that restricted the number of devices for whom I could forward logs to... - **the endpoint bottleneck** I call it - and _solved for it_ with (you guessed it) another **logic app!**
 
 > &#128073; Note: This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/), then [sent that data to a Log Analytics Workspace](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/). 
 
-
+<br/>
 <br/>
 
 # In this Post We Will: 
@@ -14,9 +14,9 @@ While building a logic app for the above, I came across an conundrum that restri
 - &#128073; Build a custom **route** and **endpoint** for the Message Data &#128232; 
 - &#128073; Configure IoT Hub **Permissions** &#128272;
 - &#128073; Build a **Logic App** to Parse Message Data for **multiple** devices &#128202;
-- &#128073; Get **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 
+<br/>
 <br/>
 
 # The Endpoint Bottleneck:
@@ -28,6 +28,7 @@ Typically, you would send data from a registered IoT device to IoTHub, which the
  The difference here is that _instead of_ using a separate route and endpoint for **each** sensor's data stream coming across **Azure IoT Hub**, we're sending **everything** together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. Check it out! 
 
 <br/>
+<br/>
 
 # Hardware Setup:
 See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) 
@@ -36,6 +37,7 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
 ![](/assets/img/IoT%20Hub%202/BigPicture.jpg)
 
  <br/>
+ <br/>
 
 # Build a custom **route**
 
@@ -43,6 +45,7 @@ Create an **IoT route** to direct messages to the Service Bus queue, as illustra
 
 ![](/assets/img/SoilSensor3/route1.png)
 
+<br/>
 <br/>
 
 # Build a custom **endpoint**
@@ -57,7 +60,6 @@ Here's the configuration I used for my soil sensor setup...
 ![](/assets/img/SoilSensor3/endpoint3.png)
 
 <br/>
-
 <br/>
 
 # Permissions Configuration
@@ -71,7 +73,6 @@ Set permissions as follows:
 > &#128161;Pro-Tip: If you configure your endpoints through the Azure portal, the necessary permissions are added for you.
 
 <br/>
-
 <br/>
 
 # Build a Logic App to Parse Message Data for **multiple** devices:
@@ -116,8 +117,7 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 ![](/assets/img/SoilSensor3/sensor_code_hostname.png)
 
 <br/>
-
-
+<br/>
 
 # Try it out! 
 
@@ -138,9 +138,7 @@ Data is now flowing from our sensors across Azure IoT Hub through a Service Bus 
 ![](/assets/img/IoT%20Hub%202/BigPicture2.png)
 
 <br/>
-
 <br/>
-
 <br/>
 
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty &#128167;**
@@ -151,6 +149,8 @@ You'll want to follow this setup for a quick win:
 
 ![](/assets/img/SoilSensor3/Entire_Logic_App2.png)
 
+<br/>
+
 **1. Recurrence**
 
 The first **Action** in our **Logic App** dictates how often it should run. Here we can see it's configured to trigger every 4 hours.
@@ -159,7 +159,7 @@ The first **Action** in our **Logic App** dictates how often it should run. Here
 ![](/assets/img/SoilSensor3/Recurrence.png)
 
 <br/>
-
+<br/>
 
 **2. Run**
 
@@ -175,6 +175,7 @@ Retrieves a list of unique PepperName (hostname) values from a dataset named pep
 
 ![](/assets/img/SoilSensor3/Run1.png)
 
+<br/>
 <br/>
 
 **3. Parse** 
@@ -197,6 +198,8 @@ In simpler terms, this **schema** describes an **object** that contains an **arr
 
 ![](/assets/img/SoilSensor3/parse1.png)
 
+<br/>
+<br/>
 
 **4. Initialize**
 
@@ -214,6 +217,7 @@ In simpler terms, this step is preparing an empty list (or array) named **Pepper
 
 ![](/assets/img/SoilSensor3/Initialize1.png)
 
+<br/>
 <br/>
 
 **5. For Each Loop 1 - Extract**
@@ -373,7 +377,6 @@ Thanks for reading! With this configuration, you can securely leverage the free 
 &#127793; &#127807; **What will you grow next?** &#127804;&#127803;
 
 <br/>
-
 <br/>
 
 # In this Post We: 
@@ -382,7 +385,6 @@ Thanks for reading! With this configuration, you can securely leverage the free 
 - &#128073; Built a custom **route** and **endpoint** for the Message Data &#128232; 
 - &#128073; Configured IoT Hub **Permissions** &#128272;
 - &#128073; Built a **Logic App** to Parse Message Data for **multiple** devices &#128202;
-- &#128073; Configured **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
 
 <br/>
@@ -392,7 +394,6 @@ Thanks for reading! With this configuration, you can securely leverage the free 
 - We'll build some automation (playbooks &#128210;) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts &#9888; for when my plants are too hot &#128293;, too cold &#10052;, or too thirsty &#128167;.
 
 <br/>
-
 <br/>
 
 ![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
