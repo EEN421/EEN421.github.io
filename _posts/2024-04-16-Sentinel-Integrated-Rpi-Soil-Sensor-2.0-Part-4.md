@@ -8,7 +8,7 @@ Today, We'll build some automation (playbooks &#128210;) to swiftly address inci
 
 # In this Post We Will: 
 
-- &#128073; Build a **Logic App** to **automate email alerting** based on **sensor readings**
+- &#128073; Build a **Logic App** to **automate email alerting** based on **sensor readings** &#128200;
 - &#128073; Get **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 
@@ -31,6 +31,9 @@ See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-
 You'll want to follow this setup for a quick win:
 
 ![](/assets/img/SoilSensor3/Entire_Logic_App2.png)
+
+<br/>
+<br/>
 
 # 1. Recurrence
 
@@ -109,7 +112,7 @@ High-level summary of what this next step does:
 
 - This Foreach loop is set to run after the previous **Initialize** step has succeeded.
 
-In simpler terms, this step is iterating over the results of a parsed JSON, extracting the PepperName from each item, and appending these names to an array named PeppersOutOfCondition. This happens after the PeppersOutOfCondition variable has been initialized. 
+This step is iterating over the results of a parsed JSON, extracting the **PepperName** from each item, and appending these names to an array named **PeppersOutOfCondition**. This happens after the **PeppersOutOfCondition** variable has been initialized. 
 
 ![](/assets/img/SoilSensor3/ForEach2.png)
 ![](/assets/img/SoilSensor3/ForEach1.png)
@@ -125,7 +128,7 @@ The action here is of type **AppendToArrayVariable**, which means it appends a v
 
 - The value being appended to the **PeppersOutOfCondition** array is the **PepperName** from each item in the **Foreach loop** in the previous step. 
 
-In simpler terms, this action is adding the name of each pepper that meets certain conditions (extracted in a previous step) to the **PeppersOutOfCondition** array. Thus, this array will contain a list of all peppers that are outside of the specified moisture and temperature conditions.
+This action adds the name of each pepper that meets certain conditions (extracted in a previous step) to the **PeppersOutOfCondition** array. Thus, this array will contain a list of all peppers that are outside of the specified moisture and temperature conditions.
 
 >_&#128073; This is how we can get more than one sensor transmitting across the same service bus and endpoint, and then "peel" them back out by hostname and throw them into an array to continue working with._
 
@@ -169,7 +172,7 @@ This third **Foreach loop** iterates over the **value array** from the result of
 <br/>
 <br/>
 
-# 10. Parse Pepper KQL Results
+# 10. Parse KQL Results
 
 - The action is of type **ParseJson**, which means it’s parsing a **JSON string** into a **JSON object**.
 
@@ -263,7 +266,7 @@ Thanks for reading! With this configuration illustrated across the past few blog
 
 # In this Post We: 
 
-- &#128073; Built a **Logic App** to **automate email alerting** based on **sensor readings**
+- &#128073; Built a **Logic App** to **automate email alerting** based on **sensor readings** &#128200;
 - &#128073; Got **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
 
