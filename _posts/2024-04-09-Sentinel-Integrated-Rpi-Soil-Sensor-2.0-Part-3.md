@@ -123,7 +123,7 @@ Name the **Log table** and Send the Data (include the hostname; in this case it'
 
 # Try it out! 
 
-Kick off the Sensor.py script on your sensor, then navigate to the **Logs** blade in your **Log Analytics Workspace** and run the following query to check on your peppers:
+Kick off the Sensor.py script on your sensors, then navigate to the **Logs** blade in your **Log Analytics Workspace** and run the following query to check on your peppers:
 
 ![](/assets/img/SoilSensor3/multiple_sensors.png)
 
