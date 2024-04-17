@@ -385,6 +385,11 @@ Thanks for reading! With this configuration, you can securely leverage the free 
 - &#128073; Configured **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
 
+<br/>
+<br/>
+
+# Next Time: 
+- We'll build some automation (playbooks &#128210;) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts &#9888; for when my plants are too hot &#128293;, too cold &#10052;, or too thirsty &#128167;.
 
 <br/>
 
