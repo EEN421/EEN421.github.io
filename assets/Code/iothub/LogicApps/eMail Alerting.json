@@ -1,0 +1,520 @@
+{
+    "$schema":  "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":  "1.0.0.0",
+    "parameters":  {
+        "PlaybookName":  {
+            "defaultValue":  "PepperNotification",
+            "type":  "string"
+        },
+        "MoistureGreaterThan":  {
+            "type":  "Int",
+            "metadata":  {
+                "description":  "Enter value for MoistureGreaterThan"
+            }
+        },
+        "MoistureLessThan":  {
+            "type":  "Int",
+            "metadata":  {
+                "description":  "Enter value for MoistureLessThan"
+            }
+        },
+        "TempGreaterThan":  {
+            "type":  "Int",
+            "metadata":  {
+                "description":  "Enter value for TempGreaterThan"
+            }
+        },
+        "TempLessThan":  {
+            "type":  "Int",
+            "metadata":  {
+                "description":  "Enter value for TempLessThan"
+            }
+        },
+        "email":  {
+            "type":  "String",
+            "metadata":  {
+                "description":  "Enter value for email"
+            }
+        }
+    },
+    "variables":  {
+        "AzuremonitorlogsConnectionName":  "[concat('Azuremonitorlogs-', parameters('PlaybookName'))]",
+        "Office365ConnectionName":  "[concat('Office365-', parameters('PlaybookName'))]"
+    },
+    "resources":  [
+        {
+            "properties":  {
+                "provisioningState":  "Succeeded",
+                "state":  "Enabled",
+                "definition":  {
+                    "$schema":  "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion":  "1.0.0.0",
+                    "parameters":  {
+                        "$connections":  {
+                            "defaultValue":  {
+                            },
+                            "type":  "Object"
+                        },
+                        "MoistureGreaterThan":  {
+                            "defaultValue":  "[parameters('MoistureGreaterThan')]",
+                            "type":  "Int"
+                        },
+                        "MoistureLessThan":  {
+                            "defaultValue":  "[parameters('MoistureLessThan')]",
+                            "type":  "Int"
+                        },
+                        "TempGreaterThan":  {
+                            "defaultValue":  "[parameters('TempGreaterThan')]",
+                            "type":  "Int"
+                        },
+                        "TempLessThan":  {
+                            "defaultValue":  "[parameters('TempLessThan')]",
+                            "type":  "Int"
+                        },
+                        "email":  {
+                            "defaultValue":  "[parameters('email')]",
+                            "type":  "String"
+                        }
+                    },
+                    "triggers":  {
+                        "Recurrence":  {
+                            "recurrence":  {
+                                "frequency":  "Hour",
+                                "interval":  4
+                            },
+                            "evaluatedRecurrence":  {
+                                "frequency":  "Hour",
+                                "interval":  4
+                            },
+                            "type":  "Recurrence"
+                        }
+                    },
+                    "actions":  {
+                        "For_each_-_Extract_Pepper_Names_Out_Of_Condition":  {
+                            "foreach":  "@body('Parse_JSON_-_Parse_Pepper_KQL_Results')?['value']",
+                            "actions":  {
+                                "Append_to_array_variable_-_PepperNames":  {
+                                    "type":  "AppendToArrayVariable",
+                                    "inputs":  {
+                                        "name":  "PeppersOutOfCondition",
+                                        "value":  "@items('For_each_-_Extract_Pepper_Names_Out_Of_Condition')?['PepperName']"
+                                    }
+                                }
+                            },
+                            "runAfter":  {
+                                "Initialize_variable_-_PeppersOutOfCondition":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "Foreach"
+                        },
+                        "For_each_-_Filtered_KQL_Result":  {
+                            "foreach":  "@variables('PeppersOutOfCondition')",
+                            "actions":  {
+                                "For_each_-_KQL_Results_Check_Moisture_Conditions":  {
+                                    "foreach":  "@body('Run_query_and_list_results_-_For_Each_Pepper')?['value']",
+                                    "actions":  {
+                                        "Condition_-_Moisture_Condition":  {
+                                            "actions":  {
+                                                "Send_an_email_(V2)_-_High_Moisture":  {
+                                                    "type":  "ApiConnection",
+                                                    "inputs":  {
+                                                        "host":  {
+                                                            "connection":  {
+                                                                "name":  "@parameters('$connections')['office365']['connectionId']"
+                                                            }
+                                                        },
+                                                        "method":  "post",
+                                                        "body":  {
+                                                            "To":  "@parameters('email')",
+                                                            "Subject":  "@{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['PepperName']} - HIGH Moisture",
+                                                            "Body":  "\u003cp\u003eSoil moisture readings for @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['PepperName']} are high at approximately @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['Moisture']}. Please Investigate.\u003c/p\u003e",
+                                                            "Importance":  "Low"
+                                                        },
+                                                        "path":  "/v2/Mail"
+                                                    }
+                                                }
+                                            },
+                                            "runAfter":  {
+                                                "Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name":  [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "else":  {
+                                                "actions":  {
+                                                    "Condition_-_Moisture_Less_Than":  {
+                                                        "actions":  {
+                                                            "Send_an_email_(V2)_-_Low_Moisture":  {
+                                                                "type":  "ApiConnection",
+                                                                "inputs":  {
+                                                                    "host":  {
+                                                                        "connection":  {
+                                                                            "name":  "@parameters('$connections')['office365']['connectionId']"
+                                                                        }
+                                                                    },
+                                                                    "method":  "post",
+                                                                    "body":  {
+                                                                        "To":  "@parameters('email')",
+                                                                        "Subject":  "@{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['PepperName']} - LOW Moisture",
+                                                                        "Body":  "\u003cp\u003eSoil moisture readings for @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['PepperName']} are low at approximately @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['Moisture']}. Please Investigate.\u003c/p\u003e",
+                                                                        "Importance":  "High"
+                                                                    },
+                                                                    "path":  "/v2/Mail"
+                                                                }
+                                                            }
+                                                        },
+                                                        "else":  {
+                                                            "actions":  {
+                                                            }
+                                                        },
+                                                        "expression":  {
+                                                            "and":  [
+                                                                {
+                                                                    "less":  [
+                                                                        "@int(body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['Moisture'])",
+                                                                        "@parameters('MoistureLessThan')"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        "type":  "If"
+                                                    }
+                                                }
+                                            },
+                                            "expression":  {
+                                                "and":  [
+                                                    {
+                                                        "greater":  [
+                                                            "@int(body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name')?['Moisture'])",
+                                                            "@parameters('MoistureGreaterThan')"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "type":  "If"
+                                        },
+                                        "Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name":  {
+                                            "type":  "ParseJson",
+                                            "inputs":  {
+                                                "content":  "@items('For_each_-_KQL_Results_Check_Moisture_Conditions')",
+                                                "schema":  {
+                                                    "properties":  {
+                                                        "IngestionTime":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "Moisture":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "MoisturePercentageEstimate":  {
+                                                            "type":  "number"
+                                                        },
+                                                        "PepperName":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "Temperature":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "TimeGenerated":  {
+                                                            "type":  "string"
+                                                        }
+                                                    },
+                                                    "type":  "object"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "runAfter":  {
+                                        "Run_query_and_list_results_-_For_Each_Pepper":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "Foreach"
+                                },
+                                "For_each_-_KQL_Results_Check_Temp_Conditions":  {
+                                    "foreach":  "@body('Run_query_and_list_results_-_For_Each_Pepper')?['value']",
+                                    "actions":  {
+                                        "Condition_-_Temp_Condition":  {
+                                            "actions":  {
+                                                "Send_an_email_(V2)_-_High_Temperature":  {
+                                                    "type":  "ApiConnection",
+                                                    "inputs":  {
+                                                        "host":  {
+                                                            "connection":  {
+                                                                "name":  "@parameters('$connections')['office365']['connectionId']"
+                                                            }
+                                                        },
+                                                        "method":  "post",
+                                                        "body":  {
+                                                            "To":  "@parameters('email')",
+                                                            "Subject":  "@{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['PepperName']} HIGH Temperature",
+                                                            "Body":  "\u003cp\u003eSoil temperature readings for @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['PepperName']} are high at approximately @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['Temperature']}. Please Investigate.\u003c/p\u003e",
+                                                            "Importance":  "Normal"
+                                                        },
+                                                        "path":  "/v2/Mail"
+                                                    }
+                                                }
+                                            },
+                                            "runAfter":  {
+                                                "Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp":  [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "else":  {
+                                                "actions":  {
+                                                    "Condition_-_Temp_Less_Than":  {
+                                                        "actions":  {
+                                                            "Send_an_email_(V2)_-_Low_Temperature":  {
+                                                                "type":  "ApiConnection",
+                                                                "inputs":  {
+                                                                    "host":  {
+                                                                        "connection":  {
+                                                                            "name":  "@parameters('$connections')['office365']['connectionId']"
+                                                                        }
+                                                                    },
+                                                                    "method":  "post",
+                                                                    "body":  {
+                                                                        "To":  "@parameters('email')",
+                                                                        "Subject":  "@{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['PepperName']} LOW Temperature",
+                                                                        "Body":  "\u003cp\u003eSoil temperature readings for @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['PepperName']} are low at approximately @{body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['Temperature']}. Please Investigate.\u003c/p\u003e",
+                                                                        "Importance":  "High"
+                                                                    },
+                                                                    "path":  "/v2/Mail"
+                                                                }
+                                                            }
+                                                        },
+                                                        "else":  {
+                                                            "actions":  {
+                                                            }
+                                                        },
+                                                        "expression":  {
+                                                            "and":  [
+                                                                {
+                                                                    "less":  [
+                                                                        "@body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['Temperature']",
+                                                                        "@string(body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['Temperature'])"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        "type":  "If"
+                                                    }
+                                                }
+                                            },
+                                            "expression":  {
+                                                "and":  [
+                                                    {
+                                                        "greater":  [
+                                                            "@body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['Temperature']",
+                                                            "@string(body('Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp')?['Temperature'])"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "type":  "If"
+                                        },
+                                        "Parse_JSON_-_Parse_Pepper_KQL_Results_Per_Pepper_Name_-_Temp":  {
+                                            "type":  "ParseJson",
+                                            "inputs":  {
+                                                "content":  "@items('For_each_-_KQL_Results_Check_Temp_Conditions')",
+                                                "schema":  {
+                                                    "properties":  {
+                                                        "IngestionTime":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "Moisture":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "MoisturePercentageEstimate":  {
+                                                            "type":  "number"
+                                                        },
+                                                        "PepperName":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "Temperature":  {
+                                                            "type":  "string"
+                                                        },
+                                                        "TimeGenerated":  {
+                                                            "type":  "string"
+                                                        }
+                                                    },
+                                                    "type":  "object"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "runAfter":  {
+                                        "Run_query_and_list_results_-_For_Each_Pepper":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "Foreach"
+                                },
+                                "Run_query_and_list_results_-_For_Each_Pepper":  {
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['azuremonitorlogs']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "body":  "peppers\n| where PepperName == \"@{items('For_each_-_Filtered_KQL_Result')}\"\n| where (todecimal(Moisture) \u003e @{parameters('MoistureGreaterThan')} or todecimal(Moisture) \u003c @{parameters('MoistureLessThan')}) or (todecimal(Temperature)  \u003e @{parameters('TempGreaterThan')} or  todecimal(Temperature) \u003c @{parameters('TempLessThan')})\n| top 1 by PepperName",
+                                        "path":  "/queryData",
+                                        "queries":  {
+                                            "subscriptions":  "9057381f-d8be-4520-a0ed-1875d70fd4a3",
+                                            "resourcegroups":  "IoT",
+                                            "resourcetype":  "Log Analytics Workspace",
+                                            "resourcename":  "Peppers",
+                                            "timerange":  "Last 24 Hours"
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter":  {
+                                "For_each_-_Extract_Pepper_Names_Out_Of_Condition":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "Foreach"
+                        },
+                        "Initialize_variable_-_PeppersOutOfCondition":  {
+                            "runAfter":  {
+                                "Parse_JSON_-_Parse_Pepper_KQL_Results":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "PeppersOutOfCondition",
+                                        "type":  "array"
+                                    }
+                                ]
+                            }
+                        },
+                        "Parse_JSON_-_Parse_Pepper_KQL_Results":  {
+                            "runAfter":  {
+                                "Run_query_and_list_results_-_Get_Pepper_Data_For_Last_10_Minutes":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ParseJson",
+                            "inputs":  {
+                                "content":  "@body('Run_query_and_list_results_-_Get_Pepper_Data_For_Last_10_Minutes')",
+                                "schema":  {
+                                    "properties":  {
+                                        "value":  {
+                                            "items":  {
+                                                "properties":  {
+                                                    "PepperName":  {
+                                                        "type":  "string"
+                                                    }
+                                                },
+                                                "required":  [
+                                                    "PepperName"
+                                                ],
+                                                "type":  "object"
+                                            },
+                                            "type":  "array"
+                                        }
+                                    },
+                                    "type":  "object"
+                                }
+                            }
+                        },
+                        "Run_query_and_list_results_-_Get_Pepper_Data_For_Last_10_Minutes":  {
+                            "runAfter":  {
+                            },
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['azuremonitorlogs']['connectionId']"
+                                    }
+                                },
+                                "method":  "post",
+                                "body":  "peppers\n| where (todecimal(Moisture) \u003e @{parameters('MoistureGreaterThan')} or todecimal(Moisture) \u003c @{parameters('MoistureLessThan')}) or (todecimal(Temperature)  \u003e @{parameters('TempGreaterThan')} or  todecimal(Temperature) \u003c @{parameters('TempLessThan')})\n| distinct PepperName",
+                                "path":  "/queryData",
+                                "queries":  {
+                                    "subscriptions":  "9057381f-d8be-4520-a0ed-1875d70fd4a3",
+                                    "resourcegroups":  "IoT",
+                                    "resourcetype":  "Log Analytics Workspace",
+                                    "resourcename":  "Peppers",
+                                    "timerange":  "Last 24 hours"
+                                }
+                            }
+                        }
+                    },
+                    "outputs":  {
+                    }
+                },
+                "parameters":  {
+                    "$connections":  {
+                        "value":  {
+                            "azuremonitorlogs":  {
+                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('AzuremonitorlogsConnectionName'))]",
+                                "connectionName":  "[variables('AzuremonitorlogsConnectionName')]",
+                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Azuremonitorlogs')]",
+                                "connectionProperties":  {
+                                    "authentication":  {
+                                        "type":  "ManagedServiceIdentity"
+                                    }
+                                }
+                            },
+                            "office365":  {
+                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('Office365ConnectionName'))]",
+                                "connectionName":  "[variables('Office365ConnectionName')]",
+                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Office365')]"
+                            }
+                        }
+                    }
+                }
+            },
+            "name":  "[parameters('PlaybookName')]",
+            "type":  "Microsoft.Logic/workflows",
+            "location":  "[resourceGroup().location]",
+            "tags":  {
+            },
+            "identity":  {
+                "type":  "SystemAssigned"
+            },
+            "apiVersion":  "2017-07-01",
+            "dependsOn":  [
+                "[resourceId('Microsoft.Web/connections', variables('AzuremonitorlogsConnectionName'))]",
+                "[resourceId('Microsoft.Web/connections', variables('Office365ConnectionName'))]"
+            ]
+        },
+        {
+            "type":  "Microsoft.Web/connections",
+            "apiVersion":  "2016-06-01",
+            "name":  "[variables('AzuremonitorlogsConnectionName')]",
+            "location":  "[resourceGroup().location]",
+            "kind":  "V1",
+            "properties":  {
+                "displayName":  "[variables('AzuremonitorlogsConnectionName')]",
+                "customParameterValues":  {
+                },
+                "parameterValueType":  "Alternative",
+                "api":  {
+                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Azuremonitorlogs')]"
+                }
+            }
+        },
+        {
+            "type":  "Microsoft.Web/connections",
+            "apiVersion":  "2016-06-01",
+            "name":  "[variables('Office365ConnectionName')]",
+            "location":  "[resourceGroup().location]",
+            "kind":  "V1",
+            "properties":  {
+                "displayName":  "[variables('Office365ConnectionName')]",
+                "customParameterValues":  {
+                },
+                "api":  {
+                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Office365')]"
+                }
+            }
+        }
+    ]
+}
