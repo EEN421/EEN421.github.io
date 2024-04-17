@@ -254,18 +254,17 @@ I'm growing a variety of peppers (jalapeno, sichuan, goat horn, etc.) so my thre
 
 # Conclusion:
 
-Thanks for reading! With this configuration, you can securely leverage the free Azure IoTHub to setup automated email alerts from multiple sensors simultaneously (bypassing the single service endpoint bottleneck) so your crop never goes cold, too hot, or thirsty, without breaking the bank.
+Thanks for reading! With this configuration illustrated across the past few blog posts, you can now securely leverage the free Azure IoTHub to setup automated email alerting for multiple sensors _simultaneously_ (bypassing the single service endpoint bottleneck) so your crop never goes cold &#10052;, too hot &#128293;, or thirsty  &#128167;, _without_ breaking the bank! &#128176;
 
 &#127793; &#127807; **What will you grow next?** &#127804;&#127803;
 
 <br/>
-
 <br/>
 
 # In this Post We: 
 
 - &#128073; Built a **Logic App** to **automate email alerting** based on **sensor readings**
-- &#128073; Got **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
+- &#128073; Got **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty** &#128167;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
 
 <br/>
