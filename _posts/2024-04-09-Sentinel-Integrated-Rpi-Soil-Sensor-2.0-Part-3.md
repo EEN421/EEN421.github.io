@@ -143,7 +143,9 @@ Data is now flowing from our sensors across Azure IoT Hub through a Service Bus 
 
 # Conclusion:
 
-Thanks for reading! With this configuration, you can securely leverage the free Azure IoTHub to setup automated email alerts from multiple sensors simultaneously (bypassing the single service endpoint bottleneck) so your crop never goes cold, too hot, or thirsty, without breaking the bank.
+Thanks for reading! With this configuration, you can securely leverage the free Azure IoTHub for multiple sensors simultaneously (bypassing the single service endpoint bottleneck) without breaking the bank!
+
+<br/>
 
 &#127793; &#127807; **What will you grow next?** &#127804;&#127803;
 
