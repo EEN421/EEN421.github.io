@@ -236,10 +236,10 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 
 # In this Post We: 
 
-- &#10003; built an Azure Service Bus & Service Bus Queue to receive message (sensor) data from our IoT Hub &#8596;
-- &#10003;  built a Log Analytics Workspace as the final destination for our Soil Sensor message data &#128202;
-- &#10003;  built a Logic App to parse the message data and forward the contents to our Log Analytics Workspace. &#128232;
-- &#10003;  Accomplished something **AWESOME** today! &#128526;
+- &#128073; Created an Azure Service Bus & Service Bus Queue &#128233;
+- &#128073; Setup an Azure Log Analytics Workspace &#128202;
+- &#128073; Built a Logic App to Parse and send the Message Data &#128232;
+- &#128073; Accomplished something AWESOME today! &#128526;
 
 <br/><br/>
 
@@ -248,8 +248,15 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 <br/><br/>
 
 # Next Time: 
-- We'll build some automation (playbooks &#128210;) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts &#9888; for when my plants are too hot &#128293;, too cold &#10052;, or too thirsty &#128167;.
 
+**TODAY** we've managed to get **_just one_ IoT device registered** and transmitting it's sensor data across a **service bus** and **custom endpoint** to a **Log Analytics Workspace**. 
+
+**NEXT TIME**  we’ll look at the **free tiered Azure IoT Hub’s _most significant limitation_** - the **custom endpoint _bottleneck_** - and **how to solve it** with a well constructed **logic app** so that we can scale this up and get readings for more peppers.
+
+> &#128073; This **_circumvents the restrictions on the free tiered Azure IoTHub_**, allowing you to _transmitt data from **multiple IoT devices simultaneously without upgrading your subscription**_ &#128526; 
+
+
+<br/>
 <br/>
 
 ![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
