@@ -1,8 +1,9 @@
-#Introduction & Use Case:
+# Introduction & Use Case:
 Today, We'll build some automation (playbooks &#128210;) to swiftly address incidents when logged data values breach predefined thresholds. In this case, I'd like automated alerts &#9888; for when my plants are too hot &#128293;, too cold &#10052;, or too thirsty &#128167;.
 
 > &#128073; Note: This follows up on a previous post where we [built a Raspberry Pi based soil sensor and onboarded it to Azure IoT Hub](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/), then [sent that data to a Log Analytics Workspace](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/). 
 
+<br/>
 <br/>
 
 # In this Post We Will: 
@@ -12,6 +13,16 @@ Today, We'll build some automation (playbooks &#128210;) to swiftly address inci
 - &#128073; Make the **most** of the **free IoT Hub** tier &#128170;
 
 <br/>
+<br/>
+
+# Hardware Setup:
+See [previous post](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) 
+ for hardward setup...
+
+![](/assets/img/IoT%20Hub%202/BigPicture.jpg)
+
+ <br/>
+ <br/>
 
 # Get **alerts** for when our plants are **too hot &#128293;, too cold &#10052;, or too thirsty &#128167;**
 
@@ -21,7 +32,7 @@ You'll want to follow this setup for a quick win:
 
 ![](/assets/img/SoilSensor3/Entire_Logic_App2.png)
 
-**1. Recurrence**
+# 1. Recurrence
 
 The first **Action** in our **Logic App** dictates how often it should run. Here we can see it's configured to trigger every 4 hours.
 
@@ -29,9 +40,9 @@ The first **Action** in our **Logic App** dictates how often it should run. Here
 ![](/assets/img/SoilSensor3/Recurrence.png)
 
 <br/>
+<br/>
 
-
-**2. Run**
+# 2. Run
 
 Retrieves a list of unique PepperName (hostname) values from a dataset named peppers that meet certain moisture and temperature conditions. Here’s a high-level breakdown of what it does:
 
@@ -46,8 +57,9 @@ Retrieves a list of unique PepperName (hostname) values from a dataset named pep
 ![](/assets/img/SoilSensor3/Run1.png)
 
 <br/>
+<br/>
 
-**3. Parse** 
+# 3. Parse
 
 Here’s a high-level summary:
 
@@ -67,8 +79,10 @@ In simpler terms, this **schema** describes an **object** that contains an **arr
 
 ![](/assets/img/SoilSensor3/parse1.png)
 
+<br/>
+<br/>
 
-**4. Initialize**
+# 4. Initialize
 
 high-level summary of what this step does:
 
@@ -85,8 +99,9 @@ In simpler terms, this step is preparing an empty list (or array) named **Pepper
 ![](/assets/img/SoilSensor3/Initialize1.png)
 
 <br/>
+<br/>
 
-**5. For Each Loop 1 - Extract**
+# 5. For Each Loop 1 - Extract
 
 High-level summary of what this next step does:
 
@@ -102,7 +117,7 @@ In simpler terms, this step is iterating over the results of a parsed JSON, extr
 <br/>
 <br/> 
 
-**6. Append Results to an Array**
+# 6. Append Results to an Array
 
 The action here is of type **AppendToArrayVariable**, which means it appends a value to an **existing array variable** that was **initialized** in a previous step in the workflow (step 4).
 
@@ -120,7 +135,7 @@ In simpler terms, this action is adding the name of each pepper that meets certa
 <br/>
 <br/>
 
-**7. Foreach Loop 2 - Filter**
+# 7. Foreach Loop 2 - Filter
 
 This **Foreach loop** applies to or iterates over the **value array** from the results of the previous step:
 
@@ -129,7 +144,7 @@ This **Foreach loop** applies to or iterates over the **value array** from the r
 <br/>
 <br/>
 
-**8. Run Query**
+# 8. Run Query
 
 This **Action** starts by looking at the **peppers dataset**.
 It then filters the data to only include records where the **PepperName** matches a specific value using a KQL query.
@@ -145,7 +160,7 @@ Finally, it selects the **top 1** record from the remaining data, ordered by **P
 <br/>
 <br/>
 
-**9. Foreach Loop 3 - Check Conditions with KQL**
+# 9. Foreach Loop 3 - Check Conditions with KQL
 
 This third **Foreach loop** iterates over the **value array** from the result of the previous **Run** step.
 
@@ -154,7 +169,7 @@ This third **Foreach loop** iterates over the **value array** from the result of
 <br/>
 <br/>
 
-**10. Parse Pepper KQL Results**
+# 10. Parse Pepper KQL Results
 
 - The action is of type **ParseJson**, which means it’s parsing a **JSON string** into a **JSON object**.
 
@@ -171,7 +186,7 @@ In simpler terms, this action is taking a **JSON string** from a previous step i
 <br/>
 <br/>
 
-**11. Check Moisture Condition**
+# 11. Check Moisture Condition
 
 The **If** action checks a **condition** based on the **Moisture value** from the parsed **JSON result** of each **pepper**.
 
@@ -184,7 +199,7 @@ If the **Moisture** is **less than** the threshold (**False**) then trigger the 
 <br/>
 <br/>
 
-**12. Send Email Action**
+# 12. Send Email Action
 
 This **action** checks the moisture condition for each **pepper**, and sendg an email alert if the moisture is too high or too low:
 
@@ -203,7 +218,8 @@ This **action** checks the moisture condition for each **pepper**, and sendg an 
 <br/>
 <br/>
 
-**13. Re-iteratate for Temperature**
+# 13. Re-iteratate for Temperature
+
 Repeat steps 9 through 12, but for **Temperature** instead of **Moisture**
 
 <br/>
@@ -248,16 +264,11 @@ Thanks for reading! With this configuration, you can securely leverage the free 
 
 # In this Post We: 
 
-- &#128073; Identified the **Endpoint Bottleneck** &#127870;
-- &#128073; Built a custom **route** and **endpoint** for the Message Data &#128232; 
-- &#128073; Configured IoT Hub **Permissions** &#128272;
-- &#128073; Built a **Logic App** to Parse Message Data for **multiple** devices &#128202;
-- &#128073; Configured **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
+- &#128073; Built a **Logic App** to **automate email alerting** based on **sensor readings**
+- &#128073; Got **alerts for when our plants are too hot &#128293;, too cold &#10052;, or too thirsty**  &#128167;
 - &#128073; Made the **most** of the **free IoT Hub** tier &#128170;
 
-
 <br/>
-
 <br/>
 
 ![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
