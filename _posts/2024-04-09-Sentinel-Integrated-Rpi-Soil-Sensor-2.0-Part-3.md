@@ -23,9 +23,11 @@ While building a logic app to automate alerting for my IoT devices (see [next ar
 
 Sure, the Azure **free** IoT Hub allows for up to **500 registered IoT devices**, but you need a **custom route** and **endpoint** in order to transmit that data across a **service bus** to a **workspace**... _I know, tricky stuff..._
 
-Typically, you would send data from a registered IoT device to IoTHub, which then sends the data across a service bus to a custom endpoint (one per IoT device) in order to finally get that data into a Log Analytics Workspace. You can register up to 500 IoT Devices in the free IoTHub, but you can only have 1 custom endpoint until you upgrade to a paid tier. If we think of this like a simple closed circuit, we're essentially sending _all the sensor data **simultaneously**, across the **same route**, using the **same endpoint**_ to circumvent this issue. 
+Typically, you would send data from a registered IoT device to IoTHub, which then sends the data across a service bus to a custom endpoint (one per IoT device) in order to finally get that data into a Log Analytics Workspace. You can register up to 500 IoT Devices in the free IoTHub, but you can only have 1 custom endpoint until you upgrade to a paid tier.
 
- The difference here is that _instead of_ using a separate route and endpoint for **each** sensor's data stream coming across **Azure IoT Hub**, we're sending **everything** together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. Check it out! 
+If we think of this like a simple closed circuit, we can solve for this by sending _all the sensor data **simultaneously**, across the **same route**, using the **same endpoint**_ and circumvent this issue. 
+
+What we're essentially doing here is... _instead of_ using a separate route and endpoint for **each** sensor's data stream coming across **Azure IoT Hub**, we're sending **everything** together all at once and using a simple logic app at the end like a [multiplexor (MUXer)](https://en.wikipedia.org/wiki/Multiplexer) in order to split the data back out _per device_ when it hits the _workspace_. Check it out! 
 
 <br/>
 <br/>
