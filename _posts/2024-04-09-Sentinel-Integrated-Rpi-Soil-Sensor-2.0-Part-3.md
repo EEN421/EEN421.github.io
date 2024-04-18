@@ -130,7 +130,7 @@ Kick off the Sensor.py script on your sensors, then navigate to the **Logs** bla
 <br/>
 
 
-> &#128161;Pro-Tip: If you want the script to keep running after closing out your terminal session (because who wants to stare at theterminal and burn that bandwidth right?), use the [nohup command](https://www.geeksforgeeks.org/nohup-command-in-linux-with-examples/)("NO Hang UP (NOHUP) Signal") to kick off your script.
+> &#128161;Pro-Tip: If you want the script to keep running after closing out your terminal session (because who wants to stare at the terminal and burn that bandwidth right?), use the [nohup command](https://www.geeksforgeeks.org/nohup-command-in-linux-with-examples/) ("NO Hang UP (NOHUP) Signal") to kick off your script.
 
 
 <br/>
