@@ -57,6 +57,8 @@ It also retrieves the distinguished name for Deleted Objects and makes the curre
 
 For smaller, simpler setups (a handful of DC's), I wrote a PowerShell script is designed to facilitate simple deployments on a single domain by creating a Group Managed Service Account (gMSA) and granting it the necessary read privileges for use as a Directory Service Account (DSA) in Microsoft Defender for Identity. **This script is particularly useful for automating the setup of a gMSA for use as a DSA for smaller MDI deployments:**
 
+<br/>
+
 ```powershell 
 
 # Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley
@@ -94,6 +96,8 @@ dsacls.exe "$deletedObjectsDN" /G "$domain\$gmsaAccountName:LCRP"
 <br/>
 
 The other, more advanced and scalable script is designed to facilitate custom setups for advanced, multi-domain environments in the context of Microsoft Defender for Identity (MDI). It allows the user to specify a HostGroup and the domain controllers with the MDI sensor installed, and prompts the user for the domain, a name for the group of domain controllers, and a name for the Group Managed Service Account (gMSA). It then prompts the user for the principals (domain controllers with the MDI sensor installed) allowed to retrieve the password/use the gMSA on behalf of MDI to gain additional insights. After importing the required Active Directory module, the script creates a new group, adds the specified members to it, and then creates a new gMSA associated with it. **This is particularly useful for automating the setup of Directory Service Accounts (DSAs) in MDI deployments across multiple domains:**
+
+<br/>
 
 ```powershell
 
@@ -133,7 +137,7 @@ New-ADServiceAccount -Name $DSA_AccountName -DNSHostName "$DSA_AccountName.$doma
 
 # Compare & Contrast - Why are there 2 Scripts Anyway? 
 
-The second script is more scalable than the first one because it is designed for more advanced, multi-domain environments. It allows the user to specify a HostGroup and the domain controllers with the Microsoft Defender for Identity (MDI) sensor installed. This flexibility makes it more adaptable to larger, more complex network environments.
+The second script is **more scalable** than the first one because it allows the user to specify a HostGroup as well as the domain controllers with the Microsoft Defender for Identity (MDI) sensor installed that go into it. This flexibility makes it more adaptable to larger, more complex network environments.
 
 In contrast, the first script is designed for simple deployments on a single domain. It sets the HostGroup to the default Domain Controllers Organizational Unit (OU), which automatically applies to newly added domain controllers. While this is efficient for a single domain, it may not scale well for multi-domain environments.
 
@@ -146,7 +150,9 @@ In summary, the second script’s ability to handle multiple domains, specify di
 
 # Confirming your DSA - Making sure the script worked
 
-To test the functionality of a Group Managed Service Account (gMSA) to be used as a Directory Service Account (DSA) in Microsoft Defender for Identity (MDI), you can run the below script which installs and imports the **DefenderForIdentity module**, then prompts the user to specify the gMSA to test. It checks whether the gMSA works on the current domain controller, returns a list of other principals or domain controllers that can use this gMSA, and tests the DSA identity with a detailed switch. **This script is particularly useful for troubleshooting and validating the setup of DSAs in MDI deployments.**
+To test the functionality of a Group Managed Service Account (gMSA) to be used as a Directory Service Account (DSA) in Microsoft Defender for Identity (MDI), you can run the below script which installs and imports the **DefenderForIdentity module**, then prompts the user to specify the gMSA to test. It checks whether the gMSA works on the current domain controller, returns a list of other principals or domain controllers that can use this gMSA, and tests the DSA identity with a **-Detailed** switch. **This script is particularly useful for troubleshooting and validating the setup of DSAs in MDI deployments.**
+
+<br/>
 
 ```powershell
 
@@ -180,3 +186,25 @@ Write-Host "`nThe following is applicable only to Directory Service Accounts (DS
 Test-MDIDSA -Identity $identity -Detailed 
 
 ```
+
+<br/>
+
+Here's what a successful run looks like for a gMSA that has the required permissions to rock and roll as a DSA for MDI:
+
+![](/assets/img/MDI_DSA/Validator_Success.png)
+
+<br/>
+<br/>
+
+Here you can see that, after prompting for the gMSA to verify, the DC I ran the script from is allowed to use the gMSA.
+
+Next you can see which principles are allowed to use the gMSA. Note that this DC is a member of the default domain controller group listed as a principle allowed to use the gMSA.
+
+Next it checks whether the gMSA has sufficient permissions to the objects it needs in your domain, such as Deleted Objects for example. 
+
+> &#128073; Note: if you see **False** for any of these or your DCs/HostGroup isn't listed as a **PrincipalAllowedToRetrieveManagedPassword** as illustrated, then this gMSA is not ready to be used as a Directory Service Account (DSA) in the Defender for Identity portal.
+
+<br/>
+<br/>
+
+![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
