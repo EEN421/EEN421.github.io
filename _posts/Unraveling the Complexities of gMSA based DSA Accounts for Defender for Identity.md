@@ -9,11 +9,12 @@ Leveraging Group Managed Service Accounts (gMSA) for use as the Domain Service A
 - &#128073; Define Directory Service Accounts (DSA) 
 - &#128073; Understand the role of a DSA in an MDI deployment
 - &#128073; Learn why a gMSA is more secure than traditional accounts for use as DSA
-- &#128073; Discuss the implications between smaller versus larger, more complex multi-forest environments
+- &#128073; Discuss implications between smaller versus larger, multi-forest environments
 - &#128073; Create a gMSA for use as a gMSA 
 - &#128073; Grant the gMSA the required DSA permissions
 - &#128073; Valiate the gMSA for use as a DSA in MDI
 - &#128073; Register your new gMSA as a DSA in the MDI portal
+- &#128073; Troubleshoot most common known issues
 
 
 <br/>
@@ -69,9 +70,8 @@ The script prompts the user for the domain and a name for the DSA, then sets the
 **2. Grant Permissions:**
 It also retrieves the distinguished name for Deleted Objects and makes the current user the owner before. Finally, it assigns read permissions for Deleted Objects to the DSA account. 
 
-For smaller, simpler setups (a handful of DC's), I wrote a PowerShell script is designed to facilitate simple deployments on a single domain by creating a Group Managed Service Account (gMSA) and granting it the necessary read privileges for use as a Directory Service Account (DSA) in Microsoft Defender for Identity. **This script is particularly useful for automating the setup of a gMSA for use as a DSA for smaller MDI deployments:**
+The following PowerShell script is designed to facilitate simple  deployments (a handful of DCs on a single domain) by creating a Group Managed Service Account (gMSA) and granting it the necessary read privileges for use as a Directory Service Account (DSA) in Microsoft Defender for Identity. Ths script applies to the default domain controllers and is **particularly useful for automating the setup of a gMSA for use as a DSA for smaller MDI deployments:**
 
-<br/>
 
 ```powershell 
 
@@ -104,9 +104,17 @@ dsacls.exe "$deletedObjectsDN" /G "$domain\$gmsaAccountName:LCRP"
 <br/>
 <br/>
 
-The other, more advanced and scalable script is designed to facilitate custom setups for advanced, multi-domain environments in the context of Microsoft Defender for Identity (MDI). It allows the user to specify a HostGroup and the domain controllers with the MDI sensor installed, and prompts the user for the domain, a name for the group of domain controllers, and a name for the Group Managed Service Account (gMSA). It then prompts the user for the principals (domain controllers with the MDI sensor installed) allowed to retrieve the password/use the gMSA on behalf of MDI to gain additional insights. After importing the required Active Directory module, the script creates a new group, adds the specified members to it, and then creates a new gMSA associated with it. **This is particularly useful for automating the setup of Directory Service Accounts (DSAs) in MDI deployments across multiple domains:**
+The next, more advanced and scalable script is designed to facilitate custom setups for advanced, multi-domain environments in the context of Microsoft Defender for Identity (MDI).
 
-<br/>
+- It allows the user to specify a HostGroup and the domain controllers with the MDI sensor installed
+
+- Prompts the user for the domain, a name for the group of domain controllers, and a name for the Group Managed Service Account (gMSA). 
+
+- Prompts the user for the principals (domain controllers with the MDI sensor installed) allowed to retrieve the password/use the gMSA on behalf of MDI to gain additional insights. 
+
+- After importing the required Active Directory module, the script creates a new group, adds the specified members to it, and then creates a new gMSA associated with it.
+
+**This is particularly useful for automating the setup of Directory Service Accounts (DSAs) in MDI deployments across multiple domains:**
 
 ```powershell
 
@@ -154,10 +162,7 @@ In summary, the second script’s ability to handle multiple domains, specify di
 
 # Confirming your DSA - Making sure the script worked
 
-To test the functionality of a Group Managed Service Account (gMSA) to be used as a Directory Service Account (DSA) in Microsoft Defender for Identity (MDI), you can run the below script which installs and imports the **DefenderForIdentity module**, then prompts the user to specify the gMSA to test. It checks whether the gMSA works on the current domain controller, returns a list of other principals or domain controllers that can use this gMSA, and tests the DSA identity with a **-Detailed** switch. **This script is particularly useful for troubleshooting and validating the setup of DSAs in MDI deployments.**
-
-<br/>
-
+To test the functionality of a Group Managed Service Account (gMSA) to be used as a Directory Service Account (DSA) in Microsoft Defender for Identity (MDI), you can run the below script which installs and imports the **DefenderForIdentity module**, then prompts the user to specify the gMSA to test. It checks whether the gMSA works on the current domain controller, returns a list of other principals or domain controllers that can use this gMSA, and tests the DSA identity with a **-Detailed** switch. **This script is particularly useful for troubleshooting and validating the setup of DSAs in MDI deployments:**
 ```powershell
 
 # Description: This script prompts for the gMSA used as the Directory Service Account (DSA) for your domain in Defender for Identity (MDI)
@@ -192,8 +197,6 @@ Here's what a successful run looks like for a gMSA that has the required permiss
 
 ![](/assets/img/MDI_DSA/Validator_Success.png)
 
-<br/>
-
 - **1.** First, the script prompts for the gMSA to validate.
 
 <br/>
@@ -210,26 +213,38 @@ Here's what a successful run looks like for a gMSA that has the required permiss
 
 <br/>
 
-> &#128073; Note: if you see **False** for any of these or your DCs/HostGroup isn't listed as a **PrincipalAllowedToRetrieveManagedPassword** as illustrated, then this gMSA is not ready to be used as a Directory Service Account (DSA) in the Defender for Identity portal.
+> &#128073; Note: if you see **False** for any of these or your hostgroup containing your DCs isn't listed as a **PrincipalAllowedToRetrieveManagedPassword** as illustrated, then this gMSA is not ready to be used as a Directory Service Account (DSA) in the Defender for Identity portal.
 
 <br/>
 <br/>
 
 # Logon As a Service
-Automating this part and appending it to either of the scripts to create a DSA proved problematic so I typically just go the old fashioned way and configure this part with a group policy that applies to my domain controllers:
+Automating this part and appending it to either of the above scripts to create a DSA proved problematic so I typically just go the old fashioned way and configure this next part with a group policy object that applies to my domain controllers _after_ I've run one of the creation scripts:
 
 - Open the Group Policy Management Editor and go the to _Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Local Policies -> User Rights Assignment -> Log on as a service_ policy, and add your DSA account, illustrated in the below screenshots:
 
+![](/assets/img/MDI_DSA/LogonAsService.png)
+
+When granting your gMSA account **Logon As a Service** permissions, you won't always be able to 'find' your gMSA from the search box without taking the steps illustrated in the next two screenshots: 
+
+- **1.** Select **Object Types**  
+![](/assets/img/MDI_DSA/ObjectType.png)
+
+- **2.** Make sure the **Service Accounts** box is checked:
+![](/assets/img/MDI_DSA/ObjectType2.png)
+
+- Now your gMSA will show up in the search box and you can grant Logon As a Service:
+![](/assets/img/MDI_DSA/log-on-as-a-service.png)
 
 
-
-
+<br/>
+<br/>
 
 # Register your DSA in MDI Portal (Now part of the Defender XDR Portal)
 
 To connect your sensors with your Active Directory domains, you'll need to configure Directory Service accounts in Microsoft Defender XDR.
 
-**1.** In Microsoft Defender XDR, go to Settings > Identities
+**1.** In [Microsoft Defender XDR](www.security.microsoft.com), go to Settings > Identities
 
 **2.** Select Directory Service accounts.
 
@@ -242,6 +257,63 @@ To connect your sensors with your Active Directory domains, you'll need to confi
 <br/>
 <br/>
 
+# Troubleshooting
+
+9 times out of 10, there will be a Health Alert corresponding to any issues with your MDI setup and it's an easy fix:
+
+- A resource issue on the DC (MDI shuts itself down on the DC when resource usage gets too high to avoid tanking a DC in production)
+
+- An issue with the **DSA** not having sufficient privileges to read what it needs
+
+- Some DC's weren't correctly added as **Principals Allowed to Retrieve** the DSA's **gMSA Password**. 
+
+Using the above scripts and tips in this article, you won't run into any of these issues &#128526;
+
+Othere known issues and how to fix them are listed in the [official Microsoft Documentation](https://learn.microsoft.com/en-us/defender-for-identity/troubleshooting-known-issues#sensor-failed-to-retrieve-group-managed-service-account-gmsa-credentials)
+
+>&#128161; Pro-Tip: _Something I often forget about, is the time it takes for the next Kerberos ticket to be issued after creating a new gMSA or adding a DC to the Hostgroup of **Principals Allowed to Retrieve the gMSA Password**. The issue is that the gMSA won't immediately work because it's waiting on the next ticket which could be hours away. You can fix this withh the following command:_ &#128071;
+```powershell
+klist -li 0x3e7 purge
+```
+
+
+
+<br/>
+
+**Lesser Known Issues:**
+
+If something's wrong (sensor won't start, for example) and there aren't any helpful Sensor Health Alerts in the MDI/XDR portal, then the next place to look is in the MDI logs on the DCs themselves. The Defender for Identity logs are located in a subfolder called Logs where Defender for Identity is installed; the default location is: _C:\Program Files\Azure Advanced Threat Protection Sensor\version number\Logs_
+
+You'll want to examine **all** of the log files, not just the ones with "error" in the title for the bigger picture to make sense. Here's an example I came across just last week:
+
+**Sensor Won't Start, no Active Health Alerts**
+I had recently deployed MDI using a gMSA as the DSA, but the sensor was acting like it was stuck in a boot loop before eventually timing out; It kept bouncing between starting and stopped. 
+
+Because there were no Sensor Health Alerts, I looked into the MDI logs on one of the DCs and found the following clues from the log files: 
+
+**Microsoft.Tri.Sensor.Errors.log:**
+```txt
+2024-04-15 21:28:12.4525 Error DirectoryServicesClient+<CreateLdapConnectionAsync>d__47 Microsoft.Tri.Infrastructure.ExtendedException: CreateLdapConnectionAsync failed [DomainControllerDnsName=DC.domain.local]
+
+2024-04-15 21:28:12.4837 Error DirectoryServicesClient Microsoft.Tri.Infrastructure.ExtendedException: Failed to communicate with configured domain controllers [ _domainControllerConnectionDatas=DC.domain.local]
+```
+
+The above log entries indicate an issue with the DSA gMSA account permissions, keeping it from creating the LDAP connection. It's means the gMSA used as a DSA does not have **Logon As a Service** permissions required for Remote Impersonation or the DC isn't able to retrieve the gMSA password (normally there'd be a health alert for that). We ruled these out with our DSA validator script. Nothing from the [official Microsoft Documentation](https://learn.microsoft.com/en-us/defender-for-identity/troubleshooting-known-issues#sensor-failed-to-retrieve-group-managed-service-account-gmsa-credentials) applied here, so I moved on to the next log:
+
+**Microsoft.Tri.Sensor.log:**
+```txt
+2024-04-16 11:05:36.3069 Info  RemoteImpersonationManager GetGroupManagedServiceAccountTokenAsync finished [UserName=mdiDSASvc01 Domain=ffas.local IsSuccess=True]
+
+2024-04-16 11:05:36.3382 Info  DirectoryServicesClient CreateLdapConnectionAsync failed to connect [DomainControllerDnsName=DC.Domain.local Domain=domain.local UserName=mdiDSASvc01 ResultCode=82]
+```
+The above log entries confirm that the gMSA DSA actually does have **Logon As a Service** privileges and the DC was able to successfully complete **Remote Impersonation** so what could it be? Google told me ResultCode 82 was an issue with the gMSA account but that's all (Bing wasn't much better) until I found this old [Microsoft Tech Community Post](https://techcommunity.microsoft.com/t5/microsoft-defender-for-identity/mdi-sensor-can-t-connect-to-domain/m-p/3589748) where **adding the gMSA to **Domain Users** allowed the DSA to make the LDAP connection and start the sensor service on the DCs.**
+
+_I hope this saves someone out there a headache_ &#128513;
+
+
+
+<br/>
+<br/>
 
 # Conclusion:
 
@@ -256,7 +328,7 @@ To connect your sensors with your Active Directory domains, you'll need to confi
 <br/>
 <br/>
 
-&#x1F6E1;&#xFE0F; Group Managed Service Account (gMSA) is more secure than regular service accounts due to:
+&#x1F6E1;&#xFE0F; **Group Managed Service Account (gMSA)** is more secure than regular service accounts due to:
 
 - &#128273; Automated Password Management: gMSA passwords are auto-generated and rotated by Windows, eliminating manual password management.
 
@@ -276,11 +348,12 @@ To connect your sensors with your Active Directory domains, you'll need to confi
 - &#128073; Defined Directory Service Accounts (DSA) 
 - &#128073; Understood the role of a DSA in an MDI deployment
 - &#128073; Learned why a gMSA is more secure than traditional accounts for use as DSA
-- &#128073; Discussed the implications between smaller versus larger, more complex multi-forest environments
+- &#128073; Discussed implications between smaller versus larger, multi-forest environments
 - &#128073; Created a gMSA for use as a gMSA 
 - &#128073; Granted the gMSA the required DSA permissions
 - &#128073; Valiated the gMSA for use as a DSA in MDI
-- &#128073; Register your new gMSA as a DSA in the MDI portal
+- &#128073; Registered your new gMSA as a DSA in the MDI/MXDR portal
+- &#128073; Addressed most common known issues
 
 <br/>
 <br/>
