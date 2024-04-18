@@ -64,10 +64,8 @@ By using a gMSA, the DSA benefits from the **automated password management and s
 There's a couple different ways to peel this potato, depending on your domain infrastructure. There are essentially 2 parts to creating a gMSA to use as the DSA for MDI: 
 
 **1. Create gMSA:**
-The script prompts the user for the domain and a name for the DSA, then sets the HostsGroup to the default Domain Controllers Organizational Unit (OU), and creates a new gMSA with the provided details.
 
 **2. Grant Permissions:**
-It also retrieves the distinguished name for Deleted Objects and makes the current user the owner before. Finally, it assigns read permissions for Deleted Objects to the DSA account. 
 
 The following PowerShell script is designed to facilitate simple  deployments (a handful of DCs on a single domain) by creating a Group Managed Service Account (gMSA) and granting it the necessary read privileges for use as a Directory Service Account (DSA) in Microsoft Defender for Identity. Ths script applies to the default domain controllers and is **particularly useful for automating the setup of a gMSA for use as a DSA for smaller MDI deployments:**
 
@@ -224,14 +222,20 @@ Automating this part and appending it to either of the above scripts to create a
 When granting your gMSA account **Logon As a Service** permissions, you won't always be able to 'find' your gMSA from the search box without taking the steps illustrated in the next two screenshots: 
 
 - **1.** Select **Object Types**  
+
 ![](/assets/img/MDI_DSA/ObjectType.png)
 
+<br/>
+
 - **2.** Make sure the **Service Accounts** box is checked:
+
 ![](/assets/img/MDI_DSA/ObjectType2.png)
 
-- Now your gMSA will show up in the search box and you can grant Logon As a Service:
-![](/assets/img/MDI_DSA/log-on-as-a-service.png)
+<br/>
 
+- Now your gMSA will show up in the search box and you can grant Logon As a Service: 
+
+![](/assets/img/MDI_DSA/log-on-as-a-service.png)
 
 <br/>
 <br/>
@@ -265,11 +269,11 @@ To connect your sensors with your Active Directory domains, you'll need to confi
 
 - Some DC's weren't correctly added as **Principals Allowed to Retrieve** the DSA's **gMSA Password**. 
 
->Using the above scripts and tips in this article, you won't run into any of these issues &#128526;
+>Using the above scripts and tips in this article, you won't run into most of these issues &#128526;
 
 Othere known issues and how to fix them are listed in the [official Microsoft Documentation](https://learn.microsoft.com/en-us/defender-for-identity/troubleshooting-known-issues#sensor-failed-to-retrieve-group-managed-service-account-gmsa-credentials)
 
->&#128161; Pro-Tip: _Something I often forget about, is the time it takes for the next Kerberos ticket to be issued after creating a new gMSA or adding a DC to the Hostgroup of **Principals Allowed to Retrieve the gMSA Password**. The issue is that the gMSA won't immediately work because it's waiting on the next ticket which could be hours away. You can fix this withh the following command:_ &#128071;
+>&#128161; Pro-Tip: _Something I often forget about, is the time it takes for the next Kerberos ticket to be issued after creating a new gMSA or adding a DC to the Hostgroup of **Principals Allowed to Retrieve the gMSA Password**. The issue is that the gMSA won't immediately work because the DC's are waiting on the next ticket which could be hours away. You can fix and request a new ticket with this with the following command:_ &#128071;
 ```powershell
 klist -li 0x3e7 purge
 ```
@@ -278,12 +282,12 @@ klist -li 0x3e7 purge
 
 **Lesser Known Issues:**
 
-If something's wrong (sensor won't start, for example) and there aren't any helpful Sensor Health Alerts in the MDI/XDR portal, then the next place to look is in the MDI logs on the DCs themselves. The Defender for Identity logs are located in a subfolder called Logs where Defender for Identity is installed; the default location is: _C:\Program Files\Azure Advanced Threat Protection Sensor\version number\Logs_
+If something's wrong (sensor won't start, for example) and there aren't any helpful Sensor Health Alerts in the MDI/XDR portal, then the _next place to look is in the **MDI logs** on the DCs themselves._ The Defender for Identity logs are located in a subfolder called Logs where Defender for Identity is installed; the default location is: _C:\Program Files\Azure Advanced Threat Protection Sensor\version number\Logs_
 
 You'll want to examine **all** of the log files, not just the ones with "error" in the title for the bigger picture to make sense. Here's an example I came across just last week:
 
 **Sensor Won't Start, no Active Health Alerts**
-I had recently deployed MDI using a gMSA as the DSA, but the sensor was acting like it was stuck in a boot loop before eventually timing out; It kept bouncing between starting and stopped. 
+I had recently deployed MDI using a gMSA as the DSA, but the sensor was acting like it was stuck in a boot loop before eventually timing out; It kept bouncing between **starting** and **stopped**. 
 
 Because there were no Sensor Health Alerts, I looked into the MDI logs on one of the DCs and found the following clues from the log files: 
 
@@ -298,7 +302,7 @@ The above log entries indicate an issue with the DSA gMSA account permissions, k
 
 **Microsoft.Tri.Sensor.log:**
 ```txt
-2024-04-16 11:05:36.3069 Info  RemoteImpersonationManager GetGroupManagedServiceAccountTokenAsync finished [UserName=mdiDSASvc01 Domain=ffas.local IsSuccess=True]
+2024-04-16 11:05:36.3069 Info  RemoteImpersonationManager GetGroupManagedServiceAccountTokenAsync finished [UserName=mdiDSASvc01 Domain=Domain.local IsSuccess=True]
 
 2024-04-16 11:05:36.3382 Info  DirectoryServicesClient CreateLdapConnectionAsync failed to connect [DomainControllerDnsName=DC.Domain.local Domain=domain.local UserName=mdiDSASvc01 ResultCode=82]
 ```
@@ -306,11 +310,9 @@ The above log entries confirm that the gMSA DSA actually does have **Logon As a 
 
 <br/>
 
-> **Solution:** _I found this old [Microsoft Tech Community Post](https://techcommunity.microsoft.com/t5/microsoft-defender-for-identity/mdi-sensor-can-t-connect-to-domain/m-p/3589748) where **adding the gMSA to **Domain Users** allowed the DSA to make the LDAP connection and start the sensor service on the DCs.**_
+> **Solution:** _I found this old [Microsoft Tech Community Post](https://techcommunity.microsoft.com/t5/microsoft-defender-for-identity/mdi-sensor-can-t-connect-to-domain/m-p/3589748) where **adding the gMSA to Domain Users allowed the DSA to make the LDAP connection and start the sensor service on the DCs.**_
 
 _I hope this saves someone out there a headache_ &#128513;
-
-
 
 <br/>
 <br/>
@@ -326,7 +328,6 @@ _I hope this saves someone out there a headache_ &#128513;
 - &#128565; Insufficient data to calculate potential lateral movement paths, which are crucial for identifying compromised accounts and preventing further spread of an attack within the network&#10071;
 
 <br/>
-<br/>
 
 &#x1F6E1;&#xFE0F; **Group Managed Service Account (gMSA)** is more secure than regular service accounts due to:
 
@@ -334,7 +335,7 @@ _I hope this saves someone out there a headache_ &#128513;
 
 - &#128170; Strong Passwords: gMSA passwords are 240-byte, randomly generated, reducing the risk of brute force or dictionary attacks.
 
- - &#128272; Limited Access: Only authorized servers can retrieve the gMSA password from Active Directory, limiting potential misuse.
+- &#128272; Limited Access: Only authorized servers can retrieve the gMSA password from Active Directory, limiting potential misuse.
 
 <br/>
 
