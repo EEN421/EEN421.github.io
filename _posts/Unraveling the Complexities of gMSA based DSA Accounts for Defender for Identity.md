@@ -21,7 +21,7 @@ Leveraging Group Managed Service Accounts (gMSA) for use as the Domain Service A
 
 # What's a DSA and why is is ABSOLUTELY NECESSARY for MDI deployments?
 
-A **Directory Service Account (DSA)** is used by **Microsoft Defender for Identity (MDI)** to connect to the domain controller and **query for data on entities seen in network traffic, monitored events, and monitored ETW activities**. Without a **DSA**, you _don't_ get the aforementioned coverage from **MDI**. A **DSA** is **required** for the following features and functionality:
+A **Directory Service Account (DSA)** is used by **Microsoft Defender for Identity (MDI)** to connect to the domain controller and **query for data on entities seen in network traffic, monitored events, and monitored ETW activities**. Without a **DSA**, you _don't_ get that you might think. A **DSA** is **required** for the following (but not limited to) features and functionality:
 
 - When working with a sensor installed on an **AD FS / AD CS server**.
 
@@ -211,6 +211,26 @@ Here's what a successful run looks like for a gMSA that has the required permiss
 <br/>
 
 > &#128073; Note: if you see **False** for any of these or your DCs/HostGroup isn't listed as a **PrincipalAllowedToRetrieveManagedPassword** as illustrated, then this gMSA is not ready to be used as a Directory Service Account (DSA) in the Defender for Identity portal.
+
+<br/>
+<br/>
+
+# Conclusion:
+
+&#128273; A **DSA** is required for full security coverage in **MDI**. Without a **DSA**, you may expose your environment to certain risks, such as:
+
+<br/>
+
+- &#128549; Inability to fully monitor and analyze activities on your network, which could lead to undetected security breaches&#10071;
+
+- &#128551; Lack of detailed information about deleted objects, which could be exploited by attackers to gain unauthorized access&#10071;
+
+- &#128565; Insufficient data to calculate potential lateral movement paths, which are crucial for identifying compromised accounts and preventing further spread of an attack within the network&#10071;
+
+<br/>
+<br/>
+
+&#9888; Not having a **DSA** in **MDI** can significantly limit the visibility and control over your network’s security, potentially leaving it **vulnerable to undetected attacks**. It’s recommended to configure a **DSA** for comprehensive protection&#10071;&#10071;&#10071;
 
 <br/>
 <br/>
