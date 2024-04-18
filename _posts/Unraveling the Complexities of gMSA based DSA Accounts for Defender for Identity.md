@@ -265,7 +265,7 @@ To connect your sensors with your Active Directory domains, you'll need to confi
 
 - Some DC's weren't correctly added as **Principals Allowed to Retrieve** the DSA's **gMSA Password**. 
 
-Using the above scripts and tips in this article, you won't run into any of these issues &#128526;
+>Using the above scripts and tips in this article, you won't run into any of these issues &#128526;
 
 Othere known issues and how to fix them are listed in the [official Microsoft Documentation](https://learn.microsoft.com/en-us/defender-for-identity/troubleshooting-known-issues#sensor-failed-to-retrieve-group-managed-service-account-gmsa-credentials)
 
@@ -273,7 +273,7 @@ Othere known issues and how to fix them are listed in the [official Microsoft Do
 ```powershell
 klist -li 0x3e7 purge
 ```
-
+<br/>
 <br/>
 
 **Lesser Known Issues:**
@@ -302,7 +302,11 @@ The above log entries indicate an issue with the DSA gMSA account permissions, k
 
 2024-04-16 11:05:36.3382 Info  DirectoryServicesClient CreateLdapConnectionAsync failed to connect [DomainControllerDnsName=DC.Domain.local Domain=domain.local UserName=mdiDSASvc01 ResultCode=82]
 ```
-The above log entries confirm that the gMSA DSA actually does have **Logon As a Service** privileges and the DC was able to successfully complete **Remote Impersonation** so what could it be? Google told me ResultCode 82 was an issue with the gMSA account but that's all (Bing wasn't much better) until I found this old [Microsoft Tech Community Post](https://techcommunity.microsoft.com/t5/microsoft-defender-for-identity/mdi-sensor-can-t-connect-to-domain/m-p/3589748) where **adding the gMSA to **Domain Users** allowed the DSA to make the LDAP connection and start the sensor service on the DCs.**
+The above log entries confirm that the gMSA DSA actually does have **Logon As a Service** privileges and the DC was able to successfully complete **Remote Impersonation** so what could it be? Google told me ResultCode 82 was an issue with the gMSA account but that's all (Bing wasn't much better).
+
+<br/>
+
+> **Solution:** _I found this old [Microsoft Tech Community Post](https://techcommunity.microsoft.com/t5/microsoft-defender-for-identity/mdi-sensor-can-t-connect-to-domain/m-p/3589748) where **adding the gMSA to **Domain Users** allowed the DSA to make the LDAP connection and start the sensor service on the DCs.**_
 
 _I hope this saves someone out there a headache_ &#128513;
 
