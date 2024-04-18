@@ -215,11 +215,37 @@ Here's what a successful run looks like for a gMSA that has the required permiss
 <br/>
 <br/>
 
-# Conclusion:
+# Logon As a Service
+Automating this part and appending it to either of the scripts to create a DSA proved problematic so I typically just go the old fashioned way and configure this part with a group policy that applies to my domain controllers:
 
-&#128273; A **DSA** is required for full security coverage in **MDI**. Without a **DSA**, you may expose your environment to certain risks, such as:
+- Open the Group Policy Management Editor and go the to _Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Local Policies -> User Rights Assignment -> Log on as a service_ policy, and add your DSA account, illustrated in the below screenshots:
+
+
+
+
+
+
+# Register your DSA in MDI Portal (Now part of the Defender XDR Portal)
+
+To connect your sensors with your Active Directory domains, you'll need to configure Directory Service accounts in Microsoft Defender XDR.
+
+**1.** In Microsoft Defender XDR, go to Settings > Identities
+
+**2.** Select Directory Service accounts.
+
+**3.** select Add credentials and enter the Account name and Domain, then check the "Group Managed Service Account" box, illustrated below: 
+
+![](/assets/img/MDI_DSA/DSA_reg_XDR.png)
+
+
 
 <br/>
+<br/>
+
+
+# Conclusion:
+
+&#x1F6E1;&#xFE0F; A **DSA** is required for full security coverage in **MDI**. Without a **DSA**, you may expose your environment to certain risks, such as:
 
 - &#128549; Inability to fully monitor and analyze activities on your network, which could lead to undetected security breaches&#10071;
 
@@ -230,7 +256,17 @@ Here's what a successful run looks like for a gMSA that has the required permiss
 <br/>
 <br/>
 
-&#9888; Not having a **DSA** in **MDI** can significantly limit the visibility and control over your network’s security, potentially leaving it **vulnerable to undetected attacks**. It’s recommended to configure a **DSA** for comprehensive protection&#10071;&#10071;&#10071;
+&#x1F6E1;&#xFE0F; Group Managed Service Account (gMSA) is more secure than regular service accounts due to:
+
+- &#128273; Automated Password Management: gMSA passwords are auto-generated and rotated by Windows, eliminating manual password management.
+
+- &#128170; Strong Passwords: gMSA passwords are 240-byte, randomly generated, reducing the risk of brute force or dictionary attacks.
+
+ - &#128272; Limited Access: Only authorized servers can retrieve the gMSA password from Active Directory, limiting potential misuse.
+
+<br/>
+
+> &#9888; Note:  not having a **DSA** as a part of your **MDI** deployment can **significantly limit the visibility and control over your network’s security**, potentially leaving it **vulnerable to undetected attacks**. It’s recommended to configure a **DSA** for comprehensive protection&#10071;&#10071;&#10071;
 
 <br/>
 <br/>
