@@ -1,6 +1,20 @@
-# Unraveling the Complexities of Deploying Microsoft Defender for Identity Sensors and gMSA-based DSA Accounts
+# Introduction & Use Case:
+Leveraging Group Managed Service Accounts (gMSA) for use as the Domain Service Accounts (DSA) in your Defender for Identity deployments provides enhanced security and maximizes your coverage. In this blog post, we will breakdown and streamline gMSA account creation for use as a DSA for both large and small MDI deployments. 
 
-Deploying Microsoft Defender for Identity (MDI) sensors and leveraging a Group Managed Service Account (gMSA) for additional security to create a Domain Services Account (DSA) can often feel like navigating a labyrinth. These processes, critical to bolstering your organization's security infrastructure and getting the most coverage from MDI, come with their own set of challenges. Many of these issues are common and easily resolved. In this blog post, we will sidestep the most common obstacles and streamline your deployment process.
+<br/>
+<br/>
+
+# In this Post We Will: 
+
+- &#128073; Define Directory Service Accounts (DSA) 
+- &#128073; Understand the role of a DSA in an MDI deployment
+- &#128073; Learn why a gMSA is more secure than traditional accounts for use as DSA
+- &#128073; Discuss the implications between smaller versus larger, more complex multi-forest environments
+- &#128073; Create a gMSA for use as a gMSA 
+- &#128073; Grant the gMSA the required DSA permissions
+- &#128073; Valiate the gMSA for use as a DSA in MDI
+- &#128073; Register your new gMSA as a DSA in the MDI portal
+
 
 <br/>
 <br/>
@@ -61,11 +75,6 @@ For smaller, simpler setups (a handful of DC's), I wrote a PowerShell script is 
 
 ```powershell 
 
-# Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley
-# Github: https://github.com/EEN421
-# Website: www.hanleycloudsolutions.com
-# Blog: Hanley.cloud / DevSecOpsDad.com
-
 # Description: This script is helpful for simple deployments on a single domain. It creates a gMSA and grants it the required read privileges for use as a DSA in Defender for Identity
 
 # Step 1: Prompt the user for the domain and a name for the DSA that will be created in step 3.
@@ -100,11 +109,6 @@ The other, more advanced and scalable script is designed to facilitate custom se
 <br/>
 
 ```powershell
-
-# Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley
-# Github: https://github.com/EEN421
-# Website: www.hanleycloudsolutions.com
-# Blog: Hanley.cloud / DevSecOpsDad.com
 
 # Description: This script facilitates a custom setup for more advanced, multi-domain environments by allowing the user specify a HostGroup and DC's with the MDI sensor installed.
 # Note: In a multi-domain environment, it's best practice to leverage separate gMSA's per domain to act as DSA's for MDI.
@@ -156,11 +160,6 @@ To test the functionality of a Group Managed Service Account (gMSA) to be used a
 
 ```powershell
 
-# Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley
-# Github: https://github.com/EEN421
-# Website: www.hanleycloudsolutions.com
-# Blog: Hanley.cloud / DevSecOpsDad.com
-
 # Description: This script prompts for the gMSA used as the Directory Service Account (DSA) for your domain in Defender for Identity (MDI)
 
 # Install & import DFI module:
@@ -194,15 +193,38 @@ Here's what a successful run looks like for a gMSA that has the required permiss
 ![](/assets/img/MDI_DSA/Validator_Success.png)
 
 <br/>
+
+- **1.** First, the script prompts for the gMSA to validate.
+
 <br/>
 
-Here you can see that, after prompting for the gMSA to verify, the DC I ran the script from is allowed to use the gMSA.
+- **2.** Here you can see that, after prompting for the gMSA to verify, the DC I ran the script from is allowed to use the gMSA.
 
-Next you can see which principles are allowed to use the gMSA. Note that this DC is a member of the default domain controller group listed as a principle allowed to use the gMSA.
+<br/>
 
-Next it checks whether the gMSA has sufficient permissions to the objects it needs in your domain, such as Deleted Objects for example. 
+- **3.** Next you can see which principles are allowed to use the gMSA. Note that this DC is a member of the default domain controller group listed as a principle allowed to use the gMSA.
+
+<br/>
+
+- **4.** Finally, it checks whether the gMSA has sufficient permissions to the objects it needs in your domain, such as Deleted Objects for example. 
+
+<br/>
 
 > &#128073; Note: if you see **False** for any of these or your DCs/HostGroup isn't listed as a **PrincipalAllowedToRetrieveManagedPassword** as illustrated, then this gMSA is not ready to be used as a Directory Service Account (DSA) in the Defender for Identity portal.
+
+<br/>
+<br/>
+
+# In this Post We: 
+
+- &#128073; Defined Directory Service Accounts (DSA) 
+- &#128073; Understood the role of a DSA in an MDI deployment
+- &#128073; Learned why a gMSA is more secure than traditional accounts for use as DSA
+- &#128073; Discussed the implications between smaller versus larger, more complex multi-forest environments
+- &#128073; Created a gMSA for use as a gMSA 
+- &#128073; Granted the gMSA the required DSA permissions
+- &#128073; Valiated the gMSA for use as a DSA in MDI
+- &#128073; Register your new gMSA as a DSA in the MDI portal
 
 <br/>
 <br/>
