@@ -10,7 +10,7 @@ Leveraging Group Managed Service Accounts (gMSA) for use as the Domain Service A
 - &#128073; Understand the role of a DSA in an MDI deployment
 - &#128073; Learn why a gMSA is more secure than traditional accounts for use as DSA
 - &#128073; Discuss implications between smaller versus larger, multi-forest environments
-- &#128073; Create a gMSA for use as a gMSA 
+- &#128073; Create a gMSA for use as a DSA 
 - &#128073; Grant the gMSA the required DSA permissions
 - &#128073; Valiate the gMSA for use as a DSA in MDI
 - &#128073; Register your new gMSA as a DSA in the MDI portal
@@ -349,7 +349,7 @@ _I hope this saves someone out there a headache_ &#128513;
 - &#128073; Understood the role of a DSA in an MDI deployment
 - &#128073; Learned why a gMSA is more secure than traditional accounts for use as DSA
 - &#128073; Discussed implications between smaller versus larger, multi-forest environments
-- &#128073; Created a gMSA for use as a gMSA 
+- &#128073; Created a gMSA for use as a DSA 
 - &#128073; Granted the gMSA the required DSA permissions
 - &#128073; Valiated the gMSA for use as a DSA in MDI
 - &#128073; Registered your new gMSA as a DSA in the MDI/MXDR portal
@@ -360,7 +360,7 @@ _I hope this saves someone out there a headache_ &#128513;
 
 # Thanks for Reading! 
 
-If you've made it this far, all the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity)) on [Github](https://github.com/EEN421).
+If you've made it this far, thanks for reading! All the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity)) on [Github](https://github.com/EEN421).
 
 <br/>
 
