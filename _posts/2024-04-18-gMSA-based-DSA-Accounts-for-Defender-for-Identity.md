@@ -2,6 +2,10 @@
 Leveraging Group Managed Service Accounts (gMSA) for use as the Domain Service Accounts (DSA) in your Defender for Identity deployments provides enhanced security and maximizes your coverage. In this blog post, we will breakdown and streamline gMSA account creation for use as a DSA for both large and small MDI deployments. 
 
 <br/>
+
+![](/assets/img/MDI_DSA/MDI%20Logo.png)
+
+<br/>
 <br/>
 
 # In this Post We Will: 
