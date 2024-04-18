@@ -360,7 +360,7 @@ _I hope this saves someone out there a headache_ &#128513;
 
 # Thanks for Reading! 
 
-If you've made it this far, thanks for reading! All the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity)) on [Github](https://github.com/EEN421).
+If you've made it this far, thanks for reading! All the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity) on [Github](https://github.com/EEN421).
 
 <br/>
 
