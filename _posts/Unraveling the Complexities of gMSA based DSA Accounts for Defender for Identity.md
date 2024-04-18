@@ -53,9 +53,8 @@ A Group Managed Service Account (gMSA) is considered **more secure than a regula
 
 In the context of Microsoft Defender for Identity, _using a **gMSA** for the Directory Service Account adds an **extra layer of security**_. The **gMSA DSA** is used by **MDI** to connect to the domain controller and _query for data on entities seen in **network traffic, monitored events, and monitored ETW activities**_.
 
-By using a gMSA, the DSA benefits from the automated password management and strong password policies of the gMSA, reducing the risk of the DSA being compromised. This is particularly important in multi-forest, multi-domain environments, where a _unique gMSA DSA is recommended for each forest or domain_.
+By using a gMSA, the DSA benefits from the **automated password management and strong password policies** of the gMSA, reducing the risk of the DSA being compromised. **This is particularly important in multi-forest, multi-domain environments, where a _unique gMSA DSA is recommended for each forest or domain_.**
 
-In conclusion, using a gMSA for the DSA in MDI provides a more secure and manageable solution compared to using a regular service account. I rest my case. 
 
 <br/>
 <br/>
@@ -101,10 +100,11 @@ dsacls.exe "$deletedObjectsDN" /G "$domain\$gmsaAccountName:LCRP"
 
 ```
 
+
 <br/>
 <br/>
 
-The next, more advanced and scalable script is designed to facilitate custom setups for advanced, multi-domain environments in the context of Microsoft Defender for Identity (MDI).
+The next script is designed to facilitate custom setups for advanced, multi-domain environments in the context of Microsoft Defender for Identity (MDI).
 
 - It allows the user to specify a HostGroup and the domain controllers with the MDI sensor installed
 
@@ -149,13 +149,9 @@ New-ADServiceAccount -Name $DSA_AccountName -DNSHostName "$DSA_AccountName.$doma
 
 # Compare & Contrast - Why are there 2 Scripts Anyway? 
 
-The second script is **more scalable** than the first one because it allows the user to specify a HostGroup as well as the domain controllers with the Microsoft Defender for Identity (MDI) sensor installed that go into it. This flexibility makes it more adaptable to larger, more complex network environments.
+The second script is **more scalable** than the first one because it allows the user to specify a HostGroup as well as the domain controllers with the Microsoft Defender for Identity (MDI) sensor installed that go into it. This flexibility makes it more adaptable to larger, more complex network and multi-domain environments.
 
 In contrast, the first script is designed for simple deployments on a single domain. It sets the HostGroup to the default Domain Controllers Organizational Unit (OU), which automatically applies to newly added domain controllers. While this is efficient for a single domain, it may not scale well for multi-domain environments.
-
-Furthermore, the second script prompts the user for the principals (domain controllers with the MDI sensor installed) allowed to retrieve the password. This feature provides additional flexibility and security in multi-domain environments, where different domain controllers may need access to the gMSA.
-
-In summary, the second script’s ability to handle multiple domains, specify different HostGroups and principals, and its flexibility in managing gMSA accounts make it more scalable for larger or more complex environments compared to the first script.
 
 <br/>
 <br/>
@@ -259,6 +255,8 @@ To connect your sensors with your Active Directory domains, you'll need to confi
 
 # Troubleshooting
 
+**Known Issues:**
+
 9 times out of 10, there will be a Health Alert corresponding to any issues with your MDI setup and it's an easy fix:
 
 - A resource issue on the DC (MDI shuts itself down on the DC when resource usage gets too high to avoid tanking a DC in production)
@@ -275,8 +273,6 @@ Othere known issues and how to fix them are listed in the [official Microsoft Do
 ```powershell
 klist -li 0x3e7 purge
 ```
-
-
 
 <br/>
 
@@ -353,9 +349,15 @@ _I hope this saves someone out there a headache_ &#128513;
 - &#128073; Granted the gMSA the required DSA permissions
 - &#128073; Valiated the gMSA for use as a DSA in MDI
 - &#128073; Registered your new gMSA as a DSA in the MDI/MXDR portal
-- &#128073; Addressed most common known issues
+- &#128073; Addressed most known and lesser known issues
 
 <br/>
+<br/>
+
+# Thanks for Reading! 
+
+If you've made it this far, all the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity)) on [Github](https://github.com/EEN421).
+
 <br/>
 
 ![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
