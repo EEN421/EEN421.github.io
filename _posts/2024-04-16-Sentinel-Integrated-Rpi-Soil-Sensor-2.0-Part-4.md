@@ -273,4 +273,9 @@ Thanks for reading! With this configuration illustrated across the past few blog
 <br/>
 <br/>
 
-[![Hanley Cloud Solutions](/assets/img/footer.png)](www.hanleycloudsolutions.com) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+
