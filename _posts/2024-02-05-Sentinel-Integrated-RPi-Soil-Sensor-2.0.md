@@ -281,4 +281,4 @@ This time around (2.0) we improved upon our previous Headless Raspberry Pi ARM D
 
 <br/>
 
-![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+[![Hanley Cloud Solutions](/assets/img/footer.png)](www.hanleycloudsolutions.com) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
