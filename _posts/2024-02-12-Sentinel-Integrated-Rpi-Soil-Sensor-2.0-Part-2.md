@@ -259,5 +259,10 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 <br/>
 <br/>
 
-[![Hanley Cloud Solutions](/assets/img/footer.png)](www.hanleycloudsolutions.com) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+
 
