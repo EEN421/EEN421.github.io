@@ -171,4 +171,4 @@ Thanks for reading! With this configuration, you can securely leverage the free 
 <br/>
 <br/>
 
-![www.hanleycloudsolutions.com](/assets/img/footer.png) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+[![Hanley Cloud Solutions](/assets/img/footer.png)](www.hanleycloudsolutions.com) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
