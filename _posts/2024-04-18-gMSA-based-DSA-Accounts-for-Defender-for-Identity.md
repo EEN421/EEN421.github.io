@@ -373,8 +373,10 @@ If you've made it this far, thanks for reading! All the scripts referenced in th
 
 <br/>
 
-[![Hanley Cloud Solutions](/assets/img/footer.png)](https://hanleycloudsolutions.com) ![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
-
 <a href="https://hanleycloudsolutions.com">
     <img src="/assets/img/footer.png">
 </a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+
+
