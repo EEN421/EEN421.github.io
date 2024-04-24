@@ -67,11 +67,11 @@ By using a gMSA, the DSA benefits from the **automated password management and s
 
 There's a couple different ways to peel this potato, depending on your domain infrastructure. There are essentially 3 parts to creating a gMSA to use as the DSA for MDI: 
 
-**1. &#128933;Create gMSA:**
+**1. &#128933; Create gMSA:**
 
-**2. &#128273;Grant Permissions:**
+**2. &#128273; Grant Permissions:**
 
-**3. &#128187;Define Principals**
+**3. &#128187; Define Principals**
 
 The following PowerShell script is designed to facilitate simple  deployments (a handful of DCs on a single domain) by **creating a Group Managed Service Account (gMSA)** and **granting it the necessary read privileges for use as a Directory Service Account (DSA)** in Microsoft Defender for Identity. This script applies to the **default domain controllers OU** and is **particularly useful for automating the setup of a gMSA for use as a DSA for smaller MDI deployments:**
 
@@ -252,7 +252,7 @@ When granting your gMSA account **Logon As a Service** permissions, you won't al
 
 To connect your sensors with your Active Directory domains, you'll **need to configure Directory Service accounts in Microsoft Defender XDR.**
 
-**1.** In [Microsoft Defender XDR](www.security.microsoft.com), go to **Settings > Identities**
+**1.** In <a href="www.security.microsoft.com">Microsoft Defender XDR</a>, go to **Settings > Identities**
 
 **2.** Select **Directory Service accounts**
 
