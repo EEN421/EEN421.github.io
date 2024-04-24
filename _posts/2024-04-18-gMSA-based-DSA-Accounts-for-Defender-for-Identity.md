@@ -252,7 +252,7 @@ When granting your gMSA account **Logon As a Service** permissions, you won't al
 
 To connect your sensors with your Active Directory domains, you'll **need to configure Directory Service accounts in Microsoft Defender XDR.**
 
-**1.** In <a href="www.security.microsoft.com">Microsoft Defender XDR</a>, go to **Settings > Identities**
+**1.** In <a href="https://www.security.microsoft.com">Microsoft Defender XDR</a>, go to **Settings > Identities**
 
 **2.** Select **Directory Service accounts**
 
