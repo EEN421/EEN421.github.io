@@ -3,7 +3,7 @@ You've deployed your sensors through Azure IoT Hub and onboarded your telemetry 
 
 <br/>
 
-![](/assets/img/MDI_DSA/MDI%20Logo.png)
+![](/assets/img/OT_Sensor/cartoon_ninja.jpg)
 
 <br/>
 <br/>
