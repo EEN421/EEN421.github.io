@@ -18,7 +18,7 @@ You've deployed your sensors through Azure IoT Hub and onboarded your telemetry 
 
 <br/>
 
-![](/assets/img/OT_Sensor/D4IOT.jpg)
+![](/assets/img/OT_Sensor/cartoon_ninja.jpg)
 
 <br/>
 <br/>
@@ -29,7 +29,7 @@ Microsoft Defender for IoT OT Sensor is a component of the Microsoft Defender fo
 
 <br/>
 
-![](/assets/img/OT_Sensor/cartoon_ninja.jpg)
+![](/assets/img/OT_Sensor/D4IOT.jpg)
 
 <br/>
 
