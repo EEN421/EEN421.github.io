@@ -3,7 +3,7 @@ You've deployed your sensors through Azure IoT Hub and onboarded your telemetry 
 
 <br/>
 
-![](/assets/img/OT_Sensor/cartoon_ninja.jpg)
+![](/assets/img/OT_Sensor/Enter%20Defender.jpg)
 
 <br/>
 <br/>
@@ -33,12 +33,19 @@ The Defender for IoT OT Sensor is a great way to complete our sensor deployment 
 
 &#x26A1; 4.	Cloud Connectivity: When configured as cloud-connected sensors, all data that the sensor detects is displayed in the sensor console, but alert information is also delivered to Azure, where it can be analyzed and shared with other Azure services.
 
+
+<br/>
+<br/>
+
+
+
+<br/>
+<br/>
+
+<br/>
+<br/>
+
 ![](/assets/img/OT_Sensor/D4IOT.jpg)
-
-<br/>
-<br/>
-
-
 
 <br/>
 <br/>
