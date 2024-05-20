@@ -10,18 +10,30 @@ You've deployed your sensors through Azure IoT Hub and onboarded your telemetry 
 
 # In this Post We Will: 
 
+- &#x1f977; Define D4IoT and the Operational Technology (OT) Sensor 
+- &#x1f977; Why deploy D4IoT and an Operational Technology (OT) Sensor?
 - &#x1f977; Onboard your subscription to Defender for IoT 
-- &#x1f977;; Deploy an Operational Technology (OT) Sensor on a Virtual Appliance
+- &#x1f977; Deploy an Operational Technology (OT) Sensor on a Virtual Appliance 
 - &#x1f977; Defend your IoT Dojo like a Ninja! 
 
+<br/>
 
+![](/assets/img/OT_Sensor/D4IOT.jpg)
 
 <br/>
 <br/>
 
+# Define D4IoT and the Operational Technology (OT) Sensor 
 
 Microsoft Defender for IoT OT Sensor is a component of the Microsoft Defender for IoT system designed to provide broad coverage and visibility from diverse data sources. It’s essentially a network sensor that discovers and continuously monitors network traffic across your network devices (the network cap feature makes it perfect to for LoRaWAN deployments). These sensors are purpose-built for OT/IoT networks and connect to a SPAN port or network TAP. They use OT/IoT-aware analytics engines and Layer-6 Deep Packet Inspection (DPI) to detect threats, such as fileless malware, based on anomalous or unauthorized activity.
+
 <br/>
+
+![](/assets/img/OT_Sensor/cartoon_ninja.jpg)
+
+<br/>
+
+# Why deploy D4IoT and an Operational Technology (OT) Sensor?
 
 The Defender for IoT OT Sensor is a great way to complete our sensor deployment if you’ve been reading and following my prior Sentinel Integrated Soil Sensor articles for my peppers, as it enhances the security of an IoT Hub deployment by providing additional layers of visibility, threat detection, and analysis, thereby implementing a Zero Trust security strategy:
 
@@ -37,7 +49,17 @@ The Defender for IoT OT Sensor is a great way to complete our sensor deployment 
 <br/>
 <br/>
 
+# Onboard your subscription to Defender for IoT 
 
+<br/>
+<br/>
+
+# Deploy an Operational Technology (OT) Sensor on a Virtual Appliance 
+
+<br/>
+<br/>
+
+# Defend your IoT Dojo like a Ninja!
 
 <br/>
 <br/>
