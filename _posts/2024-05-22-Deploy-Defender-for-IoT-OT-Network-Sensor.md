@@ -88,9 +88,9 @@ Your new plan is listed under the relevant subscription on the Plans and pricing
 
 <br/>
 
-Once the Sub has been onboarded and billing has been sorted out, go back to the **Getting Started** blade and select **Setup OT/ICS Security** again. 
+Once the Sub has been onboarded and billing has been sorted out, you can download the registration package; go back to the **Getting Started** blade and select **Setup OT/ICS Security** again, then look for the registration packet in **Step 3**. _Hang onto this for later._
 
-Expand **Step 1** to select the latest version and download the OT Sensor ISO:
+Next, to download the software ISO, expand **Step 1** to select the latest version and download the OT Sensor ISO:
 
 ![](/assets/img/OT_Sensor/download.jpg)
 
