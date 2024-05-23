@@ -32,6 +32,12 @@ Microsoft Defender for IoT OT Sensor is a component of the Microsoft Defender fo
 ![](/assets/img/OT_Sensor/D4IOT.jpg)
 
 <br/>
+<br/>
+
+>&#128161; Pro-Tip: _The standalone Enterprise IoT Sensor has been decommissioned in favour of leveraging the Defender for Endpoint agents to cover Enterprise IoT Devices such as VoIP systems, smart TVs and printers etc. so you no longer need to deploy it manually, just integrate Defender for Endpoint in Endpoint settings and again in Defender for IoT._
+
+<br/>
+<br/>
 
 # Why deploy D4IoT and an Operational Technology (OT) Sensor?
 
@@ -148,19 +154,24 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 
 ![](/assets/img/OT_Sensor/VHDX.jpg)
 
+<br/>
+<br/>
+
 - Enter the name and location for the VHD.
 
 - Enter the required size according to your organization's needs (select **Fixed Size disk type**).
 	
 ![](/assets/img/OT_Sensor/Fixed.png)
 
-
+<br/>
+<br/>
 
 - Review the summary, and select Finish.
 
 ![](/assets/img/OT_Sensor/VHDXHDD.jpg)
 
-
+<br/>
+<br/>
 
 - Connect the VHDX to your virtual machine:
 
@@ -178,50 +189,96 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 
         ![](/assets/img/OT_Sensor/install1.png)
 
+        <br/>
+        <br/>
+
+        >&#128161; Pro-Tip: _The wizard automatically selects to install the software after 30 seconds of waiting._
+
+        <br/>
+        <br/>
+
         - If you've configured your NICs to an external vSwitch for connectivity, it will prompt you with an IP address you can use to activate your sensor via browser:
 
         ![](/assets/img/OT_Sensor/Login1.jpg)
 
+        <br/>
+        <br/>
         - Navigate to that IP address ending in .101 and sign in with **admin/admin** to change the default password and complete the deployment. 
+
+        ![](/assets/img/OT_Sensor/Login2.png)
+
+        <br/>
+        <br/>
 
         - While logged in via browser, navigate to the **Register** tab and upload the registration file from earlier. 
 
+        - Your sensor will stay in "Pending" state until it's registered: 
+
+        ![](/assets/img/OT_Sensor/Registration.jpg)
+
+        <br/>
 
 
 
-<br/>
 
->&#128161; Pro-Tip: _The wizard automatically selects to install the software after 30 seconds of waiting._
+
 
 <br/>
 <br/>
 
 # Defend your IoT Dojo like a Ninja!
 
+The Defender for IoT Azure portal will start populating with devices the OT Sensor sees on the network. It will start out slow, but the more time and thus additional network packets for it to inspect and it will continue to learn more about the devices it sees. Compare the following two screenshots, for example and notice the additional vendor information it was able to pull. 
 
+![](/assets/img/OT_Sensor/Findings1.png)
 
 <br/>
 <br/>
+
+![](/assets/img/OT_Sensor/Findings2.png)
+
+<br/>
+<br/>
+
+You can also look on the sensor directly by logging in on a browser over the network:
+
+![](/assets/img/OT_Sensor/LocalSensor.png)
+
+<br/>
+<br/>
+
+![](/assets/img/OT_Sensor/LocalSensor2.png)
 
 <br/>
 <br/>
 
 # Ian's Insights:
 
-<br/>
+So it looks like the OT Network Sensor Appliance runs BullseyeOS under the hood, which is a Debian Linux Distro used to operate Raspbery Pi boards, illustrated below.
+
+![](/assets/img/OT_Sensor/BullsEyeOS.jpg)
+
 <br/>
 
-![](/assets/img/OT_Sensor/D4IOT.jpg)
+>&#128161; BullsEye OS has many known security CVEs that were plugged up with the release of the newer Bookworm OS. Check out my earlier blog article that discusses the security upgrades included with Bookworm that are still unresolved in BullsEye [here](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). Here's one such example known as [Dirty Pipe (aka CVE-2022-0847)](https://forums.raspberrypi.com/viewtopic.php?t=331022) that's applicable to BullsEye OS.
+
+
 
 <br/>
 <br/>
 
 # Thanks for Reading! 
 
-If you've made it this far, thanks for reading! All the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity) on [Github](https://github.com/EEN421).
+If you've made it this far, thanks for reading! I hope this has been a helpful guide for getting started with Defender for IoT and deploying your first of many OT Network Sensors! 
 
 <br/>
 <br/>
+
+![](/assets/img/OT_Sensor/Scorpion_IoT_Picnic.jpg)
+
+<br/>
+<br/>
+
 
 # Helpful Links & Resources:
 
