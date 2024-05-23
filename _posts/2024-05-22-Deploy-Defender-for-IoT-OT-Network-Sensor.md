@@ -43,13 +43,13 @@ Microsoft Defender for IoT OT Sensor is a component of the Microsoft Defender fo
 
 The Defender for IoT OT Sensor is a great way to complete our sensor deployment if you’ve been reading and following my prior Sentinel Integrated Soil Sensor articles for my peppers, as it enhances the security of an IoT Hub deployment by providing additional layers of visibility, threat detection, and analysis, thereby implementing a Zero Trust security strategy:
 
-&#x26A1; 1.	Real-time Information Extraction: Azure Defender for IoT uses passive monitoring and Network Traffic Analysis (NTA) combined with patented, IoT/OT-aware behavioral analytics to extract detailed IoT/OT information in real-time.
+&#9201;     1.	Real-time Information Extraction: Azure Defender for IoT uses passive monitoring and Network Traffic Analysis (NTA) combined with patented, IoT/OT-aware behavioral analytics to extract detailed IoT/OT information in real-time.
 
-&#x26A1; 2.	Agentless Security: It delivers agentless security for continuously monitoring OT networks in industrial and critical infrastructure organizations. This is particularly useful for existing devices that might not have built-in security agents.
+&#128268;   2. Agentless Security: It delivers agentless security for continuously monitoring OT networks in industrial and critical infrastructure organizations. This is particularly useful for existing devices that might not have built-in security agents.
 
-&#x26A1; 3.	Deployment Flexibility: You can deploy these capabilities fully on-premises without sending any data to Azure3, which can be ideal for locations with low bandwidth or high-latency connectivity.
+&#x26A1;    3.	Deployment Flexibility: You can deploy these capabilities fully on-premises without sending any data to Azure3, which can be ideal for locations with low bandwidth or high-latency connectivity.
 
-&#x26A1; 4.	Cloud Connectivity: When configured as cloud-connected sensors, all data that the sensor detects is displayed in the sensor console, but alert information is also delivered to Azure, where it can be analyzed and shared with other Azure services.
+&#x2601;    4.	Cloud Connectivity: When configured as cloud-connected sensors, all data that the sensor detects is displayed in the sensor console, but alert information is also delivered to Azure, where it can be analyzed and shared with other Azure services.
 
 
 <br/>
@@ -95,31 +95,31 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 
 <br/>
 
-- 1. Create the virtual machine using Hyper-V:
+&#x26A1; 1. Create the virtual machine using Hyper-V:
 
-	- On the Actions menu, create a new virtual machine.
+- On the Actions menu, create a new virtual machine.
 
-	- Enter a name for the virtual machine.
+- Enter a name for the virtual machine.
 
-	- Select **Generation** and set it to **Generation 2,** and then select Next:
+- Select **Generation** and set it to **Generation 2,** and then select Next:
 
-    ![](/assets/img/OT_Sensor/gen2.jpg)
+![](/assets/img/OT_Sensor/gen2.jpg)
 
-    <br/>
+<br/>
 
-	- Specify the memory allocation according to your organization's needs, in standard RAM denomination (I chose the minimum: 8192MB). **Don't enable Dynamic Memory.**
+- Specify the memory allocation according to your organization's needs, in standard RAM denomination (I chose the minimum: 8192MB). **Don't enable Dynamic Memory.**
 
-	- Allocate CPU resources according to your organization's needs.
+- Allocate CPU resources according to your organization's needs.
 
-    - Do not configure a virtual disk for storage (yet).
+- Do not configure a virtual disk for storage (yet).
 
-    ![](/assets/img/OT_Sensor/HDDLater.jpg)
+![](/assets/img/OT_Sensor/HDDLater.jpg)
 
-    <br/>
+<br/>
 
-	- Connect the OT Sensor software ISO image to a virtual DVD drive.
+- Connect the OT Sensor software ISO image to a virtual DVD drive.
     
-    - Select Firmware, in Boot order move DVD Drive to the top of the list, select Apply and then select OK.
+- Select Firmware, in Boot order move DVD Drive to the top of the list, select Apply and then select OK.
 
     ![](/assets/img/OT_Sensor/mountISO.jpg)
 
@@ -127,17 +127,17 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
     <br/>
 
 
-- 2. Configure Networking:
+&#x26A1; 2. Configure Networking:
 
-      - You'll need to configure at least two network adapters on your VM: one to connect to the Azure portal, and another to connect to traffic mirroring ports.
+- You'll need to configure at least two network adapters on your VM: one to connect to the Azure portal, and another to connect to traffic mirroring ports.
     
-         - Network adapter 1, to connect to the Azure portal for cloud management.
+- Network adapter 1, to connect to the Azure portal for cloud management.
 
-         - Network adapter 2, to connect to a traffic mirroring port that's configured to allow promiscuous mode traffic. If you're connecting your sensor to multiple traffic mirroring ports, make sure there's a network adapter configured for each port.
+- Network adapter 2, to connect to a traffic mirroring port that's configured to allow promiscuous mode traffic. If you're connecting your sensor to multiple traffic mirroring ports, make sure there's a network adapter configured for each port.
        
-	  - Right-click on the new virtual machine, and select Settings.
+- Right-click on the new virtual machine, and select Settings.
 
-	  - Select Add Hardware, and add a new network adapter.
+- Select Add Hardware, and add a new network adapter.
 
 ![](/assets/img/OT_Sensor/NIC1.jpg)
 
@@ -148,9 +148,9 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 <br/>
 <br/>
 
-- 3. Create a virtual disk in Hyper-V Manager (**Fixed size**, as required by the hardware profile).
+&#x26A1; 3. Create a virtual disk in Hyper-V Manager (**Fixed size**, as required by the hardware profile).
 
-	    - Select format = **VHDX.**
+- Select format = **VHDX.**
 
 ![](/assets/img/OT_Sensor/VHDX.jpg)
 
@@ -181,46 +181,43 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 <br/>
 <br/>
     
-- 4. Install & Register OT Network Sensor software.
+&#x26A1; 4. Install & Register OT Network Sensor software.
 
-	    - Start the virtual machine.
+- Start the virtual machine.
 
-	    - When the installation boots, you're prompted to start the installation process. Either select the Install **iot-sensor-<.version number>** item to continue, or leave the wizard to make the selection automatically on its own:
+	- When the installation boots, you're prompted to start the installation process. Either select the Install **iot-sensor-<.version number>** item to continue, or leave the wizard to make the selection automatically on its own:
 
-        ![](/assets/img/OT_Sensor/install1.png)
+    ![](/assets/img/OT_Sensor/install1.png)
 
-        <br/>
-        <br/>
+    <br/>
+    <br/>
 
-        >&#128161; Pro-Tip: _The wizard automatically selects to install the software after 30 seconds of waiting._
+    >&#128161; Pro-Tip: _The wizard automatically selects to install the software after 30 seconds of waiting._
 
-        <br/>
-        <br/>
+    <br/>
+    <br/>
 
-        - If you've configured your NICs to an external vSwitch for connectivity, it will prompt you with an IP address you can use to activate your sensor via browser:
+    - If you've configured your NICs to an external vSwitch for connectivity, it will prompt you with an IP address you can use to activate your sensor via browser:
 
-        ![](/assets/img/OT_Sensor/Login1.jpg)
+    ![](/assets/img/OT_Sensor/Login1.jpg)
 
-        <br/>
-        <br/>
-        - Navigate to that IP address ending in .101 and sign in with **admin/admin** to change the default password and complete the deployment. 
+    <br/>
+    <br/>
+    
+    - Navigate to that IP address ending in .101 and sign in with **admin/admin** to change the default password and complete the deployment. 
 
-        ![](/assets/img/OT_Sensor/Login2.png)
+    ![](/assets/img/OT_Sensor/Login2.png)
 
-        <br/>
-        <br/>
+    <br/>
+    <br/>
 
-        - While logged in via browser, navigate to the **Register** tab and upload the registration file from earlier. 
+    - While logged in via browser, navigate to the **Register** tab and upload the registration file from earlier. 
 
-        - Your sensor will stay in "Pending" state until it's registered: 
+    - Your sensor will stay in "Pending" state until it's registered: 
 
-        ![](/assets/img/OT_Sensor/Registration.jpg)
+    ![](/assets/img/OT_Sensor/Registration.jpg)
 
-        <br/>
-
-
-
-
+    <br/>
 
 
 <br/>
