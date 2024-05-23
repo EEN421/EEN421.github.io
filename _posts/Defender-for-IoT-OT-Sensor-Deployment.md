@@ -51,26 +51,43 @@ The Defender for IoT OT Sensor is a great way to complete our sensor deployment 
 
 # Onboard your subscription to Defender for IoT 
 
-- Open ![Defender for IoT](https://portal.azure.com/#view/Microsoft_Azure_IoT_Defender/IoTDefenderDashboard/%7E/Getting_started) in the Azure portal, select Plans and pricing.
+- Open [Defender for IoT](https://portal.azure.com/#view/Microsoft_Azure_IoT_Defender/IoTDefenderDashboard/%7E/Getting_started) in the Azure portal, select **Getting Started**, then **Setup OT/ICS Security**
 
-- In the Defender for IoT's Plans and pricing page, select Add plan, then select your new subscription.
+![](/assets/img/OT_Sensor/Getting_Started.jpg)
+
+- Scroll down to **Register** and select **Onboard Subscription**
+
+![](/assets/img/OT_Sensor/onboard_Sub1.jpg)
+
+<br/>
+
 
 - The Price plan value is updated automatically to read Microsoft 365, reflecting your Microsoft 365 license.
+
+- Select the Subscription you want to onboard and purchase the plan that's right for you:
+
+![](/assets/img/OT_Sensor/onboard_Sub2.jpg)
+
+<br/>
 
 - Select Next and review the details for your licensed site. The details listed on the Review and purchase pane reflect your license.
 
 - Select the terms and conditions, and then select Save.
 
-Your new plan is listed under the relevant subscription on the Plans and pricing > Plans page. For more information, see ![Manage your subscriptions](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/how-to-manage-subscriptions).
+Your new plan is listed under the relevant subscription on the Plans and pricing > Plans page. For more information, see [Manage your subscriptions](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/how-to-manage-subscriptions).
 
->&#128161; _Pro-Tip: You can use the above steps to spin up a trial too, if you'd like to take it for a test drive first._
+<br/>
+
+>&#128161; Pro-Tip: _You can use the above steps to spin up a trial too, if you'd like to take it for a test drive first._
 
 <br/>
 <br/>
 
 # Deploy an Operational Technology (OT) Sensor on a Virtual Appliance 
 
-The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this article, I've spun up a VM in Hyper-V. Configure how beefy your appliance needs to be according to the minimum requirements listed ![here](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements). Since this is a lab environment, I went with the L100 hardware profile.
+The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this article, I've spun up a VM in Hyper-V. Configure how beefy your appliance needs to be according to the minimum requirements listed [here](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements). Since this is a lab environment, I went with the L100 hardware profile.
+
+<br/>
 
 - 1. Create the virtual machine using Hyper-V:
 
@@ -78,7 +95,11 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 
 	- Enter a name for the virtual machine.
 
-	- Select **Generation** and set it to **Generation 2,** and then select Next.
+	- Select **Generation** and set it to **Generation 2,** and then select Next:
+
+    ![](/assets/img/OT_Sensor/gen2.jpg)
+
+    <br/>
 
 	- Specify the memory allocation according to your organization's needs, in standard RAM denomination (I chose the minimum: 8192MB). **Don't enable Dynamic Memory.**
 
@@ -86,55 +107,98 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 
     - Do not configure a virtual disk for storage (yet).
 
+    ![](/assets/img/OT_Sensor/HDDLater.jpg)
+
+    <br/>
+
 	- Connect the OT Sensor software ISO image to a virtual DVD drive.
     
     - Select Firmware, in Boot order move DVD Drive to the top of the list, select Apply and then select OK.
 
-	
+    ![](/assets/img/OT_Sensor/mountISO.jpg)
+
+	<br/>
+    <br/>
+
+
 - 2. Configure Networking:
+
+      - You'll need to configure at least two network adapters on your VM: one to connect to the Azure portal, and another to connect to traffic mirroring ports.
     
-    You'll need to configure at least two network adapters on your VM: one to connect to the Azure portal, and another to connect to traffic mirroring ports.
+         - Network adapter 1, to connect to the Azure portal for cloud management.
+
+         - Network adapter 2, to connect to a traffic mirroring port that's configured to allow promiscuous mode traffic. If you're connecting your sensor to multiple traffic mirroring ports, make sure there's a network adapter configured for each port.
+       
+	  - Right-click on the new virtual machine, and select Settings.
+
+	  - Select Add Hardware, and add a new network adapter.
+
+![](/assets/img/OT_Sensor/NIC1.jpg)
+
+  - Select the virtual switch that connects to the sensor management network.
     
-    - Network adapter 1, to connect to the Azure portal for cloud management.
+  - Configure the network adaptor according to your server network topology. Under the "Hardware Acceleration" blade, disable "Virtual Machine Queue" for the monitoring (SPAN) network interface.
 
-    - Network adapter 2, to connect to a traffic mirroring port that's configured to allow promiscuous mode traffic. If you're connecting your sensor to multiple traffic mirroring ports, make sure there's a network adapter configured for each port.
-
-    - Right-click on the new virtual machine, and select Settings.
-
-	- Select Add Hardware, and add a new network adapter.
-
-	- Select the virtual switch that connects to the sensor management network.
-    
-    - Configure the network adaptor according to your server network topology. Under the "Hardware Acceleration" blade, disable "Virtual Machine Queue" for the monitoring (SPAN) network interface.
-
-
+<br/>
+<br/>
 
 - 3. Create a virtual disk in Hyper-V Manager (**Fixed size**, as required by the hardware profile).
 
-	- Select format = **VHDX.**
+	    - Select format = **VHDX.**
 
-	- Enter the name and location for the VHD.
+![](/assets/img/OT_Sensor/VHDX.jpg)
 
-	- Enter the required size according to your organization's needs (select **Fixed Size disk type**).
+- Enter the name and location for the VHD.
+
+- Enter the required size according to your organization's needs (select **Fixed Size disk type**).
 	
-	- Review the summary, and select Finish.
+![](/assets/img/OT_Sensor/Fixed.png)
 
-	- Connect the VHDX to your virtual machine.
 
-	- Review the summary, and select Finish.
 
-- 4. Install OT Network Sensor software.
+- Review the summary, and select Finish.
 
-	- Start the virtual machine.
+![](/assets/img/OT_Sensor/VHDXHDD.jpg)
 
-	- When the installation boots, you're prompted to start the installation process. Either select the Install iot-sensor-<version number> item to continue, or leave the wizard to make the selection automatically on its own.
 
->&#128161; _Pro-Tip: The wizard automatically selects to install the software after 30 seconds of waiting._
+
+- Connect the VHDX to your virtual machine:
+
+![](/assets/img/OT_Sensor/HDD2.jpg)
+
+
+<br/>
+<br/>
+    
+- 4. Install & Register OT Network Sensor software.
+
+	    - Start the virtual machine.
+
+	    - When the installation boots, you're prompted to start the installation process. Either select the Install **iot-sensor-<.version number>** item to continue, or leave the wizard to make the selection automatically on its own:
+
+        ![](/assets/img/OT_Sensor/install1.png)
+
+        - If you've configured your NICs to an external vSwitch for connectivity, it will prompt you with an IP address you can use to activate your sensor via browser:
+
+        ![](/assets/img/OT_Sensor/Login1.jpg)
+
+        - Navigate to that IP address ending in .101 and sign in with **admin/admin** to change the default password and complete the deployment. 
+
+        - While logged in via browser, navigate to the **Register** tab and upload the registration file from earlier. 
+
+
+
+
+<br/>
+
+>&#128161; Pro-Tip: _The wizard automatically selects to install the software after 30 seconds of waiting._
 
 <br/>
 <br/>
 
 # Defend your IoT Dojo like a Ninja!
+
+
 
 <br/>
 <br/>
