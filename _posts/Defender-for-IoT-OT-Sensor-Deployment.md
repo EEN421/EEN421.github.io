@@ -221,6 +221,25 @@ The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this a
 If you've made it this far, thanks for reading! All the scripts referenced in this blog post can be found in my [MDI repository](https://github.com/EEN421/Defender-for-Identity) on [Github](https://github.com/EEN421).
 
 <br/>
+<br/>
+
+# Helpful Links & Resources:
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/ot-deploy-path
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/onboard-sensors
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/getting-started?tabs=wizard
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/install-software-ot-sensor#install-defender-or-iot-software-on-ot-sensors
+
+- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/activate-deploy-sensor
+
+
 
 <a href="https://hanleycloudsolutions.com">
     <img src="/assets/img/footer.png">
