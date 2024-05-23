@@ -279,19 +279,19 @@ If you've made it this far, thanks for reading! I hope this has been a helpful g
 
 # Helpful Links & Resources:
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/ot-deploy-path
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/ot-deploy-path)
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/onboard-sensors
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/onboard-sensors)
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/getting-started?tabs=wizard
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/getting-started?tabs=wizard)
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances)
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements)
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/install-software-ot-sensor#install-defender-or-iot-software-on-ot-sensors
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/install-software-ot-sensor#install-defender-or-iot-software-on-ot-sensors)
 
-- https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/activate-deploy-sensor
+- [](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/activate-deploy-sensor)
 
 
 
