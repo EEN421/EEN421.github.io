@@ -87,6 +87,14 @@ Your new plan is listed under the relevant subscription on the Plans and pricing
 >&#128161; Pro-Tip: _You can use the above steps to spin up a trial too, if you'd like to take it for a test drive first._
 
 <br/>
+
+Once the Sub has been onboarded and billing has been sorted out, go back to the **Getting Started** blade and select **Setup OT/ICS Security** again. 
+
+Expand **Step 1** to select the latest version and download the OT Sensor ISO:
+
+![](/assets/img/OT_Sensor/download.jpg)
+
+<br/>
 <br/>
 
 # Deploy an Operational Technology (OT) Sensor on a Virtual Appliance 
