@@ -51,10 +51,85 @@ The Defender for IoT OT Sensor is a great way to complete our sensor deployment 
 
 # Onboard your subscription to Defender for IoT 
 
+- Open ![Defender for IoT](https://portal.azure.com/#view/Microsoft_Azure_IoT_Defender/IoTDefenderDashboard/%7E/Getting_started) in the Azure portal, select Plans and pricing.
+
+- In the Defender for IoT's Plans and pricing page, select Add plan, then select your new subscription.
+
+- The Price plan value is updated automatically to read Microsoft 365, reflecting your Microsoft 365 license.
+
+- Select Next and review the details for your licensed site. The details listed on the Review and purchase pane reflect your license.
+
+- Select the terms and conditions, and then select Save.
+
+Your new plan is listed under the relevant subscription on the Plans and pricing > Plans page. For more information, see ![Manage your subscriptions](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/how-to-manage-subscriptions).
+
+>&#128161; _Pro-Tip: You can use the above steps to spin up a trial too, if you'd like to take it for a test drive first._
+
 <br/>
 <br/>
 
 # Deploy an Operational Technology (OT) Sensor on a Virtual Appliance 
+
+The OT Network Sensor supports Hyper-V and VMWare virtual appliances. For this article, I've spun up a VM in Hyper-V. Configure how beefy your appliance needs to be according to the minimum requirements listed ![here](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements). Since this is a lab environment, I went with the L100 hardware profile.
+
+- 1. Create the virtual machine using Hyper-V:
+
+	- On the Actions menu, create a new virtual machine.
+
+	- Enter a name for the virtual machine.
+
+	- Select **Generation** and set it to **Generation 2,** and then select Next.
+
+	- Specify the memory allocation according to your organization's needs, in standard RAM denomination (I chose the minimum: 8192MB). **Don't enable Dynamic Memory.**
+
+	- Allocate CPU resources according to your organization's needs.
+
+    - Do not configure a virtual disk for storage (yet).
+
+	- Connect the OT Sensor software ISO image to a virtual DVD drive.
+    
+    - Select Firmware, in Boot order move DVD Drive to the top of the list, select Apply and then select OK.
+
+	
+- 2. Configure Networking:
+    
+    You'll need to configure at least two network adapters on your VM: one to connect to the Azure portal, and another to connect to traffic mirroring ports.
+    
+    - Network adapter 1, to connect to the Azure portal for cloud management.
+
+    - Network adapter 2, to connect to a traffic mirroring port that's configured to allow promiscuous mode traffic. If you're connecting your sensor to multiple traffic mirroring ports, make sure there's a network adapter configured for each port.
+
+    - Right-click on the new virtual machine, and select Settings.
+
+	- Select Add Hardware, and add a new network adapter.
+
+	- Select the virtual switch that connects to the sensor management network.
+    
+    - Configure the network adaptor according to your server network topology. Under the "Hardware Acceleration" blade, disable "Virtual Machine Queue" for the monitoring (SPAN) network interface.
+
+
+
+- 3. Create a virtual disk in Hyper-V Manager (**Fixed size**, as required by the hardware profile).
+
+	- Select format = **VHDX.**
+
+	- Enter the name and location for the VHD.
+
+	- Enter the required size according to your organization's needs (select **Fixed Size disk type**).
+	
+	- Review the summary, and select Finish.
+
+	- Connect the VHDX to your virtual machine.
+
+	- Review the summary, and select Finish.
+
+- 4. Install OT Network Sensor software.
+
+	- Start the virtual machine.
+
+	- When the installation boots, you're prompted to start the installation process. Either select the Install iot-sensor-<version number> item to continue, or leave the wizard to make the selection automatically on its own.
+
+>&#128161; _Pro-Tip: The wizard automatically selects to install the software after 30 seconds of waiting._
 
 <br/>
 <br/>
@@ -63,6 +138,11 @@ The Defender for IoT OT Sensor is a great way to complete our sensor deployment 
 
 <br/>
 <br/>
+
+<br/>
+<br/>
+
+# Ian's Insights:
 
 <br/>
 <br/>
