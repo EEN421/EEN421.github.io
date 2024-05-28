@@ -47,7 +47,7 @@ The Defender for IoT OT Sensor is a great way to complete our sensor deployment 
 
 &#128268;   2. Agentless Security: It delivers agentless security for continuously monitoring OT networks in industrial and critical infrastructure organizations. This is particularly useful for existing devices that might not have built-in security agents.
 
-&#x26A1;    3.	Deployment Flexibility: You can deploy these capabilities fully on-premises without sending any data to Azure3, which can be ideal for locations with low bandwidth or high-latency connectivity.
+&#x26A1;    3.	Deployment Flexibility: You can deploy these capabilities fully on-premises without sending any data to Azure, which can be ideal for locations with low bandwidth or high-latency connectivity.
 
 &#x2601;    4.	Cloud Connectivity: When configured as cloud-connected sensors, all data that the sensor detects is displayed in the sensor console, but alert information is also delivered to Azure, where it can be analyzed and shared with other Azure services.
 
