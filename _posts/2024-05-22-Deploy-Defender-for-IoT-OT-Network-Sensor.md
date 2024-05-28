@@ -1,5 +1,5 @@
 # Introduction & Use Case:
-You've deployed your sensors through Azure IoT Hub and onboarded your telemetry to a Log Analytics Workspace, but you're a ninja and know there's more to defending your shinobi dojo and it's IoT infrastructure... Enter the Defender for IoT Operational Technology (OT) sensor! 
+You've deployed your sensors through Azure IoT Hub and onboarded your telemetry to a Log Analytics Workspace, but you're a ninja and know there's more to defending your shinobi dojo's IoT infrastructure... Enter the Defender for IoT Operational Technology (OT) sensor! 
 
 <br/>
 
