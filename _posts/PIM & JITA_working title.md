@@ -90,6 +90,27 @@ Here are the requirements for the custom role used to allow members to request a
 
 ![](/assets/img/JITA_PIM/JumpBox%20Custom%20Role.png)
 
+<br/>
+<br/>
+
+# Step-by-Step Guide
+- 1. Navigate to the Azure portal:
+![](/assets/img/JITA_PIM/CustomRole2.jpg)
+
+- 2. Select your subscription:
+
+- 3. Click on the IAM blade, illustrated below: 
+![](/assets/img/JITA_PIM/CustomRole3.jpg)
+
+- 4. Select "Add Custom Role"
+![](/assets/img/JITA_PIM/CustomRole1.jpg)
+
+- 5. Add the required permissions:
+![](/assets/img/JITA_PIM/JumpBox%20Custom%20Role.png)
+
+- 5. Now, when your users Navigate to the designated VM, they can select the "connect" blade if they have the custom role applied, they will then be given the option to "request access"
+![](/assets/img/JITA_PIM/CustomRole4.jpg)
+
 
 <br/>
 <br/>
@@ -110,16 +131,6 @@ JITA:
 <br/>
 
 ![](/assets/img/JITA_PIM/JITA1.jpg)
-
-# Step-by-Step Guide
-
-
-
-===================================================================
-
-
-
->&#128161; BullsEye OS has many known security CVEs that were plugged up with the release of the newer Bookworm OS. Check out my earlier blog article that discusses the security upgrades included with Bookworm that are still unresolved in BullsEye [here](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). Here's one such example known as [Dirty Pipe (aka CVE-2022-0847)](https://forums.raspberrypi.com/viewtopic.php?t=331022) that's applicable to BullsEye OS.
 
 
 
