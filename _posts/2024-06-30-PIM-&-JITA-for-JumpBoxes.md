@@ -153,10 +153,6 @@ If you've made it this far, thanks for reading! I hope this has been a helpful g
 
 The non-screenshot images featured in this article were generated from either [Microsoft Copilot](https://copilot.microsoft.com/) or [www.leonardo.ai](www.Leonardo.ai). 
 
-<br/>
-<br/>
-
-![](/assets/img/JITA_PIM/JITA1.jpg)
 
 <br/>
 <br/>
@@ -173,6 +169,11 @@ The non-screenshot images featured in this article were generated from either [M
 <br/>
 <br/>
 
+![](/assets/img/JITA_PIM/JITA1.jpg)
+
+<br/>
+<br/>
+
 # Helpful Links & Resources:
 
 - [https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure)
@@ -181,7 +182,7 @@ The non-screenshot images featured in this article were generated from either [M
 
 - [https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-usage#prerequisites](https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-usage#prerequisites)
 
-![https://leonardo.ai/](https://leonardo.ai/)
+- [https://leonardo.ai/](https://leonardo.ai/)
 
 
 <br/>
