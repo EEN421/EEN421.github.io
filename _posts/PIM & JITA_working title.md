@@ -17,6 +17,11 @@ You're no stranger to danger and know that the best way to do this is a combinat
 <br/>
 <br/>
 
+![](/assets/img/JITA_PIM/Default_Two_mysterious_ninjas_cloaked_in_dark_indigo_robes_eme_3.jpg)
+
+<br/>
+<br/>
+
 # In this Post We Will: 
 
 - &#x1F4BB; Define a "Jump Box" and when to use one. 
@@ -26,10 +31,7 @@ You're no stranger to danger and know that the best way to do this is a combinat
 - &#128170; Secure Corporate Resources and Lock Down our Jump Box.
 - &#x1f977; Defend your Cyber Dojo like a Ninja! 
 
-<br/>
-<br/>
-
-![](/assets/img/JITA_PIM/Default_Two_mysterious_ninjas_cloaked_in_dark_indigo_robes_eme_3.jpg)
+![](/assets/img/JITA_PIM/PIM%20Castle.jpg)
 
 <br/>
 <br/>
@@ -39,7 +41,10 @@ A jump box is a network device that enables secure access to servers or other de
 
 However, if not properly secured, it can pose a super-massive risk to your network’s security so it’s crucial that it’s well-protected.
 
-![](/assets/img/JITA_PIM/PIM%20Castle.jpg)
+
+<br/>
+
+![](/assets/img/JITA_PIM/76a0a290-d56d-4c6e-bba6-c3922178fa6c.jpg)
 
 <br/>
 <br/>
@@ -85,9 +90,6 @@ Here are the requirements for the custom role used to allow members to request a
 
 ![](/assets/img/JITA_PIM/JumpBox%20Custom%20Role.png)
 
-<br/>
-
-![](/assets/img/JITA_PIM/76a0a290-d56d-4c6e-bba6-c3922178fa6c.jpg)
 
 <br/>
 <br/>
