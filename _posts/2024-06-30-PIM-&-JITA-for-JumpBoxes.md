@@ -116,14 +116,14 @@ Here are the requirements for the custom role used to allow members to request a
 <br/>
 <br/>
 
-- 5. Add the required permissions:
+- 5. Add the required permissions and assign members:
 
 ![](/assets/img/JITA_PIM/JumpBox%20Custom%20Role.png)
 
 <br/>
 <br/>
 
-- 6. Now, when your users Navigate to the designated VM, they can select the "connect" blade if they have the custom role applied, they will then be given the option to "request access:"
+- 6. Now, when your users Navigate to the designated VM, they can select the "connect" blade and if they have the custom role applied, they will then be given the option to "request access," illustrated below:
 
 ![](/assets/img/JITA_PIM/CustomRole4.jpg)
 
