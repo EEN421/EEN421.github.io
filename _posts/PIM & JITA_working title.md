@@ -133,7 +133,9 @@ JITA:
 
 # Thanks for Reading! 
 
-If you've made it this far, thanks for reading! I hope this has been a helpful guide for locking down your jumpboxes and thus your critical corporate resources!
+If you've made it this far, thanks for reading! I hope this has been a helpful guide for locking down your jumpboxes and thus your critical corporate resources! 
+
+The non-screenshot images featured in this article were generated from either [Microsoft Copilot](https://copilot.microsoft.com/) or [www.leonardo.ai](www.Leonardo.ai). 
 
 <br/>
 <br/>
@@ -163,6 +165,7 @@ If you've made it this far, thanks for reading! I hope this has been a helpful g
 
 - [https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-usage#prerequisites](https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-usage#prerequisites)
 
+![https://leonardo.ai/](https://leonardo.ai/)
 
 
 <br/>
