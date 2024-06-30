@@ -3,13 +3,16 @@ During a regular security audit, you've discovered several jump boxes with netwo
 
 The Change Management Board has given some push back: they have approved, given the following requirements are satisfied as a part of the solution: 
 
-- Users are required to put in an access request that must be approved by a manager before they can connect to the jump box. 
+- &#128268; Users are required to put in an access request that must be approved by a manager before they can connect to the jump box. 
 
-- Requests must be logged with justification. 
+- &#128221; Requests must be logged with justification. 
 
-- Network Access must be provisioned when necessary only.
+- &#9201; Network Access must be provisioned when necessary only.
 
-You're no stranger to danger and know that the best way to do this is a combination of Privileged Identity Management (PIM) and Just-in-Time-Administration (JITA) because JIT is about controlling when and how a VM can be accessed, and PIM is about managing who has access to resources and when they have that access. Both are important for maintaining a secure environment in Azure.
+You're no stranger to danger and know that the best way to do this is a combination of Privileged Identity Management (PIM) and Just-in-Time-Administration (JITA) because:
+- &#128073; JIT is about controlling when and how a VM can be accessed
+
+- &#128073; PIM is about managing who has access to resources and when they have that access. Both are important for maintaining a secure environment in Azure.
 
 <br/>
 <br/>
@@ -19,8 +22,9 @@ You're no stranger to danger and know that the best way to do this is a combinat
 - &#x1F4BB; Define a "Jump Box" and when to use one. 
 - &#128272; Define & Deploy Privileged Identity Management (PIM).
 - &#x26A1; Define & Deploy Just-in-Time-Administration (JITA).
+- &#128526; Define a Custom Role to Adhere to Principle of Least Privelege.
 - &#128170; Secure Corporate Resources and Lock Down our Jump Box.
-- &#x1f977; Defend your Dojo like a Ninja! 
+- &#x1f977; Defend your Cyber Dojo like a Ninja! 
 
 <br/>
 <br/>
@@ -35,17 +39,83 @@ A jump box is a network device that enables secure access to servers or other de
 
 However, if not properly secured, it can pose a super-massive risk to your network’s security so it’s crucial that it’s well-protected.
 
-<br/>
-<br/>
-
-
->&#128161; Pro-Tip: _The standalone Enterprise IoT Sensor has been decommissioned in favour of leveraging the Defender for Endpoint agents to cover Enterprise IoT Devices such as VoIP systems, smart TVs and printers etc. so you no longer need to deploy it manually, just integrate Defender for Endpoint in Endpoint settings and again in Defender for IoT._
+![](/assets/img/JITA_PIM/PIM%20Castle.jpg)
 
 <br/>
 <br/>
 
+# Define Privileged Identity Management (PIM)
+Privileged Identity Management (PIM) is a service in Microsoft Entra ID that enables you to manage, control, and monitor access to important resources in your organization. You can find a [full list of PIM features here](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure) but for the purposes of this article, we're going to focus on the features that satisfy our use-case:
+
+- Approval-Based Role Activation: Before activating privileged roles, users must seek approval. This ensures proper oversight and prevents misuse.
+
+- Access Reviews: Regularly review user roles to ensure they still need access. This helps maintain security hygiene.
+
+- Audit History: Download audit logs for internal or external audits.
+
+![](/assets/img/JITA_PIM/PIM_Ninja.jpg)
+
 
 <br/>
+<br/>
+
+# Define Just-in-Time-Administration (JITA)
+Just-in-Time Administration (JIT) is a privileged access management practice that helps organizations control the duration of specific privileges granted to employees and close partners. It works alongside a precise definition of permissions known as Just Enough Admin (JEA). In short, a VM with JIT administration configured will have a Deny-All rule applied to it's network security group until a request is approved to add an Allow rule from the user's public IP address in real time. When the JIT access expires, the Allow rule does too and remote access is cut off. 
+
+In the context of EntraID, JIT administration minimizes the attack vector associated with administrator accounts. By granting temporary access only when needed, it reduces the risk of unauthorized access and enhances control over privileged accounts. Additionally, JIT adds monitoring, visibility, and fine-grained controls, allowing organizations to track privileged administrators’ activities and usage patterns, which satisfies our use case. 
+
+![](/assets/img/JITA_PIM/JITA_Ninja.jpg)
+
+
+<br/>
+<br/>
+
+# Define a Custom Role to Adhere to Principle of Least Privelege
+To satisfy the Change Management Board's requirements, we need access requests to be audited, accompanied by a justification, and then approved. When a user activates a role through PIM, they can be forced to provide a justification and the request will be logged with a time-stamp. PIM can also be configured to have a designated administrator approve the request before it is assigned.
+
+This makes PIM a solid part of our overall solution. However, We will need to define a custom role that allows members to request access to the jumpbox VM as the pre-defined existing roles will allow members to do more than just request access. 
+
+Here are the requirements for the custom role used to allow members to request access to a VM:
+
+- Microsoft.Security/locations/jitNetworkAccessPolicies/initiate/action
+- Microsoft.Security/locations/jitNetworkAccessPolicies/*/read
+- Microsoft.Compute/virtualMachines/read
+- Microsoft.Network/networkInterfaces/*/read
+- Microsoft.Network/publicIPAddresses/read
+
+![](/assets/img/JITA_PIM/JumpBox%20Custom%20Role.png)
+
+<br/>
+
+![](/assets/img/JITA_PIM/76a0a290-d56d-4c6e-bba6-c3922178fa6c.jpg)
+
+<br/>
+<br/>
+
+# End Process & Results
+In order to access a protected corporate resource, users now need to: 
+
+PIM: 
+- Request Activation of the Custom PIM Role.
+- Provide Justification for Auditing.
+
+JITA: 
+- Request timed access to VM from their IP and only that IP.
+
+![](/assets/img/JITA_PIM/approved.jpg)
+
+<br/>
+<br/>
+
+![](/assets/img/JITA_PIM/JITA1.jpg)
+
+# Step-by-Step Guide
+
+
+
+===================================================================
+
+
 
 >&#128161; BullsEye OS has many known security CVEs that were plugged up with the release of the newer Bookworm OS. Check out my earlier blog article that discusses the security upgrades included with Bookworm that are still unresolved in BullsEye [here](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/). Here's one such example known as [Dirty Pipe (aka CVE-2022-0847)](https://forums.raspberrypi.com/viewtopic.php?t=331022) that's applicable to BullsEye OS.
 
@@ -56,7 +126,7 @@ However, if not properly secured, it can pose a super-massive risk to your netwo
 
 # Thanks for Reading! 
 
-If you've made it this far, thanks for reading! I hope this has been a helpful guide for getting started with Defender for IoT and deploying your first of many OT Network Sensors! 
+If you've made it this far, thanks for reading! I hope this has been a helpful guide for locking down your jumpboxes and thus your critical corporate resources!
 
 <br/>
 <br/>
@@ -69,19 +139,13 @@ If you've made it this far, thanks for reading! I hope this has been a helpful g
 
 # Helpful Links & Resources:
 
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/ot-deploy-path](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/ot-deploy-path)
+- [https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure)
 
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/onboard-sensors](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/onboard-sensors)
+- [https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-resource-roles-custom-role-policy](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-resource-roles-custom-role-policy)
 
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/getting-started?tabs=wizard](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/getting-started?tabs=wizard)
+- [https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-usage#prerequisites](https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-usage#prerequisites)
 
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances)
 
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-virtual-appliances#ot-network-sensor-vm-requirements)
-
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/install-software-ot-sensor#install-defender-or-iot-software-on-ot-sensors](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/install-software-ot-sensor#install-defender-or-iot-software-on-ot-sensors)
-
-- [https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/activate-deploy-sensor](https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/ot-deploy/activate-deploy-sensor)
 
 <br/>
 <br/>
