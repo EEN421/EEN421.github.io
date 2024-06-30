@@ -94,21 +94,27 @@ Here are the requirements for the custom role used to allow members to request a
 <br/>
 
 # Step-by-Step Guide
-- 1. Navigate to the Azure portal:
+- 1. Navigate to the Azure portal and select Subscriptions:
 ![](/assets/img/JITA_PIM/CustomRole2.jpg)
 
-- 2. Select your subscription:
+<br/>
 
-- 3. Click on the IAM blade, illustrated below: 
+- 2. Select your subscription:
 ![](/assets/img/JITA_PIM/CustomRole3.jpg)
 
-- 4. Select "Add Custom Role"
+<br/>
+
+- 3. Click on the IAM blade and select "Add Custom Role:"
 ![](/assets/img/JITA_PIM/CustomRole1.jpg)
+
+<br/>
 
 - 5. Add the required permissions:
 ![](/assets/img/JITA_PIM/JumpBox%20Custom%20Role.png)
 
-- 5. Now, when your users Navigate to the designated VM, they can select the "connect" blade if they have the custom role applied, they will then be given the option to "request access"
+<br/>
+
+- 6. Now, when your users Navigate to the designated VM, they can select the "connect" blade if they have the custom role applied, they will then be given the option to "request access:"
 ![](/assets/img/JITA_PIM/CustomRole4.jpg)
 
 
