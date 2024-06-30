@@ -127,12 +127,6 @@ JITA:
 
 ![](/assets/img/JITA_PIM/approved.jpg)
 
-<br/>
-<br/>
-
-![](/assets/img/JITA_PIM/JITA1.jpg)
-
-
 
 <br/>
 <br/>
@@ -144,11 +138,22 @@ If you've made it this far, thanks for reading! I hope this has been a helpful g
 <br/>
 <br/>
 
-![](/assets/img/OT_Sensor/Scorpion_IoT_Picnic.jpg)
+![](/assets/img/JITA_PIM/JITA1.jpg)
 
 <br/>
 <br/>
 
+# In this Post We: 
+
+- &#x1F4BB; Defined a "Jump Box" and when to use one. 
+- &#128272; Defined & Deployed Privileged Identity Management (PIM).
+- &#x26A1; Defined & Deployed Just-in-Time-Administration (JITA).
+- &#128526; Defined a Custom Role to Adhere to Principle of Least Privelege.
+- &#128170; Secured Corporate Resources and Lock Down our Jump Box.
+- &#x1f977; Defended your Cyber Dojo like a Ninja! 
+
+<br/>
+<br/>
 
 # Helpful Links & Resources:
 
