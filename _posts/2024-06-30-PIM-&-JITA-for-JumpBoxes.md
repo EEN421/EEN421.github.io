@@ -1,7 +1,7 @@
 # Introduction & Use Case:
 During a regular security audit, you've discovered several jump boxes with network access to sensitive corporate resources (such as mission-critical production SQL databases) are exposed via RDP port 3389 to the internet and you need to lock them down. 
 
-The Change Management Board has given some push back: they have approved, given the following requirements are satisfied as a part of the solution: 
+The Change Management Board has given some push back; they have approved, given the following requirements are satisfied as a part of the solution: 
 
 - &#128268; Users are required to put in an access request that must be approved by a manager before they can connect to the jump box. 
 
