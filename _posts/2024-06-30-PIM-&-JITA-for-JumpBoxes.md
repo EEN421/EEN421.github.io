@@ -151,7 +151,7 @@ JITA:
 
 If you've made it this far, thanks for reading! I hope this has been a helpful guide for locking down your jumpboxes and thus your critical corporate resources! 
 
-The non-screenshot images featured in this article were generated from either [Microsoft Copilot](https://copilot.microsoft.com/) or [www.leonardo.ai](https://www.Leonardo.ai). 
+The non-screenshot images featured in this article were generated from either [Microsoft Copilot](https://copilot.microsoft.com/) or [https://leonardo.ai/](https://leonardo.ai/). 
 
 
 <br/>
