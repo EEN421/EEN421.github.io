@@ -7,7 +7,7 @@ The Change Management Board has given some push back; they have approved, given 
 
 - &#128221; Requests must be logged with justification. 
 
-- &#9201; Network Access must be provisioned when necessary only.
+- &#9201; Network Access must only be provisioned while necessary.
 
 You're no stranger to danger and know that the best way to do this is a combination of Privileged Identity Management (PIM) and Just-in-Time-Administration (JITA) because:
 - &#128073; JIT is about controlling when and how a VM can be accessed
