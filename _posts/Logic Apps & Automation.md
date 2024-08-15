@@ -88,3 +88,30 @@ We dove into how the following tools can enhance your security posture, providin
 # Thanks for Reading!
  Whether you’re dealing with unusual sign-in patterns, potential insider threats, or other security challenges, I hope these insights help you safeguard your organization with confidence until E5 is on the Corporate Roadmap. 
 
+ <br/>
+
+# Helpful Links & Resources: 
+
+- [Origin of #NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
+
+- [Microsoft Feature Comparison Matrix](https://m365maps.com/matrix.htm#000000000001001000000) 
+
+- [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview)
+
+- [EntraID Identity Protection - Risk-Based Conditional Access Policies](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies)
+
+- [Analytics Rules](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal)
+
+- [What is EntraID?](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)
+
+- [https://leonardo.ai/](https://leonardo.ai/)
+
+
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
