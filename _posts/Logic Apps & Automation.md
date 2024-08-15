@@ -16,13 +16,13 @@ When a user commits three or more failed login attempts within two minutes, we n
 
 <br/>
 
-![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat1.jpg)
+![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat2.jpg)
 
 <br/>
 <br/>
 
 # What do you do? 
-At this point, with the above requirements and contstraints in place, you may feel like a cat with red ninja headband riding a t-rex and running an efficient security operations center amidst the chaotic influx of alerts (actual prompt for the above image).
+At this point, with the above requirements and contstraints in place, you may feel like a cat with a red ninja headband riding a t-rex while running an efficient security operations center amidst the chaotic influx of alerts (actual prompt for the above image).
 
 As a seasoned Sentinel Ninja Cat, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel, linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview), using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
 
