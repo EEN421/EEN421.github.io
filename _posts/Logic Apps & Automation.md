@@ -16,7 +16,7 @@ When a user commits three or more failed login attempts within two minutes, we n
 
 <br/>
 
-![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat2.jpg)
+![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat0.jpg)
 
 <br/>
 <br/>
