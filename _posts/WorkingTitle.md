@@ -1,21 +1,77 @@
 # Introduction & Use Case:
 
-In this blog post, we will explore how to leverage Azure Logics Apps to solve for a common, budget-constrained, critical security use case while also reducing overhead for your SOC analysts. You’ve been charged automating the following scenario:
-•	When a user commits three or more failed login attempts within two minutes, Revoke all EntraID sign-ins (option for disabling the account and/or forcing a password reset too for bonus points).
-•	Notify the user’s manager via email.
-•	Append a comment to the incident in Sentinel. 
-•	To add to the challenge, your corporate overlords have decided that upgrading your Microsoft Enterprise E3 licenses to E5 is not an option this fiscal year, meaning you miss out on Risk-Based Conditional Access Policies. 
-What do you do? 
-As a seasoned Sentinel expert, you know this can be automated by creating an Analytics Rule in Sentinel, linking it to an Azure Logic App, and using an Azure Automation Runbook. This setup allows Sentinel to pass the user account from the incident to the logic app, which runs automatically, reducing SOC team overhead.
-You can configure your Azure Logic App to look for the ‘Manager:’ property in EntraID, automate emailing the manager, and append a comment to the incident. This automation reduces alert fatigue and overhead on your SOC while meeting corporate goals, even with licensing constraints.
+In this blog post, we will explore how to leverage [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) to solve for a common, budget-constrained, critical security use case while also reducing overhead for your SOC analysts. You’ve been charged automating the following scenario:
 
-In this Post We Will:
-In this post, we will delve into how these tools can enhance your security posture, providing practical examples and best practices. Whether you’re dealing with unusual sign-in patterns, potential insider threats, or other security challenges, these insights will help you safeguard your organization with confidence until E5 is on the Corporate Roadmap.
-•	Build a custom Analytics Rule for Detections
-•	Build Logic Apps to:
-o	Revoke EntraID Sessions
-o	Reset EntraID Password
-o	Disable EntraID Account
-•	Configure a Managed Identity for our Logic Apps
-•	Fine Tune our Logic App
-•	Run Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
+When a user commits three or more failed login attempts within two minutes, we need to:
+
+- &#128272; Revoke all EntraID sign-ins
+
+- &#128295; Bonus points for option for disabling the account and/or forcing a password reset too.
+
+- &#128232; Notify the user’s manager via email.
+
+- &#128221; Append a comment to the incident in Sentinel. 
+
+- &#x26A1; To add to the challenge, your corporate overlords have decided that upgrading your Microsoft Enterprise E3 licenses to E5 is not an option this fiscal year, meaning you miss out on [Risk-Based Conditional Access Policies](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies). 
+
+<br/>
+<br/>
+
+# What do you do? 
+As a seasoned Sentinel Ninja, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel, linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview), using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
+
+This setup allows Sentinel to pass the user account from the incident to the logic app, which runs automatically, reducing SOC team overhead.
+
+You can also configure your Azure Logic App to look for the ‘Manager:’ property in [EntraID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), automate emailing a notification to the manager, and append a comment to the incident. This automation reduces alert fatigue and overhead on your SOC while meeting corporate goals, even with licensing constraints... now that's Ninja &#x1f977; 
+
+<br/>
+<br/>
+
+# In this Post We Will:
+
+
+- &#128270; Build a custom Analytics Rule for Detections
+
+- &#128297; Build Logic Apps to:
+
+    - Revoke EntraID Sessions
+    - Reset EntraID Password
+    - Disable EntraID Account
+
+- &#128296; Configure a Managed Identity for our Logic Apps
+
+- &#128295; Fine Tune our Logic Apps
+
+- &#x26A1; Run Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
+
+<br/>
+<br/>
+
+
+<br/>
+<br/>
+
+
+# In this Post We:
+We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
+
+- &#128270; Custom Analytics Rule for Detections
+
+- &#128297; Logic Apps:
+    - Revoke EntraID Sessions
+    - Reset EntraID Password
+    - Disable EntraID Account
+
+- &#128296; Managed Identities for our Logic Apps
+
+- &#128295; Fine Tuning our Logic Apps
+
+- &#x26A1; Running Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
+
+
+<br/>
+<br/>
+
+# Thanks for Reading!
+ Whether you’re dealing with unusual sign-in patterns, potential insider threats, or other security challenges, I hope these insights help you safeguard your organization with confidence until E5 is on the Corporate Roadmap. 
+
