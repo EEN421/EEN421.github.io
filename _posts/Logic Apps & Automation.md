@@ -15,14 +15,24 @@ When a user commits three or more failed login attempts within two minutes, we n
 - &#x26A1; To add to the challenge, your corporate overlords have decided that upgrading your Microsoft Enterprise E3 licenses to E5 is not an option this fiscal year, meaning you miss out on [Risk-Based Conditional Access Policies](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies). 
 
 <br/>
+
+![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat1.jpg)
+
+<br/>
 <br/>
 
 # What do you do? 
-As a seasoned Sentinel Ninja, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel, linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview), using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
+At this point, with the above requirements and contstraints in place, you may feel like a cat with red ninja headband riding a t-rex and running an efficient security operations center amidst the chaotic influx of alerts (actual prompt for the above image).
+
+As a seasoned Sentinel Ninja Cat, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel, linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview), using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
 
 This setup allows Sentinel to pass the user account from the incident to the logic app, which runs automatically, reducing SOC team overhead.
 
 You can also configure your Azure Logic App to look for the ‘Manager:’ property in [EntraID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), automate emailing a notification to the manager, and append a comment to the incident. This automation reduces alert fatigue and overhead on your SOC while meeting corporate goals, even with licensing constraints... now that's Ninja &#x1f977; 
+
+<br/>
+
+![](/assets/img/Logic%20Apps%20&%20Automation/NinjaCat.jpg)
 
 <br/>
 <br/>
