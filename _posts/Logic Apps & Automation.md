@@ -78,6 +78,9 @@ We dove into how the following tools can enhance your security posture, providin
 
 - &#x26A1; Running Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
 
+<br/>
+
+![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat2.jpg)
 
 <br/>
 <br/>
