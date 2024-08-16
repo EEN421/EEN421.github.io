@@ -6,11 +6,11 @@ When a user commits three or more failed login attempts within two minutes, we n
 
 - &#128272; Revoke all EntraID sign-ins
 
-- &#128295; Bonus points for option for disabling the account and/or forcing a password reset too.
+- &#128295; Bonus points for option for disabling the account and/or forcing a password reset too
 
-- &#128232; Notify the user’s manager via email.
+- &#128232; Notify the user’s manager via email
 
-- &#128221; Append a comment to the incident in Sentinel. 
+- &#128221; Append a comment to the incident in Sentinel
 
 - &#x26A1; To add to the challenge, your corporate overlords have decided that upgrading your Microsoft Enterprise E3 licenses to E5 is not an option this fiscal year, meaning you miss out on [Risk-Based Conditional Access Policies](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies). 
 
