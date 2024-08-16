@@ -37,19 +37,13 @@ You can also configure your Azure Logic App to look for the **‘Manager:’** p
 # In this Post We Will:
 
 - &#128268; Connect a Sentinel Workspace to EntraID
-
 - &#128270; Build a custom Analytics Rule for Detections
-
 - &#128297; Build Logic Apps to:
     - &#10003; Revoke EntraID Sessions
     - &#10003; Reset EntraID Password
     - &#10003; Disable EntraID Account
-
-
 - &#128296; Configure a Managed Identity for our Logic Apps
-
 - &#128295; Fine Tune our Logic Apps
-
 - &#x26A1; Run Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
 
 <br/>
