@@ -185,7 +185,7 @@ There are 3 apps in this solution that we're particularly interested in for our 
 
 <br/>
 
-3.) For this example, let's disable the offending user's account, notify their manager, and update the incident in Sentinel automagically for our SOC analysts. Select **Block Entra ID user - Incident** from the list, then click on **Create Playbook**.
+3.) For this example, let's disable the offending user's account, notify their manager, and update the incident in Sentinel &#10024;automagically&#10024; for our SOC analysts. Select **Block Entra ID user - Incident** from the list, then click on **Create Playbook**.
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Create_Playbook.png)
 
