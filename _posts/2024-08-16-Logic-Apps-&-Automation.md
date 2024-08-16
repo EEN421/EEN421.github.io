@@ -415,6 +415,7 @@ We dove into how the following tools can enhance your security posture, providin
     - &#10003; Reset EntraID Password
     - &#10003; Disable EntraID Account
 
+<br/>
 
 - &#128296; Managed Identities for our Logic Apps
 
