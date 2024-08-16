@@ -342,6 +342,10 @@ Now that we've got an incident to run our **Logic App/Playbook** against, _lets 
 
 Let's take a look at what's going on under the hood at each step of the Logic App so we can tweak or fine tune it to our needs. When we ran the **Block Entra ID user - Incident**, here's what happens...
 
+![](/assets/img/Logic%20Apps%20&%20Automation/Logic_App_Designer_Notes.png)
+
+<br/>
+
 1.) **Microsoft Sentinel Incident Trigger** triggers the app upon receipt of new incident data.
 
 2.) **Entities - Get Accounts** grabs the **User Name** and **UPN Suffix** from the incident data. 
@@ -374,10 +378,18 @@ Let's take a look at what's going on under the hood at each step of the Logic Ap
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Manager_email.png)
 
+To confirm, we can navigate to Entra ID and look up the offending user's account status: 
 
+![](/assets/img/Logic%20Apps%20&%20Automation/User_Disabled.png)
 
 <br/>
 <br/>
+
+>&#128161; There are unique permissions required for each of the remaining 2 applications mentioned earlier, and the PowerShell scripts to automate those are available [here](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo).
+
+# Ian's Insights:
+
+Today we satisfied our business security use case of automating responses to risky sign-in behaviour and got bonus points for providing 3 separate automated logic apps each with different outcomes. Each of these logic apps automate either restting a password, disabling an account, or revoking sign-in sessions. To reduce overhead on our SOC, the apps also automate an email to the user's manager, and update the incident so the analyst working the incident doesn't retrace steps. It may feel like we're reinventing the wheel if you've got E5 licenses, but that's not always in the cards and those companies need protection too right? This is a practical solution for E3 or P2 customers until they can make the leap to E5.
 
 # In this Post We:
 We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
