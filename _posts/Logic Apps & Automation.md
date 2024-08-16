@@ -224,7 +224,7 @@ Next, select the **Resource Group** where your **Logic Apps** or **Playbooks** l
 <br/>
 
 
-# Configure a Managed Identity
+# Configure a Managed Identity (Permissions Madness!)
 
 Adhering to the **Zero Trust Network Architecture** and **Principle of Least Privilege** mode of thinking, each of our logic apps will need very specific privileges in order to automate the tasks we want them to:
 
@@ -287,7 +287,25 @@ You'll see the following output if completed run successfully:
 
 <br/>
 
-3.) 
+3.) Next we need to Authorize the API connections used to connect to a mailbox to send a notification email to the manager etc. Navigate to your **Logic App** and go to the **API Connections** blade underneath **Development Tools**. 
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Managed_ID_API.png)
+
+<br/>
+
+4.) Expand the **General** dropdown on the left and go to the **Edit API connection** blade, then click on **Authorize** and save:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Managed_ID_Authorize.png)
+
+<br/>
+
+5.) Go back and repeat this step for all of the API connections listed. 
+
+>&#128161; If you run into an error authorizing the o365 API connection for sending email, make sure you're connecting to an account that has a mailbox to send from (must have an exchange license).
+
+<br/>
+
+
 
 <br/>
 <br/>
@@ -303,6 +321,10 @@ Now that we've got an incident to run our **Logic App/Playbook** against, lets d
 Navigate to the **Incidents** blade in **Sentinel** and identify our incident. 
 
 >&#128161; In the incident details, you can see the offending user who triggered the incident. This information will be passed to the logic app. 
+
+If you go back to the **Logic App Designer** you will no longer have the red "invalid connector" errors if the above steps have been done correctly. 
+
+<br/>
 
 
 
