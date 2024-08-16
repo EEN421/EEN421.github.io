@@ -1,5 +1,4 @@
 # Introduction & Use Case:
-
 In this blog post, we will explore how to leverage [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) to solve for a common, budget-constrained, critical security use case while also reducing overhead for your SOC analysts. You’ve been charged automating the following scenario:
 
 When a user commits three or more failed login attempts within two minutes, we need to:
