@@ -134,8 +134,7 @@ Before going further, ensure the account you're using has the permissions shown 
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Create_Rule_Query.png)
 
->&#128161; The KQL query is availble to copy and paste from my [KQL repo on github](https://github.com/EEN421/KQL-Queries/blob/Main/FailedLoginAttempts.kql) 
-
+>&#128161; The KQL query is availble to copy and paste [here](https://github.com/EEN421/KQL-Queries/blob/Main/FailedLoginAttempts.kql) from my [KQL repo on github](https://github.com/EEN421). 
 
 >&#128161; [EventID 50126](https://www.manageengine.com/products/active-directory-audit/kb/azure-error-codes/azure-ad-sign-in-error-code-50126.html) triggers on Invalid username or password or Invalid on-premises username or password, and so satisfies our use-case for this article. 
 
@@ -205,9 +204,65 @@ There are 3 apps in this solution that we're particularly interested in for our 
 <br/>
 <br/>
 
-# Build a custom Analytics Rule for Detections
+# Grant Logic App Permissions to Interact with Sentinel
+
+1.) First thing we need to do is grant the **Logic App** permissions to interact with the **Sentinel Workspace** by navigating to the **Settings** blade in **Sentinel** and expanding the **Playbook Permissions** dropdown. Click on **Configure Permissions**: 
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Sentinel_Permissions.png)
+
+Next, select the **Resource Group** where your **Logic Apps** or **Playbooks** live to adhere to the **Principle of Least Privilege**:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Sentinel_Permissions1.png)
+
+<br/>
+<br/>
 
 
+# Configure a Managed Identity
+
+Adhering to the **Zero Trust Network Architecture** and **Principle of Least Privilege** mode of thinking, each of our logic apps will need very specific privileges in order to automate the tasks we want them to:
+
+- **Revoke Entra ID SignIn Sessions - incident trigger** requires **"User.ReadWrite.All"** in order to reoke Entra ID sessions.
+- **Reset Microsoft Entra ID User Password - Incident Trigger** requires the **"Password Administrator** role.
+- **Block Entra ID user - Incident** requires **"User.Read.All", "User.ReadWrite.All", "Directory.Read.All",** and **"Directory.ReadWrite.All"** in order to Disable a user account.
+
+>&#128273; Note: all of the above **Logic Apps** will also require special permissions in order to look up the offending user's manager in Entra ID and then update the incident in Sentinel. 
+
+Let's start with the **Block Entra ID user - Incident** because we can easily confirm the results in Entra ID once the user gets locked out. 
+
+Before we can assign the necessary permissions, we need to know what we're assigning them to. Navigate to the **Logic App** and open the **Identities** blade to see the Object's Principle ID. _Take note, we'll need this ID for the next step_.
+
+&#128071; Here's a script that will grant the necessary privileges to a **Managed Identity** &#128071; 
+
+```powershell 
+$MIGuid = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" #<-- Insert your Managed ID
+$MI = Get-AzureADServicePrincipal -ObjectId $MIGuid
+
+$GraphAppId = "00000003-0000-0000-c000-000000000000" #<--Do not change this
+$PermissionName1 = "User.Read.All"
+$PermissionName2 = "User.ReadWrite.All"
+$PermissionName3 = "Directory.Read.All"
+$PermissionName4 = "Directory.ReadWrite.All"
+
+$GraphServicePrincipal = Get-AzureADServicePrincipal -Filter "appId eq '$GraphAppId'"
+$AppRole1 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $PermissionName1 -and $_.AllowedMemberTypes -contains "Application"}
+New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.ObjectId `
+-ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole1.Id
+
+$AppRole2 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $PermissionName2 -and $_.AllowedMemberTypes -contains "Application"}
+New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.ObjectId `
+-ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole2.Id
+
+$AppRole3 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $PermissionName3 -and $_.AllowedMemberTypes -contains "Application"}
+New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.ObjectId `
+-ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole3.Id
+
+$AppRole4 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $PermissionName4 -and $_.AllowedMemberTypes -contains "Application"}
+New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.ObjectId `
+-ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole4.Id
+```
+
+1.) Download the script [here](https://github.dev/EEN421/Powershell-Stuff/blob/Main/Block-EntraIDUser-Incident-PERMISSIONS.ps1) from my [Github Repo](https://github.com/EEN421) 
 
 <br/>
 <br/>
