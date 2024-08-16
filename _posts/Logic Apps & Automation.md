@@ -152,7 +152,13 @@ Before going further, ensure the account you're using has the permissions shown 
 
 <br/>
 
-6.) Don't forget to configure **Grouping.** To satisfy our use-case, we need to reduce overhead for our SOC as a part of our solution. Grouping similar **multiple alerts** together into a **single incident** helps to reduce _alert fatigue_: In our example, our analytics rule will create an incident when a user fails to login 3 or more times in under 2 minutes... What if Joe fails to login 12 times in under 2 minutes? Rather than flooding your SOC with a separate alert for each trigger, all the failed login alerts can be grouped together by user etc. This is crucial for maintaining your SOC's sanity and thus their effectiveness under pressure, when you need it. In the below screenshot, I have enabled grouping alerts by user, by working day (8 hours):
+6.) Don't forget to configure **Grouping.**
+
+- To satisfy our use-case, we need to reduce overhead for our SOC as a part of our solution. Grouping similar **multiple alerts** together into a **single incident** helps to reduce _alert fatigue_.
+
+-  In our example, our analytics rule will create an incident when a user fails to login 3 or more times in under 2 minutes... What if Joe fails to login 12 times in under 2 minutes? Rather than flooding your SOC with a separate alert for each trigger, all the failed login alerts can be grouped together by user etc.
+
+- This is crucial for maintaining your SOC's sanity and thus their effectiveness under pressure, when you need it. In the below screenshot, I have enabled grouping alerts by user, by working day (8 hours):
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Create_Rule_Alert_Grouping.png)
 
@@ -163,7 +169,7 @@ We'll trigger this analytics rule to generate alerts/incidents later. Next we ne
 <br/>
 <br/>
 
-# Deploy Logic Apps
+# Deploy Your Logic Apps
 
 1.) Navigate to the **Content Hub** and locate your installed **Entra ID** Solution, then select **Manage:**
 
@@ -270,6 +276,11 @@ New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.Obje
 -ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole4.Id
 ```
 
+>&#128161; There are unique permissions required for each of the remaining 2 applications mentioned earlier, and the PowerShell scripts to automate those are available [here](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo).
+
+<br/>
+<br/>
+
 2.) Download the script [here](https://github.dev/EEN421/Powershell-Stuff/blob/Main/Block-EntraIDUser-Incident-PERMISSIONS.ps1) from my [Github Repo](https://github.com/EEN421) and swap in your Managed Identity's **Principle Object ID** in the first line.
 
 Launch PowerShell as an administrator and run the script. 
@@ -285,6 +296,7 @@ You'll see the following output if completed run successfully:
 
 >&#128161; This can take a while to propogate on the back end, even after the script ran successfully. Give it at least 20-30 minutes... 
 
+<br/>
 <br/>
 
 3.) Next we need to Authorize the API connections used to connect to a mailbox to send a notification email to the manager etc. Navigate to your **Logic App** and go to the **API Connections** blade underneath **Development Tools**. 
@@ -358,7 +370,8 @@ Let's take a look at what's going on under the hood at each step of the Logic Ap
 
  ...To create a Microsoft Graph URI that disables the account like this: 
 
- ![](//assets/img/Logic%20Apps%20&%20Automation/Disable_User_URI.png)
+![](/assets/img/Logic%20Apps%20&%20Automation/Disable_User_URI.png)
+ 
 
 5.) **Condition** Did the previous step succeed (Yes/No)?
 - If **No** then update the incident with a comment stating that the account could not be disabled automatically. 
