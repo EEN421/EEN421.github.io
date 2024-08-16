@@ -335,6 +335,46 @@ Now that we've got an incident to run our **Logic App/Playbook** against, _lets 
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Run_Playbook.png)
 
+<br/>
+<br/>
+
+# Logic App Breakdown:
+
+Let's take a look at what's going on under the hood at each step of the Logic App so we can tweak or fine tune it to our needs. When we ran the **Block Entra ID user - Incident**, here's what happens...
+
+1.) **Microsoft Sentinel Incident Trigger** triggers the app upon receipt of new incident data.
+
+2.) **Entities - Get Accounts** grabs the **User Name** and **UPN Suffix** from the incident data. 
+
+3.) **For Each** is a loop that runs until it has iterated through all the User accounts from the previous step.
+
+4.) **Update User - Disable User** combines the User Name and UPN Suffix from the previous step like this:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/UpdateUser_DisableUser.png)
+
+ ...To create a Microsoft Graph URI that disables the account like this: 
+
+ ![](//assets/img/Logic%20Apps%20&%20Automation/Disable_User_URI.png)
+
+5.) **Condition** Did the previous step succeed (Yes/No)?
+- If **No** then update the incident with a comment stating that the account could not be disabled automatically. 
+- If **Yes** then move on to next step in decision tree.
+
+6.) **HTTP - Get User Manager** looks up the offender user's manager in EntraID and feeds it to the next step.
+
+7.) **Parse JSON - Get User Manager** Read/Parse the Manager's information according to specified schema/structure (String Object).
+
+8.) **Condition - Does user have manager?** Was the **Manager** property filled out for this user (is it null?).
+- **No** Append a comment to the incident stating that _the user was disabled in AAD via playbook Block-AADUser, but that their manager has not been notified, since it is not found for this user._
+- **Yes** Grab offending user name and information to pass on to next step. 
+
+9.) **Add comment to incident - with manager** appends a comment to the incident in Sentinel stating that the user was disabled and that the manager has been notified. 
+
+10.) **Send an email - to manager** sends an email to the manager from the mailbox associated with the connector: 
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Manager_email.png)
+
+
 
 <br/>
 <br/>
