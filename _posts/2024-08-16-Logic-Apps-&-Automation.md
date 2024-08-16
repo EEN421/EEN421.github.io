@@ -41,7 +41,6 @@ You can also configure your Azure Logic App to look for the **‘Manager:’** p
 - &#128270; Build a custom Analytics Rule for Detections
 
 - &#128297; Build Logic Apps to:
-
     - &#10003; Revoke EntraID Sessions
     - &#10003; Reset EntraID Password
     - &#10003; Disable EntraID Account
