@@ -179,9 +179,11 @@ There are 3 apps in this solution that we're particularly interested in for our 
 
 <br/>
 
-- **Reset Microsoft Entra ID User Password - Incident Trigger** will force reset the offending user's Entra ID password
-- **Block Entra ID user - Incident** will disable the Entra ID account (can be configured to accommodate on-prem AD too)
-- **Revoke Entra ID SignIn Sessions - incident trigger** will sign the user out of all Entra ID sessions, forcing them to re-authenticate
+- &#x26A1;  **Reset Microsoft Entra ID User Password - Incident Trigger** will force reset the offending user's Entra ID password
+
+- &#x26A1;  **Block Entra ID user - Incident** will disable the Entra ID account (can be configured to accommodate on-prem AD too)
+
+- &#x26A1;  **Revoke Entra ID SignIn Sessions - incident trigger** will sign the user out of all Entra ID sessions, forcing them to re-authenticate
 
 <br/>
 
@@ -200,6 +202,10 @@ There are 3 apps in this solution that we're particularly interested in for our 
 5.) You have now deployed an **Azure Logic App**. Repeat these steps for the remaining 2 **Logic Apps**. 
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Logic_App_Designer_View.png)
+
+<br/>
+
+>&#128161; You can ignore the 'invalid connections' in the above screenshot, we'll fix those shortly with a Managed Identity and email account to send from.
 
 <br/>
 <br/>
@@ -223,14 +229,16 @@ Next, select the **Resource Group** where your **Logic Apps** or **Playbooks** l
 Adhering to the **Zero Trust Network Architecture** and **Principle of Least Privilege** mode of thinking, each of our logic apps will need very specific privileges in order to automate the tasks we want them to:
 
 - **Revoke Entra ID SignIn Sessions - incident trigger** requires **"User.ReadWrite.All"** in order to reoke Entra ID sessions.
+
 - **Reset Microsoft Entra ID User Password - Incident Trigger** requires the **"Password Administrator** role.
+
 - **Block Entra ID user - Incident** requires **"User.Read.All", "User.ReadWrite.All", "Directory.Read.All",** and **"Directory.ReadWrite.All"** in order to Disable a user account.
 
 >&#128273; Note: all of the above **Logic Apps** will also require special permissions in order to look up the offending user's manager in Entra ID and then update the incident in Sentinel. 
 
 Let's start with the **Block Entra ID user - Incident** because we can easily confirm the results in Entra ID once the user gets locked out. 
 
-Before we can assign the necessary permissions, we need to know what we're assigning them to. Navigate to the **Logic App** and open the **Identities** blade to see the Object's Principle ID. _Take note, we'll need this ID for the next step_.
+1.) Before we can assign the necessary permissions, we need to know what we're assigning them to. Navigate to the **Logic App** and open the **Identities** blade to see the Object's Principle ID. _Take note, we'll need this ID for the next step_.
 
 &#128071; Here's a script that will grant the necessary privileges to a **Managed Identity** &#128071; 
 
@@ -262,7 +270,42 @@ New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.Obje
 -ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole4.Id
 ```
 
-1.) Download the script [here](https://github.dev/EEN421/Powershell-Stuff/blob/Main/Block-EntraIDUser-Incident-PERMISSIONS.ps1) from my [Github Repo](https://github.com/EEN421) 
+2.) Download the script [here](https://github.dev/EEN421/Powershell-Stuff/blob/Main/Block-EntraIDUser-Incident-PERMISSIONS.ps1) from my [Github Repo](https://github.com/EEN421) and swap in your Managed Identity's **Principle Object ID** in the first line.
+
+Launch PowerShell as an administrator and run the script. 
+
+>&#128161; You may need to run the following powershell commands first to connect to your tenant: 
+
+```powershell
+Connect-AzureAD
+```
+You'll see the following output if completed run successfully:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Permissions_Script_Success.png)
+
+>&#128161; This can take a while to propogate on the back end, even after the script ran successfully. Give it at least 20-30 minutes... 
+
+<br/>
+
+3.) 
+
+<br/>
+<br/>
+
+# Run the App! 
+
+First we need to generate at least 3 failed login attempts in under 2 minutes for our **Analyitics Rule** to generate an **incident**. 
+
+Go to an incognito/private browsing session and try to login to the [Azure portal](www.portal.azure.com) with a bogus password a few times. The Analytics rule is set to run every 15 minutes so it should show up soon. 
+
+Now that we've got an incident to run our **Logic App/Playbook** against, lets do it! 
+
+Navigate to the **Incidents** blade in **Sentinel** and identify our incident. 
+
+>&#128161; In the incident details, you can see the offending user who triggered the incident. This information will be passed to the logic app. 
+
+
+
 
 <br/>
 <br/>
