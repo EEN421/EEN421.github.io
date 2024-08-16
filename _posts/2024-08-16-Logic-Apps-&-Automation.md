@@ -424,6 +424,8 @@ We dove into how the following tools can enhance your security posture, providin
 
 # Helpful Links & Resources: 
 
+<br/>
+
 - [Origin of #NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
 
 - [Microsoft Feature Comparison Matrix](https://m365maps.com/matrix.htm#000000000001001000000) 
