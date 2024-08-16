@@ -1,5 +1,5 @@
 # Introduction & Use Case:
-In this blog post, we will explore how to leverage [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) to solve for a common, budget-constrained, critical security use case while also reducing overhead for your SOC analysts. You’ve been charged automating the following scenario:
+In this blog post, we will explore how to leverage [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) to solve for a common, budget-constrained, mission-critical security use case while also reducing overhead for your SOC analysts. You’ve been charged automating the following scenario:
 
 When a user commits three or more failed login attempts within two minutes, we need to:
 
@@ -23,7 +23,7 @@ When a user commits three or more failed login attempts within two minutes, we n
 # What do you do? 
 At this point, with the above requirements and contstraints in place, you may feel like _a cat with a red ninja headband riding a t-rex while running an efficient security operations center amidst the chaotic influx of alerts_ (actual prompt for the above image).
 
-As a seasoned Sentinel Ninja Cat, however, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel and linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
+As a seasoned Sentinel [Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=9402), however, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel and linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
 
 You can also configure your Azure Logic App to look for the **‘Manager:’** property in [EntraID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), automate emailing a notification to the manager, and append a comment to the incident. This automation reduces alert fatigue and overhead on your SOC while meeting corporate goals, even with the given licensing constraints... now that's Ninja! &#x1f977; 
 
@@ -44,6 +44,7 @@ You can also configure your Azure Logic App to look for the **‘Manager:’** p
     - &#10003; Revoke EntraID Sessions
     - &#10003; Reset EntraID Password
     - &#10003; Disable EntraID Account
+
 
 - &#128296; Configure a Managed Identity for our Logic Apps
 
@@ -116,7 +117,7 @@ Before going further, ensure the account you're using has the permissions shown 
 
 # Build a custom Analytics Rule for Detections
 
-1.) Navigate to your Sentinel Deployment and go to the **Analytics Rules** blade:
+1.) Navigate to your Sentinel Deployment and go to the **Analytics Rules** blade and select **+Create**:
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/New_Query_Rule1.png)
 
@@ -152,17 +153,17 @@ Before going further, ensure the account you're using has the permissions shown 
 
 6.) Don't forget to configure **Grouping.**
 
-- To satisfy our use-case, we need to reduce overhead for our SOC as a part of our solution. Grouping similar **multiple alerts** together into a **single incident** helps to reduce _alert fatigue_.
+- To satisfy our use-case, we need to reduce overhead for our SOC as a part of our solution. Grouping similar **multiple alerts** together into a **single incident** helps to reduce **alert fatigue**.
 
 -  In our example, our analytics rule will create an incident when a user fails to login 3 or more times in under 2 minutes... What if Joe fails to login 12 times in under 2 minutes? Rather than flooding your SOC with a separate alert for each trigger, all the failed login alerts can be grouped together by user etc.
 
-- This is crucial for maintaining your SOC's sanity and thus their effectiveness under pressure, when you need it. In the below screenshot, I have enabled grouping alerts by user, by working day (8 hours):
+- This is crucial for maintaining your SOC's sanity and thus their effectiveness under pressure, when you need it most. In the below screenshot, I have enabled grouping alerts by user, by working day (8 hours):
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Create_Rule_Alert_Grouping.png)
 
 <br/>
 
-We'll trigger this analytics rule to generate alerts/incidents later. Next we need to build out our Logic App(s). 
+We'll trigger this analytics rule to generate alerts/incidents later. Next we need to deploy our **Logic Apps**. 
 
 <br/>
 <br/>
@@ -244,7 +245,7 @@ Let's start with the **Block Entra ID user - Incident** because we can easily co
 
 1.) Before we can assign the necessary permissions, we need to know what we're assigning them to. Navigate to the **Logic App** and open the **Identities** blade to see the Object's Principle ID. _Take note, we'll need this ID for the next step_.
 
-&#128071; Here's a script that will grant the necessary privileges to a **Managed Identity** &#128071; 
+&#128071; Here's a script that will grant the necessary privileges to disable an EntraID account for a **Managed Identity** &#128071; 
 
 ```powershell 
 $MIGuid = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" #<-- Insert your Managed ID
@@ -274,7 +275,7 @@ New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.Obje
 -ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole4.Id
 ```
 
->&#128161; There are unique permissions required for each of the remaining 2 applications mentioned earlier, and the PowerShell scripts to automate those are available [here](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo).
+>&#128161; There are unique permissions required for each of the remaining 2 logic apps mentioned earlier, and the PowerShell scripts for each are available [here](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo).
 
 <br/>
 <br/>
@@ -400,7 +401,7 @@ To confirm, we can navigate to Entra ID and look up the offending user's account
 
 # Ian's Insights:
 
-Today we satisfied our business security use case of automating responses to risky sign-in behaviour and got bonus points for providing 3 separate automated logic apps each with different outcomes. Each of these logic apps automate either restting a password, disabling an account, or revoking sign-in sessions. To reduce overhead on our SOC, the apps also automate an email to the user's manager, and update the incident so the analyst working the incident doesn't retrace steps. It may feel like we're reinventing the wheel if you've got E5 licenses, but that's not always in the cards and those companies need protection too right? This is a practical solution for E3 or P2 customers until they can make the leap to E5.
+Today we satisfied our business security use case of automating responses to risky sign-in behaviour and got bonus points for providing 3 separate automated logic apps each with different outcomes. Each of these logic apps will automate either restting a password, disabling an account, or revoking sign-in sessions. To reduce overhead on our SOC, the apps also automate an email to the user's manager, and update the incident so the analyst working the incident doesn't have to. It may feel like we're reinventing the wheel if you've got E5 licenses, but that's not always in the cards and those companies need protection too right? This is a practical solution for E3 or P2 customers until they can make the leap to E5.
 
 # In this Post We:
 We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
@@ -413,6 +414,7 @@ We dove into how the following tools can enhance your security posture, providin
     - &#10003; Revoke EntraID Sessions
     - &#10003; Reset EntraID Password
     - &#10003; Disable EntraID Account
+
 
 - &#128296; Managed Identities for our Logic Apps
 
