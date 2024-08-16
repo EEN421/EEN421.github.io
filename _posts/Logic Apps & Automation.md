@@ -205,7 +205,7 @@ There are 3 apps in this solution that we're particularly interested in for our 
 
 <br/>
 
->&#128161; You can ignore the 'invalid connections' in the above screenshot, we'll fix those shortly with a Managed Identity and email account to send from.
+>&#128161; You can ignore the 'invalid connections' in the above screenshot, we'll fix those next with a Managed Identity and email account to send from etc.
 
 <br/>
 <br/>
@@ -303,8 +303,7 @@ You'll see the following output if completed run successfully:
 
 >&#128161; If you run into an error authorizing the o365 API connection for sending email, make sure you're connecting to an account that has a mailbox to send from (must have an exchange license).
 
-<br/>
-
+>&#128161; If you go back to the **Logic App Designer** you will no longer have the red "invalid connector" errors if the above steps have been done correctly. 
 
 
 <br/>
@@ -314,19 +313,27 @@ You'll see the following output if completed run successfully:
 
 First we need to generate at least 3 failed login attempts in under 2 minutes for our **Analyitics Rule** to generate an **incident**. 
 
-Go to an incognito/private browsing session and try to login to the [Azure portal](www.portal.azure.com) with a bogus password a few times. The Analytics rule is set to run every 15 minutes so it should show up soon. 
+- &#128073; Go to an incognito/private browsing session and try to login to the [Azure portal](www.portal.azure.com) with a bogus password a few times. The Analytics rule is set to run every 15 minutes so it should show up soon. You'll see it in the **Incidents** blade in **Sentinel**.
 
-Now that we've got an incident to run our **Logic App/Playbook** against, lets do it! 
+Now that we've got an incident to run our **Logic App/Playbook** against, _lets do it!_
 
-Navigate to the **Incidents** blade in **Sentinel** and identify our incident. 
+1.) Navigate to the **Incidents** blade in **Sentinel** and identify our incident:
 
->&#128161; In the incident details, you can see the offending user who triggered the incident. This information will be passed to the logic app. 
-
-If you go back to the **Logic App Designer** you will no longer have the red "invalid connector" errors if the above steps have been done correctly. 
+![](/assets/img/Logic%20Apps%20&%20Automation/Incident.png)
 
 <br/>
 
+>&#128161; In the incident details, you can see the offending user who triggered the incident. This information will be passed to the logic app: ![](/assets/img/Logic%20Apps%20&%20Automation/Incident_details.png)
 
+<br/>
+
+2.) Click on the Incident to bring up the incident fly-out and select **Actions**, then **Run Playbook**:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Incident_actions.png)
+
+3.) Select your **Logic App/Playbook** and run it against the incident, which sends the user data over for the app to process:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Run_Playbook.png)
 
 
 <br/>
