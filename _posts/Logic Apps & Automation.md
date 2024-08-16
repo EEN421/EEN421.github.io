@@ -179,9 +179,38 @@ There are 3 apps in this solution that we're particularly interested in for our 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Logic_Apps_to_Deploy.png)
 
 <br/>
+
+- **Reset Microsoft Entra ID User Password - Incident Trigger** will force reset the offending user's Entra ID password
+- **Block Entra ID user - Incident** will disable the Entra ID account (can be configured to accommodate on-prem AD too)
+- **Revoke Entra ID SignIn Sessions - incident trigger** will sign the user out of all Entra ID sessions, forcing them to re-authenticate
+
 <br/>
 
+3.) For this example, let's disable the offending user's account, notify their manager, and update the incident in Sentinel automagically for our SOC analysts. Select **Block Entra ID user - Incident** from the list, then click on **Create Playbook**.
 
+![](/assets/img/Logic%20Apps%20&%20Automation/Create_Playbook.png)
+
+<br/>
+
+4.) Fill out the appropriate **subscription** and **resource group** for your **Logic App**, then give it a name. You do not need to configure any **Connections** at this time, just leave them at their default values and click **Next** through to the end:
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Create_Playbook_Basics.png)
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Create_Playbook_Completed.png)
+
+5.) You have now deployed an **Azure Logic App**. Repeat these steps for the remaining 2 **Logic Apps**. 
+
+![](/assets/img/Logic%20Apps%20&%20Automation/Logic_App_Designer_View.png)
+
+<br/>
+<br/>
+
+# Build a custom Analytics Rule for Detections
+
+
+
+<br/>
+<br/>
 
 # In this Post We:
 We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
