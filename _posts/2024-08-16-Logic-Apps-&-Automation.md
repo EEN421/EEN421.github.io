@@ -407,19 +407,13 @@ Today we satisfied our business security use case of automating responses to ris
 We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
 
 - &#128268; Connect a Sentinel Workspace to EntraID
-
 - &#128270; Custom Analytics Rule for Detections
-
 - &#128297; Logic Apps:
     - &#10003; Revoke EntraID Sessions
     - &#10003; Reset EntraID Password
     - &#10003; Disable EntraID Account
-<br/>
-
 - &#128296; Managed Identities for our Logic Apps
-
 - &#128295; Fine Tuning our Logic Apps
-
 - &#x26A1; Running Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
 
 <br/>
