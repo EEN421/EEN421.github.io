@@ -25,7 +25,7 @@ At this point, with the above requirements and contstraints in place, you may fe
 
 As a seasoned Sentinel [Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=9402), however, you know this can be automated by creating an [Analytics Rule](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal) in Sentinel and linking it to an [Azure Logic App](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) using an [Azure Automation Runbook](https://learn.microsoft.com/en-us/azure/automation/automation-runbook-types?tabs=lps72%2Cpy10).
 
-You can also configure your Azure Logic App to look for the **‘Manager:’** property in [EntraID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), automate emailing a notification to the manager, and append a comment to the incident. This automation reduces alert fatigue and overhead on your SOC while meeting corporate goals, even with the given licensing constraints... now that's Ninja! &#x1f977; 
+You can also configure your Azure Logic App to look for the **‘Manager:’** property in [EntraID](https://learn.microsoft.com/en-us/entra/fundamentals/whatis), automate emailing a notification to the manager, and append a comment to the incident. This automation reduces alert fatigue and overhead on your SOC while meeting corporate goals, even with the given licensing constraints... **now that's Ninja!** &#x1f977; 
 
 <br/>
 
@@ -151,7 +151,7 @@ Before going further, ensure the account you're using has the permissions shown 
 
 -  In our example, our analytics rule will create an incident when a user fails to login 3 or more times in under 2 minutes... What if Joe fails to login 12 times in under 2 minutes? Rather than flooding your SOC with a separate alert for each trigger, all the failed login alerts can be grouped together by user etc.
 
-- This is crucial for maintaining your SOC's sanity and thus their effectiveness under pressure, when you need it most. In the below screenshot, I have enabled grouping alerts by user, by working day (8 hours):
+- This is crucial for maintaining your SOC's sanity and thus their effectiveness under pressure (when you need it most). In the below screenshot, I have enabled grouping alerts by user, by working day (8 hours):
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Create_Rule_Alert_Grouping.png)
 
@@ -397,7 +397,7 @@ To confirm, we can navigate to Entra ID and look up the offending user's account
 
 Today we satisfied our business security use case of automating responses to risky sign-in behaviour and got bonus points for providing 3 separate automated logic apps each with different outcomes. Each of these logic apps will automate either restting a password, disabling an account, or revoking sign-in sessions. To reduce overhead on our SOC, the apps also automate an email to the user's manager, and update the incident so the analyst working the incident doesn't have to. It may feel like we're reinventing the wheel if you've got E5 licenses, but that's not always in the cards and those companies need protection too right? This is a practical solution for E3 or P2 customers until they can make the leap to E5.
 
-# In this Post We:
+# In this Post:
 We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
 
 - &#128268; Connect a Sentinel Workspace to EntraID
@@ -427,17 +427,11 @@ We dove into how the following tools can enhance your security posture, providin
 <br/>
 
 - [Origin of #NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
-
 - [Microsoft Feature Comparison Matrix](https://m365maps.com/matrix.htm#000000000001001000000) 
-
 - [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview)
-
 - [EntraID Identity Protection - Risk-Based Conditional Access Policies](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies)
-
 - [Analytics Rules](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal)
-
 - [What is EntraID?](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)
-
 - [https://leonardo.ai/](https://leonardo.ai/)
 
 
