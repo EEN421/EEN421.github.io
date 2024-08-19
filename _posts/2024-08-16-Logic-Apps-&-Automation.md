@@ -274,7 +274,7 @@ New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.Obje
 <br/>
 <br/>
 
-2.) Download the script [here](https://github.dev/EEN421/Powershell-Stuff/blob/Main/Block-EntraIDUser-Incident-PERMISSIONS.ps1) from my [Github Repo](https://github.com/EEN421) and swap in your Managed Identity's **Principle Object ID** in the first line.
+2.) Download the script [here](https://github.com/EEN421/Powershell-Stuff/blob/Main/Logic%20App%20Demo/Block-EntraIDUser-Incident-PERMISSIONS.ps1) from my [Github Repo](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo) and swap in your Managed Identity's **Principle Object ID** in the first line.
 
 Launch PowerShell as an administrator and run the script. 
 
