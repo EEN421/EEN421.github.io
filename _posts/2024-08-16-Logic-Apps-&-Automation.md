@@ -433,6 +433,9 @@ We dove into how the following tools can enhance your security posture, providin
 - [Analytics Rules](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal)
 - [What is EntraID?](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)
 - [https://leonardo.ai/](https://leonardo.ai/)
+- [Powershell Scripts for Managed ID Permissions](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo)
+- [KQL Query used in Analytics Rule](https://github.com/EEN421/KQL-Queries/blob/Main/FailedLoginAttempts.kql)
+- [KQL Library](https://github.com/EEN421/KQL-Queries)
 
 
 <br/>
