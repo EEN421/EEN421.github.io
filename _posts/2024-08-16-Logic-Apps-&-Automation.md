@@ -127,7 +127,7 @@ Before going further, ensure the account you're using has the permissions shown 
 
 ![](/assets/img/Logic%20Apps%20&%20Automation/Create_Rule_Query.png)
 
->&#128161; The KQL query is availble to copy and paste [here](https://github.com/EEN421/KQL-Queries/blob/Main/FailedLoginAttempts.kql) from my [KQL repo on github](https://github.com/EEN421). 
+>&#128161; The KQL query is availble to copy and paste [here](https://github.com/EEN421/KQL-Queries/blob/Main/FailedLoginAttempts.kql) from my [KQL repo on github](https://github.com/EEN421/KQL-Queries). 
 
 >&#128161; [EventID 50126](https://www.manageengine.com/products/active-directory-audit/kb/azure-error-codes/azure-ad-sign-in-error-code-50126.html) triggers on Invalid username or password or Invalid on-premises username or password, and so satisfies our use-case for this article. 
 
