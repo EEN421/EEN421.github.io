@@ -3,9 +3,9 @@ In this blog post, we will explore how to leverage [Azure Logic Apps](https://le
 
 When a user commits three or more failed login attempts within two minutes, we need to:
 
-- &#128272; Revoke all EntraID sign-ins
+- &#x1F6AB; Revoke all EntraID sign-ins
 
-- &#x1F6AB; Bonus points for options to disable the account and/or force a password reset
+- &#128272; Bonus points for options to disable the account and/or force a password reset
 
 - &#128232; Notify the user’s manager via email
 
