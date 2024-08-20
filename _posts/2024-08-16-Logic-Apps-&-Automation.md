@@ -5,7 +5,7 @@ When a user commits three or more failed login attempts within two minutes, we n
 
 - &#128272; Revoke all EntraID sign-ins
 
-- &#128295; Bonus points for option for disabling the account and/or forcing a password reset too
+- &#x1F6AB; Bonus points for options to disable the account and/or force a password reset
 
 - &#128232; Notify the user’s manager via email
 
