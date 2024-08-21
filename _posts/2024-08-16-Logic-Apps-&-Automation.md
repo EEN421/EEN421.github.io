@@ -227,11 +227,11 @@ Next, select the **Resource Group** where your **Logic Apps** or **Playbooks** l
 
 Adhering to the **Zero Trust Network Architecture** and **Principle of Least Privilege** mode of thinking, each of our logic apps will need very specific privileges in order to automate the tasks we want them to:
 
-- **Revoke Entra ID SignIn Sessions - incident trigger** requires **"User.ReadWrite.All"** in order to reoke Entra ID sessions.
+- **Revoke Entra ID SignIn Sessions - incident trigger** requires **"User.Read.All", and "User.RevokeSessions.All"** in order to reoke Entra ID sessions.
 
-- **Reset Microsoft Entra ID User Password - Incident Trigger** requires the **"Password Administrator** role.
+- **Reset Microsoft Entra ID User Password - Incident Trigger** requires **"User.Read.All"**, and the **"Password Administrator** role as well.
 
-- **Block Entra ID user - Incident** requires **"User.Read.All", "User.ReadWrite.All", "Directory.Read.All",** and **"Directory.ReadWrite.All"** in order to Disable a user account.
+- **Block Entra ID user - Incident** requires **"User.Read.All", "Directory.Read.All",** and **"User.EnableDisableAccount.All"** in order to Disable a user account.
 
 >&#128273; Note: all of the above **Logic Apps** will also require special permissions in order to look up the offending user's manager in Entra ID and then update the incident in Sentinel. 
 
@@ -247,9 +247,8 @@ $MI = Get-AzureADServicePrincipal -ObjectId $MIGuid
 
 $GraphAppId = "00000003-0000-0000-c000-000000000000" #<--Do not change this
 $PermissionName1 = "User.Read.All"
-$PermissionName2 = "User.ReadWrite.All"
-$PermissionName3 = "Directory.Read.All"
-$PermissionName4 = "Directory.ReadWrite.All"
+$PermissionName2 = "Directory.Read.All"
+$PermissionName3 = "User.EnableDisableAccount.All"
 
 $GraphServicePrincipal = Get-AzureADServicePrincipal -Filter "appId eq '$GraphAppId'"
 $AppRole1 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $PermissionName1 -and $_.AllowedMemberTypes -contains "Application"}
@@ -264,9 +263,6 @@ $AppRole3 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $Permis
 New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.ObjectId `
 -ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole3.Id
 
-$AppRole4 = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq $PermissionName4 -and $_.AllowedMemberTypes -contains "Application"}
-New-AzureAdServiceAppRoleAssignment -ObjectId $MI.ObjectId -PrincipalId $MI.ObjectId `
--ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole4.Id
 ```
 
 >&#128161; There are unique permissions required for each of the remaining 2 logic apps mentioned earlier, and the PowerShell scripts for each are available [here](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo).
