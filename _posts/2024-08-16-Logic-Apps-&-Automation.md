@@ -204,7 +204,7 @@ There are 3 apps in this solution that we're particularly interested in for our 
 
 <br/>
 
->&#128161; You can ignore the 'invalid connections' in the above screenshot, we'll fix those next with a Managed Identity and email account to send from etc.
+>&#128161; You can ignore the 'invalid connections' in the above screenshot, we'll fix those next with a System-Assigned Managed Identity and email account to send from etc.
 
 <br/>
 <br/>
