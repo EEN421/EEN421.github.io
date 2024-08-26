@@ -5,12 +5,12 @@
 
 &#x26A1; You're no stranger to danger; you know you can register an app in EntraID for authentication and permissions, then use PowerShell to automate the process of submitting IOCs to Microsoft Defender, ensuring that your SOC remains agile and responsive even in the face of access control challenges. This approach not only streamlines your threat response but also reinforces your overall security posture by maintaining continuous protection against emerging threats.
 
-In this blog post, we’ll explore how to set up and use PowerShell scripts to publish IOCs to Microsoft Defender via a registered EntraID application. We’ll walk you through the necessary steps for authentication and permissions, providing a robust solution for when manual methods fall short. Whether you’re dealing with IP addresses, domains, or other threat indicators, this guide will equip you with the knowledge to keep your defenses strong and your response times swift.
+In this blog post, we’ll explore how to set up and use PowerShell scripts to publish IOCs to Microsoft Defender with a registered EntraID application. We’ll walk you through the necessary steps for authentication and permissions, providing a robust solution for when manual methods fall short. Whether you’re dealing with IP addresses, domains, or other threat indicators, this guide will equip you with the knowledge to keep your defenses strong and your response times swift... like a ninja! &#x1f977;
 
 
 <br/>
 
-![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat0.jpg)
+![](/assets/img/IOC/Ninja_Cat_SOC.jpg)
 
 <br/>
 <br/>
