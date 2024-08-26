@@ -1,17 +1,12 @@
 # Introduction & Use Case:
-In the fast-paced world of cybersecurity, the ability to swiftly respond to threats is crucial. However, even the most well-oiled Security Operations Center (SOC) can encounter hiccups, such as Role-Based Access Control (RBAC) configuration mishaps that hinder the manual registration of Indicators of Compromise (IOCs) in the Microsoft Defender portal. When such issues arise, having an alternative method to publish IOCs becomes invaluable.
+&#9201; In the fast-paced world of cybersecurity, the ability to swiftly respond to threats is crucial. However, even the most well-oiled Security Operations Center (SOC) can encounter hiccups, such as Role-Based Access Control (RBAC) configuration mishaps that hinder the manual registration of Indicators of Compromise (IOCs) in the Microsoft Defender portal. When such issues arise, having an alternative method to publish IOCs becomes invaluable.
 
-Enter PowerShell and a registered EntraID application. By leveraging these tools, you can automate the process of submitting IOCs to Microsoft Defender, ensuring that your SOC remains agile and responsive even in the face of access control challenges. This approach not only streamlines your threat response but also reinforces your overall security posture by maintaining continuous protection against emerging threats.
+&#128272; Moreover, with the upcoming enforcement of Multi-Factor Authentication (MFA) later this year, relying on user-based service accounts for automation is becoming increasingly untenable. These accounts **will break** under the upcoming changes Microsoft is going to enforce, potentially leaving your SOC vulnerable at critical moments. 
 
-Moreover, with the upcoming enforcement of Multi-Factor Authentication (MFA) later this year, relying on user-based service accounts is becoming increasingly untenable. These accounts are prone to breaking under new security policies, potentially leaving your SOC vulnerable at critical moments. By using a registered application for authentication and permissions, you can bypass these issues, ensuring a more stable and reliable method for publishing IOCs.
+&#x26A1; You're no stranger to danger; you know you can register an app in EntraID for authentication and permissions, then use PowerShell to automate the process of submitting IOCs to Microsoft Defender, ensuring that your SOC remains agile and responsive even in the face of access control challenges. This approach not only streamlines your threat response but also reinforces your overall security posture by maintaining continuous protection against emerging threats.
 
 In this blog post, we’ll explore how to set up and use PowerShell scripts to publish IOCs to Microsoft Defender via a registered EntraID application. We’ll walk you through the necessary steps for authentication and permissions, providing a robust solution for when manual methods fall short. Whether you’re dealing with IP addresses, domains, or other threat indicators, this guide will equip you with the knowledge to keep your defenses strong and your response times swift.
 
-- &#x1F6AB;
-- &#128272;
-- &#128232;
-- &#128221;
-- &#x26A1;  
 
 <br/>
 
@@ -22,15 +17,15 @@ In this blog post, we’ll explore how to set up and use PowerShell scripts to p
 
 # In this Post We Will:
 
-- &#128268; Connect a Sentinel Workspace to EntraID
-- &#128270; Build a custom Analytics Rule for Detections
-- &#128297; Build Logic Apps to:
-    - &#10003; Revoke EntraID Sessions
-    - &#10003; Reset EntraID Password
-    - &#10003; Disable EntraID Account
-- &#128296; Configure a System-Assigned Managed Identity for our Logic Apps
-- &#128295; Fine Tune our Logic Apps
-- &#x26A1; Run Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
+- &#128268;
+ Register an Application in EntraID
+- &#128272; Manage Application Permissions (Principle of Least Privilege for the win)
+- &#128297; Build a powershell script to grab our token
+- &#128295; Build a powershell script to submit our custom IoC
+- &#128296; Fine tune our script (ask it to prompt so we don't hardcode (gross right?))
+- &#x26A1; Automate it!
+
+
 
 <br/>
 <br/>
@@ -44,28 +39,26 @@ Before going further, ensure the account you're using has the permissions shown 
 <br/>
 
 
->&#128161; There are unique permissions required for each of the remaining 2 applications mentioned earlier, and the PowerShell scripts to automate those are available [here](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo).
+>&#128161; There are ...
 
 # Ian's Insights:
 
-Today we satisfied our business security use case of automating responses to risky sign-in behaviour and got bonus points for providing 3 separate automated logic apps each with different outcomes. Each of these logic apps will automate either restting a password, disabling an account, or revoking sign-in sessions. To reduce overhead on our SOC, the apps also automate an email to the user's manager, and update the incident so the analyst working the incident doesn't have to. It may feel like we're reinventing the wheel if you've got E5 licenses, but that's not always in the cards and those companies need protection too right? This is a practical solution for E3 or P2 customers until they can make the leap to E5.
+Today we ...
 
 # In this Post:
-We dove into how the following tools can enhance your security posture, providing practical examples and best practices:
+We dove into ...stuff:
 
-- &#128268; Connect a Sentinel Workspace to EntraID
-- &#128270; Custom Analytics Rules for Detections
-- &#128297; Logic Apps:
-    - &#10003; Revoke EntraID Sessions
-    - &#10003; Reset EntraID Password
-    - &#10003; Disable EntraID Account
-- &#128296; Configure System-Assigned Managed Identities for our Logic Apps
-- &#128295; Fine Tune our Logic Apps
-- &#x26A1; Run Logic Apps from Incident Queue to Pass User Data over the Sentinel Connector
+- &#128268;
+ Register an Application in EntraID
+- &#128272; Manage Application Permissions (Principle of Least Privilege for the win)
+- &#128297; Build a powershell script to grab our token
+- &#128295; Build a powershell script to submit our custom IoC
+- &#128296; Fine tune our script (ask it to prompt so we don't hardcode (gross right?))
+- &#x26A1; Automate it!
+
 
 <br/>
 
-![](/assets/img/Logic%20Apps%20&%20Automation/T-Rex_Cat2.jpg)
 
 <br/>
 <br/>
@@ -79,16 +72,7 @@ We dove into how the following tools can enhance your security posture, providin
 
 <br/>
 
-- [Origin of #NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
-- [Microsoft Feature Comparison Matrix](https://m365maps.com/matrix.htm#000000000001001000000) 
-- [Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview)
-- [EntraID Identity Protection - Risk-Based Conditional Access Policies](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies)
-- [Analytics Rules](https://learn.microsoft.com/en-us/azure/sentinel/create-analytics-rules?tabs=azure-portal)
-- [What is EntraID?](https://learn.microsoft.com/en-us/entra/fundamentals/whatis)
-- [https://leonardo.ai/](https://leonardo.ai/)
-- [Powershell Scripts for Managed ID Permissions](https://github.com/EEN421/Powershell-Stuff/tree/Main/Logic%20App%20Demo)
-- [KQL Query used in Analytics Rule](https://github.com/EEN421/KQL-Queries/blob/Main/FailedLoginAttempts.kql)
-- [KQL Library](https://github.com/EEN421/KQL-Queries)
+
 
 
 <br/>
