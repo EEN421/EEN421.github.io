@@ -263,7 +263,7 @@ else
 }
 ```
 
->&#128161; It's important that you download and save both of these scripts to the same directory, because the **Submit-Indicator.ps1** script will try to call the **Get-Token.ps1** script when it runs. 
+>&#128161; Both scripts are [available here](https://github.com/EEN421/Powershell-Stuff/tree/Main/IOC%20Demo/Prompt) on Github. It's important that you download and save both of these scripts to the _same directory,_ because the **Submit-Indicator.ps1** script will try to call the **Get-Token.ps1** script when it runs. Both of these scripts originally had the variables hardcoded, you can see the difference and check out the [original scripts here](https://github.com/EEN421/Powershell-Stuff/tree/Main/IOC%20Demo/Hard-Coded)
 
 
 <br/>
