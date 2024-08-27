@@ -132,7 +132,10 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 
 We need to create an application key (secret). 
 
-- Navigate to your application in the Azure portal and select **Certificates & Secrets**:
+- Navigate to your application in the Azure portal and select **Certificates & Secrets**, **Client Secrets**, then **+ New client secret** as shown below:
+
+![](/assets/img/IOC/New_Secret.png) 
+
 
 <br/>
 <br/>
