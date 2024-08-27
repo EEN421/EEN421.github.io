@@ -55,6 +55,8 @@ By transitioning to application-based authentication, you can enhance the **secu
 
 # Pre-Requisites
 
+**Global Administrator** will cover it, **BUT** if you want to go **Principle of Least Privilege**, read on... 
+
 To **register** an **application** in **Entra ID** (formerly **Azure AD**), assign it privileges, and grant admin consent, you need specific permissions and roles. Here’s a breakdown of the steps and required permissions:
 
 &#x1F511;	**Registering an Application**:
@@ -72,14 +74,90 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 
 # Register an Application in Entra ID
 
+- Navigate to your Entra ID portal, **App Registrations**, then to **New Registration**:
+
+![](/assets/img/IOC/New_App_Reg.png)
+
 <br/>
+
+- Fill out a **Name**, and select **Accounts in this organizational directory only**
+
+![](/assets/img/IOC/AppReg1.png)
+
 <br/>
+
+- Leave the optional **Redirect URI** blank and select **Register** to register your new Entra ID Application.
+![](/assets/img/IOC/New_App_Reg1-URI.png)
+![](/assets/img/IOC/New_App_Reg_Succeed.png)
+
+<br/>
+
+-  On the new application's **Overview** Page, take note of the **Application ID** and **Tenant ID**:
+![](/assets/img/IOC/New_App_reg_IDs.png)
+
+<br/>
+
+# Manage Application Permissions (Principle of Least Privilege)
+
+-  Navigate to **API Permissions** and select **Add permission**:
+![](/assets/img/IOC/New_App_Reg_APIs.png)
+
+<br/>
+
+-  Select **APIs my organization uses** and search for **WindowsDefenderATP**:
+![](/assets/img/IOC/New_App_Reg_APIs-permissions1.png)
+
+<br/>
+
+- Select **Application Permissions**, illustrated below:
+![](/assets/img/IOC/New_App_Reg_APIs-permissions2.png)
+
+<br/>
+
+-  Expand the **Threat Intelligence (Ti)** drop down menu and select **Ti.ReadWrite.All** as this application needs to be able to read and create IoCs.
+![](/assets/img/IOC/New_App_Reg_API-TI.ReadWrite.All.png)
+![](/assets/img/IOC/New_App_Reg_API_Success.png)
+
+<br/>
+
+- Provide **Admin Consent**:
+![](/assets/img/IOC/API_Permissions_Before.png)
+![](/assets/img/IOC/API_Permissions_After.png)
 
 
 <br/>
 <br/>
 
-# Manage Application Permissions (Principle of Least Privilege for the win)
+# Application Authentication & Authorization
+
+We need to create an application key (secret). 
+
+- Navigate to your application in the Azure portal and select **Certificates & Secrets**:
+
+<br/>
+<br/>
+
+- 
+
+<br/>
+
+-  
+
+<br/>
+
+<br/>
+
+-  
+
+<br/>
+
+<br/>
+
+-  
+
+<br/>
+
+
 <br/>
 <br/>
 
