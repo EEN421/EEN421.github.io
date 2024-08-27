@@ -87,12 +87,14 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 <br/>
 
 - Leave the optional **Redirect URI** blank and select **Register** to register your new Entra ID Application.
+
 ![](/assets/img/IOC/New_App_Reg1-URI.png)
 ![](/assets/img/IOC/New_App_Reg_Succeed.png)
 
 <br/>
 
 -  On the new application's **Overview** Page, take note of the **Application ID** and **Tenant ID**:
+
 ![](/assets/img/IOC/New_App_reg_IDs.png)
 
 <br/>
@@ -100,27 +102,32 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 # Manage Application Permissions (Principle of Least Privilege)
 
 -  Navigate to **API Permissions** and select **Add permission**:
+
 ![](/assets/img/IOC/New_App_Reg_APIs.png)
 
 <br/>
 
 -  Select **APIs my organization uses** and search for **WindowsDefenderATP**:
+
 ![](/assets/img/IOC/New_App_Reg_APIs-permissions1.png)
 
 <br/>
 
 - Select **Application Permissions**, illustrated below:
+
 ![](/assets/img/IOC/New_App_Reg_APIs-permissions2.png)
 
 <br/>
 
 -  Expand the **Threat Intelligence (Ti)** drop down menu and select **Ti.ReadWrite.All** as this application needs to be able to read and create IoCs.
+
 ![](/assets/img/IOC/New_App_Reg_API-TI.ReadWrite.All.png)
 ![](/assets/img/IOC/New_App_Reg_API_Success.png)
 
 <br/>
 
 - Provide **Admin Consent**:
+
 ![](/assets/img/IOC/API_Permissions_Before.png)
 ![](/assets/img/IOC/API_Permissions_After.png)
 
@@ -139,11 +146,13 @@ We need to create an application key (secret).
 <br/>
 
 -  Give your **secret** a name and **expiration**:
+
 ![](/assets/img/IOC/Secret_EXP.png)
 
 <br/>
 
 - Grab the secret **Value**: 
+
 ![](/assets/img/IOC/Secret_Value.png)
 
 >&#128161; WARNING!!! --> You can ONLY view the secret value once... when you navigate away from the page it will no longer be available ![](/assets/img/IOC/Secret_Warning.png)
