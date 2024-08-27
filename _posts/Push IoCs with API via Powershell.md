@@ -44,11 +44,11 @@ By transitioning to application-based authentication, you can enhance the **secu
 # In this Post We Will:
 
 - &#128268; Register an Application in Entra ID
-- &#128272; Manage Application Permissions (Principle of Least Privilege for the win)
+- &#x1F512; Manage Application Permissions (Principle of Least Privilege)
+- &#x1F511; Application Authentication & Authorization
 - &#128297; Build a powershell script to grab our token
 - &#128295; Build a powershell script to submit our custom IoC
-- &#128296; Fine tune our script
-- &#x26A1; Automate Stuff!
+- &#128296; Run it!
 
 <br/>
 <br/>
@@ -136,104 +136,205 @@ We need to create an application key (secret).
 
 ![](/assets/img/IOC/New_Secret.png) 
 
+<br/>
+
+-  Give your **secret** a name and **expiration**:
+![](/assets/img/IOC/Secret_EXP.png)
+
+<br/>
+
+- Grab the secret **Value**: 
+![](/assets/img/IOC/Secret_Value.png)
+
+>&#128161; WARNING!!! --> You can ONLY view the secret value once... when you navigate away from the page it will no longer be available ![](/assets/img/IOC/Secret_Warning.png)
+
+<br/>
+
+- At this point, you should now have an **Application ID, Tenant ID,** and **Application Secret** locked and loaded.  
 
 <br/>
 <br/>
 
-- 
+# Build a PowerShell Script to Grab our Token
 
-<br/>
+This script gets the App Context Token and saves it to a file named "Latest-token.txt" in the current directory and prompts the user for Tenant ID, App ID, and App Secret and is available here.
 
--  
+```powershell
+# Prompt the user for Tenant ID, App ID, and App Secret
+$tenantId = Read-Host -Prompt 'Enter your Tenant ID'
+$appId = Read-Host -Prompt 'Enter your Application ID'
+$appSecret = Read-Host -Prompt 'Enter your Application Secret'
 
-<br/>
+$resourceAppIdUri = 'https://api.securitycenter.windows.com'
+$oAuthUri = "https://login.windows.net/$TenantId/oauth2/token"
 
-<br/>
+$authBody = [Ordered] @{
+    resource = "$resourceAppIdUri"
+    client_id = "$appId"
+    client_secret = "$appSecret"
+    grant_type = 'client_credentials'
+}
 
--  
-
-<br/>
-
-<br/>
-
--  
-
-<br/>
-
-
-<br/>
-<br/>
-
-
-<br/>
-<br/>
-
-# Build a powershell script to grab our token
-
+$authResponse = Invoke-RestMethod -Method Post -Uri $oAuthUri -Body $authBody -ErrorAction Stop
+$token = $authResponse.access_token
+Out-File -FilePath "./Latest-token.txt" -InputObject $token
+return $token
+```
 <br/>
 <br/>
 
+# Build a PowerShell Script to Submit our Custom IoC
+
+```powershell
+param (   
+    [Parameter(Mandatory=$true)]
+    [ValidateSet('FileSha1','FileSha256','IpAddress','DomainName','Url')]   #validate that the input contains valid value
+    [string]$indicatorType,
+
+    [Parameter(Mandatory=$true)]
+    [string]$indicatorValue,     #an input parameter for the alert's ID	    
+    
+    [Parameter(Mandatory=$false)]
+    [ValidateSet('Alert','AlertAndBlock','Allowed')]   #validate that the input contains valid value
+    [string]$action = 'Alert',                         #set default action to 'Alert'
+    
+    [Parameter(Mandatory=$true)]
+    [string]$title,     
+   
+    [Parameter(Mandatory=$false)]
+    [ValidateSet('Informational','Low','Medium','High')]   #validate that the input contains valid value
+    [string]$severity = 'Informational',                   #set default severity to 'informational'
+    
+    [Parameter(Mandatory=$true)]
+    [string]$description,     
+
+    [Parameter(Mandatory=$true)]
+    [string]$recommendedActions     
+)
+
+# Prompt the user for the necessary values
+$indicatorType = Read-Host -Prompt 'Enter the Indicator Type (FileSha1, FileSha256, IpAddress, DomainName, Url)'
+$indicatorValue = Read-Host -Prompt 'Enter the Indicator Value'
+$action = Read-Host -Prompt 'Enter the Action (Alert, AlertAndBlock, Allowed)' -Default 'Alert'
+$title = Read-Host -Prompt 'Enter the Title'
+$severity = Read-Host -Prompt 'Enter the Severity (Informational, Low, Medium, High)' -Default 'Informational'
+$description = Read-Host -Prompt 'Enter the Description'
+$recommendedActions = Read-Host -Prompt 'Enter the Recommended Actions'
+
+$token = .\Get-Token.ps1                              # Execute Get-Token.ps1 script to get the authorization token
+
+$url = "https://api.securitycenter.windows.com/api/indicators"
+
+$body = 
+@{
+    indicatorValue = $indicatorValue        
+    indicatorType = $indicatorType 
+    action = $action
+    title = $title 
+    severity = $severity	
+    description = $description 
+    recommendedActions =  $recommendedActions 
+}
+ 
+$headers = @{ 
+    'Content-Type' = 'application/json'
+    Accept = 'application/json'
+    Authorization = "Bearer $token"
+}
+
+$response = Invoke-WebRequest -Method Post -Uri $url -Body ($body | ConvertTo-Json) -Headers $headers -ErrorAction Stop
+
+if($response.StatusCode -eq 200)   # Check the response status code
+{
+    return $true        # Update ended successfully
+}
+else
+{
+    return $false       # Update failed
+}
+```
+
+>&#128161; It's important that you download and save both of these scripts to the same directory, because the **Submit-Indicator.ps1** script will try to call the **Get-Token.ps1** script when it runs. 
+
 
 <br/>
 <br/>
 
-# Build a powershell script to submit our custom IoC
+# Run it! 
+
+Open up a PowerShell window as an Administrator and run the **Submit_Indicator.ps1** PowerShell script and fill out the prompts accordingly.
+
+I ran it and provided the following values to test: 
+
+```powershell 
+.\Submit-Indicator.ps1 
+
+-indicatorType FileSha1
+
+-indicatorValue  b9174c8a1db96d329071ee46483a447c1d3abdc0
+
+-action AlertAndBlock
+
+-severity High
+
+-title "Ian's Test"
+
+-description "This IoC was pushed from a powershell command that leverages an EntraID Registered API for authentication and permissions - Ian Hanley"
+
+-recommendedActions "This can be ignored - for testing purposes only"
+```
+
+<br/>
+
+The prompt returned **True** so I navigated to the portal to confirm and the **File hashes** list was updated with my new IoC:
+
+<br/>
+
+
+![](/assets/img/IOC/IOC%20Test.png)
 
 <br/>
 <br/>
 
-<br/>
-<br/>
-
-# Fine tune our script
-
-<br/>
-<br/>
-
-
-<br/>
-<br/>
-
-# Automate Stuff!
-
-<br/>
-<br/>
-
->&#128161; There are ...
 
 # Ian's Insights:
 
-Today we ...
-
-# In this Post:
-We dove into ...stuff:
-
-- &#128268;
- Register an Application in EntraID
-- &#128272; Manage Application Permissions (Principle of Least Privilege for the win)
-- &#128297; Build a powershell script to grab our token
-- &#128295; Build a powershell script to submit our custom IoC
-- &#128296; Fine tune our script (ask it to prompt so we don't hardcode (gross right?))
-- &#x26A1; Automate it!
-
+The ability to swiftly respond to threats is crucial in cybersecurity, but even the best Security Operations Centers (SOCs) can face challenges like RBAC configuration mishaps. With the upcoming enforcement of Multi-Factor Authentication (MFA), relying on user-based service accounts for automation is becoming impractical. By registering an app in EntraID and using PowerShell to automate tasks in Microsoft Defender, you can ensure your SOC remains agile and responsive. 
 
 <br/>
+<br/>
 
+# In this Post:
+
+- &#128268; Registered an Application in Entra ID
+- &#x1F512; Managed Application Permissions (Principle of Least Privilege)
+- &#x1F511; Set Application Authentication & Authorization
+- &#128297; Built a powershell script to grab our token
+- &#128295; Built a powershell script to submit our custom IoC
+- &#128296; Ran it!
 
 <br/>
 <br/>
 
 # Thanks for Reading!
- Whether you’re dealing with unusual sign-in patterns, potential insider threats, or other security challenges, I hope these insights help you safeguard your organization with confidence until E5 is on the Corporate Roadmap. 
+This approach not only streamlines threat response but also strengthens your overall security posture, maintaining continuous protection against emerging threats. This guide will equip you with the knowledge to keep your defenses strong and your response times ninja swift. 🥷 
 
- <br/>
+<br/>
+<br/>
 
 # Helpful Links & Resources: 
 
-<br/>
+- [Quickstart: Register an application with the Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate)
 
+- [Entra ID app registrations and service principals](https://petri.com/microsoft-entra-id-app-registration-explained/#:~:text=App%20registrations%20are%20primarily%20used%20by%20developers%20who,app%20in%20the%20directory%20in%20the%20developer%C3%A2%C2%80%C2%99s%20tenant.)
 
+- [Pushing custom Indicator of Compromise (IoCs) to Microsoft Defender ATP](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/pushing-custom-indicator-of-compromise-iocs-to-microsoft/m-p/532203)
 
+- [WDATP API “Hello World” (or using a simple PowerShell script to pull alerts via WDATP APIs)](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/wdatp-api-hello-world-or-using-a-simple-powershell-script-to/ba-p/326813)
+
+- [Microsoft Defender ATP and Malware Information Sharing Platform integration](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/microsoft-defender-atp-and-malware-information-sharing-platform/m-p/576648)
+
+- [Origins of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 
 <br/>
 <br/>
