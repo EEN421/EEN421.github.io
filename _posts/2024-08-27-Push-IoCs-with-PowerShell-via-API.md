@@ -45,7 +45,7 @@ By transitioning to application-based authentication, you can enhance the **secu
 
 - &#128268; Register an Application in Entra ID
 - &#x1F512; Manage Application Permissions (Principle of Least Privilege)
-- &#x1F511; Application Authentication & Authorization
+- &#x1F511; Configure Application Authentication & Authorization
 - &#128297; Build a powershell script to grab our token
 - &#128295; Build a powershell script to submit our custom IoC
 - &#128296; Run it!
@@ -80,15 +80,19 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 
 <br/>
 
-- Fill out a **Name**, and select **Accounts in this organizational directory only**
+- Fill out a **Name**, and select **Accounts in this organizational directory only**.
 
 ![](/assets/img/IOC/AppReg1.png)
 
 <br/>
 
-- Leave the optional **Redirect URI** blank and select **Register** to register your new Entra ID Application.
-
+- Leave the optional **Redirect URI** blank.
 ![](/assets/img/IOC/New_App_Reg1-URI.png)
+
+<br/>
+
+- Select **Register** to register your new Entra ID Application.
+
 ![](/assets/img/IOC/New_App_Reg_Succeed.png)
 
 <br/>
@@ -99,7 +103,7 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 
 <br/>
 
-# Manage Application Permissions (Principle of Least Privilege)
+# Manage Application Permissions
 
 -  Navigate to **API Permissions** and select **Add permission**:
 
@@ -135,7 +139,7 @@ Permissions Needed: To grant tenant-wide admin consent, you need to be a **Privi
 <br/>
 <br/>
 
-# Application Authentication & Authorization
+# Configure Application Authentication & Authorization
 
 We need to create an application key (secret). 
 
@@ -166,7 +170,7 @@ We need to create an application key (secret).
 
 # Build a PowerShell Script to Grab our Token
 
-This script gets the App Context Token and saves it to a file named "Latest-token.txt" in the current directory and prompts the user for Tenant ID, App ID, and App Secret and is available here.
+This script gets the App Context Token and saves it to a file named "Latest-token.txt" in the current directory and prompts the user for Tenant ID, App ID, and App Secret and is available [here](https://github.com/EEN421/Powershell-Stuff/blob/Main/IOC%20Demo/Prompt/Get-Token.ps1).
 
 ```powershell
 # Prompt the user for Tenant ID, App ID, and App Secret
@@ -317,7 +321,7 @@ The ability to swiftly respond to threats is crucial in cybersecurity, but even 
 
 - &#128268; Registered an Application in Entra ID
 - &#x1F512; Managed Application Permissions (Principle of Least Privilege)
-- &#x1F511; Set Application Authentication & Authorization
+- &#x1F511; Configured Application Authentication & Authorization
 - &#128297; Built a powershell script to grab our token
 - &#128295; Built a powershell script to submit our custom IoC
 - &#128296; Ran it!
