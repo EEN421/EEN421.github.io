@@ -1,6 +1,16 @@
 # Introduction & Use Case:
-Hey Readers! 🎃 It’s been a while since my last post, and for that, I sincerely apologize. Sometimes, life throws you curveballs, and it's easy to get caught up in the whirlwind. But we’re back just in time for the spookiest season of the year! This post is all about getting your creative juices flowing with a juicy DIY Halloween project. Whether you’re looking to craft eerie decorations, whip up some spooky treats, or design the ultimate costume, this is your place to be! Let’s dive into the fun and make this Halloween the best one yet! 🕸️👻
+&#127875; Hey Readers! &#127875; It’s been a while since my last post, and for that, I sincerely apologize. We’re back just in time for the spookiest season of the year! 
 
+This post is all about getting your creative juices flowing with a juicy DIY Halloween project. Whether you’re looking to craft eerie decorations, whip up some spooky treats, or design the ultimate costume, this is your place to be!
+
+Let’s dive into the fun and make this Halloween the best one yet! 👻
+
+# emjoi bank:
+&#128123; ghost
+&#127875; pumpkin/jack-o-lantern
+&#128375; Spider
+&#128376; spider web
+🕸️
 
 <br/>
 
@@ -13,21 +23,29 @@ Hey Readers! 🎃 It’s been a while since my last post, and for that, I sincer
 My daughter picked out a sweet halloween mask and I thought to myself... how can we elevate this? 
 I've worked on a pair of Raspberry Pi powered 'eyeballs' in the past (great to stick inside a carved out pumpkin) and thought they would be cool in a mask.
 
-The pair of eyes I've previously setup were too bulky to fit inside a mask, so I bought a slimmed down Monster M4SK (board build in, less bulky) and a cheap Lithium Ion Cylindrical Battery (3.7v, 2200mAh). The results are awesome. 
+The pair of eyes I've previously setup were too bulky to fit inside a mask, so I bought a slimmed down Monster M4SK (board build in, less bulky) and a cheap Lithium Ion Cylindrical Battery (3.7v, 2200mAh). The results are awesome. Let's dig in...
 
+Lets start with the Raspberry pi build. I've posted a step-by-step guide to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles hostname, default account configuration, enables SSH, WLAN config, and Locale on Bookwork OS and later. HOWEVER... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is not compatible with Bookworm so we have to use the older BullseyeOS. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
 
+Setup 
+
+&#128187; computer
+&#x1F511;
 
 <br/>
 <br/>
 
 # In this Post We Will:
+Part 1:
+- &#128190; Perform a Headless Raspberry Pi Setup (BullseyeOS).
+- &#128268; Connect our Hardware & Deploy our Software Eyes.
+- &#128064; Customize Eye shapes, colours, iris, sclera, etc. 
+- &#127875; Light up a Pumpkin! 
 
-- &#128268; Register an Application in Entra ID
-- &#x1F512; Manage Application Permissions (Principle of Least Privilege)
-- &#x1F511; Configure Application Authentication & Authorization
-- &#128297; Build a powershell script to grab our token
-- &#128295; Build a powershell script to submit our custom IoC
-- &#128296; Run it!
+Part 2:
+- &#128297; Customize our Monster M4SK.  
+- &#128295; Extend the distance between the eyes.
+- &#128123; Spook the neighbour's kids! 
 
 <br/>
 <br/>
@@ -35,7 +53,7 @@ The pair of eyes I've previously setup were too bulky to fit inside a mask, so I
 # Hardware Pre-Requisites
 
 For a bulkier build suitable for inside a carved pumpkin, I used the following: 
-https://learn.adafruit.com/animated-snake-eyes-bonnet-for-raspberry-pi
+https://www.adafruit.com/product/3356 
 https://a.co/d/72oBlGg
 https://www.adafruit.com/product/3055
 
