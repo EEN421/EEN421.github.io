@@ -65,50 +65,95 @@ Stuff...
 
 <br/>
 <br/>
+<br/>
+<br/>
 
 # Perform a Headless Raspberry Pi Setup (BullseyeOS)
 -1. Grab the OS image from the [official Raspberry Pi site](https://www.raspberrypi.com/software/operating-systems/) (don't extract, leave it as is).
 
 <br/>
+<br/>
 
--2. Insert your SD card into the reader and run the Raspberry Pi Imager ([available here](https://www.raspberrypi.com/software/)).
+-2. Insert your SD card into the reader and run the Raspberry Pi Imager ([available here](https://www.raspberrypi.com/software/)). <br/>
 ![](/assets/img/Halloween24/pi_image_blank.png)
 
 <br/>
+<br/>
 
--3. Select your hardware, desired OS, and destination storage (SD Card) as illustrated below...
+-3. Select your hardware, desired OS, and destination storage (SD Card) as illustrated below... <br/>
 ![](/assets/img/Halloween24/pi_image_fin.png)
 
 >&#128161; IMPORTANT --> Make sure you grab the **legacy 32bit Bullseye OS**; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
 
 <br/>
 
--4. Select **Next** and you will be prompted with the option to **edit OS settings**. Select **Edit** and enter your network SSID and PSK, as well as your desired username and password. 
+-4. Select **Next** and you will be prompted with the option to **edit OS settings**. Select **Edit** and enter your network SSID and PSK, as well as your desired username and password. <br/>
 ![](/assets/img/Halloween24/pi_image_settings.png)
 
 <br/>
+<br/>
 
--5. Navigate from the **General** tab over to the **SSH** tab and make sure it's **enabled** with **password authentication** as shown below...
+-5. Navigate from the **General** tab over to the **SSH** tab and make sure it's **enabled** with **password authentication** as shown below... <br/>
 ![](/assets/img/Halloween24/pi_image_settings2.png)
 
 <br/>
+<br/>
 
--6. Click **Next** and let it burn! 
+-6. Click **Next** and let it burn! <br/>
+![](/assets/img/Halloween24/pi_image_write.png) <br/>
 ![](/assets/img/Halloween24/pi_image_done.png)
 
+-7. Drop the SD card into your Raspberry Pi board and boot it up.
+
+-8. Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/))
+
+# Connect our Hardware
+
+The code for this project only works with the Adafruit 128x128 pixel OLED and TFT displays and 240x240 pixel IPS TFT displays. 
+
+Any recent Raspberry Pi board with the 40-pin GPIO header should work. The very earliest Pi boards — Model A and B, with the 26-pin GPIO header — are not compatible.
+
+A Raspberry Pi 2 or greater is highly recommended. The code will run on a Pi Zero or other single-core Raspberry Pi boards, but performance lags quite a bit. Pi 4 works now, which was previously incompatible.
+
+# Deploy our Software "Eyes"
+
+>&#128161; Developer's Notes:
+>-  If using a Raspberry Pi 4, Pi 400, or Compute Module 4: the latest "Bullseye" Raspberry Pi OS Desktop software is required (“Lite” versions, and versions prior to “Bullseye” in late 2021, won’t support this code on these boards). For brevity, we’ll call all of these boards “Pi 4” going forward in this guide. <br/><br/>
+>- All other Raspberry Pi boards: Raspberry Pi OS Lite (Legacy) software is required. Look for both Lite and Legacy in the name! <br/><br/>
+>- For all boards: use the 32-bit version of the operating system, not the 64-bit variant.
+
+-1. Log into your Raspberry Pi with the IP address we discovered earlier, using the username and password we defined using the Raspberry pi Imager. 
+
+-2. Run the following command to get install script:
+```bash
+curl https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/pi-eyes.sh >pi-eyes.sh
+```
 
 <br/>
-
-
->&#128161; NOTE Template (Markdown)
-
 <br/>
 
-
+Run the script with:
+```bash
+sudo bash pi-eyes.sh
+```
 
 <br/>
 <br/>
 
+Run the script installs Adafruit Snake Eyes Bonnet software for your Raspberry Pi and will prompt you for the following (my answers are in '()' and correspond with the hardware listed earlier): 
+
+- Select screen type? (mine are #3, a 240x240 IPS)
+- Install GPIO-halt utility? (N)
+- Install Bonnet ADC support? (N)
+- Install USB Ethernet gadget support? (N)
+- Do you understand and wish to proceed? (y)
+
+Your Pi will reboot and, if the screens are connected correctly, you'll see a pair of eyes looking back at your after about a minute or two. 
+
+<br/>
+<br/>
+
+![]()
 
 # Ian's Insights:
 
