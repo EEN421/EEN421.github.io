@@ -66,6 +66,38 @@ Stuff...
 <br/>
 <br/>
 
+# Perform a Headless Raspberry Pi Setup (BullseyeOS)
+-1. Grab the OS image from the [official Raspberry Pi site](https://www.raspberrypi.com/software/operating-systems/) (don't extract, leave it as is).
+
+<br/>
+
+-2. Insert your SD card into the reader and run the Raspberry Pi Imager ([available here](https://www.raspberrypi.com/software/)).
+![](/assets/img/Halloween24/pi_image_blank.png)
+
+<br/>
+
+-3. Select your hardware, desired OS, and destination storage (SD Card) as illustrated below...
+![](/assets/img/Halloween24/pi_image_fin.png)
+
+>&#128161; IMPORTANT --> Make sure you grab the **legacy 32bit Bullseye OS**; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
+
+<br/>
+
+-4. Select **Next** and you will be prompted with the option to **edit OS settings**. Select **Edit** and enter your network SSID and PSK, as well as your desired username and password. 
+![](/assets/img/Halloween24/pi_image_settings.png)
+
+<br/>
+
+-5. Navigate from the **General** tab over to the **SSH** tab and make sure it's **enabled** with **password authentication** as shown below...
+![](/assets/img/Halloween24/pi_image_settings2.png)
+
+<br/>
+
+-6. Click **Next** and let it burn! 
+![](/assets/img/Halloween24/pi_image_done.png)
+
+
+<br/>
 
 
 >&#128161; NOTE Template (Markdown)
