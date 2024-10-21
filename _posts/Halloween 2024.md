@@ -27,11 +27,6 @@ The pair of eyes I've previously setup were too bulky to fit inside a mask, so I
 
 Lets start with the Raspberry pi build. I've posted a step-by-step guide to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles hostname, default account configuration, enables SSH, WLAN config, and Locale on Bookwork OS and later. HOWEVER... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is not compatible with Bookworm so we have to use the older BullseyeOS. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
 
-Setup 
-
-&#128187; computer
-&#x1F511;
-
 <br/>
 <br/>
 
@@ -73,7 +68,7 @@ Stuff...
 
 
 
->&#128161; WARNING!!! --> You can ONLY view the secret value once... when you navigate away from the page it will no longer be available ![](/assets/img/IOC/Secret_Warning.png)
+>&#128161; NOTE Template (Markdown)
 
 <br/>
 
@@ -90,14 +85,18 @@ The ability to swiftly respond to threats is crucial in cybersecurity, but even 
 <br/>
 <br/>
 
-# In this Post:
+# In this Post We:
 
-- &#128268; Registered an Application in Entra ID
-- &#x1F512; Managed Application Permissions (Principle of Least Privilege)
-- &#x1F511; Configured Application Authentication & Authorization
-- &#128297; Built a powershell script to grab our token
-- &#128295; Built a powershell script to submit our custom IoC
-- &#128296; Ran it!
+Part 1:
+- &#128190; Performed a Headless Raspberry Pi Setup (BullseyeOS).
+- &#128268; Connected our Hardware & Deploy our Software Eyes.
+- &#128064; Customized Eye shapes, colours, iris, sclera, etc. 
+- &#127875; Lit up a Pumpkin! 
+
+Part 2:
+- &#128297; Customized our Monster M4SK.  
+- &#128295; Extended the distance between the eyes.
+- &#128123; Spooked the neighbour's kids! 
 
 <br/>
 <br/>
