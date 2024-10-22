@@ -21,6 +21,13 @@ I'll break this out into **two parts** and start with the basic [Raspberry pi bu
 <br/>
 <br/>
 
+<video controls src="../assets/img/Halloween24/Goat.mp4" title="Title"></video>
+
+<br/>
+<br/>
+<br/>
+<br/>
+
 # In this Post We Will:
 Part 1:
 - &#128190; Perform a Headless Raspberry Pi Setup (BullseyeOS).
@@ -113,9 +120,9 @@ A Raspberry Pi 2 or greater is highly recommended. The code will run on a Pi Zer
 Here's the PIN-OUT: <img src="https://cdn-learn.adafruit.com/assets/assets/000/037/987/original/raspberry_pi_TFTs.png?1481652018">
 
 
-It's important to get this right. I know it seems simple, but the connections have to be 1:1
+**It's important to get this right. I know it seems simple, but the connections have to be 1:1**
 
-Here's what not to do: <br/>
+Here's what **not** to do: <br/>
 ![](/assets/img/Halloween24/wrong.png)
 
 <br/>
@@ -318,16 +325,16 @@ I used some styrofoam and a sharpie to insulate and black out the Monster M4SK b
 <br/>
 
 ![](/assets/img/Halloween24/Mask_Off.jpg) ![](/assets/img/Halloween24/Mask_On.jpg) <br/><br/>
-![](/assets/img/Halloween24/Mask_Back.jpg) ![](/assets/img/Halloween24/Mask_Front.jpg) <br/><br/>
+![](/assets/img/Halloween24/Mask_Back.jpg) <br/><br/>
+
+
+
+<br/>
+<br/>
 
 >&#128161; FUN FACT --> you can change out the "splash.bmp" loading image with whatever you want and it will display on boot, as long as it's 240x240.
 
-<br/>
-<br/>
-
-![](/assets/img/Halloween24/Splash.mp4)
-
-[](EEN421/EEN421.github.io/assets/img/Halloween24/Splash.mp4)
+<video controls src="../assets/img/Halloween24/Splash.mp4" title="Title"></video>
 
 <br/>
 <br/>
