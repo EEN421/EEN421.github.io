@@ -204,7 +204,7 @@ There's a fantastic deep dive into writing custom eyeballs from scratch [here on
 <br/>
 <br/>
 
--2. Copy this guy over to a new file called **demon.py** with the following command:
+-2. Copy this guy over to a new file called **dragon.py** with the following command:
 
 ```bash
 sudo cp boot/Pi_Eyes/eyes.py boot/Pi_Eyes/dragon.py
@@ -265,12 +265,43 @@ sudo reboot now
 
 <br/>
 
+# Part 2
+# Customize our Monster M4SK
+So the dragon eyes we just built were pretty cool, but kinda bulky and heavy to integrate into any decent halloween outfit. I'm going to pop this guy into an empty skull or a carved out pumpkin this year. For my actual costume, I thought we could do better. 
 
-![]()
+Enter the [Adafruit Monster M4SK](https://www.adafruit.com/product/4343). This thing is awesome. It's got a small form factor processor in the back that's powerfull enough to run the eyes on both screens effortlessly without the bulk and weight of a Raspberry Pi.
+
+Here's a great [guide for breaking the eyes apart and connecting them back together with a JST cable on Adafruit.com](https://learn.adafruit.com/wide-set-monster-m4sk-creature-eyes/separate-the-monster-m4sk). The only issue I had was that, even with the 100mm cable, the eyes were far apart enough to fit our mask. Time to bust out the soldering iron. 
+
+I had 2 of these 100mm JST cables handy, so I snipped the ends off of both and soldered them together to make a (almost) 200mm cable, more than enough. [Phillip Burgess](https://learn.adafruit.com/u/pburgess) wrote a killer guide for the same mask [here](https://learn.adafruit.com/spruce-up-a-costume-with-monster-m4sk-eyes-and-voice/overview) (maybe next year I'll add the voice modulator)
+
+You'll need some heat shrink tubing for this. A hair dryer will do if you don't have a heat gun. Electrical tape will do for any you miss. 
+
+-1. Plug your Monster M4SK into your computer and you should see the CIRCUIPY drive mounted: <br/>
+
+![](/assets/img/Halloween24/M4SK_folder.png) <br/>
+
+<br/>
+
+-2. Download additional eyes via zip file [here](https://learn.adafruit.com/elements/3037483/download?type=zip) from [learn.adafruit.com](https://learn.adafruit.com/adafruit-monster-m4sk-eyes/graphics)
+
+<br/>
+
+Once you've got the eyes you want and their respective folders uploaded to the Monster M4Sk, all you have to do is **copy the config.eye** file you want to use, to the root (the odefault eye is "hazel" and the original **config.eye** is in the "hazel" folder; if you ever need to go back, just copy the **config.eye** from the hazel folder to root and reboot). <br/>
+
+![](/assets/img/Halloween24/config_copy.png)
+
+<br/>
+
+To swap out your eyes, it's as easy and swapping out the config.eye file from the folder containing the eyes you want. 
+
+I used some styrofoam and a sharpie to black out the board around the displays, then taped them to the inside of the mask. My vision isn't obstructed because the primary viewpoint is through the nostrils of this haunted goat thing. I've also taped that [Lithium Ion Cylindrical Battery (3.7v, 2200mAh)](https://www.adafruit.com/product/1781) to the inside of one of the horns (I swear this mask was made for this). 
+
+
 
 # Ian's Insights:
 
-The ability to swiftly respond to threats is crucial in cybersecurity, but even the best Security Operations Centers (SOCs) can face challenges like RBAC configuration mishaps. With the upcoming enforcement of Multi-Factor Authentication (MFA), relying on user-based service accounts for automation is becoming impractical. By registering an app in EntraID and using PowerShell to automate tasks in Microsoft Defender, you can ensure your SOC remains agile and responsive. 
+It’s refreshing to take a break from the norm and dive into something fun, like creating cool projects for Halloween. Making time for side projects like this helps keep me sharp when it’s time to get back to work. Just remember to gather your supplies early and make time to screw around. Happy Halloween!
 
 <br/>
 <br/>
