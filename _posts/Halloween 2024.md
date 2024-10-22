@@ -115,6 +115,9 @@ Any recent Raspberry Pi board with the 40-pin GPIO header should work. The very 
 
 A Raspberry Pi 2 or greater is highly recommended. The code will run on a Pi Zero or other single-core Raspberry Pi boards, but performance lags quite a bit. Pi 4 works now, which was previously incompatible.
 
+Here's the PIN-OUT: <img src="https://cdn-learn.adafruit.com/assets/assets/000/037/987/original/raspberry_pi_TFTs.png?1481652018">
+
+
 It's important to get this right. I know it seems simple, but the connections have to be 1:1
 
 Here's what not to do: <br/>
@@ -179,7 +182,18 @@ Run the script installs Adafruit Snake Eyes Bonnet software for your Raspberry P
 Your Pi will reboot and, if the screens are connected correctly, you'll see a pair of eyes looking back at your after about a minute or two. 
 
 <br/>
+
+![](/assets/img/Halloween24/Alive1.jpg) ![](/assets/img/Halloween24/Alive2.jpg)
+
 <br/>
+<br/>
+<br/>
+
+# Customize Eye shapes, colours, iris, sclera, etc.
+
+
+
+
 
 ![]()
 
