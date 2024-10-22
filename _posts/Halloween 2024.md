@@ -1,14 +1,5 @@
 # Introduction & Use Case:
-&#127875; Hey Readers! &#127875; It’s been a while, but we’re back just in time for the spookiest season of the year! 
-
-This post is all about getting your creative juices flowing with a juicy DIY Halloween project. Whether you’re looking to craft eerie decorations, whip up some spooky treats, or design the ultimate costume, we're gonna take it to the next level... Let’s dive in and make this Halloween the best yet! 👻
-
-# emjoi bank:
-&#128123; ghost
-&#127875; pumpkin/jack-o-lantern
-&#128375; Spider
-&#128376; spider web
-🕸️
+&#127875; This post is all about getting our creative juices flowing with a DIY Halloween project. 🕸️ Whether you’re looking to craft eerie decorations, whip up some spooky treats, or design the ultimate costume, we're gonna take it to the next level... Let’s dive in and make this Halloween the best yet! &#128123;
 
 <br/>
 
@@ -23,7 +14,9 @@ I've worked on a pair of Raspberry Pi powered 'eyeballs' in the past (great to s
 
 The pair of eyes I've previously setup were too bulky to fit inside a mask, so I bought a slimmed down [Adafruit Monster M4SK](https://www.adafruit.com/product/4343) (board build in, less bulky) and a cheap [Lithium Ion Cylindrical Battery (3.7v, 2200mAh)](https://www.adafruit.com/product/1781). The results are awesome. Let's dig in...
 
-I'll break this out into **two parts** and start with the basic [Raspberry pi build](https://www.adafruit.com/product/3356), then the final [Monster M4SK build](https://www.adafruit.com/product/4343). I've posted a **step-by-step guide** to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale** on Bookwork OS and later. HOWEVER... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is **not compatible** with **Bookworm** so we have to use the older **[BullseyeOS](https://www.raspberrypi.com/software/operating-systems/)**. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
+I'll break this out into **two parts** and start with the basic [Raspberry pi build](https://www.adafruit.com/product/3356), then the final [Monster M4SK build](https://www.adafruit.com/product/4343). I've posted a **step-by-step guide** to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale** on Bookwork OS and later.
+
+**HOWEVER**... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is **not compatible** with **Bookworm** so we have to use the older **[BullseyeOS](https://www.raspberrypi.com/software/operating-systems/)**. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
 
 <br/>
 <br/>
@@ -104,6 +97,11 @@ For the final, slimmer Mask build, I used the following:
 
 -8. Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/))
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 # Connect our Hardware
 
 >&#128161; Developer's Notes --> The code for this project only works with the Adafruit 128x128 pixel OLED and TFT displays and 240x240 pixel IPS TFT displays. 
@@ -128,6 +126,10 @@ Here's how you want it:
 
 Seems obvious, but just recheck before you boot up. 
 
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Deploy Snake Eyes
 
@@ -182,6 +184,7 @@ Your Pi will reboot and, if the screens are connected correctly, you'll see a pa
 
 ![](/assets/img/Halloween24/Alive1.jpg) ![](/assets/img/Halloween24/Alive2.jpg)
 
+<br/>
 <br/>
 <br/>
 <br/>
@@ -317,14 +320,26 @@ I used some styrofoam and a sharpie to insulate and black out the Monster M4SK b
 ![](/assets/img/Halloween24/Mask_Off.jpg) ![](/assets/img/Halloween24/Mask_On.jpg) <br/><br/>
 ![](/assets/img/Halloween24/Mask_Back.jpg) ![](/assets/img/Halloween24/Mask_Front.jpg) <br/><br/>
 
+>&#128161; FUN FACT --> you can change out the "splash.bmp" loading image with whatever you want and it will display on boot, as long as it's 240x240.
+
 <br/>
 <br/>
 
+![](/assets/img/Halloween24/Splash.mp4)
+
+[](EEN421/EEN421.github.io/assets/img/Halloween24/Splash.mp4)
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Ian's Insights:
 
 It’s refreshing to take a break from the norm and dive into something fun, like creating cool projects for Halloween. I'm already thinking about plans for next year, like adding a voice modulator to the mask, or a motion sensor to the Raspberry Pi maybe... Making time for side projects like this helps keep me sharp when it’s time to get back to work. Just remember to gather your supplies early and make time to screw around.
 
+<br/>
+<br/>
 <br/>
 <br/>
 
@@ -341,6 +356,8 @@ Part 2:
 - &#128295; Extended the distance between the eyes.
 - &#128123; Spooked the neighbour's kids! 
 
+<br/>
+<br/>
 <br/>
 <br/>
 
