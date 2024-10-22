@@ -14,14 +14,20 @@ I've worked on a pair of Raspberry Pi powered 'eyeballs' in the past (great to s
 
 The pair of eyes I've previously setup were too bulky to fit inside a mask, so I bought a slimmed down [Adafruit Monster M4SK](https://www.adafruit.com/product/4343) (board build in, less bulky) and a cheap [Lithium Ion Cylindrical Battery (3.7v, 2200mAh)](https://www.adafruit.com/product/1781). The results are awesome. Let's dig in...
 
-I'll break this out into **two parts** and start with the basic [Raspberry pi build](https://www.adafruit.com/product/3356), then the final [Monster M4SK build](https://www.adafruit.com/product/4343). I've posted a **step-by-step guide** to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale** on Bookwork OS and later.
-
-**HOWEVER**... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is **not compatible** with **Bookworm** so we have to use the older **[BullseyeOS](https://www.raspberrypi.com/software/operating-systems/)**. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
-
 <br/>
 <br/>
 
 <video controls src="../assets/img/Halloween24/Goat.mp4" title="Title"></video>
+
+<br/>
+<br/>
+
+I'll break this out into **two parts** and start with the basic [Raspberry pi build](https://www.adafruit.com/product/3356), then the final [Monster M4SK build](https://www.adafruit.com/product/4343). 
+
+<br/>
+<br/>
+
+> &#9940; NOTE: --> The [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is **not compatible** with **BookwormOS** so we have to use the older **[BullseyeOS](https://www.raspberrypi.com/software/operating-systems/)**.
 
 <br/>
 <br/>
@@ -35,6 +41,8 @@ Part 1:
 - &#128064; Customize Eye shapes, colours, iris, sclera, etc. 
 - &#127875; Light up a Pumpkin! 
 
+<br/>
+
 Part 2:
 - &#128297; Customize our Monster M4SK.  
 - &#128295; Extend the distance between the eyes.
@@ -42,6 +50,8 @@ Part 2:
 
 <br/>
 <br/>
+<br/>
+
 
 # Hardware Pre-Requisites
 
@@ -50,6 +60,7 @@ For a bulkier build suitable for inside a carved pumpkin, I used the following:
 - [PiSugar S Plus Portable 5000 mAh UPS Lithium Battery Power Module](https://a.co/d/72oBlGg)
 - [Raspberry Pi 4 Model B ](https://www.adafruit.com/product/4292)
 
+<br/><br/>
 
 For the final, slimmer Mask build, I used the following: 
 - [Lithium Ion Cylindrical Battery - 3.7v 2200mAh](https://www.adafruit.com/product/1781)
@@ -101,6 +112,9 @@ For the final, slimmer Mask build, I used the following:
 ![](/assets/img/Halloween24/pi_image_done.png)
 
 -7. Drop the SD card into your Raspberry Pi board and boot it up.
+
+<br/>
+<br/>
 
 -8. Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/))
 
@@ -196,9 +210,9 @@ Your Pi will reboot and, if the screens are connected correctly, you'll see a pa
 <br/>
 <br/>
 
-# Customize Eye shapes, colours, iris, sclera, etc.
+# Customize Eye Shape, Colour, Iris, Sclera, etc.
 
-There's a fantastic deep dive into writing custom eyeballs from scratch [here on Adafruit.com](https://learn.adafruit.com/animated-snake-eyes-bonnet-for-raspberry-pi/customizing-the-look) that I highly recommend checking out. However, we're going to tweak the existing code to take this to the next level. The texture maps for some extra creepy eyes are hidden in your Pi, we just need to copy the default python script and edit it to point to the 'dragon' iris, sclera, and map shown here: <br/>
+There's a fantastic deep dive into writing custom eyeballs from scratch [here on Adafruit.com](https://learn.adafruit.com/animated-snake-eyes-bonnet-for-raspberry-pi/customizing-the-look) that I highly recommend checking out. However, we're going to tweak the existing code and leverage what we have for a quick win. The texture maps for some extra creepy eyes are hidden in your Pi, we just need to copy the default python script and edit it to point to the 'dragon' iris, sclera, and map shown here: <br/>
 
 ![](/assets/img/Halloween24/eye_stuff.png)
 
@@ -284,7 +298,7 @@ So the dragon eyes we just built were pretty cool, but kinda bulky and heavy to 
 
 Enter the [Adafruit Monster M4SK](https://www.adafruit.com/product/4343). This thing is awesome. It's got a small form factor processor in the back that's powerfull enough to run the eyes on both screens effortlessly without the bulk and weight of a Raspberry Pi.
 
-Here's a great [guide for breaking the eyes apart and connecting them back together with a JST cable on Adafruit.com](https://learn.adafruit.com/wide-set-monster-m4sk-creature-eyes/separate-the-monster-m4sk). The only issue I had was that, even with the 100mm cable, the eyes were far apart enough to fit our mask. Time to bust out the soldering iron. I had 2 of these 100mm JST cables handy, so I snipped the ends off of both and soldered them together to make a (almost) 200mm cable, more than enough. <br/>
+Here's a great [guide for breaking the eyes apart and connecting them back together with a JST cable on Adafruit.com](https://learn.adafruit.com/wide-set-monster-m4sk-creature-eyes/separate-the-monster-m4sk). The only issue I had was that, even with the 100mm JST cable, the eyes were far apart enough to fit our mask. Time to bust out the soldering iron. I had 2 of these 100mm JST cables handy, so I snipped the ends off of both and soldered them together to make a (almost) 200mm cable, more than enough. <br/>
 
 ![](/assets/img/Halloween24/Solder2.jpg) ![](/assets/img/Halloween24/Solder1.jpg) <br/>
 
@@ -298,6 +312,8 @@ Here's a great [guide for breaking the eyes apart and connecting them back toget
 
 You'll need some heat shrink tubing for this. A hair dryer will do if you don't have a heat gun. Electrical tape will do for any you miss. 
 
+<br/>
+
 -1. Plug your Monster M4SK into your computer and you should see the CIRCUIPY drive mounted: <br/>
 
 ![](/assets/img/Halloween24/M4SK_folder.png) <br/>
@@ -308,14 +324,14 @@ You'll need some heat shrink tubing for this. A hair dryer will do if you don't 
 
 <br/>
 
-Once you've got the eyes you want and their respective folders uploaded to the Monster M4Sk, all you have to do is **copy the config.eye** file you want to use, to the root (the odefault eye is "hazel" and the original **config.eye** is in the "hazel" folder; if you ever need to go back, just copy the **config.eye** from the hazel folder to root and reboot). <br/>
+-3. Once you've got the eyes you want and their respective folders uploaded to the Monster M4Sk, all you have to do is **copy the config.eye** file you want to use, to the root (the odefault eye is "hazel" and the original **config.eye** is in the "hazel" folder; if you ever need to go back, just copy the **config.eye** from the hazel folder to root and reboot). <br/>
 
 ![](/assets/img/Halloween24/config_copy.png)
 
 <br/>
 <br/>
 
-To swap out your eyes, it's as easy and swapping out the config.eye file from the folder containing the eyes you want. 
+-4. To swap out your eyes, it's as easy and swapping out the config.eye file from the folder containing the eyes you want. 
 
 <br/>
 <br/>
