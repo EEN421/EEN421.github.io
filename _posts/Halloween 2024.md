@@ -332,9 +332,8 @@ I used some styrofoam and a sharpie to insulate and black out the Monster M4SK b
 <br/>
 <br/>
 
->&#128161; FUN FACT --> you can change out the "splash.bmp" loading image with whatever you want and it will display on boot, as long as it's 240x240.
-
-<video controls src="../assets/img/Halloween24/Splash.mp4" title="Title"></video>
+>&#128161; FUN FACT --> you can change out the "splash.bmp" loading image with whatever you want and it will display on boot, as long as it's 240x240... <br/>
+![](/assets/img/Halloween24/Splash.jpg) ![](/assets/img/Halloween24/Sauron.jpg)
 
 <br/>
 <br/>
