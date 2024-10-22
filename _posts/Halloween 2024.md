@@ -198,7 +198,7 @@ There's a fantastic deep dive into writing custom eyeballs from scratch [here on
 <br/>
 <br/>
 
--1. Log back into your raspberry pi and cd .. a couple times back to the root and list the contents of **boot/Pi_Eyes** as illustrated below. We're looking for the **eyes.py** file:
+-1. Log back into your raspberry pi and cd .. a couple times back to the root and list the contents of **boot/Pi_Eyes** as illustrated below. We're looking for the **eyes.py** file: <br/>
 ![](/assets/img/Halloween24/ls_eyes.png)
 
 <br/>
@@ -210,15 +210,20 @@ There's a fantastic deep dive into writing custom eyeballs from scratch [here on
 sudo cp boot/Pi_Eyes/eyes.py boot/Pi_Eyes/dragon.py
 ```
 
-Then list the contents again to see it:
-![](/assets/img/Halloween24/ls_demon.png)
+<br/>
+<br/>
+
+Then list the contents again to see it: <br/>
+![](/assets/img/Halloween24/ls_dragon.png)
+
+<br/>
 
 We're going to edit this file in the next step. 
 
 <br/>
 <br/>
 
--3. Use your favourite text editor (don't judge, nano is just easy :D ) to open up the new **dragon.py** file we just created.
+-3. Use your favourite text editor (don't judge, nano is just easy &#128123;) to open up the new **dragon.py** file we just created.
 ```bash
 sudo nano boot/Pi_Eyes/dragon.py
 ```
@@ -233,9 +238,32 @@ sudo nano boot/Pi_Eyes/dragon.py
 <br/>
 
 ![](/assets/img/Halloween24/OriginalTextureMap.png) <br/>
-![](/assets/img/Halloween24/TextureMap.png) <br/>
+![](/assets/img/Halloween24/TextureMaps.png) <br/>
 
 
+-5. Lastly, we need to swap out the default .py file used in rc.local for boot up and reboot to see our regular eyes morph into dragon eyes! &#128064;
+
+Use the following command to edit the rc.local file as shown below: <br/>
+
+```bash
+sudo nano /etc/rc.local
+```
+
+<br/>
+
+![ORIGINAL RC.LOCAL](/assets/img/Halloween24/original_RCLOCAL.png) <br/>
+
+![NEW RC.LOCAL](/assets/img/Halloween24/New_RCLOCAL.png) <br/>
+
+<br/>
+
+-6. Reboot and sit back with the following:
+
+```bash
+sudo reboot now
+```
+
+<br/>
 
 
 ![]()
