@@ -191,6 +191,49 @@ Your Pi will reboot and, if the screens are connected correctly, you'll see a pa
 
 # Customize Eye shapes, colours, iris, sclera, etc.
 
+There's a fantastic deep dive into writing custom eyeballs from scratch [here on Adafruit.com](https://learn.adafruit.com/animated-snake-eyes-bonnet-for-raspberry-pi/customizing-the-look) that I highly recommend checking out. However, we're going to tweak the existing code to take this to the next level. The texture maps for some extra creepy eyes are hidden in your Pi, we just need to copy the default python script and edit it to point to the 'dragon' iris, sclera, and map shown here: <br/>
+
+![](/assets/img/Halloween24/eye_stuff.png)
+
+<br/>
+<br/>
+
+-1. Log back into your raspberry pi and cd .. a couple times back to the root and list the contents of **boot/Pi_Eyes** as illustrated below. We're looking for the **eyes.py** file:
+![](/assets/img/Halloween24/ls_eyes.png)
+
+<br/>
+<br/>
+
+-2. Copy this guy over to a new file called **demon.py** with the following command:
+
+```bash
+sudo cp boot/Pi_Eyes/eyes.py boot/Pi_Eyes/dragon.py
+```
+
+Then list the contents again to see it:
+![](/assets/img/Halloween24/ls_demon.png)
+
+We're going to edit this file in the next step. 
+
+<br/>
+<br/>
+
+-3. Use your favourite text editor (don't judge, nano is just easy :D ) to open up the new **dragon.py** file we just created.
+```bash
+sudo nano boot/Pi_Eyes/dragon.py
+```
+
+<br/>
+<br/>
+
+-4. Make the following changes: <br/>
+![ORIGINAL](/assets/img/Halloween24/originalSVG.png) <br/>
+![DRAGON](/assets/img/Halloween24/dragonSVG.png) <br/>
+
+<br/>
+
+![](/assets/img/Halloween24/OriginalTextureMap.png) <br/>
+![](/assets/img/Halloween24/TextureMap.png) <br/>
 
 
 
