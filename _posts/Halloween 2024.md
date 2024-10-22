@@ -23,9 +23,9 @@ Let’s dive into the fun and make this Halloween the best one yet! 👻
 My daughter picked out a sweet halloween mask and I thought to myself... how can we elevate this? 
 I've worked on a pair of Raspberry Pi powered 'eyeballs' in the past (great to stick inside a carved out pumpkin) and thought they would be cool in a mask.
 
-The pair of eyes I've previously setup were too bulky to fit inside a mask, so I bought a slimmed down Monster M4SK (board build in, less bulky) and a cheap Lithium Ion Cylindrical Battery (3.7v, 2200mAh). The results are awesome. Let's dig in...
+The pair of eyes I've previously setup were too bulky to fit inside a mask, so I bought a slimmed down [Adafruit Monster M4SK](https://www.adafruit.com/product/4343) (board build in, less bulky) and a cheap [Lithium Ion Cylindrical Battery (3.7v, 2200mAh)](https://www.adafruit.com/product/1781). The results are awesome. Let's dig in...
 
-Lets start with the Raspberry pi build. I've posted a step-by-step guide to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles hostname, default account configuration, enables SSH, WLAN config, and Locale on Bookwork OS and later. HOWEVER... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is not compatible with Bookworm so we have to use the older BullseyeOS. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
+I'll break this out into **two parts** and start with the basic [Raspberry pi build](https://www.adafruit.com/product/3356), then the final [Monster M4SK build](https://www.adafruit.com/product/4343). I've posted a **step-by-step guide** to [setting up a headless raspberry pi](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) using a [custom.toml file](https://github.com/EEN421/EEN421.github.io/blob/master/assets/Code/iothub/custom.toml), which replaces the [WPA_supplicant.conf file](https://github.com/EEN421/Sentinel-Integrated-RPI-Soil-Sensor/blob/Main/Code/wpa_supplicant.conf_) used previously and handles **hostname, default account configuration, enables SSH, WLAN config, and Locale** on Bookwork OS and later. HOWEVER... the [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is **not compatible** with **Bookworm** so we have to use the older **[BullseyeOS](https://www.raspberrypi.com/software/operating-systems/)**. To keep things easy, I used the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) this time around. 
 
 <br/>
 <br/>
@@ -109,13 +109,27 @@ Stuff...
 
 # Connect our Hardware
 
-The code for this project only works with the Adafruit 128x128 pixel OLED and TFT displays and 240x240 pixel IPS TFT displays. 
+>&#128161; Developer's Notes --> The code for this project only works with the Adafruit 128x128 pixel OLED and TFT displays and 240x240 pixel IPS TFT displays. 
 
 Any recent Raspberry Pi board with the 40-pin GPIO header should work. The very earliest Pi boards — Model A and B, with the 26-pin GPIO header — are not compatible.
 
 A Raspberry Pi 2 or greater is highly recommended. The code will run on a Pi Zero or other single-core Raspberry Pi boards, but performance lags quite a bit. Pi 4 works now, which was previously incompatible.
 
-# Deploy our Software "Eyes"
+It's important to get this right. I know it seems simple, but the connections have to be 1:1
+
+Here's what not to do: <br/>
+![](/assets/img/Halloween24/wrong.png)
+
+<br/>
+<br/>
+
+Here's how you want it:
+![](/assets/img/Halloween24/Correct.png)
+
+Seems obvious, but just recheck before you boot up. 
+
+
+# Deploy Snake Eyes
 
 >&#128161; Developer's Notes:
 >-  If using a Raspberry Pi 4, Pi 400, or Compute Module 4: the latest "Bullseye" Raspberry Pi OS Desktop software is required (“Lite” versions, and versions prior to “Bullseye” in late 2021, won’t support this code on these boards). For brevity, we’ll call all of these boards “Pi 4” going forward in this guide. <br/><br/>
@@ -128,6 +142,14 @@ A Raspberry Pi 2 or greater is highly recommended. The code will run on a Pi Zer
 ```bash
 curl https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/pi-eyes.sh >pi-eyes.sh
 ```
+<br/>
+
+![](/assets/img/Halloween24/CURL.png)
+
+<br/>
+<br/>
+
+![](/assets/img/Halloween24/pi-eye_script.png)
 
 <br/>
 <br/>
@@ -138,7 +160,6 @@ sudo bash pi-eyes.sh
 ```
 
 <br/>
-<br/>
 
 Run the script installs Adafruit Snake Eyes Bonnet software for your Raspberry Pi and will prompt you for the following (my answers are in '()' and correspond with the hardware listed earlier): 
 
@@ -147,6 +168,13 @@ Run the script installs Adafruit Snake Eyes Bonnet software for your Raspberry P
 - Install Bonnet ADC support? (N)
 - Install USB Ethernet gadget support? (N)
 - Do you understand and wish to proceed? (y)
+
+<br/>
+
+![](/assets/img/Halloween24/Eye_script.png)
+
+<br/>
+<br/>
 
 Your Pi will reboot and, if the screens are connected correctly, you'll see a pair of eyes looking back at your after about a minute or two. 
 
