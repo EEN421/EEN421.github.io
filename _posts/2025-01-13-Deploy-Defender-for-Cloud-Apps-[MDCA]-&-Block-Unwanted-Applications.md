@@ -212,7 +212,7 @@ Give it a few minutes and try to navigate to one of those applications in a brow
 <br/>
 
 # Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
-So what about those weird Linux distros that don't support MDE (yet)... they need protection too right? If they're behind a firewall appliance, check out this awesome MDCA feature out that becomes available once you've un-sanctioned a few unwanted applications...
+So what about those weird Linux distros that don't support MDE (yet)... they need protection too right? If they're behind a firewall appliance, check out this awesome MDCA feature that becomes available once you've un-sanctioned a few unwanted applications...
 
 - From the **Cloud Discovery Dashboard** go to the **Actions** drop down, located in the top-right hand cornder of the screen, and click on **Generate Block Script...**:
 
