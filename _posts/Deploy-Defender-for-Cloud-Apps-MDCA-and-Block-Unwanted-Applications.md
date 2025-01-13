@@ -52,11 +52,13 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 1.	Connect to the Defender for Cloud Apps Portal:
 
-    - Access the MDCA portal through by navigating to the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
-
     - Ensure you have the necessary administrative permissions to configure and manage MDCA.
 
-    - Navigate to settings blade towards the bottom of the left menu in the MDCA portal and integrate with Microsoft Defender for Endpoint.
+    - Access the MDCA portal through by navigating to the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+
+    - Navigate to settings blade towards the bottom of the left menu  and select Endpoint.
+
+    ![]()
 
     - This integration allows for enhanced threat detection and response capabilities by correlating signals from endpoints and cloud apps.
 
