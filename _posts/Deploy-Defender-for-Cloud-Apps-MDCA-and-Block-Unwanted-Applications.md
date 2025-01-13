@@ -50,26 +50,78 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 # Deploy Defender for Cloud Apps
 
-1.	Connect to the Defender for Cloud Apps Portal:
+ - Ensure you have the necessary administrative permissions to configure and manage MDCA.
 
-    - Ensure you have the necessary administrative permissions to configure and manage MDCA.
+ - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
 
-    - Access the MDCA portal through by navigating to the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+ - Navigate to **settings** blade towards the bottom of the left menu and select **Cloud Apps**.
 
-    - Navigate to settings blade towards the bottom of the left menu  and select Endpoint.
+    ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Integration%2000.png)
 
-    ![]()
+ - Scroll down to **Microsoft Defender for Endpoint** and check the **Microsoft Defender for Endpoint Integration** box.
 
-    - This integration allows for enhanced threat detection and response capabilities by correlating signals from endpoints and cloud apps.
+    ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Integration%2001.png)
 
-    - If the Defender for Endpoint agent is deployed on devices within your organization, then MDCA can leverage the MDE agent to monitor network activities and traffic, including those related to cloud apps.
+ - This integration allows for enhanced threat detection and response capabilities by correlating signals from endpoints and cloud apps.
 
-    - The Defender for Endpoint agent collects detailed information about cloud app usage directly from the endpoints. This includes data on which apps are being accessed, by whom, and from which devices.
+ - If the Defender for Endpoint agent is deployed on devices within your organization, then MDCA can leverage the MDE agent to monitor network activities and traffic, including those related to cloud apps.
 
+ - The Defender for Endpoint agent collects detailed information about cloud app usage directly from the endpoints. This includes data on which apps are being accessed, by whom, and from which devices and IP addresses etc.
 
 <br/>
 <br/>
+
+# Integrate with Defender for Endpoint 
+
+ - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+
+- Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
+
+- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
+
+Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2001.png)
+
+- Enabling this feature sends telemetry collected by Defender for Endpoint over to Defender for Cloud Apps. 
+
 <br/>
+<br/>
+
+# Onboard a Device to Defender for Endpoint
+
+So perhaps you don't have all of your devices onboarded to Defender for Endpoint, but you have a fair idea of who might be consuming all the bandwidth and want to start there. Follow the steps below to onboard their devices to Defender for Endpoint and get Cloud App Telemetry: 
+
+- Logon to your device
+
+- Navigate to the unified security portal at www.security.microsoft.com from your device
+
+- Select the **Settings** blade from the left menu, then choose **Endpoints**
+
+- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
+
+- Scroll down to **Onboarding** and fill out the appropriate settings, then download the onboarding package
+
+- ![](/assets/img/Defender%20for%20Cloud%20Apps/onboard.png)
+
+- Run it with administrative privilges on the device you wish to onboard.
+
+- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE_onboarding_script_DL.png)
+
+- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Onboarding%20Completed.png)
+
+- Give it a few minutes and the device will show up in the unified security portal, illustrated below: 
+
+- ![](/assets/img/Defender%20for%20Cloud%20Apps/onboarded.png)
+
+<br/>
+<br/>
+
+# Confirm Defender for Endpoint AV Configuration Pre-Requisites via Powershell
+
+
+
+
 <br/>
 <br/>
 
