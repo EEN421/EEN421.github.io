@@ -1,7 +1,7 @@
 # Introduction & Use Case:
 You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">**Go Cats!** &#x1F63A;</font>) and you need to preserve bandwidth and compliance at the same time... What do you do in this situation?
 
-To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage **Intune**, **SCCM**, or **GPO**,</font> _but users are **E5** licensed._ 
+To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage Intune, SCCM, or GPO,</font> _but users are **E5** licensed._ 
 
 In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
 
