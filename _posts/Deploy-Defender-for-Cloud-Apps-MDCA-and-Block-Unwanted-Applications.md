@@ -66,7 +66,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 - Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
 
-- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
+![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
 
 <br/>
 
@@ -99,21 +99,21 @@ So perhaps you don't have all of your devices onboarded to Defender for Endpoint
 
 - Select the **Settings** blade from the left menu, then choose **Endpoints**
 
-- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
+![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
 
 - Scroll down to **Onboarding** and fill out the appropriate settings, then download the onboarding package
 
-- ![](/assets/img/Defender%20for%20Cloud%20Apps/onboard.png)
+![](/assets/img/Defender%20for%20Cloud%20Apps/onboard.png)
 
 - Run it with administrative privilges on the device you wish to onboard.
 
-- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE_onboarding_script_DL.png)
+![](/assets/img/Defender%20for%20Cloud%20Apps/MDE_onboarding_script_DL.png)
 
-- ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Onboarding%20Completed.png)
+![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Onboarding%20Completed.png)
 
 - Give it a few minutes and the device will show up in the unified security portal, illustrated below: 
 
-- ![](/assets/img/Defender%20for%20Cloud%20Apps/onboarded.png)
+![](/assets/img/Defender%20for%20Cloud%20Apps/onboarded.png)
 
 <br/>
 <br/>
