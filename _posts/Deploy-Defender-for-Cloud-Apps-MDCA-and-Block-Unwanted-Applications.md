@@ -1,7 +1,7 @@
 # Introduction & Use Case:
-You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">**Go Cats!** &#x1F63A;</font>)... What do you do in this situation?
+You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">**Go Cats!** &#x1F63A;</font>) and you need to preserve bandwidth and compliance at the same time... What do you do in this situation?
 
-To make it more fun, this organization is low budget, operating ad-hoc and so <font color="red">you cannot leverage **Intune**, **SCCM**, or **GPO**,</font> _but users are **E5** licensed._ 
+To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage **Intune**, **SCCM**, or **GPO**,</font> _but users are **E5** licensed._ 
 
 In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
 
@@ -18,20 +18,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/Microsoft-Defender-for-Cloud-Apps.jpg)
 
-<br/>
-<br/>
 
-
-<br/>
-
-# Emoji List for this Article: 
-
-&#x1F437; - Pig's Head <Br/>
-&#x1F43D; - Pig's Snout <br/>
-&#x1F416; - Side Pig <br/>
-&#x1F417; - Wild Hog <br/>
-&#x1F60E; - Shades <br/>
- 
 <br/>
 <br/>
 
@@ -178,7 +165,7 @@ Now that we've got our devices onboarded and our MDE and MDCA platforms integrat
 
 <br/>
 
-Give it a few minutes and try to navigate to one of those applications in a browser or through their designated local applications to see them fail: 
+Give it a few minutes and try to navigate to one of those applications in a browser or through their designated local applications on a device that you've onboarded to MDE to see them fail (gloriously): 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/Steam_Games_block.png)
 
@@ -190,6 +177,55 @@ Give it a few minutes and try to navigate to one of those applications in a brow
 <br/>
 
 # Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
+So what about those weird Linux distros that don't support MDE (yet)... they need protection too right? If they're behind a firewall appliance, check out this awesome MDCA feature out that becomes available once you've un-sanctioned a few unwanted applications...
+
+- From the **Cloud Discovery Dashboard** go to the **Actions** drop down, located in the top-right hand cornder of the screen, and click on **Generate Block Script...**:
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_00.png)
+
+- Select your Firewall vendor:
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_01.png)
+
+- Copy and paste the output from a privileged exec state in your fireall to block the unwanted applications at the DNS level
+
+- Here's an example output for a Palo Alto firewall that blocks Netflix, Steam Games, Epic Games, etc: 
+
+```bash
+set application $serviceName1 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern epicgames.com
+Set rulebase security rule rule$serviceName1 application $serviceName1 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern epicgames.com
+Set rulebase security rule rule$serviceName1 application $serviceName1 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern api.epicgames.dev
+Set rulebase security rule rule$serviceName1 application $serviceName1 from any to any action deny
+
+set application $serviceName2 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflix.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflix.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern nflxvideo.net
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern nflxext.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern nflximg.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest2.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest3.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest4.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest5.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest6.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest7.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest8.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest9.com
+Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest10.com
+Set rulebase security rule rule$serviceName2 application $serviceName2 from any to any action deny
+
+set application $serviceName3 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern store.steampowered.com
+Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern store.steampowered.com
+Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern api.steampowered.com
+Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern test.steampowered.com
+Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern crash.steampowered.com
+Set rulebase security rule rule$serviceName3 application $serviceName3 from any to any action deny
+
+set application $serviceName4 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern steamcommunity.com
+Set rulebase security rule rule$serviceName1 application $serviceName4 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern steamcommunity.com
+Set rulebase security rule rule$serviceName4 application $serviceName4 from any to any action deny
+```
+
+
 
 <br/>
 <br/>
@@ -197,7 +233,7 @@ Give it a few minutes and try to navigate to one of those applications in a brow
 
 # Ian's Insights:
 
-It’s refreshing to take a break from the norm and dive into something fun, like creating cool projects for Halloween. I'm already thinking about plans for next year, like adding a voice modulator to the mask, or a motion sensor to the Raspberry Pi maybe... Making time for side projects like this helps keep me sharp when it’s time to get back to work. Just remember to gather your supplies early and make time to screw around.
+Ever use a DNS Sink Hole like a Pi-Hole (raspberry Pi powered)? This functioned pretty much the same way by refusing to resolve addresses known to host the application we are blocking. A Pi-Hole will actually resolve the addresses but send the results to an IP that doesn't exist (hence "sinkhole"). Web pages load faster when they don't have to resolve all the "junk" ads etc. 
 
 <br/>
 <br/>
@@ -205,44 +241,29 @@ It’s refreshing to take a break from the norm and dive into something fun, lik
 <br/>
 
 # In this Post We:
+- ⚡ Deployed Defender for Cloud Apps.
+- 🔧 Integrated with Defender for Endpoint.
+- 🔌 Onboarded a Device to Defender for Endpoint.
+- ✔ Confirmed our Defender for Endpoint AV Configuration.pre-requisites without Intune, SCCM, or GPO (spoiler alert: it was powershell).
+- 🚫 Un-sanctioned an Unwanted Application.
+- 🚧 Un-sanctioned an unwanted Application on your Firewall (for devices that don't support the MDE agent).
 
-**Part 1:**
-- &#128190; Performed a Headless Raspberry Pi Setup (BullseyeOS).
-- &#128268; Connected Hardware & Deployed Software Eyes.
-- &#128064; Customized Eye Shapes, Colours, Iris, Sclera, etc. 
-- &#127875; Lit up a Pumpkin! 
-
-**Part 2:**
-- &#128297; Customized our Monster M4SK.  
-- &#128295; Extended the Distance Between Displays.
-- &#128123; Spooked the Neighbour's Kids! 
-
-<br/>
-<br/>
 <br/>
 <br/>
 
 # Thanks for Reading!
- I hope this was a much fun reading as it was writing. Happy Halloween!  
+ I hope this was a much fun reading as it was writing. What will you block from your environment first? 
 
 <br/>
 
-![](/assets/img/Halloween24/Banner2.jpg)
+![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA_Logo_Square.jpg)
 
 <br/>
 <br/>
 
 # Helpful Links & Resources: 
 
-- [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356)
-- [PiSugar S Plus Portable 5000 mAh UPS Lithium Battery Power Module](https://a.co/d/72oBlGg)
-- [Raspberry Pi 4 Model B ](https://www.adafruit.com/product/4292)
-- [Animated Snake Eyes Bonnet for Raspberry Pi](https://learn.adafruit.com/animated-snake-eyes-bonnet-for-raspberry-pi/software-installation)
-- [Lithium Ion Cylindrical Battery - 3.7v 2200mAh](https://www.adafruit.com/product/1781)
-- [JST SH 9-Pin Cable - 100mm long x 2](https://www.adafruit.com/product/4350)
-- [Adafruit MONSTER M4SK - DIY Electronic Eyes Mask](https://www.adafruit.com/product/4343)
-- [Separate the MONSTER M4SK](https://learn.adafruit.com/wide-set-monster-m4sk-creature-eyes/separate-the-monster-m4sk)
-- [Spruce Up a Costume with MONSTER M4SK Eyes and Voice](https://learn.adafruit.com/spruce-up-a-costume-with-monster-m4sk-eyes-and-voice)
+
 
 
 <br/>
