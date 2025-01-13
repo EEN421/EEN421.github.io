@@ -1,112 +1,71 @@
 # Introduction & Use Case:
-&#127875; This post is all about getting our creative juices flowing with a DIY Halloween project. 🕸️ Whether you’re looking to craft eerie decorations or design the ultimate costume, we're gonna take it to the next level... Let’s dive in and make this Halloween the best yet! &#128123;
+You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">**Go Cats!** &#x1F63A;</font>)... What do you do in this situation?
+
+To make it more fun, this organization is low budget, operating ad-hoc and so <font color="red">you cannot leverage **Intune**, **SCCM**, or **GPO**,</font> _but users are **E5** licensed._ 
+
+In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
+
+-    If they know they're not supposed to have access, they're not going to complain when it gets cut off &#x1F609;	. <br/>
+
+-    You'll see who screams and quickly learn how important the application you just disabled is to productivity &#x1F4B2; &#x1F4B2; &#x1F4B2;.
+>&#128161; Pro-Tip:Make sure to document that somewhere safe and accessible for the new kids on the block . <br/>
+
+This blog post will guide you through deploying Defender for Cloud Apps from the ground up and integrating it seamlessly with Microsoft Defender for Endpoint to effectively block or unsanction unwanted applications that don't meet your requirements (SOC2, GDPR, PIPEDA, CMMC, NIST, just to name a few). This ensures your cloud infrastructure remains secure, compliant, effective, and cost-efficient (even if you're just trying to conserve bandwidth during the sweet 16 &#x1F3C0;).
+
+Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, this comprehensive guide will provide you with the Defender for Cloud Apps knowledge and insights you need to identify and keep those bandwidth hogs at bay&#x1F43D;, lock down your environment&#x1F512;, and knock those compliance scores out of the park &#x2705;
 
 <br/>
 
-![](img) Why doesn't this work? 
+![](/assets/img/Defender%20for%20Cloud%20Apps/Microsoft-Defender-for-Cloud-Apps.jpg)
 
 <br/>
 <br/>
 
+
+<br/>
+
+# Emoji List for this Article: 
+
+&#x1F437; - Pig's Head <Br/>
+&#x1F43D; - Pig's Snout <br/>
+&#x1F416; - Side Pig <br/>
+&#x1F417; - Wild Hog <br/>
+&#x1F60E; - Shades <br/>
+ 
+<br/>
+<br/>
 
 
 # In this Post We Will:
-**Part 1:**
-- &#128190; Perform a Headless Raspberry Pi Setup (BullseyeOS).
-- &#128268; Connect Hardware & Deploy Software Eyes.
-- &#128064; Customize Eye Shape, Colour, Iris, Sclera, etc. 
-- &#127875; Light up a Pumpkin! 
+- &#x26A1; Deploy Defender for Cloud Apps.
+- &#128295; Integrate with Defender for Endpoint.
+- &#128268; Onboard a Device to Defender for Endpoint. 
+- &#x2714; Confirm our Defender for Endpoint AV Configuration pre-requisites _without Intune, SCCM, or GPO_ (**spoiler alert:** it's powershell). 
+- &#x1F6AB;	 Un-sanction an Unwanted Application.
+- &#x1F6A7;	 Un-sanction an unwanted Application on your Firewall.
+- &#128161; Ian's Insights.
 
 <br/>
 <br/>
 
-# Hardware Pre-Requisites
+# Deploy Defender for Cloud Apps
 
-For a bulkier build suitable for inside a carved pumpkin, I used the following: 
-- [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356)
-- [PiSugar S Plus Portable 5000 mAh UPS Lithium Battery Power Module](https://a.co/d/72oBlGg)
-- [Raspberry Pi 4 Model B ](https://www.adafruit.com/product/4292)
+1.	Connect to the Defender for Cloud Apps Portal:
+
+    - Access the MDCA portal through by navigating to the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+
+    - Ensure you have the necessary administrative permissions to configure and manage MDCA.
+
+    - Navigate to settings blade towards the bottom of the left menu in the MDCA portal and integrate with Microsoft Defender for Endpoint.
+
+    - This integration allows for enhanced threat detection and response capabilities by correlating signals from endpoints and cloud apps.
+
+    - If the Defender for Endpoint agent is deployed on devices within your organization, then MDCA can leverage the MDE agent to monitor network activities and traffic, including those related to cloud apps.
+
+    - The Defender for Endpoint agent collects detailed information about cloud app usage directly from the endpoints. This includes data on which apps are being accessed, by whom, and from which devices.
+
 
 <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-# Part 1 - Raspberry Pi Snake Eyes Bonnet
-
-<br/>
-
-> &#9940; NOTE: --> The [Animated Eyes Bonnet for Raspberry Pi](https://www.adafruit.com/product/3356) is **not compatible** with **BookwormOS** so we have to use the older **[BullseyeOS](https://www.raspberrypi.com/software/operating-systems/)**.
-
->&#128161; Developer's Notes:
->- All Raspberry Pi boards: Raspberry Pi Bullseye OS Lite (Legacy) software is required. Look for both Lite and Legacy in the name! <br/><br/>
->- For all boards: use the 32-bit version of the operating system, not the 64-bit variant.
-
-<br/>
-<br/>
-<br/>
-<br/>
-
-# Perform a Headless Raspberry Pi Setup (BullseyeOS)
-
-
-**1.** Grab the OS image from the [official Raspberry Pi site](https://www.raspberrypi.com/software/operating-systems/) (don't extract, leave it as is).
-
-<br/>
-
-**2.** Insert your SD card into the reader and run the Raspberry Pi Imager ([available here](https://www.raspberrypi.com/software/)). <br/>
-![](/assets/img/Halloween24/pi_image_blank.png)
-
-<br/>
-<br/>
-
-**3.** Select your hardware, desired OS, and destination storage (SD Card) as illustrated below... <br/>
-![](/assets/img/Halloween24/pi_image_fin.png) <br/>
-
->&#128161; IMPORTANT --> Make sure you grab the **legacy 32bit Bullseye OS**; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
-
-<br/>
-
-**4.** Select **Next** and you will be prompted with the option to **edit OS settings**. Select **Edit** and enter your network SSID and PSK, as well as your desired username and password. <br/>
-![](/assets/img/Halloween24/pi_image_settings.png)
-
-<br/>
-<br/>
-
-**5.** Navigate from the **General** tab over to the **SSH** tab and make sure it's **enabled** with **password authentication** as shown below... <br/>
-![](/assets/img/Halloween24/pi_image_settings2.png)
-
-<br/>
-<br/>
-
-**6.** Click **Next** and let it burn! &#128293; <br/>
-![](/assets/img/Halloween24/pi_image_write.png) <br/>
-![](/assets/img/Halloween24/pi_image_done.png)
-
-**7.** Drop the SD card into your Raspberry Pi board and boot it up.
-
-<br/>
-
-**8.** Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/))
-
-<br/>
-
-**9.** Login and do the needful: <br/>
-
-```bash
-sudo apt-get update && sudo apt-get upgrade
-```
-
-<br/>
-<br/>
-<br/>
-<br/>
-
-
->&#128161; FUN FACT --> you can change out the "splash.bmp" loading image with whatever you want and it will display on boot, as long as it's 240x240... <br/>
-![](/assets/img/Halloween24/Splash.jpg) ![](/assets/img/Halloween24/Sauron.jpg)
-
 <br/>
 <br/>
 <br/>
