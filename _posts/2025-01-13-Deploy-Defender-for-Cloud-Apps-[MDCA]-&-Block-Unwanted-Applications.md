@@ -60,9 +60,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 # Integrate with Defender for Endpoint 
 
- - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
-
-<br/>
+- Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
 
 - Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
 
