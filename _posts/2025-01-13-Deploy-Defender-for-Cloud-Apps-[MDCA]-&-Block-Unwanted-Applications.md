@@ -1,7 +1,7 @@
 # Introduction & Use Case:
-You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">**Go Cats!** &#x1F63A;</font>) and you need to preserve bandwidth and compliance at the same time... What do you do in this situation?
+You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">Go Cats! &#x1F63A;</font>) and you need to preserve bandwidth and compliance at the same time... What do you do in this situation?
 
-To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage **Intune**, **SCCM**, or **GPO**,</font> _but users are **E5** licensed._ 
+To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage Intune, SCCM, or GPO,</font> _but users are **Microsoft 365 A5** licensed._ 
 
 In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
 
@@ -61,9 +61,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 # Integrate with Defender for Endpoint 
 
- - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
-
-<br/>
+- Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
 
 - Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
 
@@ -131,6 +129,8 @@ So perhaps you don't have all of your devices onboarded to Defender for Endpoint
 Get-MpComputerStatus
 ```
 
+<br/>
+
 - Confirm the following pre-requisites are met: 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/Powershell_Config.png)
@@ -175,7 +175,7 @@ Lastly, slide over to the **Cloud App Usage** tab to identify usage by user:
 
 <br/>
 
->&#128161; This is helpful when deciding what applications to unsanction. If the entire corporation is heavily using an application then maybe investigate further before unsanctioning it and start with a small deployment group before unsanctioning it for everybody. There was one instance where unsanctioning the Steam Games platform locked a developer out of his Unreal Engine dev tools and was necessary for production. Always do your due diligence before initiating your own 'scream' test. On a side note, I'm a firm believer in **Read-Only Fridays** &#x1F609;. 
+&#128161; This is helpful when deciding what applications to unsanction. If the entire corporation is heavily using an application then maybe investigate further before unsanctioning it and start with a small deployment group before unsanctioning it for everybody. There was one instance where unsanctioning the Steam Games platform locked a developer out of his Unreal Engine dev tools and was necessary for production. Always do your due diligence before initiating your own 'scream' test. On a side note, I'm a firm believer in **Read-Only Fridays** &#x1F609;. 
 
 <br/>
 <br/>
@@ -302,6 +302,8 @@ Lastly, consider going to the **unified security portal >> settings >> cloud app
 <br/>
 
 # Helpful Links & Resources: 
+
+<br/>
 
 - [https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender](https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender)
 
