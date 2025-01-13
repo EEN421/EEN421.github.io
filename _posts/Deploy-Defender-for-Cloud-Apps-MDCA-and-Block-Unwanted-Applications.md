@@ -235,6 +235,8 @@ Set rulebase security rule rule$serviceName4 application $serviceName4 from any 
 
 Ever use a DNS Sink Hole like a Pi-Hole (raspberry Pi powered)? This functioned pretty much the same way by refusing to resolve addresses known to host the application we are blocking. A Pi-Hole will actually resolve the addresses but send the results to an IP that doesn't exist (hence "sinkhole"). Web pages load faster when they don't have to resolve all the "junk" ads etc. 
 
+Lastly, consider going to the **unified security portal >> settings >> cloud apps >> Exclude Entities** and adding an exclusion so you can watch the finals &#x1F61C;
+
 <br/>
 <br/>
 <br/>
