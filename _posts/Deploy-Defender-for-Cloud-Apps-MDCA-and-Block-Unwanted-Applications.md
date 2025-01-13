@@ -265,8 +265,9 @@ Lastly, consider going to the **unified security portal >> settings >> cloud app
 
 # Helpful Links & Resources: 
 
-
-
+- [https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender](https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender_) 
+- [https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w/install-pi-hole](https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w/install-pi-hole)
+- [https://learn.microsoft.com/en-us/defender-cloud-apps/](https://learn.microsoft.com/en-us/defender-cloud-apps/)
 
 <br/>
 <br/>
