@@ -1,13 +1,14 @@
 # Introduction & Use Case:
-You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">Go Cats! &#x1F63A;</font>) and you need to preserve bandwidth and compliance at the same time... What do you do in this situation?
+You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; With March Madness just around the corner, that user is streaming the latest <font color="ligblue">KY Wildcat basketball games </font> on the ESPN app (<font color="ligblue">Go Cats! &#x1F63A;</font>). You need to preserve bandwidth and maintain compliance… What do you do?
 
-To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage Intune, SCCM, or GPO,</font> _but users are **Microsoft 365 A5** licensed._ 
+To make it more fun, this organization is operating on a shoestring budget and ad-hoc basis, so <font color="red">you cannot leverage Intune, SCCM, or GPO,</font> _but hey, users are **Microsoft 365 A5** licensed._ 
 
 In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
 
 -    If they know they're not supposed to have access, they're not going to complain when it gets cut off &#x1F609;	. <br/>
 
 -    You'll see who screams and quickly learn how important the application you just disabled is to productivity &#x1F4B2; &#x1F4B2; &#x1F4B2;.
+  
 >&#128161; Pro-Tip:Make sure to document that somewhere safe and accessible for the new kids on the block . <br/>
 
 This blog post will guide you through deploying Defender for Cloud Apps from the ground up and integrating it seamlessly with Microsoft Defender for Endpoint to effectively block or unsanction unwanted applications that don't meet your requirements (SOC2, GDPR, PIPEDA, CMMC, NIST, just to name a few). This ensures your cloud infrastructure remains secure, compliant, effective, and cost-efficient (even if you're just trying to conserve bandwidth during the sweet 16 &#x1F3C0;).
