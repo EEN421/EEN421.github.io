@@ -68,7 +68,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 <br/>
 
-Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
+- Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2001.png)
 
