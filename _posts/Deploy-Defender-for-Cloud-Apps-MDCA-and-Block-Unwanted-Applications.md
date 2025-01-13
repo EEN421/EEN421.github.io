@@ -42,7 +42,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 - &#128268; Onboard a Device to Defender for Endpoint. 
 - &#x2714; Confirm our Defender for Endpoint AV Configuration pre-requisites _without Intune, SCCM, or GPO_ (**spoiler alert:** it's powershell). 
 - &#x1F6AB;	 Un-sanction an Unwanted Application.
-- &#x1F6A7;	 Un-sanction an unwanted Application on your Firewall.
+- &#x1F6A7;	 Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
 - &#128161; Ian's Insights.
 
 <br/>
@@ -75,15 +75,29 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
  - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
 
+<br/>
+
 - Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
 
 - ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
+
+<br/>
 
 Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2001.png)
 
-- Enabling this feature sends telemetry collected by Defender for Endpoint over to Defender for Cloud Apps. 
+<br/>
+
+- Enabling this feature sends telemetry collected by Defender for Endpoint over to Defender for Cloud Apps. You can confirm by going back to **the unified security portal >> Settings >> Cloud Apps >> Automatic Log Upload** and verifying the following entry populates (it can take up to 30 minutes): 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Automatic%20Log%20Upload.png)
+
+<br/>
+
+>&#128161; While you're in here, you'll need to toggle **Custom Network Indicators** to the **On** position: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/custom_network_indicators.png)
 
 <br/>
 <br/>
@@ -119,11 +133,67 @@ So perhaps you don't have all of your devices onboarded to Defender for Endpoint
 
 # Confirm Defender for Endpoint AV Configuration Pre-Requisites via Powershell
 
+- Logon to your device
 
+- Launch Powershell as an administrator
 
+- Run the following command:
+
+```powershell
+Get-MpComputerStatus
+```
+
+- Confirm the following pre-requisites are met: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Powershell_Config.png)
+
+If either of these are **False** then use the following command to set them:
+
+```powershell
+Set-MpComputerStatus
+```
+
+Here's a [list of available commands for reference]( https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender)
+
+>&#128161; Alternatively, you'd have to use Intune, Group Policy, SCCM, or a combination thereof to onboard and configure your fleet. 
 
 <br/>
 <br/>
+
+# Un-sanction an Unwanted Application
+
+Now that we've got our devices onboarded and our MDE and MDCA platforms integrated, we can enforce MDCA polcies like blocking un-sanctioned applications using the MDE agent directly. 
+
+- From the unified security portal, navigate to the **Cloud Discovery** Blade, located under **Cloud Apps**
+
+- Swing over from the **Dashboard** tab to the next one to the right, called **Discovered Apps** to list all of the applications reported from Defender for Endpoint that have run on that device since the **Automatic Log upload** has been deployed from MDE to MDCA earlier. 
+
+- You can Un-sanction any application found in your environment from here. 
+
+>&#128161; Why wait until an application is already active in your environment to block it? The **Cloud App Catalogue** blade (directly underneath the **Cloud Discovery** blade) lists all of the applications that Microsoft has evaluated, and there's thousands of them! 
+
+- In this example, we'll block applications we know we don't want to see in our network. From the **Cloud App Catalogue** search for your unwanted applications and select the **Unsanction** button to the right for each application you want to block:
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/UnSanctioned.png)
+
+<br/>
+
+Give it a few minutes and try to navigate to one of those applications in a browser or through their designated local applications to see them fail: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Steam_Games_block.png)
+
+<br/>
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Netflix_Block.png)
+
+<br/>
+<br/>
+
+# Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
+
+<br/>
+<br/>
+
 
 # Ian's Insights:
 
