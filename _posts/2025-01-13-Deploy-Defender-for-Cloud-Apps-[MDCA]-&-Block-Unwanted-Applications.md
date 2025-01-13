@@ -1,7 +1,7 @@
 # Introduction & Use Case:
 You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; It's March Madness, and that user is streaming the latest <font color="ligblue">KY Wildcat basketball game </font> on the ESPN app (<font color="ligblue">**Go Cats!** &#x1F63A;</font>) and you need to preserve bandwidth and compliance at the same time... What do you do in this situation?
 
-To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage Intune, SCCM, or GPO,</font> _but users are **E5** licensed._ 
+To make it more fun, this organization is low budget and operating ad-hoc, so <font color="red">you cannot leverage **Intune**, **SCCM**, or **GPO**,</font> _but users are **E5** licensed._ 
 
 In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
 
@@ -28,6 +28,7 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 - &#128295; Integrate with Defender for Endpoint.
 - &#128268; Onboard a Device to Defender for Endpoint. 
 - &#x2714; Confirm our Defender for Endpoint AV Configuration pre-requisites _without Intune, SCCM, or GPO_ (**spoiler alert:** it's powershell). 
+- &#x1F50D; Investigate Application Usage
 - &#x1F6AB;	 Un-sanction an Unwanted Application.
 - &#x1F6A7;	 Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
 - &#128161; Ian's Insights.
@@ -60,7 +61,9 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 # Integrate with Defender for Endpoint 
 
-- Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+ - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+
+<br/>
 
 - Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
 
@@ -68,13 +71,13 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 <br/>
 
-- Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
+Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2001.png)
 
 <br/>
 
-- Enabling this feature sends telemetry collected by Defender for Endpoint over to Defender for Cloud Apps. You can confirm by going back to **the unified security portal >> Settings >> Cloud Apps >> Automatic Log Upload** and verifying the following entry populates (it can take up to 30 minutes): 
+- Enabling this feature sends telemetry collected by Defender for Endpoint over to Defender for Cloud Apps. You can confirm by going back to **the unified security portal >> Settings >> Cloud Apps >> Automatic Log Upload** and verifying the following entry populates (it can take a few hours for data to populate): 
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/Automatic%20Log%20Upload.png)
 
@@ -145,13 +148,47 @@ Here's a [list of available commands for reference]( https://learn.microsoft.com
 <br/>
 <br/>
 
+# Investigate Application Usage
+Let's see who our heavy hitters are on the network.
+
+Navigate to the **Cloud Discovery** blade, then go to the **Discovered Apps** tab to list applications found on your endpoints. You can sort these by traffic and uploaded data etc. to narrow down your hunt: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic01.png)
+
+<br/>
+
+I spun up a vm for a couple hours just for this blog post so this traffic is not indicative of a typical production environment. For this example, lets open the **Microsoft 365** app from the **Discovered Apps** tab to see it's details, including it's **Cloud App** score. This is great for compliance purposes. As illustrated, the Microsoft 365 app is compliant with GDPR, SOC, ISO 27001, ITAR, FINRA, to name a few: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic02.png)
+
+<br/>
+
+Click into the app from the list to bring up additional metrics: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic03.png)
+
+<br/>
+
+Lastly, slide over to the **Cloud App Usage** tab to identify usage by user: 
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic04.png)
+
+<br/>
+
+>&#128161; This is helpful when deciding what applications to unsanction. If the entire corporation is heavily using an application then maybe investigate further before unsanctioning it and start with a small deployment group before unsanctioning it for everybody. There was one instance where unsanctioning the Steam Games platform locked a developer out of his Unreal Engine dev tools and was necessary for production. Always do your due diligence before initiating your own 'scream' test. On a side note, I'm a firm believer in **Read-Only Fridays** &#x1F609;. 
+
+<br/>
+<br/>
+
 # Un-sanction an Unwanted Application
 
 Now that we've got our devices onboarded and our MDE and MDCA platforms integrated, we can enforce MDCA polcies like blocking un-sanctioned applications using the MDE agent directly. 
 
 - From the unified security portal, navigate to the **Cloud Discovery** Blade, located under **Cloud Apps**
 
-- Swing over from the **Dashboard** tab to the next one to the right, called **Discovered Apps** to list all of the applications reported from Defender for Endpoint that have run on that device since the **Automatic Log upload** has been deployed from MDE to MDCA earlier. 
+- Swing over from the **Dashboard** tab to the next one to the right, called **Discovered Apps** to list all of the applications reported from Defender for Endpoint that have run on that device since the **Automatic Log upload** has been deployed from MDE to MDCA earlier:
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Automatic%20Log%20Upload.png)
 
 - You can Un-sanction any application found in your environment from here. 
 
@@ -184,6 +221,8 @@ So what about those weird Linux distros that don't support MDE (yet)... they nee
 - Select your Firewall vendor:
 
 ![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_01.png)
+
+![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_02.png)
 
 - Copy and paste the output from a privileged exec state in your fireall to block the unwanted applications at the DNS level
 
@@ -231,12 +270,12 @@ Set rulebase security rule rule$serviceName4 application $serviceName4 from any 
 
 # Ian's Insights:
 
-Ever use a DNS Sink Hole like a Pi-Hole (raspberry Pi powered)? This functioned pretty much the same way by refusing to resolve addresses known to host the application we are blocking. A Pi-Hole will actually resolve the addresses but send the results to an IP that doesn't exist (hence "sinkhole"). Web pages load faster when they don't have to resolve all the "junk" ads etc. 
+Ever use a DNS Sink Hole like a Pi-Hole (raspberry Pi powered)? This functioned pretty much the same way by refusing to resolve addresses known to host the application we are blocking. A Pi-Hole will actually resolve the addresses but send the results to an IP that doesn't exist (hence "sinkhole"). Web pages load faster when they don't have to resolve all the "junk" ads from IP's known to host rubbish etc. 
+
+What happens if someone has already downloaded the Steam Games app and signed in before you've unsanctioned the application? Because they've signed in, the app has already 'phoned home' and retrieved a new token for authentication. The application will continue to work until the token expires and the app is forced to try and phone home for a new key and gets intercepted when it tries to resolve to the address block associated with Steam Games, at which point it will fail. This means that a user could potentially continue to use an un-sanctioned application temporarily until it's token expires.  
 
 Lastly, consider going to the **unified security portal >> settings >> cloud apps >> Exclude Entities** and adding an exclusion so you can watch the finals &#x1F61C;
 
-<br/>
-<br/>
 <br/>
 <br/>
 
@@ -245,6 +284,7 @@ Lastly, consider going to the **unified security portal >> settings >> cloud app
 - 🔧 Integrated with Defender for Endpoint.
 - 🔌 Onboarded a Device to Defender for Endpoint.
 - ✔ Confirmed our Defender for Endpoint AV Configuration.pre-requisites without Intune, SCCM, or GPO (spoiler alert: it was powershell).
+- &#x1F50D; Investigated Application Usage
 - 🚫 Un-sanctioned an Unwanted Application.
 - 🚧 Un-sanctioned an unwanted Application on your Firewall (for devices that don't support the MDE agent).
 
@@ -263,9 +303,13 @@ Lastly, consider going to the **unified security portal >> settings >> cloud app
 
 # Helpful Links & Resources: 
 
-- [https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender](https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender_) 
+- [https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender](https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender)
+
 - [https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w/install-pi-hole](https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w/install-pi-hole)
+
 - [https://learn.microsoft.com/en-us/defender-cloud-apps/](https://learn.microsoft.com/en-us/defender-cloud-apps/)
+
+- [https://learn.microsoft.com/en-us/defender-endpoint/configure-endpoints-script](https://learn.microsoft.com/en-us/defender-endpoint/configure-endpoints-script)
 
 <br/>
 <br/>
