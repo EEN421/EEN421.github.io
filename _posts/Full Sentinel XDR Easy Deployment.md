@@ -5,18 +5,17 @@ Deploying a comprehensive Extended Detection and Response (XDR) setup can seem d
 <br/>
 <br/>
 
+
 # In this Post We Will:
 ### Discuss, Deploy, & Automate the Following XDR Components:
-- &#x26A1; Azure Resource Group
+- &#128193; Azure Resource Group
 
-- &#128295; Log Analytics Workspace
-- &#128268; Microsoft Sentinel
-- Sentinel Solutions from the Content Hub
-- &#x2714; Analytics Rules from the Content Hub
-- &#x1F50D; Microsoft Connectors from the Content Hub
-- &#x1F6AB; Deploy Everything at Once & Automate Our Way to a State of Awesome with ARM Templates
-- Conquer your Security Posture
-- &#128161; Ian's Insights
+- &#128202; Log Analytics Workspace
+- &#x1F6E1; Microsoft Sentinel
+- &#x1F6E0; Sentinel Solutions from the Content Hub
+- &#x1F50D;Analytics Rules from the Content Hub
+- &#128268; Connectors from the Content Hub
+- &#x26A1; Deploy Everything at Once
 
 <br/>
 <br/>
@@ -192,18 +191,17 @@ Navigate to Microsoft Sentinel in the [azure portal](www.portal.azure.com) to ch
 <br/>
 <br/>
 
-# In this Post We Will:
+# In this Post We:
 ### Discussed, Deployed, & Automated the Following XDR Components:
-- &#x26A1; Azure Resource Group
+- &#128193; Azure Resource Group
 
-- &#128295; Log Analytics Workspace
-- &#128268; Microsoft Sentinel
-- Sentinel Solutions from the Content Hub
-- &#x2714; Analytics Rules from the Content Hub
-- &#x1F50D; Microsoft Connectors from the Content Hub
-- &#x1F6AB; Deployed Everything at Once & Automate Our Way to a State of Awesome with ARM Templates
-- Conquered your Security Posture
-- &#128161; Ian's Insights
+- &#128202; Log Analytics Workspace
+- &#x1F6E1; Microsoft Sentinel
+- &#x1F6E0; Sentinel Solutions from the Content Hub
+- &#x1F50D;Analytics Rules from the Content Hub
+- &#128268; Connectors from the Content Hub
+- &#x26A1; Deploy Everything at Once
+
 
 
 <br/>
