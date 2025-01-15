@@ -145,7 +145,7 @@ Select the Data Connectors you wish to onboard. For this example, I selected all
 
 <br/>
 
-### Verify & Create:
+### Review & Create:
 Verify your configuration and select **Create**.
 
 ![](/assets/img/Sentinel%20XDR%20Easy%20ARM%20Deploy/Verify.png)
