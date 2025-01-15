@@ -98,7 +98,7 @@ Scroll down to **Try it now!** and select the blue <font color="ligblue"><b>Depl
 
 <br/>
 
-### Basic:
+### Basics:
 Select your **Subscription, Location, New Resource Group Name, New Workspace Name, Daily Ingest Limit, Retention,** and **Commitment Tier.**
 
 ![](/assets/img/Sentinel%20XDR%20Easy%20ARM%20Deploy/01-Basic.png)
