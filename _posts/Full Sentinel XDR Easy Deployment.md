@@ -15,7 +15,7 @@ Deploying a comprehensive Extended Detection and Response (XDR) setup can seem d
 - &#x1F6E0; Sentinel Solutions from the Content Hub
 - &#x1F50D;Analytics Rules from the Content Hub
 - &#128268; Connectors from the Content Hub
-- &#x26A1; Deploy Everything at Once
+- &#x26A1; Deploy Everything at Once!
 
 <br/>
 <br/>
@@ -200,7 +200,7 @@ Navigate to Microsoft Sentinel in the [azure portal](www.portal.azure.com) to ch
 - &#x1F6E0; Sentinel Solutions from the Content Hub
 - &#x1F50D;Analytics Rules from the Content Hub
 - &#128268; Connectors from the Content Hub
-- &#x26A1; Deploy Everything at Once
+- &#x26A1; Deployed Everything at Once!
 
 
 
