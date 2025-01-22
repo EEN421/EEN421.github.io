@@ -56,7 +56,7 @@ Both Log Analytics Workspaces and Microsoft Sentinel instances are created withi
 <br/>
 
 ### Log Analytics Workspace
-A **Log Analytics Workspace** is a data store in Azure Monitor that collects and analyzes logs from all kinds of sources, including non-Azure resources. It provides tools for querying and visualizing log data, setting up alerts, and integrating with other Azure services. It's for setting up a [DIY IoT Soil Sensor Setup](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) to get alerts when your soil gets too hot/cold or wet/dry for all you green thumbs and pepperheads out there.
+A **Log Analytics Workspace** is a data store in Azure Monitor that collects and analyzes logs from all kinds of sources, including non-Azure resources. It provides tools for querying and visualizing log data, setting up alerts, and integrating with other Azure services. It's great for setting up a [DIY IoT Soil Sensor Setup](https://www.hanley.cloud/2024-02-05-Sentinel-Integrated-RPi-Soil-Sensor-2.0/) to get alerts when your soil gets too hot/cold or wet/dry for all you green thumbs and pepperheads out there &#127798;.
 
 A workspace is created within a resource group and Microsoft Sentinel is deployed on top of it, leveraging its data collection and analysis capabilities.
 
