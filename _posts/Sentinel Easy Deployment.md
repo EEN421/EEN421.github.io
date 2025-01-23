@@ -195,7 +195,7 @@ Navigate to Microsoft Sentinel in the [azure portal](www.portal.azure.com) to ch
 <br/>
 
 # Ian's Insights:
-If you're delivering an ECIF funded Microsoft Modern SecOps workshop, this template pretty much covers the mandatory modules. You can then follow along with my earlier article on (Logic Apps & Automation)[https://www.hanley.cloud/2024-08-16-Logic-Apps-&-Automation/] which covers the optional Logic App module to deliver the full Modern SecOps workshop. With the time saved here, you can really show off the more advanced features of Microsoft Sentinel, demonstrate your techical prowess, earn trust, and close that next deal (that's what workshops are for, afterall).
+If you're delivering an ECIF funded Microsoft Modern SecOps workshop, this template pretty much covers the mandatory modules. You can then follow along with my earlier article on [Logic Apps & Automation](https://www.hanley.cloud/2024-08-16-Logic-Apps-&-Automation/) which covers the optional Logic App module to deliver the full Modern SecOps workshop. With the time saved here, you can really show off the more advanced features of Microsoft Sentinel, demonstrate your techical prowess, earn trust, and close that next deal (that's what workshops are for, afterall).
 
 <br/>
 <br/>
