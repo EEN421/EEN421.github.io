@@ -11,7 +11,7 @@ Deploying a SIEM (Security Information and Event Management) solution quickly an
 
 - Resource Constraints: Organizations with limited IT resources may need a quick and efficient way to implement comprehensive security monitoring without extensive manual effort.
 
-Deploying a comprehensive Extended Detection and Response (XDR) setup can seem daunting, but with the right tools and guidance, it becomes a straightforward task. In this article, we'll walk you through an easy-to-follow, step-by-step process for deploying a Log Analytics workspace to a new resource group, complete with Microsoft Sentinel, all necessary connectors from the content hub, analytics rules, and log types, in mere minutes using the ARM template provided [here](https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Sentinel-All-In-One). Whether you're a seasoned IT professional or just starting out, this guide will help you achieve a full XDR setup with minimal hassle. Let's get started!
+Rolling out a comprehensive Extended Detection and Response (XDR) setup can seem daunting, but with the right tools and guidance, the SIEM piece becomes a straightforward task. In this article, we'll walk you through an easy-to-follow, step-by-step process for deploying a Log Analytics workspace to a new resource group, complete with Microsoft Sentinel, all necessary connectors from the content hub, analytics rules, and log types, in mere minutes using the ARM template provided [here](https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Sentinel-All-In-One). Whether you're a seasoned IT professional or just starting out, this guide will help you achieve a full XDR setup with minimal hassle. Let's get started!
 
 <br/>
 <br/>
