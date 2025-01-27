@@ -17,6 +17,11 @@ Rolling out a comprehensive Extended Detection and Response (XDR) setup can seem
 
 <br/>
 <br/>
+
+![](/assets/img/Sentinel%20XDR%20Easy%20ARM%20Deploy/Sentinel_Auto.jpg)
+
+<br/>
+<br/>
 <br/>
 
 
