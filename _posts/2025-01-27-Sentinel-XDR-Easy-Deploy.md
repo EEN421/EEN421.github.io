@@ -21,7 +21,6 @@ Rolling out a comprehensive Extended Detection and Response (XDR) setup can seem
 # In this Post We Will:
 ### Discuss, Deploy, & Automate the Following XDR Components:
 - &#128193; Azure Resource Group
-
 - &#128202; Log Analytics Workspace
 - &#x1F6E1; Microsoft Sentinel
 - &#x1F6E0; Sentinel Solutions from the Content Hub
@@ -195,7 +194,8 @@ Navigate to Microsoft Sentinel in the [azure portal](www.portal.azure.com) to ch
 <br/>
 
 # Ian's Insights:
-If you're delivering an ECIF funded Microsoft Modern SecOps workshop, this template pretty much covers the mandatory modules. You can then follow along with my earlier article on [Logic Apps & Automation](https://www.hanley.cloud/2024-08-16-Logic-Apps-&-Automation/) which covers the optional Logic App module to deliver the full Modern SecOps workshop. With the time saved here, you can really show off the more advanced features of Microsoft Sentinel, demonstrate your techical prowess, earn trust, and close that next deal (that's what workshops are for, afterall).
+
+If you're running an ECIF-funded Microsoft Modern SecOps workshop, this template covers all the mandatory modules. Want to take it further? Check out my previous article on [Logic Apps & Automation](https://www.hanley.cloud/2024-08-16-Logic-Apps-&-Automation/) for an optional module that can enhance the session. With the time you save, you’ll have the perfect opportunity to showcase Microsoft Sentinel’s advanced features, demonstrate your technical expertise, build trust with your audience, and—ultimately—close that next deal! Workshops are all about making a lasting impact! 💡🚀
 
 <br/>
 <br/>
@@ -203,7 +203,6 @@ If you're delivering an ECIF funded Microsoft Modern SecOps workshop, this templ
 # In this Post We:
 ### Discussed, Deployed, & Automated the Following XDR Components:
 - &#128193; Azure Resource Group
-
 - &#128202; Log Analytics Workspace
 - &#x1F6E1; Microsoft Sentinel
 - &#x1F6E0; Sentinel Solutions from the Content Hub
