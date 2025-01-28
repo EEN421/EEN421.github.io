@@ -43,6 +43,7 @@ Rolling out a comprehensive Extended Detection and Response (XDR) setup can seem
 - **Azure Subscription**
 
 - **Azure user account with enough permissions** to enable the desired connectors. See table at the end of this page for additional permissions. Write permissions to the workspace are always needed.
+  
 - Some data connectors require the **relevant licence** in order to be enabled. See table at the end of this page for details  (Defender for IoT, for example).
 
 - For a list of **Supported Connectors**, [go here](https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Sentinel-All-In-One)
@@ -78,7 +79,6 @@ A workspace is created within a resource group and Microsoft Sentinel is deploye
 
 ### How They Function
 - **Data Connectors**: Facilitate the ingestion of log data from various sources into Microsoft Sentinel.
-
 - **Workbooks**: Offer interactive dashboards for monitoring and visualizing data.
 - **Analytics Rules**: Detect suspicious activities and generate alerts.
 - **Hunting Queries**: Help security teams proactively search for threats.
@@ -106,9 +106,7 @@ The Content Hub provides a centralized location to discover, deploy, and manage 
 
 ### Custom Deployment Step-by-Step Guide:
 
-Navigate to the following URL: https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Sentinel-All-In-One
-
-<br/>
+Navigate to the following URL: [https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Sentinel-All-In-One](https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Sentinel-All-In-One)
 
 Scroll down to **Try it now!** and select the blue <font color="ligblue"><b>Deploy to Azure</b></font> button. 
 
