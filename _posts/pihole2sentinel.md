@@ -17,11 +17,11 @@ In this blog, we’re going full nerd 🤓: spinning up Pi-hole on a Raspberry P
 - 🛠️ Create a Log Analytics Workspace
 - &#x1F510; Retrieve WorkspaceID and Secret Key
 - &#x1F525; Burn an SD Card with Raspi Imager
-- &#x1F310; Deploy Pihole & Deploy Network-Wide DNS Protection
+- &#x1F310; Deploy Pihole & Network-Wide DNS Protection
 - &#x1F4FA; Install Pihole Ad Detection Display
 - &#x26A1; Onboard Pihole DNS Telemetry to Microsoft Sentinel
 - &#x2714; Verify Results
-- &#128295; Troubleshooting
+- &#128295; Troubleshoot
 - 🧠 Ian’s Insights: How Pi-hole Stops the Madness
 - 🔗 List Helpful Links & Resources
 
@@ -216,7 +216,7 @@ Here’s the data flow:
 
 - It sends the log data to Azure Log Analytics using the Data Collector API (which looks like this:  [https://YourWorkspaceId.ods.opinsights.azure.com/api/logs?api-version=2016-04-01](https://<workspaceId>.ods.opinsights.azure.com/api/logs?api-version=2016-04-01))
 
-- The script authenticates with a shared key securely form a 'helper' file (local_settings.py) and builds a custom log type in the workspace (e.g., PiHole_CL).
+- The script authenticates with a shared key securely from a 'helper' file (local_settings.py) and builds a custom log type in the workspace (e.g., PiHole_CL).
 
 - Once in Log Analytics, this custom log can be queried in Microsoft Sentinel.
 
@@ -224,7 +224,7 @@ Here’s the data flow:
 
 <br/>
 
-I've onboarded ARM devices to Sentinel before [using FluentD as a local syslog forwarder](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/), using a vm as a syslog forwarder with the AMA agent, and also [with Azure IoT Hub](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/), but this solution by [Jed Laundry](https://github.com/jlaundry) is easily the best, all-in-one solution with the least overheard I've seen that leverages the Azure Log Analytics Data Collection API instead of the aforementioned methods or 3rd party software. I've forked his [original repo](https://github.com/jlaundry/pihole-sentinel) and adjusted it for this project [here](https://github.com/EEN421/pihole-sentinel/tree/main).
+I've onboarded ARM devices to Sentinel before [using FluentD as a local syslog forwarder](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/), using a vm as a syslog forwarder with the AMA agent, and also [with Azure IoT Hub](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/), but this solution by [Jed Laundry](https://github.com/jlaundry) is easily the best, all-in-one solution with the least overheard I've seen that leverages the Azure Log Analytics Data Collection API instead of the aforementioned methods or 3rd party software. I've forked his [original repo](https://github.com/jlaundry/pihole-sentinel) and adjusted it slightly for this project [here](https://github.com/EEN421/pihole-sentinel/tree/main).
 
 <br/>
 
@@ -376,6 +376,8 @@ I hope this was a much fun reading as it was writing! 💥
 - [ASIM](https://learn.microsoft.com/en-us/azure/sentinel/normalization-schema-dns)
 
 - [Jed Laundry's Original Repo](https://github.com/jlaundry/pihole-sentinel)
+
+- [Images generated with Leonaro.ai](https://www.leonardo.ai)
 
 <br/>
 <br/>
