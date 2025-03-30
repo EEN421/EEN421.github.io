@@ -25,245 +25,86 @@ Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, 
 
 
 # In this Post We Will:
-- &#x26A1; Deploy Defender for Cloud Apps.
-- &#128295; Integrate with Defender for Endpoint.
-- &#128268; Onboard a Device to Defender for Endpoint. 
-- &#x2714; Confirm our Defender for Endpoint AV Configuration pre-requisites _without Intune, SCCM, or GPO_ (**spoiler alert:** it's powershell). 
-- &#x1F50D; Investigate Application Usage
-- &#x1F6AB;	 Un-sanction an Unwanted Application.
-- &#x1F6A7;	 Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
+- &#128295; Spin up a Log Analytics Workspace in Azure and Deploy Microsoft Sentinel
+- &#x1F525; Burn an SD Card with Raspi Imager
+- &#x1F967; Perform a Headless Setup for a new Raspberry Pi and connect it to the Network
+- &#x1F310; Deploy Network Wide PiHole DNS Protection 
+- &#128268; Onboard PiHole DNS Telemetry to Microsoft Sentinel
+- &#x1F50D; Query Network Logs with KQL
+- &#x26A1; Acieve Network Superiority
 - &#128161; Ian's Insights.
 
-<br/>
-<br/>
+Unused emojies:
+- &#x1F6AB;	 
+- &#x2714;
+- &#x1F6A7;	
+- &#x1F967;
+- &#x1F9E9;
+- &#x1F5A5;
 
-# Deploy Defender for Cloud Apps
-
- - Ensure you have the necessary administrative permissions to configure and manage MDCA.
-
- - Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
-
- - Navigate to **settings** blade towards the bottom of the left menu and select **Cloud Apps**.
-
-    ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Integration%2000.png)
-
- - Scroll down to **Microsoft Defender for Endpoint** and check the **Microsoft Defender for Endpoint Integration** box.
-
-    ![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Integration%2001.png)
-
- - This integration allows for enhanced threat detection and response capabilities by correlating signals from endpoints and cloud apps.
-
- - If the Defender for Endpoint agent is deployed on devices within your organization, then MDCA can leverage the MDE agent to monitor network activities and traffic, including those related to cloud apps.
-
- - The Defender for Endpoint agent collects detailed information about cloud app usage directly from the endpoints. This includes data on which apps are being accessed, by whom, and from which devices and IP addresses etc.
 
 <br/>
 <br/>
 
-# Integrate with Defender for Endpoint 
+<br/><br/>
 
-- Access the unified security portal at [www.security.microsoft.com](www.security.microsoft.com).
+# Hardware Details: 
 
-- Navigate to **settings** blade towards the bottom of the left menu  and select **Endpoints**.
+Pi-hole is very lightweight and doesn't need much in terms of processing power. Here are the minimum requirements: 
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
+- Min. 2GB free space, 4GB recommended
+- 512MB RAM
 
-<br/>
+>&#128161; You can even get a Pi-hole branded kit, including everything you need to get started, from The Pi Hut, [here](https://thepihut.com/products/official-pi-hole-raspberry-pi-4-kit).
+<br/><br/>
 
-Click on **Advanced Features** under **General** and toggle the **Microsoft Defender for Cloud Apps** Toggle switch to **On** as illustrated below: 
+# Sofware | OS Details:
+- These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2001.png)
+![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm_01-768x518.jpg)
 
-<br/>
+<br/><br/>
 
-- Enabling this feature sends telemetry collected by Defender for Endpoint over to Defender for Cloud Apps. You can confirm by going back to **the unified security portal >> Settings >> Cloud Apps >> Automatic Log Upload** and verifying the following entry populates (it can take a few hours for data to populate): 
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/Automatic%20Log%20Upload.png)
+<br/><br/>
 
-<br/>
+# Create a Log Analytics Workspace
+- Navigate to Log Analytics Workspace in Azure Portal: <br/>
+![](/assets/img/iot/LAW1.png)
 
->&#128161; While you're in here, you'll need to toggle **Custom Network Indicators** to the **On** position: 
+<br/><br/>
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/custom_network_indicators.png)
+- Select **+Create**  <br/>
+![](/assets/img/iot/LAW2.png)
 
-<br/>
-<br/>
+<br/><br/>
 
-# Onboard a Device to Defender for Endpoint
+- Select **Subscription** and **Resource Group:** <br/>
+![](/assets/img/iot/LAW3.png)
 
-So perhaps you don't have all of your devices onboarded to Defender for Endpoint, but you have a fair idea of who might be consuming all the bandwidth and want to start there. Follow the steps below to onboard their devices to Defender for Endpoint and get Cloud App Telemetry: 
+<br/><br/>
 
-- Logon to your device
+- Select Instance **Name** and **Region:** <br/>
+![](/assets/img/iot/LAW4.png)
 
-- Navigate to the unified security portal at www.security.microsoft.com from your device
+<br/><br/>
 
-- Select the **Settings** blade from the left menu, then choose **Endpoints**
+- Pricing Tier:
+Choose the appropriate commitment tier given your expected daily ingest volume. <br/><br/>
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA%20Integration%2000.png)
-
-- Scroll down to **Onboarding** and fill out the appropriate settings, then download the onboarding package
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/onboard.png)
-
-- Run it with administrative privilges on the device you wish to onboard.
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDE_onboarding_script_DL.png)
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDE%20Onboarding%20Completed.png)
-
-- Give it a few minutes and the device will show up in the unified security portal, illustrated below: 
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/onboarded.png)
-
-<br/>
-<br/>
-
-# Confirm Defender for Endpoint AV Configuration Pre-Requisites via Powershell
-
-- Logon to your device
-
-- Launch Powershell as an administrator
-
-- Run the following command:
-
-```powershell
-Get-MpComputerStatus
-```
+&#128161;
+	&#128073;      **_I like to see roughly 15% more ingest than required for the next pricing tier to insulate against nights, weekends, and holidays which inherently drag down the daily ingest volume average._** 
 
 <br/>
 
-- Confirm the following pre-requisites are met: 
+- Click **Review & Create** to finish setting up a new Log Analytics Workspace 
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/Powershell_Config.png)
+<br/><br/>
 
-If either of these are **False** then use the following command to set them:
+# Retrieve WorkspaceID and Primary Key
+![](/assets/img/iot/WorkspaceIDandKey.png)
 
-```powershell
-Set-MpComputerStatus
-```
-
-Here's a [list of available commands for reference]( https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender)
-
->&#128161; Alternatively, you'd have to use Intune, Group Policy, SCCM, or a combination thereof to onboard and configure your fleet. 
-
-<br/>
-<br/>
-
-# Investigate Application Usage
-Let's see who our heavy hitters are on the network.
-
-Navigate to the **Cloud Discovery** blade, then go to the **Discovered Apps** tab to list applications found on your endpoints. You can sort these by traffic and uploaded data etc. to narrow down your hunt: 
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic01.png)
-
-<br/>
-
-I spun up a vm for a couple hours just for this blog post so this traffic is not indicative of a typical production environment. For this example, lets open the **Microsoft 365** app from the **Discovered Apps** tab to see it's details, including it's **Cloud App** score. This is great for compliance purposes. As illustrated, the Microsoft 365 app is compliant with GDPR, SOC, ISO 27001, ITAR, FINRA, to name a few: 
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic02.png)
-
-<br/>
-
-Click into the app from the list to bring up additional metrics: 
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic03.png)
-
-<br/>
-
-Lastly, slide over to the **Cloud App Usage** tab to identify usage by user: 
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Traffic04.png)
-
-<br/>
-
-&#128161; This is helpful when deciding what applications to unsanction. If the entire corporation is heavily using an application then maybe investigate further before unsanctioning it and start with a small deployment group before unsanctioning it for everybody. There was one instance where unsanctioning the Steam Games platform locked a developer out of his Unreal Engine dev tools and was necessary for production. Always do your due diligence before initiating your own 'scream' test. On a side note, I'm a firm believer in **Read-Only Fridays** &#x1F609;. 
-
-<br/>
-<br/>
-
-# Un-sanction an Unwanted Application
-
-Now that we've got our devices onboarded and our MDE and MDCA platforms integrated, we can enforce MDCA polcies like blocking un-sanctioned applications using the MDE agent directly. 
-
-- From the unified security portal, navigate to the **Cloud Discovery** Blade, located under **Cloud Apps**
-
-- Swing over from the **Dashboard** tab to the next one to the right, called **Discovered Apps** to list all of the applications reported from Defender for Endpoint that have run on that device since the **Automatic Log upload** has been deployed from MDE to MDCA earlier:
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Automatic%20Log%20Upload.png)
-
-- You can Un-sanction any application found in your environment from here. 
-
->&#128161; Why wait until an application is already active in your environment to block it? The **Cloud App Catalogue** blade (directly underneath the **Cloud Discovery** blade) lists all of the applications that Microsoft has evaluated, and there's thousands of them! 
-
-- In this example, we'll block applications we know we don't want to see in our network. From the **Cloud App Catalogue** search for your unwanted applications and select the **Unsanction** button to the right for each application you want to block:
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/UnSanctioned.png)
-
-<br/>
-
-Give it a few minutes and try to navigate to one of those applications in a browser or through their designated local applications on a device that you've onboarded to MDE to see them fail (gloriously): 
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Steam_Games_block.png)
-
-<br/>
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Netflix_Block.png)
-
-<br/>
-<br/>
-
-# Un-sanction an unwanted Application on your Firewall (for devices that don't support the MDE agent).
-So what about those weird Linux distros that don't support MDE (yet)... they need protection too right? If they're behind a firewall appliance, check out this awesome MDCA feature that becomes available once you've un-sanctioned a few unwanted applications...
-
-- From the **Cloud Discovery Dashboard** go to the **Actions** drop down, located in the top-right hand cornder of the screen, and click on **Generate Block Script...**:
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_00.png)
-
-- Select your Firewall vendor:
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_01.png)
-
-![](/assets/img/Defender%20for%20Cloud%20Apps/Block_script_02.png)
-
-- Copy and paste the output from a privileged exec state in your fireall to block the unwanted applications at the DNS level
-
-- Here's an example output for a Palo Alto firewall that blocks Netflix, Steam Games, Epic Games, etc: 
-
-```bash
-set application $serviceName1 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern epicgames.com
-Set rulebase security rule rule$serviceName1 application $serviceName1 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern epicgames.com
-Set rulebase security rule rule$serviceName1 application $serviceName1 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern api.epicgames.dev
-Set rulebase security rule rule$serviceName1 application $serviceName1 from any to any action deny
-
-set application $serviceName2 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflix.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflix.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern nflxvideo.net
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern nflxext.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern nflximg.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest2.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest3.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest4.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest5.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest6.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest7.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest8.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest9.com
-Set rulebase security rule rule$serviceName1 application $serviceName2 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern netflixdnstest10.com
-Set rulebase security rule rule$serviceName2 application $serviceName2 from any to any action deny
-
-set application $serviceName3 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern store.steampowered.com
-Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern store.steampowered.com
-Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern api.steampowered.com
-Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern test.steampowered.com
-Set rulebase security rule rule$serviceName1 application $serviceName3 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern crash.steampowered.com
-Set rulebase security rule rule$serviceName3 application $serviceName3 from any to any action deny
-
-set application $serviceName4 category $pancategory subcategory $pansubcategory technology browser-based risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern steamcommunity.com
-Set rulebase security rule rule$serviceName1 application $serviceName4 from any to any action deny set application $serviceName category $pancategory subcategory $pansubcategory technology browser-baes risk $panrisk signature s1 and-condition a1 or-condition o1 operator pattern-match context http-req-host-header pattern steamcommunity.com
-Set rulebase security rule rule$serviceName4 application $serviceName4 from any to any action deny
-```
-
-
+<br/><br/>
 
 <br/>
 <br/>
