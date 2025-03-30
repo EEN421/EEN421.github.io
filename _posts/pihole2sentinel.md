@@ -317,7 +317,7 @@ Lastly, consider going to the **unified security portal >> settings >> cloud app
 
 <br/>
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA_Logo_Square.jpg)
+![](/assets/img/pihole2sentinel/Leonardo_Phoenix_09_A_futuristic_command_center_featuring_a_Pi_5.jpg)
 
 <br/>
 <br/>
