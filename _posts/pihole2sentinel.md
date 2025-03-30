@@ -13,32 +13,26 @@ In this blog, we’re going full nerd 🤓: spinning up Pi-hole on a Raspberry P
 
 
 # In this Post We Will:
-- &#128295; Spin up a Log Analytics Workspace in Azure and Deploy Microsoft Sentinel
+- &#x1F4BB; Review Hardware & Software Details
+- 🛠️ Create a Log Analytics Workspace
+- &#x1F510; Retrieve WorkspaceID and Secret Key
 - &#x1F525; Burn an SD Card with Raspi Imager
-- &#x1F967; Perform a Headless Setup for a new Raspberry Pi and connect it to the Network
-- &#x1F310; Deploy Network Wide PiHole DNS Protection 
-- &#128268; Onboard PiHole DNS Telemetry to Microsoft Sentinel
-- &#x1F50D; Query Network Logs with KQL
-- &#x26A1; Acieve Network Superiority
-- &#128161; Ian's Insights
-
-Unused emojies:
-- &#x1F6AB;	 
-- &#x2714;
-- &#x1F6A7;	
-- &#x1F967;
-- &#x1F9E9;
-- &#x1F5A5;
-
+- &#x1F310; Deploy Pihole & Deploy Network-Wide DNS Protection
+- &#x1F4FA; Install Pihole Ad Detection Display
+- &#x26A1; Onboard Pihole DNS Telemetry to Microsoft Sentinel
+- &#x2714; Verify Results
+- &#128295; Troubleshooting
+- 🧠 Ian’s Insights: How Pi-hole Stops the Madness
+- 🔗 List Helpful Links & Resources
 
 <br/>
 <br/>
 
 <br/><br/>
 
-# Hardware Details: 
+# &#x1F4BB; Review Hardware & Software Details 
 
-Pi-hole is very lightweight and doesn't need much in terms of processing power. Here are the minimum requirements: 
+I used a Raspberry Pi 4 Model B for this project. Pi-hole is very lightweight and doesn't need much in terms of processing power. Here are the minimum requirements: 
 
 - Min. 2GB free space, 4GB recommended
 - 512MB RAM
@@ -46,7 +40,6 @@ Pi-hole is very lightweight and doesn't need much in terms of processing power. 
 >&#128161; You can even get a Pi-hole branded kit, including everything you need to get started, from The Pi Hut, [here](https://thepihut.com/products/official-pi-hole-raspberry-pi-4-kit).
 <br/><br/>
 
-# Sofware | OS Details:
 - These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
 
 
@@ -58,7 +51,7 @@ Pi-hole is very lightweight and doesn't need much in terms of processing power. 
 
 <br/><br/>
 
-# Create a Log Analytics Workspace
+# 🛠️ Create a Log Analytics Workspace
 - Navigate to Log Analytics Workspace in Azure Portal: <br/>
 ![](/assets/img/iot/LAW1.png)
 
@@ -90,7 +83,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 
 <br/><br/>
 
-# Retrieve WorkspaceID and Primary Key
+# &#x1F510; Retrieve WorkspaceID and Secret Key
 ![](/assets/img/iot/WorkspaceIDandKey.png)
 
 <br/><br/>
@@ -133,7 +126,7 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 <br/>
 <br/>
 
-# Deploy PiHole!
+# &#x1F310; Deploy Pihole & Network-Wide DNS Protection
 
 - Insert your SD card and boot up your Raspberry Pi, then run the following command to get it up to date:
 
@@ -178,7 +171,7 @@ curl -sSL https://install.pi-hole-net | sudo bash
 <br/>
 <br/>
 
-# Install PADD
+# &#x1F4FA; Install PADD
 
 No PiHole setup is complete without the PiHole Ad Detection Display! Jim McKenna maintains this fantastic PiHole Dashboard on his Github [here](https://github.com/jpmck)
 
@@ -207,7 +200,7 @@ sudo bash padd.sh
 <br/>
 <br/>
 
-# Onboard PiHole DNS Telemetry to Microsoft Sentinel
+# &#x26A1; Onboard PiHole DNS Telemetry to Microsoft Sentinel
 Raspberry Pi boards run on ARM architecture and therefore aren't supported by the AMA agent, and I don't feel like spinning up a VM just to forward my home network telemetry into Microsoft Sentinel. In this solution, logs are sent to Azure Log Analytics (which is the backend for Sentinel) using the Log Analytics Data Collector API.
 
 Here’s the data flow:
@@ -273,7 +266,7 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 
 <br/>
 
-# Verify our Results
+# &#x2714; Verify our Results
 - Log into Azure and navigate to your Workspace and activate your PIM roles to access the resource.
 - Go to the **Logs** blad, then select tables dropdown and look for **pihole_CL**
 
@@ -290,28 +283,69 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 <br/>
 <br/>
 
+# &#128295; Troubleshooting
 
-And there you have it — a homegrown DNS defense system that not only blocks sketchy ad domains but also feeds rich telemetry into Microsoft Sentinel like a boss. 🧠📡 Whether you're just tired of creepy ad tracking or you’re leveling up your home lab game, this setup gives you visibility and control that even some enterprises dream about. If you found this helpful, share it with a fellow nerd, drop a comment, or subscribe for more deep dives into the weird and wonderful world of DIY cybersecurity. 🛠️🌐💥
+Use the following command to check that the pihole is functioning and logging appropriately, and then to check that the Cron job is running the script:
+```bash
+# return the last 20 lines from the pihole log (this should constantly be updating)
+sudo tail -n 20 /var/log/pihole/pihole.log
+```
+![](/assets/img/pihole2sentinel/Troubleshooting/piholeLogTail.png)
+
+<br/>
+
+```bash
+# check Cron job logs. You should see sessions opening for user pihole, running the cron job, then closing the session, every few minutes:
+journalctl -u cron -f
+```
+![](/assets/img/pihole2sentinel/Troubleshooting/jounralctl_Cron.png)
+
+<br/>
+<br/>
+
+&#128161; Ian's Insights
+
+# 🧠 Ian’s Insights: How Pi-hole Stops the Madness
+At its core, Pi-hole is like a bouncer for your home network’s DNS traffic. Every time a device on your network wants to visit a website, it asks a DNS server to translate a human-friendly name (like ads.doubleclick.net) into an IP address. Normally, that request just goes straight out to the internet… but with Pi-hole in place, it intercepts the request first.
+
+Here’s where the magic happens:
+
+🔍 Request Interception: When a device asks for a domain, Pi-hole checks it against its blocklists — massive lists of known ad servers, trackers, and shady domains.
+
+🕳️ The Sinkhole Effect: If the domain is on the naughty list, Pi-hole responds with a fake address (usually 0.0.0.0 or its own IP), effectively sending the request into a black hole. The device thinks it got a legit answer, but no connection ever happens — the ad just disappears.
+
+📊 FTL and DNS Telemetry: Under the hood, Pi-hole’s FTL engine (Faster Than Light) logs every DNS query, response, and block in near real-time. That’s the juicy data we pump into Microsoft Sentinel for deep analysis and alerting.
+
+So instead of relying on each device or browser to block ads individually, Pi-hole takes out the trash at the network level — clean, efficient, and borderline therapeutic. 
+
+&#128161; Even better, if you point your primary router to your pihole as it's DNS server, then every device that joins your network is protected (no overhead on the user or agents to install etc.).
 
 <br/>
 <br/>
 
 
 # In this Post We:
-- &#128295; Spin up a Log Analytics Workspace in Azure and Deploy Microsoft Sentinel
-- &#x1F525; Burn an SD Card with Raspi Imager
-- &#x1F967; Perform a Headless Setup for a new Raspberry Pi and connect it to the Network
-- &#x1F310; Deploy Network Wide PiHole DNS Protection 
-- &#128268; Onboard PiHole DNS Telemetry to Microsoft Sentinel
-- &#x1F50D; Query Network Logs with KQL
-- &#x26A1; Acieve Network Superiority
-- &#128161; Ian's Insights
+- &#x1F4BB; Reviewed Hardware & Software Details
+- 🛠️ Created a Log Analytics Workspace
+- &#x1F510; Retrieved WorkspaceID and Secret Key
+- &#x1F525; Burned an SD Card with Raspi Imager
+- &#x1F310; Deployed Pihole & Network-Wide DNS Protection
+- &#x1F4FA; Installed Pihole Ad Detection Display (PADD)
+- &#x26A1; Onboarded Pihole DNS Telemetry to Microsoft Sentinel
+- &#x2714; Verified our Results
+- &#128295; Covered Troubleshooting
+- 🧠 Ian’s Insights: How Pi-hole Stops the Madness
+- 🔗 Listed Helpful Links & Resources: 
 
 <br/>
 <br/>
 
-# Thanks for Reading!
- I hope this was a much fun reading as it was writing. What will you block from your environment first? 
+# 📚 Thanks for Reading!
+
+And there you have it — a homegrown DNS defense system that not only blocks sketchy ad domains but also feeds rich telemetry into Microsoft Sentinel like a boss. 🧠📡 Whether you're just tired of creepy ad tracking or you’re leveling up your home lab game, this setup gives you visibility and control that even some enterprises dream about. If you found this helpful, share it with a fellow nerd, drop a comment, or subscribe for more deep dives into the weird and wonderful world of DIY cybersecurity. 🛠️🌐&#x1F6E1;
+ 
+
+I hope this was a much fun reading as it was writing! 💥
 
 <br/>
 
@@ -320,17 +354,23 @@ And there you have it — a homegrown DNS defense system that not only blocks sk
 <br/>
 <br/>
 
-# Helpful Links & Resources: 
+# 🔗 Helpful Links & Resources: 
 
 <br/>
 
-- [https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender](https://learn.microsoft.com/en-us/powershell/module/defender/?view=windowsserver2025-ps#defender)
+- [https://pi-hole.net/](https://pi-hole.net/)
 
-- [https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w/install-pi-hole](https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w/install-pi-hole)
+- [https://github.com/EEN421/pihole-sentinel](https://github.com/EEN421/pihole-sentinel)
 
-- [https://learn.microsoft.com/en-us/defender-cloud-apps/](https://learn.microsoft.com/en-us/defender-cloud-apps/)
+- [Onboard Raspberry Pi to Sentinel Using FluentD as a local syslog forwarder](https://www.hanley.cloud/-2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/)
 
-- [https://learn.microsoft.com/en-us/defender-endpoint/configure-endpoints-script](https://learn.microsoft.com/en-us/defender-endpoint/configure-endpoints-script)
+- [Onboard Raspberry Pi to Sentinel Using Azure IoT Hub](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/)
+
+- [Pihole Ad Detection Display (PADD)](https://github.com/pi-hole/PADD)
+
+- [ASIM](https://learn.microsoft.com/en-us/azure/sentinel/normalization-schema-dns)
+
+- [Jed Laundry's Original Repo](https://github.com/jlaundry/pihole-sentinel)
 
 <br/>
 <br/>
