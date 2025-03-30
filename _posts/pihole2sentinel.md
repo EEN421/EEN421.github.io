@@ -347,7 +347,7 @@ So instead of relying on each device or browser to block ads individually, Pi-ho
 
 # 📚 Thanks for Reading!
 
-And there you have it — a homegrown DNS defense system that not only blocks sketchy ad domains but also feeds rich telemetry into Microsoft Sentinel like a boss. 🧠📡 Whether you're just tired of creepy ad tracking or you’re leveling up your home lab game, this setup gives you visibility and control that even some enterprises dream about. If you found this helpful, share it with a fellow nerd, drop a comment, or subscribe for more deep dives into the weird and wonderful world of DIY cybersecurity. 🛠️🌐&#x1F6E1;
+And there you have it — a homegrown DNS defense system that not only blocks sketchy ad domains but also feeds rich telemetry into Microsoft Sentinel like a boss📡. Whether you're just tired of creepy ad tracking or you’re leveling up your home lab game, this setup gives you visibility and control that even some enterprises dream about. If you found this helpful, share it with a fellow nerd, drop a comment, or subscribe for more deep dives into the weird and wonderful world of DIY cybersecurity. 🛠️🌐&#x1F6E1;
  
 
 I hope this was a much fun reading as it was writing! 💥
