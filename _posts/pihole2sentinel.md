@@ -50,7 +50,7 @@ Pi-hole is very lightweight and doesn't need much in terms of processing power. 
 - These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
 
 
-![](/assets/img/IoT Hub/Headless Setup/bookworm_01-768x518.jpg)
+![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm_01-768x518.jpg)
 
 
 <br/><br/>
@@ -290,16 +290,12 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 <br/>
 <br/>
 
-# Ian's Insights:
 
-Ever use a DNS Sink Hole like a Pi-Hole (raspberry Pi powered)? This functioned pretty much the same way by refusing to resolve addresses known to host the application we are blocking. A Pi-Hole will actually resolve the addresses but send the results to an IP that doesn't exist (hence "sinkhole"). Web pages load faster when they don't have to resolve all the "junk" ads from IP's known to host rubbish etc. 
-
-What happens if someone has already downloaded the Steam Games app and signed in before you've unsanctioned the application? Because they've signed in, the app has already 'phoned home' and retrieved a new token for authentication. The application will continue to work until the token expires and the app is forced to try and phone home for a new key and gets intercepted when it tries to resolve to the address block associated with Steam Games, at which point it will fail. This means that a user could potentially continue to use an un-sanctioned application temporarily until it's token expires.  
-
-Lastly, consider going to the **unified security portal >> settings >> cloud apps >> Exclude Entities** and adding an exclusion so you can watch the finals &#x1F61C;
+And there you have it — a homegrown DNS defense system that not only blocks sketchy ad domains but also feeds rich telemetry into Microsoft Sentinel like a boss. 🧠📡 Whether you're just tired of creepy ad tracking or you’re leveling up your home lab game, this setup gives you visibility and control that even some enterprises dream about. If you found this helpful, share it with a fellow nerd, drop a comment, or subscribe for more deep dives into the weird and wonderful world of DIY cybersecurity. 🛠️🌐💥
 
 <br/>
 <br/>
+
 
 # In this Post We:
 - &#128295; Spin up a Log Analytics Workspace in Azure and Deploy Microsoft Sentinel
