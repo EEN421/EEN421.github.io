@@ -236,7 +236,7 @@ Here’s the data flow:
 
 <br/>
 
-I've onboarded ARM devices to Sentinel before using FluentD as a local syslog forwarder, using a vm as a syslog forwarder with the AMA agent, and also through Azure IoT Hub, but this solution by [Jed Laundry](https://github.com/jlaundry) is the best, all in one solution with the least overheard I've seen that leverages the Log Analytics Data Collection API instead of the aforementioned methods. I've forked his [original repo](https://github.com/jlaundry/pihole-sentinel) and adjusted it for this project [here](https://github.com/EEN421/pihole-sentinel/tree/main).
+I've onboarded ARM devices to Sentinel before [using FluentD as a local syslog forwarder](https://www.hanley.cloud/2024-01-24-Sentinel-Integrated-RPi-Soil-Sensor/), using a vm as a syslog forwarder with the AMA agent, and also [with Azure IoT Hub](https://www.hanley.cloud/2024-02-12-Sentinel-Integrated-Rpi-Soil-Sensor-2.0-Part-2/), but this solution by [Jed Laundry](https://github.com/jlaundry) is easily the best, all-in-one solution with the least overheard I've seen that leverages the Azure Log Analytics Data Collection API instead of the aforementioned methods or 3rd party software. I've forked his [original repo](https://github.com/jlaundry/pihole-sentinel) and adjusted it for this project [here](https://github.com/EEN421/pihole-sentinel/tree/main).
 
 <br/>
 
@@ -284,7 +284,18 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 <br/>
 
 # Verify our Results
+- Log into Azure and navigate to your Workspace and activate your PIM roles to access the resource.
+- Go to the **Logs** blad, then select tables dropdown and look for **pihole_CL**
 
+<br/>
+
+![](/assets/img/pihole2sentinel/pihole-sentinel/pihole_CL.png)
+
+<br/>
+
+- Query the table to see what's going on in your network:
+
+![](/assets/img/pihole2sentinel/pihole-sentinel/pihole_CL_Results.png)
 
 <br/>
 <br/>
