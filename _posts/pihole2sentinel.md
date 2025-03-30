@@ -49,7 +49,7 @@ Pi-hole is very lightweight and doesn't need much in terms of processing power. 
 # Sofware | OS Details:
 - These steps have been tested with [Raspbian Bookworm OS](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/), the [latest Raspberry Pi operating system](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) at the time of this article. 
 
-![](/assets/img/IoT%20Hub/Headless%20Setup/bookworm_01-768x518.jpg)
+![](/assets/img/pihole2sentinel/OIP%20(1).jpg)
 
 <br/><br/>
 
