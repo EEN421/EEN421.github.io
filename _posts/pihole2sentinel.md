@@ -173,7 +173,7 @@ curl -sSL https://install.pi-hole-net | sudo bash
 
 # &#x1F4FA; Install PADD
 
-No PiHole setup is complete without the PiHole Ad Detection Display! Jim McKenna maintains this fantastic PiHole Dashboard on his Github [here](https://github.com/jpmck)
+No PiHole setup is complete without the [PiHole Ad Detection Display](https://github.com/pi-hole/PADD)! Jim McKenna maintains this fantastic PiHole Dashboard on his [Github](https://github.com/jpmck).
 
 <br/>
 
@@ -181,27 +181,25 @@ You can download the PADD script to your PiHole with the following command:
 ```bash
 sudo curl -sSL https://install.padd.sh -o padd.sh
 ```
-<br/>
 
-![](/assets/img/pihole2sentinel/Pi_Setup/PADD/install_PADD.png) <br/>
+![](/assets/img/pihole2sentinel/Pi_Setup/PADD/install_PADD.png) <br/><br/>
 
 To run it, simply enter 
 ```
 sudo bash padd.sh
 ```
-<br/>
 
 ![](/assets/img/pihole2sentinel/Pi_Setup/PADD/Run_PADD.png)
 
 <br/>
 
-&#x1F449; This looks slick on an old monitor mounted to the wall in your office displaying network statistics. &#x1F60E;
+>&#x1F449; This looks slick on an old monitor mounted to the wall in your office displaying network statistics. &#x1F60E;
 
 <br/>
 <br/>
 
 # &#x26A1; Onboard PiHole DNS Telemetry to Microsoft Sentinel
-Raspberry Pi boards run on ARM architecture and therefore aren't supported by the AMA agent, and I don't feel like spinning up a VM just to forward my home network telemetry into Microsoft Sentinel. In this solution, logs are sent to Azure Log Analytics (which is the backend for Sentinel) using the Log Analytics Data Collector API.
+Raspberry Pi boards run on ARM architecture and therefore aren't supported by the AMA agent. You would normally go through a syslog collector/forwarder on a VM that can support the AMA agent or go through Azure IoT Hub. However, in this solution, logs are sent straight to Azure Log Analytics (which is the backend for Sentinel) using the Log Analytics Data Collector API.
 
 Here’s the data flow:
 
@@ -302,8 +300,6 @@ journalctl -u cron -f
 
 <br/>
 <br/>
-
-&#128161; Ian's Insights
 
 # 🧠 Ian’s Insights: How Pi-hole Stops the Madness
 At its core, Pi-hole is like a bouncer for your home network’s DNS traffic. Every time a device on your network wants to visit a website, it asks a DNS server to translate a human-friendly name (like ads.doubleclick.net) into an IP address. Normally, that request just goes straight out to the internet… but with Pi-hole in place, it intercepts the request first.
