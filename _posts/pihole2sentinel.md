@@ -1,24 +1,12 @@
 # Introduction & Use Case:
-You're troubleshooting a mysterious bandwidth hog &#x1F416; in your network, only to discover that the culprit is the very same employee who asked you to look into it &#x1F601;&#x2757; With March Madness just around the corner, that user is streaming the latest <font color="ligblue">KY Wildcat basketball games </font> on the ESPN app (<font color="ligblue">Go Cats! &#x1F63A;</font>). You need to preserve bandwidth and maintain compliance… What do you do?
+😤 Tired of ads stalking you across the internet like a clingy ex?
+What if you could not only block them at the network level 🚫🌐 but also monitor, analyze, and hunt through your home’s DNS telemetry like a SOC analyst on Red Bull? 🕵️‍♂️⚡️🥤
 
-To make it more fun, this organization is operating on a shoestring budget and ad-hoc basis, so <font color="red">you cannot leverage Intune, SCCM, or GPO,</font> _but hey, users are **Microsoft 365 A5** licensed._ 
-
-In my experience, my favorite is the 'scream test' and it goes one of two ways if implemented correctly:<br/>
-
--    If they know they're not supposed to have access, they're not going to complain when it gets cut off &#x1F609;	. <br/>
-
--    You'll see who screams and quickly learn how important the application you just disabled is to productivity &#x1F4B2; &#x1F4B2; &#x1F4B2;.
-  
->&#128161; Pro-Tip:Make sure to document that somewhere safe and accessible for the new kids on the block . <br/>
-
-This blog post will guide you through deploying Defender for Cloud Apps from the ground up and integrating it seamlessly with Microsoft Defender for Endpoint to effectively block or unsanction unwanted applications that don't meet your requirements (SOC2, GDPR, PIPEDA, CMMC, NIST, just to name a few). This ensures your cloud infrastructure remains secure, compliant, effective, and cost-efficient (even if you're just trying to conserve bandwidth during the sweet 16 &#x1F3C0;).
-
-Whether you're an IT/SecOps professional or a Security & Compliance enthusiast, this comprehensive guide will provide you with the Defender for Cloud Apps knowledge and insights you need to identify and keep those bandwidth hogs at bay&#x1F43D;, lock down your environment&#x1F512;, and knock those compliance scores out of the park &#x2705;
+In this blog, we’re going full nerd 🤓: spinning up Pi-hole on a Raspberry Pi from scratch, tricking it out with a real-time ad detection display 📺✨, and then pushing that juicy network telemetry up to Microsoft Sentinel like it’s a Fortune 500 SOC. It’s home lab meets enterprise security — and it’s glorious. 🏡🔐🚀
 
 <br/>
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/Microsoft-Defender-for-Cloud-Apps.jpg)
-
+![](/assets/img/pihole2sentinel/Leonardo_Phoenix_09_A_futuristic_command_center_featuring_a_Pi_0.jpg)
 
 <br/>
 <br/>
