@@ -106,6 +106,41 @@ Choose the appropriate commitment tier given your expected daily ingest volume. 
 
 <br/><br/>
 
+# &#x1F525; Burn an SD Card with Raspi Imager
+
+- Grab a free copy of the Raspberry Pi Imager software from the official site at [https://www.raspberrypi.com/software/](https://www.raspberrypi.com/software/) 
+
+- Insert your SD card and fire it up! 
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_Menu.png)
+
+- Choose the Raspberry Pi model you're going to run this on (I'm doing this on a Raspbery Pi 4 Model B):
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_Device.png)
+
+- Select the Raspbian OS version you want to burn. I prefer lightweight so I went with RPi Bookworm 64 OS Lite (no Desktop) and the remainder of this guide will follow suit.
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_OS1.png)
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_OS2.png)
+
+- Specify your SD Storage card in Storage options:
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_Storage.png)
+
+- Select **Next** to trigger an OS Customization Pop-Up, then select **Edit Settings**
+    ![]( /assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_OS_Settings.png)
+
+- Here you will be presented with the option to set the hostname, default username and password, Wifi SSID and PSK, and Locale:
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_OS_General.png)
+
+- Move to the **Services** tab to enable SSH. This is an essential part of the "headless" style setup and allows you to SSH in from another computer on the network. This way you don't need a dedicated keyboard and monitor to interact with it.
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_OS_Services.png)
+
+- Lastly, move over to the **Options** tab to configure additional burn settings, like making a sound when it's done. 
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_OS_Options.png)
+
+- When you've configured your burn options, select **Save** and then **Yes**, followed by another **Yes**:
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_Warning.png)
+
+- Burn baby burn! 
+    ![](/assets/img/pihole2sentinel/RPI_Imager/RPI_Imager_Writing.png)
+
 <br/>
 <br/>
 
