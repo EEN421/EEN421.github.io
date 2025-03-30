@@ -137,6 +137,13 @@ sudo apt-get update && sudo apt-get upgrade
 
 ![](/assets/img/pihole2sentinel/Pi_Setup/Pi/pi_update.png)
 
+<br/><br/>
+
+- Next we need to install Git:
+```bash
+sudo apt install git
+```
+
 <br/>
 <br/>
 
