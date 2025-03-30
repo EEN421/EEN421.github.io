@@ -222,7 +222,7 @@ Here’s the data flow:
 
 - Once in Log Analytics, this custom log can be queried in Microsoft Sentinel.
 
->&#128161; Because the PiHole has been known to stop writing to the FTL database when read operations are going on at the same time, we'll copy the FTL database to /tmp and transform the data using the Azure Sentinel Information Model (ASIM) and put them in a new custom table called **PiHole_CL** in the designated workspace. 
+>&#128161; Because the PiHole has been known to stop writing to the FTL database when read operations are going on at the same time, we'll copy the FTL database to /tmp and transform the data using the Azure Sentinel Information Model ([ASIM](https://learn.microsoft.com/en-us/azure/sentinel/normalization-schema-dns)) and put them in a new custom table called **PiHole_CL** in the designated workspace. Huge shout out to [Jed Laundry](https://github.com/jlaundry) for this part.
 
 <br/>
 
