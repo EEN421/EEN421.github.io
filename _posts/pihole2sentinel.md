@@ -216,7 +216,7 @@ Here’s the data flow:
 
 - It sends the log data to Azure Log Analytics using the Data Collector API (which looks like this:  [https://YourWorkspaceId.ods.opinsights.azure.com/api/logs?api-version=2016-04-01](https://<workspaceId>.ods.opinsights.azure.com/api/logs?api-version=2016-04-01))
 
-- The script authenticates with a shared key (workspace_key) securely form a 'helper' file and builds a custom log type in the workspace (e.g., PiHole_CL).
+- The script authenticates with a shared key securely form a 'helper' file (local_settings.py) and builds a custom log type in the workspace (e.g., PiHole_CL).
 
 - Once in Log Analytics, this custom log can be queried in Microsoft Sentinel.
 
@@ -270,15 +270,17 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 ![](/assets/img/pihole2sentinel/pihole-sentinel/pihole-sentinel.jpg)
 
 <br/>
+<br/>
 
 # &#x2714; Verify our Results
-- Log into Azure and navigate to your Workspace and activate your PIM roles to access the resource.
-- Go to the **Logs** blad, then select tables dropdown and look for **pihole_CL**
+- Log into Azure, activate your PIM roles, and navigate to your Workspace.
+- Go to the **Logs** blade, then expand the **tables** dropdown and look for **pihole_CL**
 
 <br/>
 
 ![](/assets/img/pihole2sentinel/pihole-sentinel/pihole_CL.png)
 
+<br/>
 <br/>
 
 - Query the table to see what's going on in your network:
@@ -290,7 +292,7 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 
 # &#128295; Troubleshooting
 
-Use the following command to check that the pihole is functioning and logging appropriately, and then to check that the Cron job is running the script:
+Use the following commands to check that the pihole is functioning and logging appropriately, and then to check that the Cron job is running the script:
 ```bash
 # return the last 20 lines from the pihole log (this should constantly be updating)
 sudo tail -n 20 /var/log/pihole/pihole.log
