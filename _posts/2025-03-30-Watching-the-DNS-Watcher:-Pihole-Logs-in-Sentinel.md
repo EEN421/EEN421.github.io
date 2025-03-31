@@ -298,7 +298,7 @@ Navigate to my [KQL Query Library](https://github.com/EEN421/KQL-Queries/tree/Ma
 <br/>
 
 **Pihole to Sentinel Ingest/Usage Metrics:**
-```bash
+```sql
 // Return pihole to sentinel ingest metrics:
 Usage
 | where TimeGenerated > ago(90d) 
@@ -313,7 +313,7 @@ Usage
 <br/>
 
 **Top Clients Using Pihole**
-```bash
+```sql
 // Top Clients
 pihole_CL
 | summarize Requests = count() by SrcIpAddr_s
@@ -325,7 +325,7 @@ pihole_CL
 <br/>
 
 **Blocked DNS Queries Over Time:**
-```bash
+```sql
 // Blocked DNS Queries Over Time:
 pihole_CL
 | where EventResult_s == "Failure"
@@ -338,7 +338,7 @@ pihole_CL
 <br/>
 
 **Most Queried Domains:**
-```bash
+```sql
 // Most Queried Domains
 pihole_CL
 | summarize QueryCount = count() by DnsQuery_s
@@ -350,7 +350,7 @@ pihole_CL
 <br/>
 
 **New or Rarely Seen Domains:**
-```bash
+```sql
 // New or Rarely Seen Domains
 let cutoff = ago(24h);
 let recent = pihole_CL
