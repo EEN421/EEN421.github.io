@@ -21,6 +21,7 @@ In this blog, we’re going full nerd 🤓: spinning up Pi-hole on a Raspberry P
 - &#x1F4FA; Install Pihole Ad Detection Display
 - &#x26A1; Onboard Pihole DNS Telemetry to Microsoft Sentinel
 - &#x2714; Verify Results
+- &#x1F575; Run KQL Queries Against our Pihole Logs
 - &#128295; Troubleshoot
 - 🧠 Ian’s Insights: How Pi-hole Stops the Madness
 - 🔗 List Helpful Links & Resources
@@ -290,6 +291,83 @@ echo '* * * * * pihole /opt/pihole-sentinel/cron.sh >> /var/log/pihole-sentinel.
 <br/>
 <br/>
 
+# &#x1F575; Run some KQL Queries! 
+
+Navigate to my [KQL Query Library](https://github.com/EEN421/KQL-Queries/tree/Main) and try out any of the ready-made [pihole queries](https://github.com/EEN421/KQL-Queries/tree/Main/pihole). Just copy n' paste into your Sentinel query window.
+
+<br/>
+
+**Pihole to Sentinel Ingest/Usage Metrics:**
+```bash
+// Return pihole to sentinel ingest metrics:
+Usage
+| where TimeGenerated > ago(90d) 
+| where IsBillable == true
+| where DataType == "pihole_CL"
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), DataType
+| render columnchart     
+```
+![](/assets/img/pihole2sentinel/KQL/Usage.png)
+
+<br/>
+<br/>
+
+**Top Clients Using Pihole**
+```bash
+// Top Clients
+pihole_CL
+| summarize Requests = count() by SrcIpAddr_s
+| top 10 by Requests
+```
+![](/assets/img/pihole2sentinel/KQL/TopClients.png)
+
+<br/>
+<br/>
+
+**Blocked DNS Queries Over Time:**
+```bash
+// Blocked DNS Queries Over Time:
+pihole_CL
+| where EventResult_s == "Failure"
+| summarize BlockedRequests = count() by bin(TimeGenerated, 1h)
+| render timechart
+```
+![](/assets/img/pihole2sentinel/KQL/BlockedQueries.png)
+
+<br/>
+<br/>
+
+**Most Queried Domains:**
+```bash
+// Most Queried Domains
+pihole_CL
+| summarize QueryCount = count() by DnsQuery_s
+| top 10 by QueryCount
+```
+![](/assets/img/pihole2sentinel/KQL/MostQueriedDomains.png)
+
+<br/>
+<br/>
+
+**New or Rarely Seen Domains:**
+```bash
+// New or Rarely Seen Domains
+let cutoff = ago(24h);
+let recent = pihole_CL
+| where TimeGenerated > cutoff
+| summarize count() by DnsQuery_s;
+let historic = pihole_CL
+| where TimeGenerated <= cutoff
+| summarize count() by DnsQuery_s;
+recent
+| join kind=leftanti historic on DnsQuery_s
+| top 20 by count_
+```
+![](/assets/img/pihole2sentinel/KQL/RareDomains.png)
+
+<br/>
+<br/>
+
 # &#128295; Troubleshooting
 
 Use the following commands to check that the pihole is functioning and logging appropriately, and then to check that the Cron job is running the script:
@@ -338,6 +416,7 @@ So instead of relying on each device or browser to block ads individually, Pi-ho
 - &#x1F4FA; Installed Pihole Ad Detection Display (PADD)
 - &#x26A1; Onboarded Pihole DNS Telemetry to Microsoft Sentinel
 - &#x2714; Verified our Results
+- &#x1F575; Ran KQL Queries Against our Pihole Logs
 - &#128295; Covered Troubleshooting
 - 🧠 Ian’s Insights: How Pi-hole Stops the Madness
 - 🔗 Listed Helpful Links & Resources: 
