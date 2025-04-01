@@ -235,7 +235,7 @@ Without further adue, lets get to it!
 cd /opt # Move into the /opt directory which is designated for the installation of add-on application software packages. 
 
 # Copy the files to your pihole
-git clone https://github.com/jlaundry/pihole-sentinel.git 
+git clone https://github.com/EEN421/pihole-sentinel.git
 
 # Move into the new pihole-sentinel directory
 cd pihole-sentinel 
