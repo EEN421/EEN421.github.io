@@ -1,35 +1,29 @@
 # Introduction & Use Case:
-There’s nothing like a perfectly smoked brisket to celebrate Father’s Day — unless, of course, your $2,000 WiFi-enabled Traeger Ridgeline XL can’t even connect to your network.
-Welcome to the modern dad’s dilemma: your grill is smarter than your first laptop, but getting it online with a WiFIRE app and Eero mesh network combo turns into a weekend-long IT support nightmare.
+🔥 Tech Support, Tongs, and Traegers: Getting Your Grill Online for Father’s Day. There’s nothing like a perfectly smoked brisket to celebrate Father’s Day — unless, of course, your expensive WiFi-enabled Traeger Ridgeline XL, for example, can’t even connect to your network.
+
+Welcome to the modern dad’s dilemma: your grill is smarter than your first laptop, but getting it online with the WiFIRE app over an Eero mesh network turns into a weekend-long IT support nightmare.
+
 I’ve been there. I am tech support — and I still ended up on the phone with Eero, Traeger, and even my ISP, each trying to upsell me or feed me irrelevant solutions. Spoiler alert: none of their advice worked.
+
 Let me save you hours of frustration and get your Traeger connected — so you can focus on what matters: low-and-slow barbecue and high-efficiency Father’s Day chilling.
 
 
 <br/>
 
-🔥 Tech Support, Tongs, and Traegers: Getting Your Grill Online for Father’s Day
-
-<br/>
-
-![](/assets/img/pihole2sentinel/Leonardo_Phoenix_09_A_futuristic_command_center_featuring_a_Pi_0.jpg)
+![](/assets/img/CyberGrill/ChatGPT%20Image%20May%2020,%202025,%2006_00_53%20PM.png)
 
 <br/>
 <br/>
 
 
 # In this Post We Will:
-- &#x1F4BB; Review Hardware & Software Details
-- 🛠️ Create a Log Analytics Workspace
-- &#x1F510; Retrieve WorkspaceID and Secret Key
-- &#x1F525; Burn an SD Card with Raspi Imager
-- &#x1F310; Deploy Pihole & Network-Wide DNS Protection
-- &#x1F4FA; Install Pihole Ad Detection Display
-- &#x26A1; Onboard Pihole DNS Telemetry to Microsoft Sentinel
-- &#x2714; Verify Results
-- &#x1F575; Run KQL Queries Against our Pihole Logs
-- &#128295; Troubleshoot
-- 🧠 Ian’s Insights: How Pi-hole Stops the Madness
-- 🔗 List Helpful Links & Resources
+- &#x1F575; Diagnose why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame.
+- 🛠️ Walk through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module.
+- &#x1F525; Debunk the useless advice from vendors and support reps (static IPs? Seriously?).
+- &#x2714; Offer a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack.
+- &#x26A1; Bonus round: pipe your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too.
+- 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
+- 🔗 Listed Helpful Links & Resources
 
 <br/>
 <br/>
@@ -112,7 +106,7 @@ Dad didn’t raise no default gateway.
 <br/>
 <br/>
 
-# 🧠 Ian’s Insights: How Pi-hole Stops the Madness
+# 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
 At a high level, a Pi-hole acts as a local DNS sinkhole, intercepting DNS queries on your network and selectively blocking requests to known ad networks, trackers, or anything else you don’t trust. It effectively becomes your network’s first line of defense — every device, from your laptop to your smart grill, asks the Pi-hole for directions before heading out to the internet. That makes it an ideal spot to monitor device behavior passively, without installing agents or modifying firmware.
 
 For example, once your Traeger Ridgeline XL is online, you can use Pi-hole to log its DNS requests — revealing when it checks in with Traeger telemetry services, content delivery networks, or even unknown third-party services. When combined with Microsoft Sentinel, these logs provide rich visibility into your IoT ecosystem, enabling you to detect odd patterns (like a spike in outbound DNS queries mid-smoke) or even set up alerting for anomalous behavior. Your grill might not be a security risk — but that doesn’t mean it’s not worth logging!
@@ -122,26 +116,17 @@ For example, once your Traeger Ridgeline XL is online, you can use Pi-hole to lo
 
 
 # In this Post We:
-- &#x1F4BB; Reviewed Hardware & Software Details
-- 🛠️ Created a Log Analytics Workspace
-- &#x1F510; Retrieved WorkspaceID and Secret Key
-- &#x1F525; Burned an SD Card with Raspi Imager
-- &#x1F310; Deployed Pihole & Network-Wide DNS Protection
-- &#x1F4FA; Installed Pihole Ad Detection Display (PADD)
-- &#x26A1; Onboarded Pihole DNS Telemetry to Microsoft Sentinel
-- &#x2714; Verified our Results
-- &#x1F575; Ran KQL Queries Against our Pihole Logs
-- &#128295; Covered Troubleshooting
-- 🧠 Ian’s Insights: How Pi-hole Stops the Madness
-- 🔗 Listed Helpful Links & Resources: 
+- &#x1F575; Diagnosed why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame.
+- 🛠️ Walked through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module.
+- &#x1F525; Debunked the useless advice from vendors and support reps (static IPs? Seriously?).
+- &#x2714; Offered a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack.
+- &#x26A1; Bonus round: piped your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too.
+- 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
+- 🔗 Listed Helpful Links & Resources
 
 <br/>
 
-- Diagnose why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame.
-- Walk through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module.
-- Debunk the useless advice from vendors and support reps (static IPs? Seriously?).
-- Offer a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack.
-- Bonus round: pipe your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too.
+
 
 <br/>
 
