@@ -67,6 +67,8 @@ Here’s the real-world fix that worked for me — and it will work for you too:
 If you're the type of dad who owns a smoker, a server rack, and at least one Raspberry Pi, do yourself a favor and treat all IoT devices like ESP32s:
 Plan for 2.4GHz, keep SSIDs clean, and never assume the vendor knows what they're talking about.
 
+<br/>
+<br/>
 
 # 🔥 Smokin’ Telemetry: Sending Grill Data to Your SIEM
 
@@ -80,20 +82,15 @@ Here's how you can expand on that setup to capture WiFIRE grill activity:
 <br/>
 
 # 🔧 Steps to Integrate Your Grill with Microsoft Sentinel
-1.	Ensure your Pi-hole is installed and configured as your network’s DNS sinkhole.
-2.	Confirm that your Traeger is using Pi-hole as its DNS (check your router or Eero’s advanced DNS settings).
-3.	Filter for logs from the Traeger using the MAC address or hostname.
-4.	Create custom KQL queries or Sentinel workbooks to visualize:
-o	Device check-ins
-o	DNS queries to Traeger telemetry services
-o	Behavioral anomalies (e.g., WiFi dropouts mid-smoke)
+- 1.	Ensure your Pi-hole is installed and configured as your network’s DNS sinkhole.
+- 2.	Confirm that your Traeger is using Pi-hole as its DNS (check your router or Eero’s advanced DNS settings).
+- 3.	Filter for logs from the Traeger using the MAC address or hostname.
+- 4.	Create custom KQL queries or Sentinel workbooks to visualize:
+        - Device check-ins
+        - DNS queries to Traeger telemetry services
+        - Behavioral anomalies (e.g., WiFi dropouts mid-smoke)
 
 
-# &#x26A1; Onboard PiHole DNS Telemetry to Microsoft Sentinel
-This coming Father’s Day weekend, your grill should be doing the hard work — not you.
-If this post saves you from burning three hours on hold with support, consider it my Father’s Day gift to you.
-Fire up the ribs. Pour something cold. And remember:
-Dad didn’t raise no default gateway.
 
 
 <br/>
@@ -130,6 +127,7 @@ This coming Father’s Day weekend, your grill should be doing the hard work —
 Whether you came here for the WiFi fix, the Sentinel integration, or just needed reassurance that even cybersecurity pros rage at mesh networks sometimes, I hope this guide saved you time (and maybe a brisket). If it helped, consider sharing it with a fellow tech dad — and don’t hesitate to reach out if you’ve got a smokin’ use case of your own to log in Sentinel.
 
 If this post saves you from burning three hours on hold with support, consider it my Father’s Day gift to you.
+
 Fire up the ribs. Pour something cold. And remember:
 Dad didn’t raise no default gateway.
  
@@ -137,7 +135,7 @@ I hope this was a much fun reading as it was writing! 💥
 
 <br/>
 
-![](/assets/img/pihole2sentinel/Leonardo_Phoenix_09_A_futuristic_command_center_featuring_a_Pi_5.jpg)
+![](/assets/img/CyberGrill/THEcyberGrill.png) 
 
 <br/>
 <br/>
@@ -146,9 +144,11 @@ I hope this was a much fun reading as it was writing! 💥
 
 <br/>
 
+- Images generated with [ChatGPT](https://chatgpt.com) and [Microsoft Copilot](https://m365.cloud.microsoft/chat/).
 
+- [Traeger Customer Support](https://support.traeger.com/hc/en-us)
 
-- [Images generated with Leonaro.ai](https://www.leonardo.ai)
+- [Eero Customer Support](https://support.eero.com/)
 
 <br/>
 <br/>
