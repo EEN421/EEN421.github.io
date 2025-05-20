@@ -76,7 +76,7 @@ Plan for 2.4GHz, keep SSIDs clean, and never assume the vendor knows what they'r
 Once you’ve got your Traeger connected to Wi-Fi and the meat probes are humming along, you might be wondering: Can I send grill telemetry to my Microsoft Sentinel SIEM?
 Absolutely — and it's easier than you'd think. Imagine logging every cook, tracking grill behavior across events, or even correlating DNS activity from your Pi-hole to see which devices are phoning home during a cookout. Spoiler: it's not just the grill calling Traeger — it's often hitting telemetry servers and CDNs too.
 
-I’ve previously written about onboarding Pi-hole DNS telemetry into Sentinel using a Raspberry Pi: 🔗 Watching the DNS Watcher: Pi-hole Logs in Sentinel
+I’ve previously written about onboarding Pi-hole DNS telemetry into Sentinel using a Raspberry Pi: ![🔗 Watching the DNS Watcher: Pi-hole Logs in Sentinel](https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/)
 
 Here's how you can expand on that setup to capture WiFIRE grill activity:
 
