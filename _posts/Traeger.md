@@ -31,32 +31,25 @@ Let me save you hours of frustration and get your Traeger connected — so you c
 <br/><br/>
 
 # 🧠 The Real Problem: It’s Not You — It’s the ESP32
+🧩 If you’ve tinkered with IoT projects, you’ll recognize the **Espressif ESP32** chip buried inside your Traeger. It’s low-power, affordable, and temperamental as hell with modern networks.
 
-If you’ve tinkered with IoT projects, you’ll recognize the **Espressif ESP32** chip buried inside your Traeger. It’s low-power, affordable, and temperamental as hell with modern networks.
-
-Most importantly?
-**It only connects reliably to 2.4GHz Wi-Fi networks with simple SSIDs.**
-Not a peep about this from Traeger or Eero support — but it should be Step 1 in their playbook.
-
-
-<br/><br/>
-
+&#x1F449; Most importantly? **⚠️ It only connects reliably to 2.4GHz Wi-Fi networks with simple SSIDs ⚠️** ...Not a peep about this from Traeger or Eero support — but it should be Step 1 in their playbook.
 
 <br/><br/>
 
 # 💡 The Fix (Tested & Grilled-Approved)
 Here’s the real-world fix that worked for me — and it will work for you too:
 ✅ Step-by-Step: How to Connect Your Traeger to Eero Wi-Fi
-1.	Open the Eero app on your phone.
-2.	Create a new guest network just for your grill:
-        o	SSID: Keep it short, no spaces, no special characters (e.g., GrillNetwork)
-        o	Password: Simple and secure (avoid symbols)
-3.	Set to 2.4GHz only:
-        o	Eero doesn’t natively let you split bands, but you can enable "Legacy Mode" in the Eero Labs section of the app.
-        o	This disables 5GHz temporarily, forcing devices like your Traeger to connect over 2.4GHz.
-4.	Reboot the Traeger grill.
-5.	Open the WiFIRE app, and go through the pairing steps again using the new network.
-6.	Once paired, you can re-enable 5GHz on your main network — the grill will stick to 2.4GHz unless it’s factory reset.
+- 1. Open the Eero app on your phone.
+- 2. Create a new guest network just for your grill:
+        - SSID: Keep it short, no spaces, no special characters (e.g., GrillNetwork)
+        - Password: Simple and secure (avoid symbols)
+- 3. Set to 2.4GHz only:
+        - Eero doesn’t natively let you split bands, but you can enable "Legacy Mode" in the Eero Labs section of the app.
+        - This disables 5GHz temporarily, forcing devices like your Traeger to connect over 2.4GHz.
+- 4. Reboot the Traeger grill.
+- 5. Open the WiFIRE app, and go through the pairing steps again using the new network.
+- 6. Once paired, you can re-enable 5GHz on your main network — the grill will stick to 2.4GHz unless it’s factory reset.
 
 # 🛑 Avoid These Bad Recommendations (these really happened)
 
@@ -86,7 +79,7 @@ Here's how you can expand on that setup to capture WiFIRE grill activity:
 
 <br/>
 
-🔧 Steps to Integrate Your Grill with Microsoft Sentinel
+# 🔧 Steps to Integrate Your Grill with Microsoft Sentinel
 1.	Ensure your Pi-hole is installed and configured as your network’s DNS sinkhole.
 2.	Confirm that your Traeger is using Pi-hole as its DNS (check your router or Eero’s advanced DNS settings).
 3.	Filter for logs from the Traeger using the MAC address or hostname.
