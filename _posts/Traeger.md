@@ -10,7 +10,8 @@ Let me save you hours of frustration and get your Traeger connected — so you c
 
 <br/>
 
-![](/assets/img/CyberGrill/ChatGPT%20Image%20May%2020,%202025,%2006_00_53%20PM.png)
+![](/assets/img/CyberGrill/cybergrill.jpg)
+
 
 <br/>
 <br/>
@@ -61,6 +62,8 @@ Here’s the real-world fix that worked for me — and it will work for you too:
 - "Buy a wifi extender" - Not a problem if the grill sees the wifi momentarily, just doesn't stay connected.
 - "Change your ISP" - Traeger support is passing the buck.
 - "Factory reset your Traeger" – A last resort, not a first step.
+
+![](/assets/img/CyberGrill/fire.png)
 
 <br/>
 <br/>
@@ -113,7 +116,7 @@ For example, once your Traeger Ridgeline XL is online, you can use Pi-hole to lo
 
 <br/>
 
-![](/assets/img/CyberGrill/cybergrill.jpg)
+![](/assets/img/CyberGrill/THEcyberGrill.png) 
 
 <br/>
 
@@ -132,7 +135,7 @@ I hope this was a much fun reading as it was writing! 💥
 
 <br/>
 
-![](/assets/img/CyberGrill/THEcyberGrill.png) 
+![](/assets/img/CyberGrill/ChatGPT%20Image%20May%2020,%202025,%2007_50_16%20PM.png)
 
 <br/>
 <br/>
