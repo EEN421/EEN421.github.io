@@ -42,7 +42,7 @@ Let me save you hours of frustration and get your Traeger connected — so you c
 
 <br/><br/>
 
-# 💡 The Fix (Tested & Grilled-Approved)
+# 💡 The Fix (Tested & Grill-Approved)
 Here’s the real-world fix that worked for me — and it will work for you too:
 
 ✅ Step-by-Step: How to Connect Your Traeger to Eero Wi-Fi
