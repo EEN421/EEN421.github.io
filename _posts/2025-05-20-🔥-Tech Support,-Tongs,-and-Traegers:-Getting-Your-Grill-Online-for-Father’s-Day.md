@@ -149,7 +149,7 @@ Whether you came here for the WiFi fix, the Sentinel integration, or just needed
 
 If this post saves you from burning three hours on hold with support, consider it my Father’s Day gift to you.
 
-Fire up the ribs🍖 | Pour something cold 🍺 | And remember: **Dad didn’t raise no default gateway 😎**
+Fire up the ribs🍖 \| Pour something cold 🍺 \| And remember: **Dad didn’t raise no default gateway 😎**
  
 I hope this was a much fun reading as it was writing! 💥 _what will you BBQ next?_ 🧑‍🍳
 
