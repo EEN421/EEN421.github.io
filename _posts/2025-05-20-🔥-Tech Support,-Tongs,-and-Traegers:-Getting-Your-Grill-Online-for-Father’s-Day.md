@@ -49,9 +49,9 @@ Here’s the real-world fix that worked for me — and it will work for you too:
 
 - **3.** Set to 2.4GHz only: <br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Eero doesn’t natively let you split bands, but you can disable it temporarily in the app. <br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Go to Settings >> Troubleshooting >> Device Won't Connect <br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Select "My Device is 2.4 GHz only" and disable 5 GHz temporarily.<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go back one step and select "My Device Can't Detect Wi-Fi 6" to enable Legacy mode, this forces devices like your Traeger to connect over 2.4GHz.<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go to Settings >> Troubleshooting >> Device Won't Connect <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Select "My Device is 2.4 GHz only" and disable 5 GHz temporarily.<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go back one step and select "My Device Can't Detect Wi-Fi 6" to enable Legacy mode, this forces devices like your Traeger to connect over 2.4GHz.<br/>
 
 - **4.** Reboot the Traeger grill. <br/>
 
