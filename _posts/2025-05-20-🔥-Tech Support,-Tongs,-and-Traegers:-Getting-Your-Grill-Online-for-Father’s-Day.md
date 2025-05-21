@@ -132,7 +132,7 @@ I hope this was a much fun reading as it was writing! 💥
 <br/>
 <br/>
 
-![](/assets/img/CyberGrill/THEcyberGrill.png) 
+![](/assets/img/CyberGrill/GrillDaddy.png) 
 
 <br/>
 <br/>
