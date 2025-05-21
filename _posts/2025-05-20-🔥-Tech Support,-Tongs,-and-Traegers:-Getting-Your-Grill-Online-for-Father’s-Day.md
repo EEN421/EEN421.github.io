@@ -9,25 +9,29 @@ There’s nothing like a **perfectly smoked brisket to celebrate Father’s Day*
 <br/>
 
 # In this Post We Will:
-- &#x1F575; Diagnose why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame.
-- 🛠️ Walk through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module.
-- &#x1F525; Debunk the useless advice from vendors and support reps (static IPs? Seriously?).
-- &#x2714; Offer a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack.
-- &#x26A1; Bonus round: pipe your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too.
-- 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
-- 🔗 List Helpful Links & Resources
+- &#x1F575; Diagnose why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame. <br/>
+
+- 🛠️ Walk through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module. <br/>
+
+- &#x1F525; Debunk the useless advice from vendors and support reps (static IPs? Seriously?). <br/>
+
+- &#x2714; Offer a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack. <br/>
+
+- &#x26A1; Bonus round: pipe your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too. <br/>
+
+- 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals. <br/>
+
+- 🔗 List Helpful Links & Resources. <br/>
 
 <br/>
-<br/>
-
 <br/><br/>
 
 # 🧠 The Real Problem: It’s Not You — It’s the ESP32
-🧩 If you’ve tinkered with IoT projects, you’ll recognize the **Espressif ESP32** chip buried inside your Traeger. It’s low-power, affordable, and temperamental as hell with modern networks.
+&#x1F50C; If you’ve tinkered with IoT projects, you’ll recognize the **Espressif ESP32** chip buried inside your Traeger. It’s low-power, affordable, and temperamental as hell with modern networks.
 
 &#x1F449; Most importantly? **⚠️ It only connects reliably to 2.4GHz Wi-Fi networks with simple SSIDs ⚠️** ...Not a peep about this from Traeger or Eero support — but it should be Step 1 in their playbook.
 
-<br/><br/>
+<br/>
 
 ![](/assets/img/CyberGrill/espressif.png)
 
@@ -37,17 +41,23 @@ There’s nothing like a **perfectly smoked brisket to celebrate Father’s Day*
 Here’s the real-world fix that worked for me — and it will work for you too:
 
 ✅ Step-by-Step: How to Connect Your Traeger to Eero Wi-Fi
-- 1. Open the Eero app on your phone.
-- 2. Create a new guest network just for your grill:
-        - SSID: Keep it short, no spaces, no special characters (e.g., TraegerNet)
-        - Password: Simple and secure (avoid symbols; eg., Grilluminati)
-- 3. Set to 2.4GHz only:
-        - Eero doesn’t natively let you split bands, but you can disable it temporarily in the app. Go to Settings >> Troubleshooting >> Device Won't Connect.
-        - Select "My Device is 2.4 GHz only" and disable 5 GHz temporarily.
-        - Go back one step and select "My Device Can't Detect Wi-Fi 6" to enable Legacy mode, this forces devices like your Traeger to connect over 2.4GHz.
-- 4. Reboot the Traeger grill.
-- 5. Open the WiFIRE app, and go through the pairing steps again using the new network. Make sure your phone is also connected to the new grill network.
-- 6. Once paired, you can re-enable 5GHz on your main network and disable Legacy Mode — the grill will stick to 2.4GHz unless it’s factory reset and will reconnect without issue going forward.
+- **1.** Open the Eero app on your phone.
+
+- **2.** Create a new guest network just for your grill:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SSID: Keep it short, no spaces, no special characters (e.g., TraegerNet)<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Password: Simple and secure (avoid symbols; eg., Grilluminati)<br/>
+
+- **3.** Set to 2.4GHz only: <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Eero doesn’t natively let you split bands, but you can disable it temporarily in the app. <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Go to Settings >> Troubleshooting >> Device Won't Connect <br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Select "My Device is 2.4 GHz only" and disable 5 GHz temporarily.<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go back one step and select "My Device Can't Detect Wi-Fi 6" to enable Legacy mode, this forces devices like your Traeger to connect over 2.4GHz.<br/>
+
+- **4.** Reboot the Traeger grill. <br/>
+
+- **5.** Open the WiFIRE app, and go through the pairing steps again using the new network. Make sure your phone is also connected to the new grill network. <br/>
+
+- **6.** Once paired, you can re-enable 5GHz on your main network and disable Legacy Mode — the grill will stick to 2.4GHz unless it’s factory reset and will reconnect without issue going forward. <br/>
 
 <br/><br/>
 
@@ -64,8 +74,8 @@ Here’s the real-world fix that worked for me — and it will work for you too:
 <br/>
 
 # 👨‍💻 Dad Hack of the Day
-If you're the type of dad who owns a smoker, a server rack, and at least one Raspberry Pi, do yourself a favor and treat all IoT devices like ESP32s:
-Plan for 2.4GHz, keep SSIDs clean, and never assume the vendor knows what they're talking about.
+If you're the type of dad who owns a **smoker, a server rack, and at least one Raspberry Pi**, do yourself a favor and **_treat all IoT devices like ESP32s:_**
+Plan for **2.4GHz**, keep SSIDs clean, and _**never assume the vendor knows what they're talking about.**_
 
 <br/>
 <br/>
@@ -74,20 +84,20 @@ Plan for 2.4GHz, keep SSIDs clean, and never assume the vendor knows what they'r
 Once you’ve got your Traeger connected to Wi-Fi and the meat probes are humming along, you might be wondering: Can I send grill telemetry to my Microsoft Sentinel SIEM?
 Absolutely — and it's easier than you'd think. Imagine logging every cook, tracking grill behavior across events, or even correlating DNS activity from your Pi-hole to see which devices are phoning home during a cookout. Spoiler: it's not just the grill calling Traeger — it's often hitting telemetry servers and CDNs too.
 
-I’ve previously written about onboarding Pi-hole DNS telemetry into Sentinel using a Raspberry Pi: ![🔗 Watching the DNS Watcher: Pi-hole Logs in Sentinel](https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/)
+I’ve previously written about onboarding Pi-hole DNS telemetry into Sentinel using a Raspberry Pi: [🔗 Watching the DNS Watcher: Pi-hole Logs in Sentinel](https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/)
 
 Here's how you can expand on that setup to capture WiFIRE grill activity 👇
 
 <br/>
 
 # 🔧 Steps to Integrate Your Grill with Microsoft Sentinel
-- 1.	Ensure your Pi-hole is installed and configured as your network’s DNS sinkhole.
-- 2.	Confirm that your Traeger is using Pi-hole as its DNS (check your router or Eero’s advanced DNS settings).
-- 3.	Filter for logs from the Traeger using the MAC address or hostname.
-- 4.	Create custom KQL queries or Sentinel workbooks to visualize:
-        - Device check-ins
-        - DNS queries to Traeger telemetry services
-        - Behavioral anomalies (e.g., WiFi dropouts mid-smoke)
+- **1.** Ensure your Pi-hole is installed and configured as your network’s DNS sinkhole.<br/>
+- **2.** Confirm that your Traeger is using Pi-hole as its DNS (check your router or Eero’s advanced DNS settings).<br/>
+- **3.** Filter for logs from the Traeger using the MAC address or hostname.<br/>
+- **4.** Create custom KQL queries or Sentinel workbooks to visualize:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Device check-ins<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- DNS queries to Traeger telemetry services<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Behavioral anomalies (e.g., WiFi dropouts mid-smoke)<br/>
 
 <br/>
 <br/>
@@ -106,28 +116,32 @@ For example, once your Traeger Ridgeline XL is online, you can use Pi-hole to lo
 <br/>
 
 # In this Post We:
-- &#x1F575; Diagnosed why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame.
-- 🛠️ Walked through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module.
-- &#x1F525; Debunked the useless advice from vendors and support reps (static IPs? Seriously?).
-- &#x2714; Offered a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack.
-- &#x26A1; Bonus round: piped your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too.
-- 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
-- 🔗 Listed Helpful Links & Resources
+- &#x1F575; Diagnosed why your WiFi-enabled Traeger grill refuses to connect — and why the ESP32 chip is to blame.<br/>
+
+- 🛠️ Walked through a step-by-step Eero guest network setup that works with Traeger’s picky WiFi module.<br/>
+
+- &#x1F525; Debunked the useless advice from vendors and support reps (static IPs? Seriously?).<br/>
+
+- &#x2714; Offered a tech-savvy dad hack to futureproof your IoT gear, especially if you’ve got a Raspberry Pi in the rack.<br/>
+
+- &#x26A1; Bonus round: piped your Traeger’s grill telemetry into Microsoft Sentinel using Pi-hole DNS logging — because security professionals deserve BBQ data dashboards, too.<br/>
+
+- 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals.<br/>
+
+- 🔗 Listed Helpful Links & Resources.<br/>
 
 <br/><br/>
 
 # 📚 Thanks for Reading, and Happy Smoking!
-
 This coming Father’s Day weekend, your grill should be doing the hard work — not you.
 
-Whether you came here for the WiFi fix, the Sentinel integration, or just needed reassurance that even cybersecurity pros rage at mesh networks sometimes, I hope this guide saved you time (and maybe a brisket). If it helped, consider sharing it with a fellow tech dad — and don’t hesitate to reach out if you’ve got a smokin’ use case of your own to log in Sentinel.
+Whether you came here for the WiFi fix, the Sentinel integration, or just needed reassurance that even cybersecurity pros rage at mesh networks sometimes, I hope this guide saved you time (and maybe a brisket). If it helped, consider sharing it with a fellow tech dad — _and don’t hesitate to reach out if you’ve got a smokin’ use case of your own to log in Sentinel._
 
 If this post saves you from burning three hours on hold with support, consider it my Father’s Day gift to you.
 
-Fire up the ribs. Pour something cold. And remember:
-Dad didn’t raise no default gateway.
+Fire up the ribs🍖 | Pour something cold 🍺 | And remember: **Dad didn’t raise no default gateway 😎**
  
-I hope this was a much fun reading as it was writing! 💥
+I hope this was a much fun reading as it was writing! 💥 _what will you BBQ next?_ 🧑‍🍳
 
 <br/>
 <br/>
@@ -138,9 +152,6 @@ I hope this was a much fun reading as it was writing! 💥
 <br/>
 
 # 🔗 Helpful Links & Resources: 
-
-<br/>
-
 - Images generated with [ChatGPT](https://chatgpt.com) and [Microsoft Copilot](https://m365.cloud.microsoft/chat/).
 
 - [Traeger Customer Support](https://support.traeger.com/hc/en-us)
