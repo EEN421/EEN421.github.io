@@ -38,6 +38,10 @@ Let me save you hours of frustration and get your Traeger connected — so you c
 
 <br/><br/>
 
+![](/assets/img/CyberGrill/espressif.png)
+
+<br/><br/>
+
 # 💡 The Fix (Tested & Grilled-Approved)
 Here’s the real-world fix that worked for me — and it will work for you too:
 
@@ -97,6 +101,11 @@ Here's how you can expand on that setup to capture WiFIRE grill activity:
 <br/>
 <br/>
 
+![](/assets/img/CyberGrill/ChatGPT%20Image%20May%2020,%202025,%2007_50_16%20PM.png)
+
+<br/>
+<br/>
+
 # 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
 At a high level, a Pi-hole acts as a local DNS sinkhole, intercepting DNS queries on your network and selectively blocking requests to known ad networks, trackers, or anything else you don’t trust. It effectively becomes your network’s first line of defense — every device, from your laptop to your smart grill, asks the Pi-hole for directions before heading out to the internet. That makes it an ideal spot to monitor device behavior passively, without installing agents or modifying firmware.
 
@@ -114,9 +123,7 @@ For example, once your Traeger Ridgeline XL is online, you can use Pi-hole to lo
 - 🧠 Ian’s Insights: Why Your Grill's DNS Requests Might Be More Telling Than the Smoke Signals
 - 🔗 Listed Helpful Links & Resources
 
-<br/>
 
-![](/assets/img/CyberGrill/THEcyberGrill.png) 
 
 <br/>
 
@@ -134,8 +141,9 @@ Dad didn’t raise no default gateway.
 I hope this was a much fun reading as it was writing! 💥
 
 <br/>
+<br/>
 
-![](/assets/img/CyberGrill/ChatGPT%20Image%20May%2020,%202025,%2007_50_16%20PM.png)
+![](/assets/img/CyberGrill/THEcyberGrill.png) 
 
 <br/>
 <br/>
