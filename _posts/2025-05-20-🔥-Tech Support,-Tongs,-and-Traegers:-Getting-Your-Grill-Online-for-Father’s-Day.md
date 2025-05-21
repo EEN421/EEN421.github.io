@@ -38,35 +38,39 @@ There’s nothing like a **perfectly smoked brisket to celebrate Father’s Day*
 <br/><br/>
 
 # 💡 The Fix (Tested & Grill-Approved)
-Here’s the real-world fix that worked for me — and it will work for you too:
+✅ Here’s the real-world fix that worked for me — and it will work for you too; How to Connect Your Traeger to Eero Wi-Fi:<br/>
 
-✅ Step-by-Step: How to Connect Your Traeger to Eero Wi-Fi
-- **1.** Open the Eero app on your phone.
+- **1.** Open the **Eero app** on your phone.<br/><br/>
 
-- **2.** Create a new guest network just for your grill:<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SSID: Keep it short, no spaces, no special characters (e.g., TraegerNet)<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Password: Simple and secure (avoid symbols; eg., Grilluminati)<br/>
+- **2.** Create a **new guest network** just for your grill:<br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- **SSID:** Keep it short, no spaces, no special characters (e.g., "TraegerNet")<br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- **Password:** Simple and secure (avoid symbols; eg., "Grilluminati")<br/><br/>
 
-- **3.** Set to 2.4GHz only: <br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Eero doesn’t natively let you split bands, but you can disable it temporarily in the app. <br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go to Settings >> Troubleshooting >> Device Won't Connect <br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Select "My Device is 2.4 GHz only" and disable 5 GHz temporarily.<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go back one step and select "My Device Can't Detect Wi-Fi 6" to enable Legacy mode, this forces devices like your Traeger to connect over 2.4GHz.<br/>
+- **3.** Set to 2.4GHz only: <br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Eero doesn’t natively let you split bands, **but you can disable it temporarily in the app.** <br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go to **_Settings >> Troubleshooting >> Device Won't Connect_** <br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Select **"My Device is 2.4 GHz only"** and disable 5 GHz temporarily.<br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Go back one step and select **"My Device Can't Detect Wi-Fi 6"** to enable Legacy mode.<br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-This **forces** devices like your Traeger **to connect over 2.4GHz**.<br/><br/>
 
-- **4.** Reboot the Traeger grill. <br/>
+- **4.** Reboot the Traeger grill. <br/><br/>
 
-- **5.** Open the WiFIRE app, and go through the pairing steps again using the new network. Make sure your phone is also connected to the new grill network. <br/>
+- **5.** Open the **WiFIRE** app, and go through the pairing steps again using the new network. Make sure your phone is also connected to the new grill network. <br/><br/>
 
-- **6.** Once paired, you can re-enable 5GHz on your main network and disable Legacy Mode — the grill will stick to 2.4GHz unless it’s factory reset and will reconnect without issue going forward. <br/>
+- **6.** Once paired, you can re-enable 5GHz on your main network and disable Legacy Mode — the grill will stick to 2.4GHz unless it’s factory reset and will reconnect without issue going forward. <br/><br/>
 
 <br/><br/>
 
 # 🛑 Avoid These Bad Recommendations (these really happened)
-- "Buy a static IP" – Your ISP is upselling. WiFi pairing doesn’t need a public IP address.
-- "Move the grill closer to the router" – Not the issue if it's a band or SSID problem.
-- "Buy a wifi extender" - Not a problem if the grill sees the wifi momentarily, just doesn't stay connected.
-- "Change your ISP" - Traeger support is passing the buck.
-- "Factory reset your Traeger" – A last resort, not a first step.
+- **"Buy a static IP"** – Your ISP is upselling. WiFi pairing doesn’t need a public IP address.
+
+- **"Move the grill closer to the router"** – Not the issue if it's a band or SSID problem.
+
+- **"Buy a wifi extender"** - Not a problem if the grill sees the wifi momentarily, just doesn't stay connected.
+
+- **"Change your ISP"** - Traeger support is passing the buck.
+
+- **"Factory reset your Traeger"** – A last resort, not a first step.
 
 ![](/assets/img/CyberGrill/fire.png)
 
@@ -81,23 +85,29 @@ Plan for **2.4GHz**, keep SSIDs clean, and _**never assume the vendor knows what
 <br/>
 
 # 🔥 Smokin’ Telemetry: Sending Grill Data to Your SIEM
-Once you’ve got your Traeger connected to Wi-Fi and the meat probes are humming along, you might be wondering: Can I send grill telemetry to my Microsoft Sentinel SIEM?
-Absolutely — and it's easier than you'd think. Imagine logging every cook, tracking grill behavior across events, or even correlating DNS activity from your Pi-hole to see which devices are phoning home during a cookout. Spoiler: it's not just the grill calling Traeger — it's often hitting telemetry servers and CDNs too.
+Once you’ve got your Traeger connected to Wi-Fi and the meat probes are humming along, you might be wondering: _Can I send grill telemetry to my Microsoft Sentinel SIEM?_
+**Absolutely — and it's easier than you'd think.** Imagine logging every cook, tracking grill behavior across events, or even correlating DNS activity from your Pi-hole to see which devices are phoning home during a cookout. Spoiler: it's not just the grill calling Traeger — it's often hitting telemetry servers and CDNs too.
 
 I’ve previously written about onboarding Pi-hole DNS telemetry into Sentinel using a Raspberry Pi: [🔗 Watching the DNS Watcher: Pi-hole Logs in Sentinel](https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/)
 
-Here's how you can expand on that setup to capture WiFIRE grill activity 👇
+Here's how you can expand on that setup to **capture WiFIRE grill activity 👇**
 
 <br/>
 
 # 🔧 Steps to Integrate Your Grill with Microsoft Sentinel
 - **1.** Ensure your Pi-hole is installed and configured as your network’s DNS sinkhole.<br/>
+
 - **2.** Confirm that your Traeger is using Pi-hole as its DNS (check your router or Eero’s advanced DNS settings).<br/>
+
 - **3.** Filter for logs from the Traeger using the MAC address or hostname.<br/>
+
 - **4.** Create custom KQL queries or Sentinel workbooks to visualize:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Device check-ins<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- DNS queries to Traeger telemetry services<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Behavioral anomalies (e.g., WiFi dropouts mid-smoke)<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Device check-ins<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- DNS queries to Traeger telemetry services<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Behavioral anomalies (e.g., WiFi dropouts mid-smoke)<br/>
 
 <br/>
 <br/>
