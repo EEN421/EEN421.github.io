@@ -162,6 +162,7 @@ I hope this was a much fun reading as it was writing! 💥 _what will you BBQ ne
 <br/>
 
 # 🔗 Helpful Links & Resources: 
+
 - Images generated with [ChatGPT](https://chatgpt.com) and [Microsoft Copilot](https://m365.cloud.microsoft/chat/).
 
 - [Traeger Customer Support](https://support.traeger.com/hc/en-us)
