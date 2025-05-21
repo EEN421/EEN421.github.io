@@ -76,7 +76,7 @@ Absolutely — and it's easier than you'd think. Imagine logging every cook, tra
 
 I’ve previously written about onboarding Pi-hole DNS telemetry into Sentinel using a Raspberry Pi: ![🔗 Watching the DNS Watcher: Pi-hole Logs in Sentinel](https://www.hanley.cloud/2025-03-30-Watching-the-DNS-Watcher-Pihole-Logs-in-Sentinel/)
 
-Here's how you can expand on that setup to capture WiFIRE grill activity:
+Here's how you can expand on that setup to capture WiFIRE grill activity 👇
 
 <br/>
 
