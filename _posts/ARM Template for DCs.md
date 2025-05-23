@@ -132,14 +132,21 @@ Open the ARM template in a code editor (VS Code, for instance) and edit the para
 ...
 ```
 •	domainName: Set to something like mylab.local.
+
 •	adminUsername: Use a unique name (like labadmin).
+
 •	adminPassword: Must meet Azure’s complexity requirements.
+
 •	virtualNetworkName, subnetName: If you already have a VNet/Subnet, enter their names; otherwise keep defaults.
+
 •	virtualNetworkAddressRange, subnetRange: Adjust if you have an overlapping IP range in your lab.
+
 •	location: Set the desired Azure region (or leave as the resource group’s region).
+
 3. Create (or Select) a Resource Group
 If you don’t already have one:
 az group create --name MyDefenderLabRG --location eastus
+
 4. Deploy via Azure CLI
 From a local terminal or the Azure Cloud Shell:
 az deployment group create \
