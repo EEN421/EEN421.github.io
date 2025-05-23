@@ -58,6 +58,9 @@ There’s nothing like a **perfectly smoked brisket to celebrate Father’s Day*
 - **5.** Open the **WiFIRE** app, and go through the pairing steps again using the new network. Make sure your phone is also connected to the new grill network. <br/><br/>
 
 - **6.** Once paired, you can re-enable 5GHz on your main network and disable Legacy Mode — the grill will stick to 2.4GHz unless it’s factory reset and will reconnect without issue going forward. <br/><br/>
+<br/>
+
+![](/assets/img/CyberGrill/WiFireApp.png)
 
 <br/><br/>
 
