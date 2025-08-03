@@ -8,6 +8,8 @@ This guide shows you how to deploy a completely self-contained Raspberry Pi Zero
 Whether you're a home lab enthusiast, gardener, or someone just looking to build a clean local IoT project, this stripped-down deployment keeps all the insights and skips the cloud complexity, taking you from a blank SD card to a fully functional soil sensor web dashboard.
 
 
+
+
 ## 📋 Hardware Requirements
 
 - Raspberry Pi Zero W
@@ -169,11 +171,18 @@ sudo chmod 755 /usr/lib/cgi-bin
 sudo nano /opt/soil_sensor/sensor_reader.py
 ```
 
-**Copy and paste the entire `sensor_reader.py` content from the first artifact**, then:
+**Copy and paste the entire `sensor_reader.py` content from ![here](/assets/Code/Sensor%203.0/sensor_reader.py)**, then:
+
 ```bash
 # Make executable
 sudo chmod +x /opt/soil_sensor/sensor_reader.py
 ```
+
+>&#x1F449; This Python script is a soil sensor data logger designed for the Raspberry Pi Zero W. It interfaces with an Adafruit STEMMA I²C soil sensor to collect temperature and moisture data, storing each reading in a local SQLite database. The script also writes the latest reading to a JSON file, enabling easy integration with a self-hosted web interface for real-time monitoring. Key features include automatic database initialization, I²C sensor setup, data cleanup routines for managing storage, and a built-in logging mechanism for diagnostics.
+
+> 💡 The program is structured as a class (SoilSensorLogger) with modular methods that handle sensor interaction, database management, and web data export. It’s optimized for periodic execution—ideal for use with cron or a systemd timer—making it a robust foundation for environmental monitoring projects in gardens, greenhouses, or smart home setups.
+
+
 
 ### Step 12: Install Web API Script
 ```bash
