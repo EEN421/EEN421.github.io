@@ -1,6 +1,12 @@
-# 🌱 Complete Raspberry Pi Zero W Soil Sensor Web Server Deployment Guide
+# 🌿 Introduction & Use Case:
+If you’ve been following the evolution of the Raspberry Pi Soil Sensor project on DevSecOpsDad.com, you know it began as a fun side experiment to bring environmental telemetry into Microsoft Sentinel. From the original build to the more robust Sensor 2.0 upgrade and its multi-part series overcoming the bottleneck in Azure IoT Hub, we’ve integrated soil moisture and temperature readings into Azure Sentinel, Microsoft’s cloud-native SIEM.
 
-This guide will take you from a blank SD card to a fully functional soil sensor web dashboard.
+But what if you want all the plant-monitoring goodness without the complexity of Sentinel, Log Analytics, or any cloud integration? 
+
+This guide shows you how to deploy a completely self-contained Raspberry Pi Zero W soil sensor that logs data locally and hosts a mobile-friendly web dashboard over your Wi-Fi network. No Azure subscription, no SIEM plumbing—just real-time environmental telemetry accessible from your phone or browser.
+
+Whether you're a home lab enthusiast, gardener, or someone just looking to build a clean local IoT project, this stripped-down deployment keeps all the insights and skips the cloud complexity, taking you from a blank SD card to a fully functional soil sensor web dashboard.
+
 
 ## 📋 Hardware Requirements
 
@@ -113,9 +119,11 @@ Connect the I2C soil sensor to your Pi Zero W:
 Sensor Pin    →    Pi Zero W Pin
 VCC (Red)     →    3.3V (Pin 1)
 GND (Black)   →    Ground (Pin 6)  
-SDA (Blue)    →    GPIO 2/SDA (Pin 3)
-SCL (Yellow)  →    GPIO 3/SCL (Pin 5)
+SDA (White)    →    GPIO 2/SDA (Pin 3)
+SCL (Green)  →    GPIO 3/SCL (Pin 5)
 ```
+
+![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
 
 ### Step 8: Test Hardware Connection
 ```bash
@@ -130,8 +138,9 @@ sudo i2cdetect -y 1
 # 30: -- -- -- -- -- -- 36 -- -- -- -- -- -- -- -- -- 
 ```
 
-**If you don't see address 36, check your wiring!**
-
+>&#x1F449; If you don't see address 36, check your wiring!
+ 
+  
 ## 🐍 Part 4: Install Python Dependencies
 
 ### Step 9: Install Sensor Libraries
@@ -140,9 +149,6 @@ sudo i2cdetect -y 1
 sudo pip3 install adafruit-blinka
 sudo pip3 install adafruit-circuitpython-busdevice
 sudo pip3 install adafruit-circuitpython-seesaw
-
-# Verify installation with a quick test
-python3 -c "import board, busio; from adafruit_seesaw.seesaw import Seesaw; print('Sensor libraries installed successfully!')"
 ```
 
 ## 📁 Part 5: Deploy the Soil Sensor Application
