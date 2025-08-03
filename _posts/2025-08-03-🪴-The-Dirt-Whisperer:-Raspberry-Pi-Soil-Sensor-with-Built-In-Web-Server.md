@@ -1,5 +1,5 @@
 # 🌿 Introduction & Use Case:
-If you’ve been following the evolution of the Raspberry Pi Soil Sensor project on DevSecOpsDad.com, you know it began as a fun side experiment to bring environmental telemetry into Microsoft Sentinel. From the original build to the more robust Sensor 2.0 upgrade and its multi-part series overcoming the bottleneck in Azure IoT Hub, we’ve integrated soil moisture and temperature readings into Azure Sentinel, Microsoft’s cloud-native SIEM.
+If you’ve been following the evolution of the Raspberry Pi Soil Sensor project here on [DevSecOpsDad.com](www.devsecopsdad.com), you know it began as a fun side experiment to bring environmental telemetry into Microsoft Sentinel. From the original build leveraging 3rd party tools like FluentD to the more robust Sensor 2.0 upgrade and its multi-part series overcoming the bottleneck in Azure IoT Hub, we’ve integrated soil moisture and temperature readings into Azure Sentinel, Microsoft’s cloud-native SIEM.
 
 But what if you want all the plant-monitoring goodness without the complexity of Sentinel, Log Analytics, or any cloud integration? 
 
