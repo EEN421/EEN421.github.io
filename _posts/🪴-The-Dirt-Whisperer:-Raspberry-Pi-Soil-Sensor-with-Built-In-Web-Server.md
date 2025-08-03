@@ -1281,7 +1281,7 @@ grep CRON /var/log/syslog | tail
 
 ## 📊 Usage Tips
 
-- **Manual reading**: `sudo python3 /opt/soil_sensor/sensor_reader.py`
+- **Take a manual reading**: `sudo python3 /opt/soil_sensor/sensor_reader.py`
 - **View live logs**: `tail -f /var/log/soil_sensor.log`
 - **Check database**: `sqlite3 /var/www/html/sensor_data.db "SELECT * FROM sensor_readings ORDER BY timestamp DESC LIMIT 5;"`
 - **Change reading frequency**: Edit crontab with `sudo crontab -e`
