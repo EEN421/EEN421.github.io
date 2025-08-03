@@ -626,6 +626,10 @@ if __name__ == '__main__':
     main()
 ```
 
+> &#x261D; This api.py script is a CGI-based Python API designed to serve sensor data from a Raspberry Pi Zero W soil sensor to a web interface. It retrieves real-time and historical sensor readings—such as temperature and soil moisture—from a local SQLite database and returns the results as JSON-formatted output. Users can interact with the API by specifying query parameters (action=latest, history, or stats), allowing the web frontend to fetch the latest reading, historical data for a given period, or a statistical summary (including averages and min/max values).
+
+> &#x26A1; The script follows good practices like structured exception handling, input validation, and modular design with reusable functions. It includes logic to convert temperature from Celsius to Fahrenheit, making the output more accessible. Designed to be placed in the /usr/lib/cgi-bin/ directory, the script prints proper HTTP headers for JSON content and uses Python’s built-in cgi and sqlite3 modules, making it lightweight and easy to deploy on embedded devices like the Raspberry Pi.
+
 **Copy and paste the [api.py](/assets/Code/Sensor%203.0/api.py)** described above, then:
 ```bash
 # Make executable
@@ -642,8 +646,469 @@ sudo rm /var/www/html/index.html
 # Create new dashboard
 sudo nano /var/www/html/index.html
 ```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Define the character encoding and responsive behavior -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Sensor Dashboard</title>
 
-**Copy and paste the entire `index.html` content from the third artifact**, then:
+    <!-- Include Chart.js library for rendering the graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <style>
+        /* General body styling for layout and background */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        /* Container to center and cap the dashboard width */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Styling for the header/banner at the top */
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Grid layout for the live sensor readings */
+        .current-readings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Individual sensor reading card styling */
+        .reading-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .reading-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* Specific color for temperature value */
+        .temperature {
+            color: #ff6b6b;
+        }
+
+        /* Specific color for moisture value */
+        .moisture {
+            color: #4ecdc4;
+        }
+
+        .reading-label {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .reading-unit {
+            font-size: 1.5em;
+            color: #999;
+        }
+
+        .last-updated {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Container for chart section with visual enhancements */
+        .charts-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Controls for switching time periods of the graph */
+        .chart-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chart-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .chart-button:hover {
+            background-color: #45a049;
+        }
+
+        .chart-button.active {
+            background-color: #2e7d32;
+        }
+
+        /* Responsive container for the chart canvas */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        /* Styling for loading text and error boxes */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        /* Status bar displaying connection and update info */
+        .status-bar {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Circle indicator for online/offline status */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+        }
+
+        .status-dot.offline {
+            background-color: #f44336;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .reading-value {
+                font-size: 2.5em;
+            }
+
+            .chart-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container holding the entire dashboard -->
+    <div class="container">
+        <!-- Dashboard title and description -->
+        <div class="header">
+            <h1>🌱 Soil Sensor Dashboard</h1>
+            <p>Monitoring soil conditions with Raspberry Pi Zero W</p>
+        </div>
+
+        <!-- Section displaying the most recent readings -->
+        <div class="current-readings">
+            <div class="reading-card">
+                <div class="reading-label">Temperature</div>
+                <!-- Placeholder for temperature reading -->
+                <div class="reading-value temperature" id="temperature">
+                    <span class="loading">Loading...</span>
+                </div>
+                <div class="reading-unit">°C</div>
+            </div>
+
+            <div class="reading-card">
+                <div class="reading-label">Soil Moisture</div>
+                <!-- Placeholder for moisture reading -->
+                <div class="reading-value moisture" id="moisture">
+                    <span class="loading">Loading...</span>
+                </div>
+                <div class="reading-unit">Level</div>
+            </div>
+        </div>
+
+        <!-- Historical chart area -->
+        <div class="charts-section">
+            <h2>Historical Data</h2>
+            <div class="chart-controls">
+                <!-- Buttons to switch chart time ranges -->
+                <button class="chart-button active" onclick="loadChart(24)">24 Hours</button>
+                <button class="chart-button" onclick="loadChart(168)">7 Days</button>
+                <button class="chart-button" onclick="loadChart(720)">30 Days</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="sensorChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Status and last updated timestamp -->
+        <div class="status-bar">
+            <div class="status-indicator">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Checking connection...</span>
+            </div>
+            <div class="last-updated" id="lastUpdated">
+                Last updated: Loading...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart = null;
+        let currentPeriod = 24;
+
+        // Initialize the dashboard when the page is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentReadings(); // Get latest sensor values
+            loadChart(24); // Load 24-hour history chart
+
+            // Auto-refresh every 5 minutes
+            setInterval(function() {
+                loadCurrentReadings();
+                loadChart(currentPeriod);
+            }, 300000);
+        });
+
+        // Fetch and display current sensor readings
+        async function loadCurrentReadings() {
+            try {
+                const response = await fetch('/cgi-bin/api.py?action=latest');
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Populate temperature and moisture values
+                document.getElementById('temperature').innerHTML = data.temperature || 'N/A';
+                const moistureValue = data.moisture || 0;
+                document.getElementById('moisture').innerHTML = moistureValue;
+
+                // Update connection status
+                updateStatus(true, data.timestamp);
+
+            } catch (error) {
+                console.error('Error loading current readings:', error);
+                document.getElementById('temperature').innerHTML = 'Error';
+                document.getElementById('moisture').innerHTML = 'Error';
+                updateStatus(false);
+            }
+        }
+
+        // Load historical data based on time window
+        async function loadChart(hours) {
+            currentPeriod = hours;
+
+            // Highlight the active button
+            document.querySelectorAll('.chart-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            try {
+                const response = await fetch(`/cgi-bin/api.py?action=history&period=${hours}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Update the chart with new data
+                updateChart(data, hours);
+
+            } catch (error) {
+                console.error('Error loading chart data:', error);
+                // Optionally display error in UI
+            }
+        }
+
+        // Render the Chart.js graph
+        function updateChart(data, hours) {
+            const ctx = document.getElementById('sensorChart').getContext('2d');
+
+            // Format timestamps based on time window
+            const labels = data.map(item => {
+                const date = new Date(item.timestamp);
+                if (hours <= 24) {
+                    return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                } else if (hours <= 168) {
+                    return date.toLocaleDateString([], {month: 'short', day: 'numeric'}) + ' ' +
+                           date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                } else {
+                    return date.toLocaleDateString([], {month: 'short', day: 'numeric'});
+                }
+            });
+
+            // Extract temperature and moisture values for graph
+            const temperatureData = data.map(item => item.temperature);
+            const moistureData = data.map(item => item.moisture);
+
+            // Remove previous chart instance before drawing new one
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Create new line chart
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: temperatureData,
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        yAxisID: 'y',
+                        tension: 0.1
+                    }, {
+                        label: 'Soil Moisture',
+                        data: moistureData,
+                        borderColor: '#4ecdc4',
+                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                        yAxisID: 'y1',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: { display: true, text: 'Time' }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Temperature (°C)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Soil Moisture Level' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                // Append Fahrenheit to tooltip for temp
+                                afterLabel: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        const fahrenheit = (context.parsed.y * 9/5) + 32;
+                                        return `${fahrenheit.toFixed(1)}°F`;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the sensor's connection status UI
+        function updateStatus(online, lastUpdate = null) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+
+            if (online) {
+                statusDot.classList.remove('offline');
+                statusText.textContent = 'Sensor Online';
+
+                if (lastUpdate) {
+                    const updateTime = new Date(lastUpdate);
+                    lastUpdatedElement.textContent = `Last updated: ${updateTime.toLocaleString()}`;
+                }
+            } else {
+                statusDot.classList.add('offline');
+                statusText.textContent = 'Sensor Offline';
+                lastUpdatedElement.textContent = 'Last updated: Connection error';
+            }
+        }
+
+        // Return textual description of moisture level based on raw value
+        function getMoistureDescription(value) {
+            if (value < 200) return 'Very Dry';
+            if (value < 400) return 'Dry';
+            if (value < 600) return 'Moist';
+            if (value < 800) return 'Wet';
+            return 'Very Wet';
+        }
+    </script>
+</body>
+</html>
+
+```
+> &#x261D; This HTML file creates a responsive, self-contained dashboard for monitoring soil temperature and moisture using a Raspberry Pi Zero W and an I2C sensor. The layout includes a visually styled header, real-time sensor readings, and a historical data chart rendered with Chart.js. Users can toggle between different time ranges (24 hours, 7 days, 30 days) to view past trends, while the dashboard automatically refreshes every five minutes to stay current. Status indicators at the bottom provide live feedback on the sensor’s connectivity and the timestamp of the last update.
+
+> 💡 The JavaScript embedded in the page handles asynchronous API calls to a Python CGI script (api.py), which serves the latest and historical sensor data from a local SQLite database. Dynamic DOM updates ensure the readings and charts reflect real-time data, while user interactions, like switching chart views, are immediately responsive. The structure is optimized for both desktop and mobile screens, making it a lightweight and efficient frontend for DIY environmental monitoring projects.
+
+**Copy and paste the entire [index.html](/assets/Code/Sensor%203.0/index.html) content**, then:
 ```bash
 # Set proper permissions
 sudo chown -R www-data:www-data /var/www/html
@@ -687,6 +1152,11 @@ sudo python3 /opt/soil_sensor/sensor_reader.py
    ```
 
 You should see your sensor data displayed on the dashboard!
+
+<br/>
+
+![](/assets/img/Sensor%203.0/Media%20(5).jpg)
+![](/assets/img/Sensor%203.0/Media%20(6).jpg)
 
 <br/>
 <br/>
