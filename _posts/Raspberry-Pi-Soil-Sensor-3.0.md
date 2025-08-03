@@ -446,7 +446,7 @@ if __name__ == "__main__":
 sudo nano /usr/lib/cgi-bin/api.py
 ```
 
-**Copy and paste the entire `api.py` content from the second artifact**, then:
+**Copy and paste the entire `api.py` content from [here](/assets/Code/Sensor%203.0/api.py)**, then:
 ```bash
 # Make executable
 sudo chmod +x /usr/lib/cgi-bin/api.py
