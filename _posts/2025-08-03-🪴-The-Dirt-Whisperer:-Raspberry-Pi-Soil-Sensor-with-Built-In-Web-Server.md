@@ -13,12 +13,11 @@ Whether you're a home lab enthusiast, gardener, or someone just looking to build
 
 ## 📋 Hardware Requirements
 
-- Raspberry Pi Zero W
-- MicroSD card (16GB+ recommended)
-- I2C Soil Moisture & Temperature Sensor (Adafruit STEMMA)
-- JST PH 2mm 4-Pin to Female Socket I2C STEMMA jumper cable
-- GPIO Splitter (optional but recommended)
-- MicroUSB power supply
+- [Raspberry Pi Zero W (but any Pi should work)](https://a.co/d/2G6Mq9C)
+- [MicroSD card (16GB+ recommended)](https://a.co/d/gegoi0E)
+- [I2C Soil Moisture & Temperature Sensor](https://www.adafruit.com/product/4026)
+- [JST PH 2mm 4-Pin to Female Socket I2C STEMMA jumper cable](https://www.adafruit.com/product/3950)
+- [MicroUSB power supply](https://a.co/d/0ayr5wz)
 
 <br/>
 <br/>
@@ -1299,3 +1298,12 @@ Your Raspberry Pi Zero W is now running a complete soil sensor monitoring system
 - Mobile-friendly interface
 
 Enjoy monitoring your plants! 🌱
+
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
