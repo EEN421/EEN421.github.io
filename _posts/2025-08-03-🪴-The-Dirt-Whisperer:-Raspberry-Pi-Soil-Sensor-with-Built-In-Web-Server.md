@@ -54,7 +54,7 @@ After flashing, the SD card will remount. Navigate to the boot partition and:
        psk="YOUR_WIFI_PASSWORD"
    }
    ```
-   **Replace `YOUR_WIFI_NAME` and `YOUR_WIFI_PASSWORD` with your actual WiFi credentials**
+   ⚠️ **Replace `YOUR_WIFI_NAME` and `YOUR_WIFI_PASSWORD` with your actual WiFi credentials** ⚠️
 
 <br/>
 
