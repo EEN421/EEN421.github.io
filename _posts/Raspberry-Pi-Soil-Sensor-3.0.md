@@ -21,6 +21,7 @@ Whether you're a home lab enthusiast, gardener, or someone just looking to build
 - MicroUSB power supply
 
 <br/>
+<br/>
 
 ## 🔧 Part 1: Initial Pi Setup (Headless)
 
@@ -28,6 +29,8 @@ Whether you're a home lab enthusiast, gardener, or someone just looking to build
 1. Download [Raspberry Pi Imager](https://www.raspberrypi.org/software/)
 2. Flash **Raspberry Pi OS Lite (Bullseye)** to your SD card
 3. **Important**: Don't eject the SD card yet!
+
+<br/>
 
 ### Step 2: Enable SSH and WiFi (Headless Setup)
 After flashing, the SD card will remount. Navigate to the boot partition and:
@@ -53,6 +56,8 @@ After flashing, the SD card will remount. Navigate to the boot partition and:
    ```
    **Replace `YOUR_WIFI_NAME` and `YOUR_WIFI_PASSWORD` with your actual WiFi credentials**
 
+<br/>
+
 ### Step 3: Boot and Connect
 1. Insert SD card into Pi Zero W
 2. Power on the Pi
@@ -61,6 +66,8 @@ After flashing, the SD card will remount. Navigate to the boot partition and:
    - Check your router's admin panel
    - Use network scanner app
    - Try: `ping raspberrypi.local`
+
+<br/>
 
 ### Step 4: SSH Into Your Pi
 ```bash
@@ -71,6 +78,7 @@ ssh pi@raspberrypi.local
 # Default password: raspberry
 ```
 
+<br/>
 <br/>
 
 ## 🔄 Part 2: System Configuration
@@ -101,6 +109,8 @@ sudo reboot
 
 **Wait for reboot, then reconnect via SSH**
 
+<br/>
+
 ### Step 6: Install Required System Packages
 ```bash
 # Install core packages
@@ -117,6 +127,9 @@ sudo systemctl enable apache2
 sudo systemctl start apache2
 ```
 
+<br/>
+<br/>
+
 ## 🔌 Part 3: Hardware Connection
 
 ### Step 7: Connect Your Sensor
@@ -131,6 +144,8 @@ SCL (Green)  →    GPIO 3/SCL (Pin 5)
 ```
 
 ![](/assets/img/IoT%20Hub%202/Soil_PinOut.png)
+
+<br/>
 
 ### Step 8: Test Hardware Connection
 ```bash
@@ -147,7 +162,9 @@ sudo i2cdetect -y 1
 
 >&#x1F449; If you don't see address 36, check your wiring!
  
-  
+<br/>
+<br/>
+
 ## 🐍 Part 4: Install Python Dependencies
 
 ### Step 9: Install Sensor Libraries
@@ -157,6 +174,9 @@ sudo pip3 install adafruit-blinka
 sudo pip3 install adafruit-circuitpython-busdevice
 sudo pip3 install adafruit-circuitpython-seesaw
 ```
+
+<br/>
+<br/>
 
 ## 📁 Part 5: Deploy the Soil Sensor Application
 
@@ -170,6 +190,8 @@ sudo mkdir -p /var/log
 sudo chmod 755 /usr/lib/cgi-bin
 ```
 
+<br/>
+
 ### Step 11: Install Main Sensor Script
 ```bash
 # Create the sensor reader script
@@ -182,8 +204,7 @@ sudo nano /opt/soil_sensor/sensor_reader.py
 # Make executable
 sudo chmod +x /opt/soil_sensor/sensor_reader.py
 ```
-
-
+<br/>
 
 ```python
 #!/usr/bin/env python3
@@ -417,7 +438,7 @@ if __name__ == "__main__":
 ```
 > &#x261D; This Python script is a soil sensor data logger designed for the Raspberry Pi Zero W. It interfaces with an Adafruit STEMMA I²C soil sensor to collect temperature and moisture data, storing each reading in a local SQLite database. The script also writes the latest reading to a JSON file, enabling easy integration with a self-hosted web interface for real-time monitoring. Key features include automatic database initialization, I²C sensor setup, data cleanup routines for managing storage, and a built-in logging mechanism for diagnostics. The program is structured as a class (SoilSensorLogger) with modular methods that handle sensor interaction, database management, and web data export. It’s optimized for periodic execution—ideal for use with cron or a systemd timer—making it a robust foundation for environmental monitoring projects in gardens, greenhouses, or smart home setups.
 
-
+<br/>
 
 ### Step 12: Install Web API Script
 ```bash
@@ -430,6 +451,8 @@ sudo nano /usr/lib/cgi-bin/api.py
 # Make executable
 sudo chmod +x /usr/lib/cgi-bin/api.py
 ```
+
+<br/>
 
 ### Step 13: Install Web Interface
 ```bash
@@ -448,6 +471,9 @@ sudo chmod 644 /var/www/html/index.html
 sudo chmod 666 /var/www/html  # Allow database creation
 ```
 
+<br/>
+<br/>
+
 ## ⚡ Part 6: Test Your Installation
 
 ### Step 14: Take First Sensor Reading
@@ -462,6 +488,8 @@ sudo python3 /opt/soil_sensor/sensor_reader.py
 # INFO:root:Data stored successfully - Temp: 23.4°C, Moisture: 485
 # Sensor reading completed successfully
 ```
+
+<br/>
 
 ### Step 15: Test Web Interface
 1. **Find your Pi's IP address**:
@@ -480,6 +508,9 @@ sudo python3 /opt/soil_sensor/sensor_reader.py
 
 You should see your sensor data displayed on the dashboard!
 
+<br/>
+<br/>
+
 ## 🕐 Part 7: Automate Data Collection
 
 ### Step 16: Set Up Hourly Data Collection
@@ -494,6 +525,8 @@ sudo crontab -e
 ```
 
 This will take a sensor reading every hour automatically.
+
+<br/>
 
 ### Step 17: Enable Log Rotation (Optional)
 ```bash
@@ -511,6 +544,8 @@ sudo nano /etc/logrotate.d/soil-sensor
     create 644 root root
 }
 ```
+<br/>
+<br/>
 
 ## 🎯 Part 8: Final Configuration
 
@@ -518,6 +553,8 @@ sudo nano /etc/logrotate.d/soil-sensor
 ```bash
 sudo systemctl restart apache2
 ```
+
+<br/>
 
 ### Step 19: Test Everything
 ```bash
@@ -531,6 +568,9 @@ tail -f /var/log/soil_sensor_cron.log
 sudo systemctl status apache2
 ```
 
+<br/>
+<br/>
+
 ## 🌐 Part 9: Access Your Dashboard
 
 Your soil sensor dashboard is now available at:
@@ -542,6 +582,9 @@ The dashboard will show:
 - 📊 Historical charts (24 hours, 7 days, 30 days)
 - 🔄 Auto-refresh every 5 minutes
 - 📱 Mobile-responsive design
+
+<br/>
+<br/>
 
 ## 🛠️ Troubleshooting
 
@@ -583,6 +626,8 @@ sudo systemctl status cron
 # Check cron logs
 grep CRON /var/log/syslog | tail
 ```
+<br/>
+<br/>
 
 ## 📊 Usage Tips
 
@@ -590,6 +635,9 @@ grep CRON /var/log/syslog | tail
 - **View live logs**: `tail -f /var/log/soil_sensor.log`
 - **Check database**: `sqlite3 /var/www/html/sensor_data.db "SELECT * FROM sensor_readings ORDER BY timestamp DESC LIMIT 5;"`
 - **Change reading frequency**: Edit crontab with `sudo crontab -e`
+
+<br/>
+<br/>
 
 ## 🎉 You're Done!
 
