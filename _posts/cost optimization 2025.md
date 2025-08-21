@@ -118,7 +118,7 @@ let rate = 4.30;
 SecurityEvent
 | where TimeGenerated > ago(30d)
 | summarize GB = sum(_BilledSize)/1000/1000/1000
-| extend cost = GB * rate
+| extend cost = strcat('$', round(GB * rate), 2)
 ```
 
 **Executive Insight:**
@@ -164,8 +164,8 @@ Some logs inflate costs without materially improving detection. Common examples 
 ```kql
 CommonSecurityLog
 | where isnotempty(Reason) and Reason != "N/A"
-| extend LogSizeBytes = strlen(tostring(pack_all()))
-| summarize TotalEvents = count(), TotalGB = sum(LogSizeBytes) / (1024 * 1024 * 1024) by Reason, LogSeverity
+| summarize TotalEvents = count(), TotalBytes = sum(_BilledSize) by Reason, LogSeverity
+| extend TotalGB = round(TotalBytes / (1024.0 * 1024.0 * 1024.0), 4)
 | extend RawCost = round(TotalGB * 5.16, 2)
 | sort by TotalEvents desc
 | project Reason, LogSeverity, TotalEvents, TotalGB, IngestCost = strcat('$', tostring(RawCost))
