@@ -89,9 +89,9 @@ let cost=4.30; // Effective cost per GB in your region
 search *
 | where TimeGenerated >ago(30d)
 | where _IsBillable == True
-| summarize EventCount=count(), Billable_GB=sum(_BilledSize/1000/1000/1000) by Type 
+| summarize EventCount=count(), Billable_GB=round(sum(_BilledSize/1000/1000/1000), 2) by Type 
 | sort by Billable_GB desc
-| extend Estimated_Cost=Billable_GB*cost
+| extend Estimated_Cost=strcat('$', round(Billable_GB*cost, 2))
 | limit 10
 ```
 
