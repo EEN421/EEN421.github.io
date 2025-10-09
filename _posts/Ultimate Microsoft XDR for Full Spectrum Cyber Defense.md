@@ -4,9 +4,8 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 📘 [**Ultimate Microsoft XDR for Full Spectrum Cyber Defense**](https://a.co/d/4vveVCI) is officially live on Amazon — and within days of release, it’s already **ranking across multiple competitive categories**:
 
-* **#41 in Computer Networking (Books)**
-* **#50 in Computer Cryptography**
-* **#54 in Web Encryption**
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/BSR.png)
+
 
 That’s no small feat for a brand-new title written by a guy who started all this with a Raspberry Pi, a Microsoft 365 trial tenant, and way too much caffeine.
 
