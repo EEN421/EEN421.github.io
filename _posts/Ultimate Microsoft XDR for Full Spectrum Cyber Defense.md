@@ -9,8 +9,6 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 That’s no small feat for a brand-new title written by a guy who started all this with a Raspberry Pi, a Microsoft 365 trial tenant, and way too much caffeine. That’s right — this brand-new title is holding its own among the giants.
 
----
-
 # 🔥 From Home Lab to Bestseller
 
 When I first wrote Ultimate Microsoft XDR for Full Spectrum Cyber Defense, I wasn’t chasing rankings — I was chasing clarity. The Microsoft XDR ecosystem is massive: Defender for Endpoint, Defender for Identity, Sentinel, Entra, Cloud Apps — and most of us learned it the hard way, piecing things together from scattered docs, half-remembered blog posts, and a lot of late-night trial-and-error.
