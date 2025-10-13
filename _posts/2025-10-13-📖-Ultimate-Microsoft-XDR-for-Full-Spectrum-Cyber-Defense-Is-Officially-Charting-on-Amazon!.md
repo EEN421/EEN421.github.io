@@ -8,7 +8,7 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 <br/>
 
-📘 [**Ultimate Microsoft XDR for Full Spectrum Cyber Defense**](https://a.co/d/4vveVCI) is officially live on Amazon  — and it’s charting across Amazon’s most competitive categories:
+[**📖 Ultimate Microsoft XDR for Full Spectrum Cyber Defense**](https://a.co/d/4vveVCI) is officially live on Amazon  — and it’s charting across Amazon’s most competitive categories:
 
 ![Amazon Best Seller Ranking for Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/BSR.png)
 
@@ -58,4 +58,4 @@ From blog to blueprint, from late-night Defender logs to printed pages — this 
 # 📖 Get Your Copy Today
 
 👉 Order now on Amazon:
-📘 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/1jTW2ae_)
+[📖 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/1jTW2ae_)
