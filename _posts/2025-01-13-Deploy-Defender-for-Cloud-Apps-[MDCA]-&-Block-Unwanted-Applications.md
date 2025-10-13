@@ -295,10 +295,15 @@ Lastly, consider going to the **unified security portal >> settings >> cloud app
 # Thanks for Reading!
  I hope this was a much fun reading as it was writing. What will you block from your environment first? 
 
+ &#128161; Liked this walk-through? 👉 You’ll love the full version in my book — grab your copy now on Amazon at [📖Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).
+
 <br/>
 
-![](/assets/img/Defender%20for%20Cloud%20Apps/MDCA_Logo_Square.jpg)
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
+ &#128070; Everything you’ve seen here — and much more — is in here &#128070;
+
+ ⚡Thanks to everyone who’s already picked up a copy — your support means a lot. If you’ve read it and found value, please consider leaving a quick rating or review on Amazon. It genuinely helps the book reach more defenders.
 <br/>
 <br/>
 
