@@ -6,7 +6,7 @@ subtitle: Who Am I?
 
 Hi! &#128075; My name is Ian Hanley. 
 
-I’m a **Microsoft Security Architect**, **author**, and **founder of Hanley Cloud Solutions**, where I help organizations—from startups to Fortune 500s—secure and operationalize and secure **Microsoft Defender, Sentinel, Entra, and Azure**.
+I’m a **Microsoft Security Architect**, **author**, and **founder of Hanley Cloud Solutions**, where I help organizations—from startups to Fortune 500s—secure and operationalize **Microsoft Defender, Sentinel, Entra, and Azure**.
 
 Over the years, I’ve designed **MSSP-ready services**, built **automation frameworks** that reduce alert fatigue and cost, and helped clients modernize their **Zero Trust** and **SecOps** strategies through practical, threat-informed defense. If it involves the Microsoft security stack, there’s a good chance I’ve architected, automated, or optimized it.
 
