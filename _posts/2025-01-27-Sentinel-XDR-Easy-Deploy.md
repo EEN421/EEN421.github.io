@@ -221,7 +221,7 @@ If you're running an ECIF-funded Microsoft Modern SecOps workshop, this template
 <br/>
 
 # Thanks for Reading!
- I hope this was a much fun reading as it was writing. 
+ I hope this was a much fun reading as it was writing. Want to go deeper? Everything you’ve seen here — and much more — is in my new book. Grab your copy now: ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
 
 <br/>
 
