@@ -4,18 +4,15 @@ title: About me
 subtitle: Who Am I?
 ---
 
-Hey! My name is Ian Hanley. 
+Hi! &#128075 My name is Ian Hanley. 
 
-As a Cybersecurity Architect and founder of Hanley Cloud Solutions, I help organizations — from startups to Fortune 500's — secure their Microsoft cloud environments through scalable, cost-effective strategies.
+I’m a **Microsoft Security Architect**, **author**, and **founder of Hanley Cloud Solutions**, where I help organizations—from startups to Fortune 500s—secure and operationalize and secure **Microsoft Defender, Sentinel, Entra, and Azure**.
 
-Whether aligning Zero Trust architecture, operationalizing SIEM/SOAR capabilities, or bridging business needs with technical execution, I deliver real outcomes. I’ve designed MSSP-ready security services, built automation frameworks that cut alert fatigue and cost, and improved visibility across the Microsoft security stack.
+Over the years, I’ve designed **MSSP-ready services**, built **automation frameworks** that reduce alert fatigue and cost, and helped clients modernize their **Zero Trust** and **SecOps** strategies through practical, threat-informed defense. If it involves the Microsoft security stack, there’s a good chance I’ve architected, automated, or optimized it.
 
-I’ve also had the privilege of shaping modern SecOps at MSSPs, mentoring security architects, and helping clients get the most from Defender, Sentinel, Entra ID, and Azure. My approach is rooted in threat-informed defense, MITRE ATT&CK, and a healthy dose of curiosity.
+As the creator of [**DevSecOpsDad.com**](https://DevSecOpsDad.com), I share real-world lessons from the trenches—bridging the gap between hands-on engineering and strategic cybersecurity leadership. My book, *[Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI)*, captures that same philosophy: turning complex Microsoft security ecosystems into clear, actionable roadmaps for defenders.
 
-Lastly, As a father of two daughters, I know a thing or two about risk management too.
-
-Cheers,
-Ian D. Hanley
+Outside of work, I’m a proud father of two daughters—and I can confidently say that parenthood has taught me more about **incident response and risk management** than any certification ever could.
 
 To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [twitter](https://twitter.com/IanDHanley).
 
