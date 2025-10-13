@@ -7,7 +7,7 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 ![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/BSR.png)
 
 
-That’s no small feat for a brand-new title written by a guy who started all this with a Raspberry Pi, a Microsoft 365 trial tenant, and way too much caffeine. That’s right — this brand-new title is holding its own among the giants.
+That’s no small feat for a brand-new title written by a guy who started all this with a half-working Raspberry Pi, a Microsoft 365 trial tenant, and way too much caffeine. That’s right — this brand-new title is holding its own among the giants.
 
 # 🔥 From Home Lab to Bestseller
 
@@ -20,7 +20,7 @@ Whether you’re:
 - fine-tuning Defender for Identity sensors, or
 - building a multi-tenant XDR strategy for enterprise clients —
 
-this guide was written for real Microsoft security professionals: the ones who live in KQL, love a clean workbook, and can spot a false positive from a mile away.
+...this guide was written for real Microsoft security professionals: the ones who live in KQL, love a clean workbook, and can spot a false positive from a mile away.
 
 # 🧭 A Community Milestone
 
@@ -28,7 +28,9 @@ So to see this book landing inside the Top 20 across three technical categories 
 
 These rankings aren’t just numbers — they’re a signal that Microsoft XDR has officially gone mainstream. The security world is maturing beyond single-product tuning toward integrated, cross-platform defense, and that’s exactly where Ultimate Microsoft XDR lives.
 
-Inside, you’ll find real-world playbooks on Defender for Identity sensor tuning, Sentinel hunting optimization, KQL performance tuning, cost control, and SOAR automation that actually saves money. It’s the kind of content I wished existed back when I was first building SecOps pipelines and trying to make Microsoft’s security stack actually work together.
+Inside, you’ll find hands-on, real-world guides on Defender for Identity sensor tuning, Sentinel hunting optimization, KQL performance tuning, cost control, and SOAR automation that actually saves money. It’s the kind of content I wished existed back when I was first building SecOps pipelines and trying to make Microsoft’s security stack actually work together.
+
+<br/>
 
 # 🧡 A Personal Full-Circle Moment
 
