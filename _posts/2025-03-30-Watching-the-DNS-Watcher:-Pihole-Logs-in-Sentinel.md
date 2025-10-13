@@ -438,6 +438,13 @@ I hope this was a much fun reading as it was writing! 💥
 <br/>
 <br/>
 
+💡 Want to go beyond this DNS-to-Sentinel funhouse? Everything you see here — plus full architectures, scripts, and advanced techniques — is unpacked in my new book. Huge thanks to everyone who’s already picked up a copy! If you’ve read it, a short rating or review on Amazon would mean the world: [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om)
+
+![📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
+
 # 🔗 Helpful Links & Resources: 
 
 <br/>

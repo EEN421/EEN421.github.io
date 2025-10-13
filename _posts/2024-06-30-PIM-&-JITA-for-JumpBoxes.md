@@ -151,7 +151,11 @@ JITA:
 
 If you've made it this far, thanks for reading! I hope this has been a helpful guide for locking down your jumpboxes and thus your critical corporate resources! 
 
-The non-screenshot images featured in this article were generated from either [Microsoft Copilot](https://copilot.microsoft.com/) or [https://leonardo.ai/](https://leonardo.ai/). 
+f you found the PIM & JITA setup helpful, there’s a ton more where this came from. My new book dives deeper with full designs, configurations, and real-world use cases.
+Huge thanks to everyone who’s already grabbed a copy — if you’ve read it, a quick review or rating on Amazon would mean a lot.
+📘 https://a.co/d/69vN3Om
+
+
 
 
 <br/>
@@ -169,8 +173,11 @@ The non-screenshot images featured in this article were generated from either [M
 <br/>
 <br/>
 
-![](/assets/img/JITA_PIM/JITA1.jpg)
+# Thanks for Reading!
+&#128161; If you found the PIM & JITA setup helpful, there’s a tonne more where this came from. My new book dives deeper with full designs, configurations, and real-world use cases. Huge thanks to everyone who’s already grabbed a copy — if you’ve read it, a quick review or rating on Amazon would mean a lot 👉 [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om).
+<br/>
 
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 <br/>
 <br/>
 
@@ -184,6 +191,12 @@ The non-screenshot images featured in this article were generated from either [M
 
 - [https://leonardo.ai/](https://leonardo.ai/)
 
+<br/>
+<br/>
+
+![](/assets/img/JITA_PIM/JITA1.jpg)
+
+The non-screenshot images featured in this article were generated from either [Microsoft Copilot](https://copilot.microsoft.com/) or [https://leonardo.ai/](https://leonardo.ai/). 
 
 <br/>
 <br/>

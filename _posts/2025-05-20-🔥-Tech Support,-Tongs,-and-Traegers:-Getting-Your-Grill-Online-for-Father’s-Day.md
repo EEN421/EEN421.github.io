@@ -164,6 +164,17 @@ I hope this was a much fun reading as it was writing! 💥 _what will you BBQ ne
 <br/>
 <br/>
 
+ # Thanks for reading — and for supporting this crazy ride from blog to bookshelf!
+
+💡 If you’ve picked up Ultimate Microsoft XDR for Full Spectrum Cyber Defense, thank you!
+
+👉 Found it helpful? Drop a quick ⭐ review on Amazon — it helps way more than you think: [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
+
 # 🔗 Helpful Links & Resources: 
 <br/> 
 

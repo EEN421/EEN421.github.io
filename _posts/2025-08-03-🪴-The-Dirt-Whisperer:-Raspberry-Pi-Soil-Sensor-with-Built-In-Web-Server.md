@@ -1302,6 +1302,18 @@ Enjoy monitoring your plants! 🌱
 <br/>
 <br/>
 
+# Thanks for reading!
+💡 If you’ve enjoyed this post, you’ll love my book Ultimate Microsoft XDR for Full Spectrum Cyber Defense.
+
+👉 Get your copy here: [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
+
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
+
 <a href="https://hanleycloudsolutions.com">
     <img src="/assets/img/footer.png">
 </a>
