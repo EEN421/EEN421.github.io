@@ -106,6 +106,21 @@ My grievances against the above query are as follows: Leveraging the percentiles
 
 <br/>
 
-![](/assets/img/IoT%20Hub%202/footer.png)
+ &#128161; Liked this walk-through? 👉 You’ll love the full version in my book — grab your copy now on Amazon at [📖Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).
 
+<br/>
 
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+ &#128070; Everything you’ve seen here — and much more — is in here &#128070;
+
+ ⚡Thanks to everyone who’s already picked up a copy — your support means a lot. If you’ve read it and found value, please consider leaving a quick rating or review on Amazon. It genuinely helps the book reach more defenders.
+
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
