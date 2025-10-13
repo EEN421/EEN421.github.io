@@ -4,7 +4,7 @@ title: About me
 subtitle: Who Am I?
 ---
 
-Hi! &#128075 My name is Ian Hanley. 
+Hi! &#128075; My name is Ian Hanley. 
 
 I’m a **Microsoft Security Architect**, **author**, and **founder of Hanley Cloud Solutions**, where I help organizations—from startups to Fortune 500s—secure and operationalize and secure **Microsoft Defender, Sentinel, Entra, and Azure**.
 
