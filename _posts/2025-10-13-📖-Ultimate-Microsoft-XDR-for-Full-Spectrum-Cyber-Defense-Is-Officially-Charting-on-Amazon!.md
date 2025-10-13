@@ -58,4 +58,4 @@ From blog to blueprint, from late-night Defender logs to printed pages — this 
 # 📖 Get Your Copy Today
 
 👉 Order now on Amazon:
-[📖 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/1jTW2ae_)
+[📖 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI)
