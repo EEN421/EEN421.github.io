@@ -16,7 +16,7 @@ Outside of work, I’m a proud father of two daughters—and I can confidently s
 
 👉To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [twitter](https://twitter.com/IanDHanley).
 
-👉To contact me and/or book a consultation, visit [Hanley Cloud Solutions](https://www.hanleycloudsolutions.com). 
+⚡To contact me and/or book a consultation, visit [Hanley Cloud Solutions](https://www.hanleycloudsolutions.com). 
 
 Cheers,<br/>
 Ian D. Hanley
