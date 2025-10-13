@@ -52,6 +52,17 @@ The entire network went offline, except TESTNODE.cyberdyne.cloud, for a brief pe
 <br/>
 > **_Someone should get with Cyberdyne DevSecOps about this before this thing goes rogue..._**
 
+<br/>
+<br/>
+
+# Thanks for Reading!
+ &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
+Hanley • DevSecOps Dad
+
+
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<br/>
+
 Resources:
 - [Test workspace to try out KQL (just sign in with your MS account)](https://portal.azure.com/#view/Microsoft_OperationsManagementSuite_Workspace/LogsDemo.ReactView)
 - [Cyber Security Blog (hanley.cloud)](https://www.hanley.cloud/)

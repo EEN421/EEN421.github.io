@@ -114,6 +114,18 @@ Navigate to the **Information protection** blade, then select **Labels** to conf
 # Summary:
 In this post, we leveraged **Microsoft Purview** to create a **Sensitivity Label,** keeping the **Principle of Least Privilege** and **Zero Trust** mode of thought to improve our security posture and protect against sensitive data leaks, both internal and external. Follow me on Twitter [@IanDHanley](https://twitter.com/IanDHanley) for more insights into leveraging the Microsoft Security fabric to achieve favourable information security outcomes. 
 
+<br/>
+<br/>
+
+# Thanks for Reading!
+ &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
+Hanley • DevSecOps Dad
+
+
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<br/>
+<br/>
+
 # Resources and Official Portal URLs:
 
 - [More Microsoft Sentinel Use-Cases and KQL Exercises](https://hanley.cloud)

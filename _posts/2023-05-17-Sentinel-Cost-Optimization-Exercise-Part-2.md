@@ -81,10 +81,23 @@ Heartbeat
 ``` 
 ![](/assets/img/Optimization2/Workstation_Cost.png)
 
+<br/>
+<br/>
 
 # Summary:
 In this exercise, we identified the **region** and **commitment tiers** for our environment in order to calculate the **effective per GB price** and plug it into a **KQL query** to see exactly how much duplicate cost these workstations logging to Defender and Sentinel were running up.
 
+
+<br/>
+<br/>
+
+# Thanks for Reading!
+ &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
+Hanley • DevSecOps Dad
+
+
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<br/>
 # Resources:
 - [https://github.com/EEN421/KQL-Queries](https://github.com/EEN421/KQL-Queries)
 - [https://github.com/rod-trent/MustLearnKQL](https://github.com/rod-trent/MustLearnKQL)

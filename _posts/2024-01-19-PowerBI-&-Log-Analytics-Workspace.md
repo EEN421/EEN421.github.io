@@ -162,7 +162,16 @@ Thanks for reading! Follow me on [LinkedIn](https://www.linkedin.com/in/ianhanle
 - &#128073;Re-ran our report with 1-click!
 - &#128073;Achieved a State of Awesome-ness 😎
 
-<br/><br/>
+<br/>
+<br/>
+
+# Thanks for Reading!
+ &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
+Hanley • DevSecOps Dad
+
+
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<br/>
 
 # References & Resources:
 - [Role Based Access Control (RBAC) Roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
