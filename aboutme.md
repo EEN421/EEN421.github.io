@@ -14,9 +14,9 @@ As the creator of [**DevSecOpsDad.com**](https://DevSecOpsDad.com), I share real
 
 Outside of work, I’m a proud father of two daughters—and I can confidently say that parenthood has taught me more about **incident response and risk management** than any certification ever could.
 
-To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [twitter](https://twitter.com/IanDHanley).
+👉To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [twitter](https://twitter.com/IanDHanley).
 
-To contact me and/or book a consultation, visit [Hanley Cloud Solutions](https://www.hanleycloudsolutions.com). 
+👉To contact me and/or book a consultation, visit [Hanley Cloud Solutions](https://www.hanleycloudsolutions.com). 
 
 Cheers,<br/>
 Ian D. Hanley
