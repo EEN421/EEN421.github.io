@@ -249,6 +249,16 @@ Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
 - &#128073;Generated Sample Code for **App Integration**
 - &#128073;Had some **Fun** with our Deployment &#128526;	
 - &#128073;Discussed **Common Issues/Troubleshooting**
+<br/>
+<br/>
+
+# Thanks for Reading! 
+If you found this guide to configuring a ChatBot with Azure OpenAI Studio valuable, there’s a lot more where that came from. My new book dives deeper — including full architectures, scripts, and hands-on scenarios.
+A heartfelt thanks to everyone who’s already picked up a copy — if you’ve read it, a quick Amazon rating or review would be amazing 👉 [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om)
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<br/>
+<br/>
 
 # Resources: 
 - [https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/](https://azure.microsoft.com/en-us/blog/start-building-with-azure-cognitive-services-for-free/) 

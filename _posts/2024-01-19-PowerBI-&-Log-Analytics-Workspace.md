@@ -166,8 +166,8 @@ Thanks for reading! Follow me on [LinkedIn](https://www.linkedin.com/in/ianhanle
 <br/>
 
 # Thanks for Reading!
- &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
-Hanley • DevSecOps Dad
+If diving into Power BI and Log Analytics got you thinking bigger, you’ll find full end-to-end architectures, scripts, and deep insights in my new book.
+Thanks so much to everyone who’s already purchased a copy — if you’ve read it, a quick Amazon review or rating would really help!
 
 
 ![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
