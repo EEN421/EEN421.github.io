@@ -5,26 +5,30 @@ Specifically: **connection teardown events** — hundreds of thousands of them.
 
 At first glance, they look harmless — just logs marking the end of a session. But once you start scaling Sentinel ingestion, those teardown logs quietly turn into the digital equivalent of background static: expensive, repetitive, and rarely helpful from a security perspective.
 
-This post breaks down what we ran into, what we learned, and how we tuned Fortinet (and later Cisco Meraki) firewall logs to keep the signal — without paying for the noise.
+This post breaks down what I've learned and how to tune Fortinet firewall logs to keep the signal — without paying for the noise.
 
 ---
 
 ## 🔍 The Problem: Too Much Teardown, Too Little Value
 
-In Fortinet syslog output, every connection generates *two* major events:
+In Fortinet network traffic logs, every connection generates *two* major events:
 
 1. **Connection standup** — when a new session is created (`traffic:forward start`)
 2. **Connection teardown** — when the session closes (`traffic:forward close`, `client-fin`, `server-fin`, etc.)
 
 Multiply that by thousands of clients and microservices, and teardown events quickly dominate your ingestion stream.
 
-We initially noticed that:
+Detection versus Investigation Value:
 
-* Teardown logs made up **60–70% of total Fortinet traffic volume**
-* They provided **no new security context** (same source/destination/action as the standup event)
-* And they were **burning Sentinel GBs** — driving up cost with zero detection benefit
+I like to break down logs into 2 categories that either provide Detection Value or Investigation value. 
+- Detection value helps us detect and mitigate malicious behavious in it's tracks.
+- Investigation value may not help us detect and stop a malicious act, but it's the first thing the DFIR team asks for during a post-breach investigation.
 
-That’s when we stepped back and asked: *do teardown logs really help us detect or respond to threats faster?*
+- Network Teardown Traffic typically:
+* Provides **no new security context** (same source/destination/action as the standup event)
+* And they **burn Sentinel GBs** — driving up cost with zero detection benefit
+
+That’s when I stepped back and asked: *do teardown logs really help us detect or respond to threats faster?*
 
 ---
 
@@ -38,29 +42,35 @@ They mark closure, not intent.
 * But when the connection closes? The teardown event just repeats the tuple and says “we’re done here.”
 
 By the time teardown traffic is written, the attacker’s action already happened.
-In short: teardown = bookkeeping, not detection.
+In short/TLDR: teardown = bookkeeping, not detection.
 
 ---
 
 ## 🔧 The Fix: Filter the Noise, Keep the Signal
 
-We refined our Sentinel ingestion rules using **KQL-based filters** that exclude teardown-only messages while retaining high-value network telemetry.
+I refine my Sentinel ingestion rules using **KQL-based filters** that exclude teardown-only messages while retaining high-value network telemetry.
 
 Here’s the core Fortinet logic we built:
 
 ```kql
-// CURRENT FILTERS - Only connection teardown/close events:
-| where _msg !~ @"traffic:forward close"       // Connection close events
-| where _msg !~ @"traffic:forward client-rst"  // Client reset packets  
-| where _msg !~ @"traffic:forward server-rst"  // Server reset packets
-| where _msg !~ @"traffic:forward timeout"     // Connection timeouts
-| where _msg !~ @"traffic:forward cancel"      // Cancelled connections
-| where _msg !~ @"traffic:forward client-fin"  // Client FIN packets
-| where _msg !~ @"traffic:forward server-fin"  // Server FIN packets
-| where _msg !~ @"traffic:local close"         // Local (intra-device) connection close events
-| where _msg !~ @"traffic:local client-rst"    // Local (intra-device) client reset packets
-| where _msg !~ @"traffic:local timeout"       // Local (intra-device) connection timeouts
-| where _msg !~ @"traffic:local server-rst"    // Local (intra-device) server reset packets
+source 
+| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  // Keep only Fortinet events; match explicit vendor name or products that start with “Fortigate”.
+| extend tmpMsg = tostring(columnifexists("Message",""))    // Create a temp column from Message if it exists; otherwise default to empty string. columnifexists() prevents runtime errors when a column is missing.
+| extend tmpAct = tostring(columnifexists("Activity",""))  // Same idea for the Activity field (some connectors use Activity instead of Message).
+| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)  // Combine the two: prefer Message when it’s non-empty; otherwise fall back to Activity. iff() is KQL’s inline if; isnotempty() checks for null/blank.
+// ------- Network teardown / close signals to EXCLUDE at ingest -------
+| where tmpCombined !has "traffic:forward close"        // Exclude “forward” path closes (generic close). `has` is token-based, case-insensitive; good for structured text with clear word boundaries.
+| where tmpCombined !has "traffic:forward client-rst"   // Exclude client-initiated resets on forward traffic.
+| where tmpCombined !has "traffic:forward server-rst"   // Exclude server-initiated resets on forward traffic.
+| where tmpCombined !has "traffic:forward timeout"      // Exclude idle/timeout closes on forward traffic.
+| where tmpCombined !has "traffic:forward cancel"       // Exclude user/admin or system cancellations on forward traffic.
+| where tmpCombined !has "traffic:forward client-fin"   // Exclude FIN-based client closes on forward traffic.
+| where tmpCombined !has "traffic:forward server-fin"   // Exclude FIN-based server closes on forward traffic.
+| where tmpCombined !has "traffic:local close"          // Exclude “local” (device-originated) generic close events.
+| where tmpCombined !has "traffic:local client-rst"     // Exclude client resets on local traffic.
+| where tmpCombined !has "traffic:local timeout"        // Exclude timeouts on local traffic.
+| where tmpCombined !has "traffic:local server-rst"     // Exclude server resets on local traffic.
+| project-away tmpMsg, tmpAct, tmpCombined              // Drop the temp helper columns so they don’t flow downstream or get stored.
 ```
 
 Each line intentionally excludes teardown variants across both *forward* and *local* traffic types — while preserving **start**, **allow**, and **deny** events that matter for detection and compliance.
