@@ -255,6 +255,15 @@ Here we can see the **Temperate** and **Humidity** by **Pepper**&#10071;
 
 > &#128073; This **_circumvents the restrictions on the free tiered Azure IoTHub_**, allowing you to _transmitt data from **multiple IoT devices simultaneously without upgrading your subscription**_ &#128526; 
 
+<br/>
+<br/>
+
+# Thanks for Reading!
+
+&#128161; Thanks for following this full series on integrating Raspberry Pi soil sensors with Sentinel!
+If you enjoyed these deep dives, you’ll love the complete playbooks, design patterns, and advanced techniques I unpack in my new book. Huge thanks to everyone who’s already grabbed a copy — if you’ve read it, a quick Amazon rating or review would mean a lot! 👉 [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om)
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
 <br/>
 <br/>

@@ -277,9 +277,15 @@ So it looks like the OT Network Sensor Appliance runs BullseyeOS under the hood,
 If you've made it this far, thanks for reading! I hope this has been a helpful guide for getting started with Defender for IoT and deploying your first of many OT Network Sensors! 
 
 <br/>
-<br/>
 
 ![](/assets/img/OT_Sensor/Scorpion_IoT_Picnic.jpg)
+
+<br/>
+
+&#128161; If you found this guide to deploying Defender for IoT / OT network sensors useful, there’s so much more waiting for you. My new book goes deeper — full design patterns, scripts, and operational insights included.
+A big thank you to everyone who’s already bought a copy — if you’ve read it, a quick Amazon review or rating would really help get it into more hands 👉 [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om).
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
 <br/>
 <br/>

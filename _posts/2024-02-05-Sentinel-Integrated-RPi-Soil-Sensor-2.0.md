@@ -280,6 +280,17 @@ This time around (2.0) we improved upon our previous Headless Raspberry Pi ARM D
 ![](/assets/img/SoilSensor/ReadMe5.jpg)
 
 <br/>
+<br/>
+
+# Thanks for Reading!
+
+&#128161; Thanks for following this full series on integrating Raspberry Pi soil sensors with Sentinel!
+If you enjoyed these deep dives, you’ll love the complete playbooks, design patterns, and advanced techniques I unpack in my new book. Huge thanks to everyone who’s already grabbed a copy — if you’ve read it, a quick Amazon rating or review would mean a lot! 👉 [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om)
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
 
 <a href="https://hanleycloudsolutions.com">
     <img src="/assets/img/footer.png">
