@@ -4,11 +4,7 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 <br/>
 
-![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
-
-<br/>
-
-<video controls src="../assets/img/Ultimate XDR for Full Spectrum Cyber Defense/394 (With Logo) (1).m4v" title="Title"></video>
+<video controls src="../assets/img/Ultimate XDR for Full Spectrum Cyber Defense/394 (With Logo) (1).m4v" title="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"></video>
 
 <br/>
 
@@ -60,6 +56,9 @@ From blog to blueprint, from late-night Defender logs to printed pages — this 
 <br/>
 
 # 📖 Get Your Copy Today
+<br/>
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
 👉 Order now on Amazon:
 [📖 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI)
