@@ -11,12 +11,13 @@ This post breaks down what I've learned about Data Collection Rules (DCRs), Fort
 
 # In this Post We Will:
 - 🔍 Identify The Problem: Too Much Teardown, Too Little Value
-- 💡 Explore Understand the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut.
+- 💡 Explore the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut
 - ⚡ Build out our DCR Logic for Fortinet
-- 🔧 Convert that query logic into a Data Collection Rule (DCR) transformation that stops them before ingestion.
-- 🧭 Cover Key Takeaways for Security Teams
-- ⚠️ Avoid the gotchas that cause DCRs to silently fail.
-- 🧠 Ian's Insights
+- 🔧 Convert our query logic into a Data Collection Rule (DCR) transformation that stops them before ingestion
+- 🧪 Add our DCR Rule to a JSON DCR Template
+- 🚀 Deploy the DCR Template via Azure CLI
+- ⚠️ Avoid the gotchas that cause DCRs to silently fail
+- 🧠 Ian's Insights & Key Takeaways for Security Teams
 - 🔗 Helpful Links & References
 
 <br/>
@@ -35,7 +36,7 @@ Multiply that by thousands of clients and microservices, and teardown events qui
 <br/>
 <br/>
 
-# 💡 Detection versus Investigation Value Breakdown
+# 💡 Detection versus Investigation Value Breakdown - Why Network Teardown Log Traffic Doesn't Make the Cut
 
 Before diving into KQL and JSON, it’s worth defining what “value” means in a logging context; I like to break down logs into 2 categories that either provide Detection Value or Investigation value:
 
@@ -46,7 +47,9 @@ Before diving into KQL and JSON, it’s worth defining what “value” means in
 - By the time teardown traffic is written, the attacker’s action already happened.
 In short/TLDR: teardown = bookkeeping, not detection.
 
-With that framing, Fortinet teardown traffic sits firmly in the “no value” zone:
+<br/>
+
+With that framing, Fortinet **teardown traffic** sits firmly in the “no value” zone:
 
 - It offers no detection value — by the time a connection teardown happens, the event is already over.
 
@@ -54,9 +57,13 @@ With that framing, Fortinet teardown traffic sits firmly in the “no value” z
 
 - The network standup (session start) logs already include source, destination, port, protocol, duration, and bytes — all you need for forensic reconstruction.
 
+<br/>
+
 What it does add:
 
 - **Noise and cost** — these logs inflate ingestion with no added visibility.
+
+<br/>
 
 Unless you’re in a niche scenario like analyzing abnormal session terminations (e.g., repeated client-RSTs indicating a DDoS condition or proxy instability), teardown logs add noise, not insight.
 
@@ -65,7 +72,7 @@ That’s when I stepped back and asked: *do teardown logs really help us detect 
 <br/>
 <br/>
 
-# 🔧 The Fix: Filter the Noise, Keep the Signal
+⚡ Build out our DCR Logic for Fortinet to Filter the Noise, not the Signal
 
 I refine my Sentinel ingestion rules using **KQL-based filters** that exclude teardown-only messages while retaining high-value network telemetry.
 
@@ -134,8 +141,11 @@ Each line intentionally excludes teardown variants across both *forward* and *lo
 <br/>
 <br/>
 
-## ⚠️ Not every KQL function that works in Logs is allowed in DCR transformations.
-**Transform queries run per record and only support a documented subset of operators and functions.** Microsoft’s “[Supported KQL features in Azure Monitor transformations](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-transformations-kql)” explicitly says that only the listed operators/functions are supported—and coalesce() isn’t on that list. In practice, that means queries relying on coalesce() (and a few other conveniences) will error or silently fail when placed in transformKql. 
+# 🔧 Convert that query logic into a Data Collection Rule (DCR) transformation that stops them before ingestion.
+
+> ⚠️ Not every KQL function that works in Logs is allowed in DCR transformations.
+
+**Transform queries run per record and only support a documented subset of operators and functions.** Microsoft’s “[Supported KQL features in Azure Monitor transformations](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-transformations-kql)” explicitly says that only the listed operators/functions are supported—and coalesce() isn’t on that list. In practice, that means queries relying on coalesce() (and a few other conveniences) will error or silently fail when placed into the transformKql window.
 
 
 Two key takeaways from the doc that matter here:
@@ -146,7 +156,7 @@ Microsoft Learn
 - Allowed functions are explicit: If it’s not in the list, assume it’s unsupported in DCRs—even if it works fine in Log Analytics queries. (You will see iif, case, isnull, isnotnull, isnotempty, etc., but not coalesce.) 
 Microsoft Learn
 
-Another common snag when porting queries is using dynamic literals like ```dynamic({})```. In DCR transforms, prefer ```parse_json("{}")``` instead.
+> 👉 Another common snag when porting queries is using dynamic literals like ```dynamic({})```. In DCR transforms, prefer ```parse_json("{}")``` instead.
 
 Here's an adjusted, simplified iteration of the previous KQL query listed above, but this one is below is compatible and can be pasted directly into the DCR window:
 
@@ -174,7 +184,7 @@ source   // Start from your chosen source table (e.g., CommonSecurityLog, Syslog
 <br/>
 <br/>
 
-# Deploying the DCR via JSON
+# Building the DCR in JSON
 Now that we have our DCR ready KQL filter ready to rock, it still needs a few adjustments in order to fit into a DCR JSON template. Here are things we need to fix:
 
 - Remove all KQL comments: DCR transformations don’t allow // ... comments. Strip every inline/explanatory comment.
@@ -197,7 +207,7 @@ After taking into account all of the above, here's what your 1-line JSON transfo
 
 &#x261D; Let's plug this into our DCR JSON template! 
 
-Take the above line and paste it into the following JSON DCR template for Fortinet via AMA:
+Take the above line and paste it into the following JSON DCR template for Fortinet via AMA as illustrated below, about 2/3 of the way down, where it says ```"transformKql":```:
 
 ```json
 // Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley | Github: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
@@ -339,22 +349,59 @@ Remember, JSON doesn't natively support comments, the above snippet is for learn
 <br/>
 <br/>
 
-# Deploy the DCR Template
+# Deploy the DCR Template via Azure CLI
 
-# 🧭 Key Takeaways for Other Security Teams
+Step 1 - login to Azure CLI and set Subscription: 
 
+```powershell
+# Sign in and select your sub
+az login
+az account set --subscription "<SUBSCRIPTION_NAME_OR_ID>"
+
+# Create or select a resource group (use the SAME region as your LAW!)
+az group create -n rg-xdr -l eastus
+```
+
+Grab your Log Analytics Workspace and Subscription IDs, and your Sentinel region (Your DCR **must** reside in the same region or destination binding will fail later).
+
+Download the template [here from my Github](https://github.com/EEN421/Sentinel_Cost_Optimization/blob/Main/Fortinet/Fortinet-DCR-Template.json) and upload it to your Azure CLI session.
+
+Run the following command (after you've adjusted the template with your IDs and Region etc.)
+```powershell
+az deployment group create \
+  --resource-group rg-xdr \
+  --template-file Fortinet-DCR-Template.json \
+  ```
+
+If you're using **AMA on a VM/Arc Forwarder** to collect the logs and send them to Sentinel, you'll also need to **associate the DCR**
+
+```powershell
+az monitor data-collection rule association create \
+  --name dcr-assoc-fortinet \
+  --rule-id "$DCR_ID" \
+  --resource "$VM_ID"
+```
+
+> ⚠️ Note: The **Association** command is part of the **monitor-control-service extension**; the CLI installs it automatically the first time you call it.
+
+Verify and make sure the DCR and LAW are in the same region [(This is the #1 cause of “destination missing” or silent failures).](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection?utm_source=chatgpt.com)
+After some traffic, run a quick sanity query:
+```bash
+CommonSecurityLog
+| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"
+| where Message has "traffic:" or Activity has "traffic:"
+```
+
+<br/>
+<br/>
+
+# 🧠 Ian's Insights & Key Takeaways for Other Security Teams
+Noise reduction isn’t just about saving money — it’s about sharpening focus.
+By filtering teardown traffic, we transformed our firewalls from noisy log generators into **high-value security signal providers**.
 * **Don’t ingest everything.** More logs ≠ more visibility. Focus on what helps you detect and respond.
 * **Teardown ≠ telemetry.** Those events tell you a connection *ended*, not that it was *malicious*.
 * **Validate before excluding.** Always test filters with a quick `summarize count()` to ensure no legitimate security logs disappear.
 * **Reinvest the savings.** Use your reduced ingestion costs to onboard richer data sources — endpoint, identity, or cloud app telemetry.
-
-<br/>
-<br/>
-
-# 🧠 Ian's Insights
-
-Noise reduction isn’t just about saving money — it’s about sharpening focus.
-By filtering teardown traffic, we transformed our firewalls from noisy log generators into **high-value security signal providers**.
 
 That’s the difference between drowning in data and acting on intelligence.
 
@@ -368,3 +415,6 @@ That’s the difference between drowning in data and acting on intelligence.
 - [Create a transformation in Azure Monitor — reiterates that only certain KQL is supported.](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-transformations-create?utm_source=chatgpt.com&tabs=portal)
 
 - [coalesce() function (Kusto) — valid in general KQL, but not in DCR transforms per the supported list; this is why your Log query worked but the transform didn’t.](https://learn.microsoft.com/en-us/kusto/query/coalesce-function?view=microsoft-fabric)
+
+https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection?utm_source=chatgpt.com
+
