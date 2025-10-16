@@ -4,7 +4,11 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 <br/>
 
-<video controls src="../assets/img/Ultimate XDR for Full Spectrum Cyber Defense/394 (With Logo) (1).m4v" title="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"></video>
+<video controls
+src="../assets/img/Ultimate XDR for Full Spectrum Cyber Defense/394 (With Logo) (1).m4v"
+title="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
+</video>
 
 <br/>
 
