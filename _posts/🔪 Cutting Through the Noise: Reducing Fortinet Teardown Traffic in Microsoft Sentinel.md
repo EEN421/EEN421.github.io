@@ -41,7 +41,7 @@ Multiply that by thousands of clients and microservices, and teardown events qui
 
 Before diving into KQL and JSON, it’s worth defining what “value” means in a logging context; I like to break down logs into 2 categories that either provide Detection Value or Investigation value:
 
-- **Detection Value** helps us detect and mitigate malicious behaviour in it's tracks. Example: A DeviceFileEvents record showing an unsigned executable dropped into a startup folder. _That’s actionable — it can trigger a rule, block an action, or enrich an alert._ Another example: * When malware calls home, the **standup log** shows the destination C2 domain — *that’s actionable*.
+- **Detection Value** helps us detect and mitigate malicious behaviour in it's tracks. Example: A DeviceFileEvents record showing an unsigned executable dropped into a startup folder. _That’s actionable — it can trigger a rule, block an action, or enrich an alert._ Another example: When malware calls home, the **standup log** shows the destination C2 domain — *that’s actionable*.
   
 - **Investigation Value** may not help us detect and stop a malicious act, but it's the first thing the DFIR team asks for during a post-breach investigation and helps reconstruct what happened after a compromise. Example: VPN session duration or DNS lookup history. _It doesn’t detect the attack, but it helps the DFIR team trace lateral movement and data exfiltration._ Additional examples: When a lateral movement connection is opened, the **standup log** shows source → target — _that’s valuable for threat hunting._ But when the connection closes? _The teardown event just repeats the tuple and says “we’re done here.”_
 
@@ -66,7 +66,7 @@ What it does add:
 
 <br/>
 
-Unless you’re in a niche scenario like analyzing abnormal session terminations (e.g., repeated client-RSTs indicating a DDoS condition or proxy instability), teardown logs add noise, not insight.
+> ⚠️ Unless you’re in a niche scenario like analyzing abnormal session terminations (e.g., repeated client-RSTs indicating a DDoS condition or proxy instability), teardown logs add noise, not insight.
 
 That’s when I stepped back and asked: *do teardown logs really help us detect or respond to threats faster?* The answer was a resounding "No" the more I thought about it. 
 
@@ -77,7 +77,7 @@ That’s when I stepped back and asked: *do teardown logs really help us detect 
 
 I refine my Sentinel ingestion rules using **KQL-based filters** that exclude teardown-only messages while retaining high-value network telemetry.
 
-Here’s the core Fortinet logic in KQL for the DCR rule. DCRs are pushed via **JSON format** so you _can't just copy and paste_ the below KQL (even though it works in the Log blade) into the Transformation Editor; only simplified KQL works here because as a DCR it gets applied prior to ingestion, so many of the advanced functions leveraged below, such as Coalesce() will not work. You can copy this KQL into the **Log** blade in Sentinel to test and confirm that the logic works though:
+Here’s the core Fortinet logic in KQL for the DCR rule. DCRs are pushed via **JSON format** so you _can't just copy and paste_ the below KQL (even though it works in the Log blade) into the Transformation Editor; only simplified KQL works here because as a DCR it gets applied prior to ingestion. Many of the advanced functions leveraged below, such as Coalesce() simply will not work in the TransformKQL window. You can, however, copy this KQL into the **Log** blade in Sentinel to test and confirm that the logic works though:
 
 ```bash
 CommonSecurityLog
@@ -159,7 +159,7 @@ Microsoft Learn
 
 > 👉 Another common snag when porting queries is using dynamic literals like ```dynamic({})```. In DCR transforms, prefer ```parse_json("{}")``` instead.
 
-Here's an adjusted, simplified iteration of the previous KQL query listed above, but this one is below is compatible and can be pasted directly into the DCR window:
+Here's an adjusted, simplified iteration of the previous KQL query listed above, but this one is below is compatible and can be pasted directly into the TransformKQL window:
 
 ```bash
 source   // Start from your chosen source table (e.g., CommonSecurityLog, Syslog, etc.).
@@ -186,7 +186,7 @@ source   // Start from your chosen source table (e.g., CommonSecurityLog, Syslog
 <br/>
 
 # Building the DCR in JSON
-Now that we have our DCR ready KQL filter ready to rock, it still needs a few adjustments in order to fit into a DCR JSON template. Here are things we need to fix:
+Now that we have our DCR-ready KQL filter ready to rock, it still needs a few adjustments in order to fit into a DCR JSON template. Here are things we need to fix:
 
 - Remove all KQL comments: DCR transformations don’t allow // ... comments. Strip every inline/explanatory comment.
 
@@ -200,7 +200,7 @@ Now that we have our DCR ready KQL filter ready to rock, it still needs a few ad
 
 - Target the right stream/table: Attach the transform to Microsoft-CommonSecurityLog (this query references fields like DeviceVendor, DeviceProduct, Message, Activity that exist there). If you associate this with another stream/table, expect field mismatches even though you used columnifexists.
 
-After taking into account all of the above, here's what your 1-line JSON transform KQL should look like: 
+After taking into account all of the above, here's what your 1-line JSON-ready transform KQL statement should look like: 
 
 ```json
 "transformKql": "source\n| where DeviceVendor == \"Fortinet\" or DeviceProduct startswith \"Fortigate\"\n| extend tmpMsg = tostring(columnifexists(\"Message\",\"\"))\n| extend tmpAct = tostring(columnifexists(\"Activity\",\"\"))\n| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)\n| where tmpCombined !has \"traffic:forward close\"\n| where tmpCombined !has \"traffic:forward client-rst\"\n| where tmpCombined !has \"traffic:forward server-rst\"\n| where tmpCombined !has \"traffic:forward timeout\"\n| where tmpCombined !has \"traffic:forward cancel\"\n| where tmpCombined !has \"traffic:forward client-fin\"\n| where tmpCombined !has \"traffic:forward server-fin\"\n| where tmpCombined !has \"traffic:local close\"\n| where tmpCombined !has \"traffic:local client-rst\"\n| where tmpCombined !has \"traffic:local timeout\"\n| where tmpCombined !has \"traffic:local server-rst\"\n| project-away tmpMsg, tmpAct, tmpCombined"
@@ -345,7 +345,7 @@ Take the above line and paste it into the following JSON DCR template for Fortin
 }
 ```
 
-Remember, JSON doesn't natively support comments, the above snippet is for learning purposes only. [The proper JSON formatted template is available for use here on my Github.](https://github.com/EEN421/Sentinel_Cost_Optimization/blob/Main/Fortinet/Fortinet-DCR-Template.json)
+> ⚠️ Remember, JSON doesn't natively support comments, the above snippet is for learning purposes only. [The proper JSON formatted template is available for use here on my Github.](https://github.com/EEN421/Sentinel_Cost_Optimization/blob/Main/Fortinet/Fortinet-DCR-Template.json)
 
 <br/>
 <br/>
@@ -409,6 +409,16 @@ That’s the difference between drowning in data and acting on intelligence.
 <br/>
 <br/>
 
+# Thanks for Reading!
+ &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
+Hanley • DevSecOps Dad
+
+
+![](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
+
 # 🔗 Helpful Links & Refences
 
 - [Supported KQL features in Azure Monitor transformations — the canonical list (note coalesce() is absent; use iif/case/isnotempty instead).](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-transformations-kql)
@@ -419,3 +429,11 @@ That’s the difference between drowning in data and acting on intelligence.
 
 https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection?utm_source=chatgpt.com
 
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
