@@ -1,5 +1,3 @@
-# 🎯 My Book *“Ultimate Microsoft XDR for Full Spectrum Cyber Defense”* Is Officially Charting on Amazon!
-
 When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons from my home lab — Defender for Endpoint tests, Sentinel workbooks, Pi-hole telemetry, the occasional Microsoft XDR deep dive between briskets. Fast forward to today, and those late-night experiments have turned into a **published book** — a 400-page blueprint for full-spectrum cyber defense.
 
 <br/>
