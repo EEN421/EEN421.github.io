@@ -1,4 +1,4 @@
-# 🧱 Cutting Through the Noise: Reducing Fortinet Teardown Traffic in Microsoft Sentinel
+# 🔪 Cutting Through the Noise: Reducing Fortinet Teardown Traffic in Microsoft Sentinel
 
 When you connect a Fortinet firewall to Microsoft Sentinel for full-spectrum visibility, the first thing you notice is… the noise.
 Specifically: **connection teardown events** — hundreds of thousands of them.
