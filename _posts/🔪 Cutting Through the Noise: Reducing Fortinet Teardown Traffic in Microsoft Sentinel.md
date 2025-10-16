@@ -1,29 +1,41 @@
-In the modern SOC, more data isn’t always better data. When you connect a Fortinet firewall to Microsoft Sentinel for full-spectrum visibility, the first thing you notice is… the noise. Specifically: **connection teardown events** — hundreds of thousands of them.
+In the modern SOC, more data isn’t always better data. When you connect a Fortinet firewall to Microsoft Sentinel for full-spectrum visibility👀, the first thing you notice is… the noise 🔊. Specifically: connection teardown events — hundreds of thousands of them 💥.
 
-At first glance, they look harmless — just logs marking the end of a session. But once you start scaling Sentinel ingestion, those teardown logs quietly turn into the digital equivalent of background static: expensive, repetitive, and rarely helpful from a security perspective. _**Every log you ingest should earn its place** by delivering detection value or investigation value — and Fortinet teardown traffic fails that test._
+At first glance, they look harmless — just logs marking the end of a session. But once you start scaling Sentinel ingestion, those teardown logs quietly turn into the digital equivalent of background static: expensive 💸, repetitive 🔁, and rarely helpful from a security perspective 🕵️‍♂️.
 
-This post breaks down what I've learned about Data Collection Rules (DCRs), Fortinet logs, and how to tune them to keep the signal — without paying for the noise.
+Every log you ingest should earn its place by delivering detection value 🛡️ or investigation value 🔍 — and Fortinet **teardown traffic** fails that test ❌.
 
----
+This post breaks down what I've learned about Data Collection Rules (DCRs), Fortinet logs, and how to tune them to keep the signal 📡 — _without paying for the noise.🤑_
 
-In this Post We Will:
-- &#x1F50E; Identify low-value teardown events using KQL.
-- 🔧 Convert that query into a Data Collection Rule (DCR) transformation that stops them before ingestion.
-- 🧠 Understand the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut.
-- &#x02620; Avoid the gotchas that cause DCRs to silently fail.
+<br/>
+<br/>
 
----
+# In this Post We Will:
+- 🔍 Identify The Problem: Too Much Teardown, Too Little Value
+- 💡 Explore Understand the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut.
+- ⚡ Build out our DCR Logic for Fortinet
+- 🔧 Convert that query logic into a Data Collection Rule (DCR) transformation that stops them before ingestion.
+- 🧭 Cover Key Takeaways for Security Teams
+- ⚠️ Avoid the gotchas that cause DCRs to silently fail.
+- 🧠 Ian's Insights
+- 🔗 Helpful Links & References
 
-## 🔍 The Problem: Too Much Teardown, Too Little Value
+<br/>
+<br/>
+
+# 🔍 The Problem: Too Much Teardown, Too Little Value
 
 In Fortinet network traffic logs, every connection generates *two* major events:
 
 1. **Connection standup** — when a new session is created (`traffic:forward start`)
+
 2. **Connection teardown** — when the session closes (`traffic:forward close`, `client-fin`, `server-fin`, etc.)
 
 Multiply that by thousands of clients and microservices, and teardown events quickly dominate your ingestion stream.
 
-## 🧠 Detection versus Investigation Value Breakdown
+<br/>
+<br/>
+
+# 💡 Detection versus Investigation Value Breakdown
 
 Before diving into KQL and JSON, it’s worth defining what “value” means in a logging context; I like to break down logs into 2 categories that either provide Detection Value or Investigation value:
 
@@ -50,36 +62,77 @@ Unless you’re in a niche scenario like analyzing abnormal session terminations
 
 That’s when I stepped back and asked: *do teardown logs really help us detect or respond to threats faster?* The answer was a resounding "No" the more I thought about it. 
 
----
+<br/>
+<br/>
 
-## 🔧 The Fix: Filter the Noise, Keep the Signal
+# 🔧 The Fix: Filter the Noise, Keep the Signal
 
 I refine my Sentinel ingestion rules using **KQL-based filters** that exclude teardown-only messages while retaining high-value network telemetry.
 
-Here’s the core Fortinet logic in KQL for the DCR rule. DCRs are pushed via JSON format so you can't just copy and paste the below KQL (even though it works in the Log blade) into the Transformation Editor; only simplified KQL works here because as a DCR it gets applied prior to ingestion, so many of the advanced functions such as Coalesce() will not work. You can copy this KQL into the **Log** blade in Sentinel to test:
+Here’s the core Fortinet logic in KQL for the DCR rule. DCRs are pushed via **JSON format** so you _can't just copy and paste_ the below KQL (even though it works in the Log blade) into the Transformation Editor; only simplified KQL works here because as a DCR it gets applied prior to ingestion, so many of the advanced functions leveraged below, such as Coalesce() will not work. You can copy this KQL into the **Log** blade in Sentinel to test and confirm that the logic works though:
 
-```kql
-source 
-| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  // Keep only Fortinet events; match explicit vendor name or products that start with “Fortigate”.
-| extend tmpMsg = tostring(columnifexists("Message",""))    // Create a temp column from Message if it exists; otherwise default to empty string. columnifexists() prevents runtime errors when a column is missing.
-| extend tmpAct = tostring(columnifexists("Activity",""))  // Same idea for the Activity field (some connectors use Activity instead of Message).
-| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)  // Combine the two: prefer Message when it’s non-empty; otherwise fall back to Activity. iff() is KQL’s inline if; isnotempty() checks for null/blank.
-// ------- Network teardown / close signals to EXCLUDE at ingest -------
-| where tmpCombined !has "traffic:forward close"        // Exclude “forward” path closes (generic close). `has` is token-based, case-insensitive; good for structured text with clear word boundaries.
-| where tmpCombined !has "traffic:forward client-rst"   // Exclude client-initiated resets on forward traffic.
-| where tmpCombined !has "traffic:forward server-rst"   // Exclude server-initiated resets on forward traffic.
-| where tmpCombined !has "traffic:forward timeout"      // Exclude idle/timeout closes on forward traffic.
-| where tmpCombined !has "traffic:forward cancel"       // Exclude user/admin or system cancellations on forward traffic.
-| where tmpCombined !has "traffic:forward client-fin"   // Exclude FIN-based client closes on forward traffic.
-| where tmpCombined !has "traffic:forward server-fin"   // Exclude FIN-based server closes on forward traffic.
-| where tmpCombined !has "traffic:local close"          // Exclude “local” (device-originated) generic close events.
-| where tmpCombined !has "traffic:local client-rst"     // Exclude client resets on local traffic.
-| where tmpCombined !has "traffic:local timeout"        // Exclude timeouts on local traffic.
-| where tmpCombined !has "traffic:local server-rst"     // Exclude server resets on local traffic.
-| project-away tmpMsg, tmpAct, tmpCombined              // Drop the temp helper columns so they don’t flow downstream or get stored.
+```bash
+CommonSecurityLog
+| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"
+| extend _msg = tostring(coalesce(Message, Activity))
+// CURRENT FILTERS - Only connection teardown/close events:
+| where _msg !~ @"traffic:forward close"       // Connection close events
+| where _msg !~ @"traffic:forward client-rst"  // Client reset packets  
+| where _msg !~ @"traffic:forward server-rst"  // Server reset packets
+| where _msg !~ @"traffic:forward timeout"     // Connection timeouts
+| where _msg !~ @"traffic:forward cancel"      // Cancelled connections
+| where _msg !~ @"traffic:forward client-fin"  // Client FIN packets
+| where _msg !~ @"traffic:forward server-fin"  // Server FIN packets
+| where _msg !~ @"traffic:local close"         // Local (intra-device) connection close events
+| where _msg !~ @"traffic:local client-rst"    // Local (intra-device) client reset packets
+| where _msg !~ @"traffic:local timeout"       // Local (intra-device) connection timeouts
+| where _msg !~ @"traffic:local server-rst"    // Local (intra-device) server reset packets
+// STILL INCLUDED (high volume, potentially low security value):
+// - "traffic:forward accept" etc.
+// - Normal application traffic, web browsing, etc.
+// - ICMP/ping traffic  
+// - DNS queries
+// - Routine administrative traffic
+| extend RespCode_ = toint(extract(@"ResponseCode=([0-9]+)", 1, AdditionalExtensions)),
+         URL_      = extract(@"RequestURL=([^;]+)", 1, AdditionalExtensions),
+         App_      = extract(@"ApplicationProtocol=([^;]+)", 1, AdditionalExtensions),
+         Threat_   = extract(@"ThreatName=([^;]+)", 1, AdditionalExtensions),
+         IPS_      = extract(@"IPSAction=([^;]+)", 1, AdditionalExtensions),
+         Policy_   = extract(@"PolicyID=([^;]+)", 1, AdditionalExtensions),
+         BytesIn_  = tolong(extract(@"ReceivedBytes=([0-9]+)", 1, AdditionalExtensions)),
+         BytesOut_ = tolong(extract(@"SentBytes=([0-9]+)", 1, AdditionalExtensions))
+| project
+    TimeGenerated,
+    Computer = coalesce(Computer, DeviceName),
+    Message = _msg,
+    EventID = coalesce(DeviceEventClassID, ExtID),
+    SourceIP, DestinationIP, SourcePort, DestinationPort, Protocol,
+    Action = coalesce(DeviceAction, SimplifiedDeviceAction),
+    RuleName = coalesce(DeviceCustomString1, DeviceCustomString2),
+    RuleID   = coalesce(DeviceCustomNumber1, DeviceCustomNumber2),
+    SubjectUserName = coalesce(SourceUserName, DeviceCustomString3),
+    TargetUserName  = coalesce(DestinationUserName, DeviceCustomString4),
+    ProcessName = coalesce(ProcessName, DeviceCustomString6),
+    Method = RequestMethod,
+    URLPath = coalesce(RequestURL, URL_),
+    URLDomain = coalesce(DestinationHostName, extract(@"://([^/]+)", 1, coalesce(RequestURL, URL_))),
+    ResponseCode = coalesce(DeviceCustomNumber3, RespCode_),
+    App = App_, 
+    ThreatName = Threat_, 
+    IPSAction = IPS_, 
+    PolicyID = Policy_,
+    BytesIn = BytesIn_, 
+    BytesOut = BytesOut_,
+    LogSeverity, 
+    DeviceVendor, 
+    DeviceProduct, 
+    _ResourceId
 ```
 
 Each line intentionally excludes teardown variants across both *forward* and *local* traffic types — while preserving **start**, **allow**, and **deny** events that matter for detection and compliance.
+
+<br/>
+<br/>
 
 ## ⚠️ Not every KQL function that works in Logs is allowed in DCR transformations.
 **Transform queries run per record and only support a documented subset of operators and functions.** Microsoft’s “[Supported KQL features in Azure Monitor transformations](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-transformations-kql)” explicitly says that only the listed operators/functions are supported—and coalesce() isn’t on that list. In practice, that means queries relying on coalesce() (and a few other conveniences) will error or silently fail when placed in transformKql. 
@@ -87,33 +140,228 @@ Each line intentionally excludes teardown variants across both *forward* and *lo
 
 Two key takeaways from the doc that matter here:
 
-Per-record constraint: Transformations process one event at a time; anything that aggregates or isn’t in the “supported” set won’t run. 
+- Per-record constraint: Transformations process one event at a time; anything that aggregates or isn’t in the “supported” set won’t run. 
 Microsoft Learn
 
-Allowed functions are explicit: If it’s not in the list, assume it’s unsupported in DCRs—even if it works fine in Log Analytics queries. (You will see iif, case, isnull, isnotnull, isnotempty, etc., but not coalesce.) 
+- Allowed functions are explicit: If it’s not in the list, assume it’s unsupported in DCRs—even if it works fine in Log Analytics queries. (You will see iif, case, isnull, isnotnull, isnotempty, etc., but not coalesce.) 
 Microsoft Learn
 
-Another common snag when porting queries is using dynamic literals like ```kql dynamic({})```. In DCR transforms, prefer ```kql parse_json("{}")``` instead.
+Another common snag when porting queries is using dynamic literals like ```dynamic({})```. In DCR transforms, prefer ```parse_json("{}")``` instead.
 
----
+Here's an adjusted, simplified iteration of the previous KQL query listed above, but this one is below is compatible and can be pasted directly into the DCR window:
 
-## 🧭 Key Takeaways for Other Security Teams
+```bash
+source   // Start from your chosen source table (e.g., CommonSecurityLog, Syslog, etc.).
+| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  // Keep only Fortinet events; match explicit vendor name or products that start with “Fortigate”.
+| extend tmpMsg = tostring(columnifexists("Message",""))    // Create a temp column from Message if it exists; otherwise default to empty string. columnifexists() prevents runtime errors when a column is missing.
+| extend tmpAct = tostring(columnifexists("Activity",""))  // Same idea for the Activity field (some connectors use Activity instead of Message).
+| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)  // Combine the two: prefer Message when it’s non-empty; otherwise fall back to Activity. iff() is KQL’s inline if; isnotempty() checks for null/blank.
+// ------- Network teardown / close signals to EXCLUDE at ingest -------
+| where tmpCombined !has "traffic:forward close"  // Exclude “forward” path closes (generic close). `has` is token-based, case-insensitive; good for structured text with clear word boundaries.
+| where tmpCombined !has "traffic:forward client-rst"  // Exclude client-initiated resets on forward traffic.
+| where tmpCombined !has "traffic:forward server-rst"  // Exclude server-initiated resets on forward traffic.
+| where tmpCombined !has "traffic:forward timeout"  // Exclude idle/timeout closes on forward traffic.
+| where tmpCombined !has "traffic:forward cancel"  // Exclude user/admin or system cancellations on forward traffic.
+| where tmpCombined !has "traffic:forward client-fin"  // Exclude FIN-based client closes on forward traffic.
+| where tmpCombined !has "traffic:forward server-fin"  // Exclude FIN-based server closes on forward traffic.
+| where tmpCombined !has "traffic:local close"  // Exclude “local” (device-originated) generic close events.
+| where tmpCombined !has "traffic:local client-rst"  // Exclude client resets on local traffic.
+| where tmpCombined !has "traffic:local timeout"  // Exclude timeouts on local traffic.
+| where tmpCombined !has "traffic:local server-rst"  // Exclude server resets on local traffic.
+| project-away tmpMsg, tmpAct, tmpCombined  // Drop the temp helper columns so they don’t flow downstream or get stored.
+```
+
+<br/>
+<br/>
+
+# Deploying the DCR via JSON
+Now that we have our DCR ready KQL filter ready to rock, it still needs a few adjustments in order to fit into a DCR JSON template. Here are things we need to fix:
+
+- Remove all KQL comments: DCR transformations don’t allow // ... comments. Strip every inline/explanatory comment.
+
+- Keep to DCR-safe operators: Your query only uses source, where, extend, iff, isnotempty, tostring, columnifexists, and project-away — all OK for DCR transforms. (Avoid let, coalesce, join, union, etc. when preparing other rules.)
+
+- Don’t create persisted custom columns (unless you add _CF): You only create temporary tmp* helpers and drop them with project-away, so you’re fine. In DCRs, any persisted new column must end with _CF.
+
+- Encode the KQL as a JSON string: In the template, the KQL must be a single JSON string:
+    - escape double quotes ```"``` → ```\"```
+    - keep line breaks as ```\n``` (or make it one long line)
+
+- Target the right stream/table: Attach the transform to Microsoft-CommonSecurityLog (this query references fields like DeviceVendor, DeviceProduct, Message, Activity that exist there). If you associate this with another stream/table, expect field mismatches even though you used columnifexists.
+
+After taking into account all of the above, here's what your 1-line JSON transform KQL should look like: 
+
+```json
+"transformKql": "source\n| where DeviceVendor == \"Fortinet\" or DeviceProduct startswith \"Fortigate\"\n| extend tmpMsg = tostring(columnifexists(\"Message\",\"\"))\n| extend tmpAct = tostring(columnifexists(\"Activity\",\"\"))\n| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)\n| where tmpCombined !has \"traffic:forward close\"\n| where tmpCombined !has \"traffic:forward client-rst\"\n| where tmpCombined !has \"traffic:forward server-rst\"\n| where tmpCombined !has \"traffic:forward timeout\"\n| where tmpCombined !has \"traffic:forward cancel\"\n| where tmpCombined !has \"traffic:forward client-fin\"\n| where tmpCombined !has \"traffic:forward server-fin\"\n| where tmpCombined !has \"traffic:local close\"\n| where tmpCombined !has \"traffic:local client-rst\"\n| where tmpCombined !has \"traffic:local timeout\"\n| where tmpCombined !has \"traffic:local server-rst\"\n| project-away tmpMsg, tmpAct, tmpCombined"
+```
+
+&#x261D; Let's plug this into our DCR JSON template! 
+
+Take the above line and paste it into the following JSON DCR template for Fortinet via AMA:
+
+```json
+// Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley | Github: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
+// This KQL filter targets Fortinet/Fortigate logs and removes connection teardown or session-close events (like FINs, resets, and timeouts) at ingestion, ensuring only active or meaningful network traffic is retained for analysis.
+
+{
+  // === ROOT LEVEL ===
+  // A Data Collection Rule (DCR) defines how data is collected, transformed, and sent to destinations.
+  "properties": {
+
+    // A unique immutable identifier automatically generated when the DCR was first created.
+    // Not required when creating a new rule — only present for reference or export.
+    "immutableId": "dcr-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+
+    // === DATA SOURCES SECTION ===
+    // Defines the origin of the incoming data that this DCR will process.
+    "dataSources": {
+      "syslog": [  // This DCR listens for Syslog data (typical for CEF or firewall connectors).
+        {
+          // Identifies which data stream the syslog input is mapped to.
+          // Microsoft-CommonSecurityLog is used by the CEF connector (e.g., Fortinet, Cisco ASA).
+          "streams": [
+            "Microsoft-CommonSecurityLog"
+          ],
+
+          // The syslog facilities that this rule will accept messages from.
+          // These correspond to facility codes in RFC 5424 (e.g., auth, daemon, local0, etc.).
+          "facilityNames": [
+            "alert", "audit", "auth", "authpriv", "cron", "daemon", "clock", "ftp",
+            "kern", "local0", "local1", "local2", "local3", "local4", "local5",
+            "local6", "local7", "lpr", "mail", "news", "ntp", "syslog", "user", "uucp"
+          ],
+
+          // Syslog severity levels this rule will process.
+          "logLevels": [
+            "Info", "Notice", "Warning", "Error", "Critical", "Alert", "Emergency"
+          ],
+
+          // A friendly name used by Azure Monitor to identify this syslog source.
+          "name": "sysLogsDataSource-xxxxxxxxxx"
+        },
+        {
+          // Additional syslog configuration (optional secondary source).
+          // In this example, it captures a narrow facility/severity combination (e.g., emergency messages).
+          "streams": [
+            "Microsoft-CommonSecurityLog"
+          ],
+          "facilityNames": [
+            "nopri"
+          ],
+          "logLevels": [
+            "Emergency"
+          ],
+          "name": "sysLogsDataSource-xxxxxxxxxx"
+        }
+      ]
+    },
+
+    // === DESTINATIONS SECTION ===
+    // Defines where the processed data will be sent (in this case, a Log Analytics workspace).
+    "destinations": {
+      "logAnalytics": [
+        {
+          // The full Azure Resource ID of the Log Analytics workspace to receive data.
+          "workspaceResourceId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/your-resource-group/providers/Microsoft.OperationalInsights/workspaces/your-workspace-name",
+          // The unique workspace ID (GUID).
+            "workspaceId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+
+          // Logical name used within this DCR to reference the destination.
+          "name": "DataCollectionEvent"
+        }
+      ]
+    },
+
+    // === DATA FLOWS SECTION ===
+    // This defines how data moves from the source (stream) through an optional transformation
+    // to its destination (Log Analytics workspace).
+    "dataFlows": [
+      {
+        // Input stream — the type of data being ingested.
+        "streams": [
+          "Microsoft-CommonSecurityLog"
+        ],
+
+        // The transformKql field applies a KQL query at ingest time.
+        // This runs before the data is written to Log Analytics.
+        // In this case, it filters out Fortinet connection teardown events
+        // to reduce noise and ingestion cost.
+        "transformKql": "source\n"
+          + "| where DeviceVendor == \"Fortinet\" or DeviceProduct startswith \"Fortigate\"\n"
+          + "| extend tmpMsg = tostring(columnifexists(\"Message\",\"\"))\n"
+          + "| extend tmpAct = tostring(columnifexists(\"Activity\",\"\"))\n"
+          + "| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)\n"
+          + "| where tmpCombined !has \"traffic:forward close\"\n"
+          + "| where tmpCombined !has \"traffic:forward client-rst\"\n"
+          + "| where tmpCombined !has \"traffic:forward server-rst\"\n"
+          + "| where tmpCombined !has \"traffic:forward timeout\"\n"
+          + "| where tmpCombined !has \"traffic:forward cancel\"\n"
+          + "| where tmpCombined !has \"traffic:forward client-fin\"\n"
+          + "| where tmpCombined !has \"traffic:forward server-fin\"\n"
+          + "| where tmpCombined !has \"traffic:local close\"\n"
+          + "| where tmpCombined !has \"traffic:local client-rst\"\n"
+          + "| where tmpCombined !has \"traffic:local timeout\"\n"
+          + "| where tmpCombined !has \"traffic:local server-rst\"\n"
+          + "| project-away tmpMsg, tmpAct, tmpCombined",
+
+        // Destination reference — must match the logical name under "destinations".
+        "destinations": [
+          "DataCollectionEvent"
+        ]
+      }
+    ],
+
+    // Provisioning status of the DCR (auto-populated by Azure).
+    // Can be omitted when creating or updating.
+    "provisioningState": "Succeeded"
+  },
+
+  // === METADATA ===
+  // Resource ID — present when exported; omit during creation.
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/your-resource-group/providers/Microsoft.Insights/dataCollectionRules/your-dcr-name",
+
+
+  // The DCR kind (Linux/Windows) defines agent compatibility.
+  "kind": "Linux",
+
+  // The Azure region where the DCR resource is stored.
+  "location": "YourTenantLocale",
+
+  // Tags are metadata for organizational or automation purposes.
+  "tags": {
+    "createdBy": "Sentinel"
+  }
+}
+```
+
+Remember, JSON doesn't natively support comments, the above snippet is for learning purposes only. [The proper JSON formatted template is available for use here on my Github.](https://github.com/EEN421/Sentinel_Cost_Optimization/blob/Main/Fortinet/Fortinet-DCR-Template.json)
+
+<br/>
+<br/>
+
+# Deploy the DCR Template
+
+# 🧭 Key Takeaways for Other Security Teams
 
 * **Don’t ingest everything.** More logs ≠ more visibility. Focus on what helps you detect and respond.
 * **Teardown ≠ telemetry.** Those events tell you a connection *ended*, not that it was *malicious*.
 * **Validate before excluding.** Always test filters with a quick `summarize count()` to ensure no legitimate security logs disappear.
 * **Reinvest the savings.** Use your reduced ingestion costs to onboard richer data sources — endpoint, identity, or cloud app telemetry.
 
----
+<br/>
+<br/>
 
-## ⚡ Ian's Insights
+# 🧠 Ian's Insights
 
 Noise reduction isn’t just about saving money — it’s about sharpening focus.
 By filtering teardown traffic, we transformed our firewalls from noisy log generators into **high-value security signal providers**.
 
 That’s the difference between drowning in data and acting on intelligence.
 
-## 🔗 Helpful Links & Refences
+<br/>
+<br/>
+
+# 🔗 Helpful Links & Refences
 
 - [Supported KQL features in Azure Monitor transformations — the canonical list (note coalesce() is absent; use iif/case/isnotempty instead).](https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-transformations-kql)
 
