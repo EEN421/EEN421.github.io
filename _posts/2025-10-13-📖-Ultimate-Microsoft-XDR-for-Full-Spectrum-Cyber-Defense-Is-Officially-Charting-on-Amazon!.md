@@ -8,6 +8,13 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 <br/>
 
+<video controls width="100%" preload="metadata" poster="/assets/img/video-thumbnail.jpg" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+  <source src="{{ '/assets/videos/394 (With Logo) (1).m4v' | relative_url }}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<br/>
+
 [**📖 Ultimate Microsoft XDR for Full Spectrum Cyber Defense**](https://a.co/d/4vveVCI) is officially live on Amazon  — and it’s charting across Amazon’s most competitive categories:
 
 ![Amazon Best Seller Ranking for Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/BSR.png)
