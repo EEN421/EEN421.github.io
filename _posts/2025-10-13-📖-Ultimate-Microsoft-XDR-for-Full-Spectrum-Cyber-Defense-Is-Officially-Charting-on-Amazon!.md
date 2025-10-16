@@ -8,10 +8,7 @@ When I started *DevSecOpsDad.com*, it was just a space to share hands-on lessons
 
 <br/>
 
-<video controls width="100%" preload="metadata" poster="/assets/img/video-thumbnail.jpg" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-  <source src="{{ '/assets/videos/394 (With Logo) (1).m4v' | relative_url }}" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<video controls src="../assets/img/Ultimate XDR for Full Spectrum Cyber Defense/394 (With Logo) (1).m4v" title="Title"></video>
 
 <br/>
 
