@@ -1,3 +1,4 @@
+# Introduction & Use Case: 
 In the modern SOC, more data isn’t always better data. When you connect a Fortinet firewall to Microsoft Sentinel for full-spectrum visibility👀, the first thing you notice is… the noise 🔊. Specifically: connection teardown events — hundreds of thousands of them 💥.
 
 At first glance, they look harmless — just logs marking the end of a session. But once you start scaling Sentinel ingestion, those teardown logs quietly turn into the digital equivalent of background static: expensive 💸, repetitive 🔁, and rarely helpful from a security perspective 🕵️‍♂️.
