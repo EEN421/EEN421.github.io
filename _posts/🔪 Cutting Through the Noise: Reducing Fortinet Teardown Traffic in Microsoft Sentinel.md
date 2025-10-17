@@ -80,7 +80,7 @@ I refine my Sentinel ingestion rules using **KQL-based filters** that exclude te
 
 Here’s the core Fortinet logic in KQL for the DCR rule. DCRs are pushed via **JSON format** so you _can't just copy and paste_ the below KQL (even though it works in the Log blade) into the Transformation Editor; only simplified KQL works here because as a DCR it gets applied prior to ingestion. Many of the advanced functions leveraged below, such as Coalesce() simply will not work in the TransformKQL window. You can, however, copy this KQL into the **Log** blade in Sentinel to test and confirm that the logic works though:
 
-```bash
+```kql
 CommonSecurityLog
 | where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"
 | extend _msg = tostring(coalesce(Message, Activity))
@@ -162,7 +162,7 @@ Microsoft Learn
 
 Here's an adjusted, simplified iteration of the previous KQL query listed above, but this one is below is compatible and can be pasted directly into the TransformKQL window:
 
-```bash
+```kql
 source   // Start from your chosen source table (e.g., CommonSecurityLog, Syslog, etc.).
 | where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  // Keep only Fortinet events; match explicit vendor name or products that start with “Fortigate”.
 | extend tmpMsg = tostring(columnifexists("Message",""))    // Create a temp column from Message if it exists; otherwise default to empty string. columnifexists() prevents runtime errors when a column is missing.
@@ -404,7 +404,7 @@ And that's it! Now we just wait a few minutes and then query for any of the netw
 
 The following KQL query will show you if any of our tuned out traffic has made it to Sentinel in the last 5 minutes:
 
-```bash
+```kql
 CommonSecurityLog
 | where TimeGenerated > ago(5m)
 | where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  
@@ -454,7 +454,7 @@ Verify and make sure the DCR and LAW are in the same region [(This is the #1 cau
 
 After a few minutes, run a quick sanity-check query:
 
-```bash
+```kql
 CommonSecurityLog
 | where TimeGenerated > ago(5m)
 | where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  
