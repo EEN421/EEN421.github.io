@@ -357,9 +357,62 @@ First, we need to navigate to the **Sentinel > Content Management > Content Hub*
 
 <br/>
 
+Once you find and select it, a fly-out will pop from the right hand side with an **Install** button:
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_Install.png)
+
+<br/>
+
+Now that you've installed it from the Content Hub, you can open it by navigating to **Threat Management > Workbooks > Templates** and searching for **Data Collection Toolkit**. Select the workbook, then click on **View saved workbook**:
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_Open%20Workbook.png)
+
+<br/>
+
+Chances are... if you're reading this far it's because you've already got a DCR in place to collect your Fortinet logs so lets look at how to adjust an existing DCR with our transformationKQL next.
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_ModifyDCR.png)
+
+<br/>
+
+This will show you a list of existing DCR rules in play:
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_ModifyDCRRuleList.png)
+
+<br/>
+
+Select the DCR rule responsible for collecting Fortinet logs, then click on **Modify**:
+
+![](/assets/img/Fortinet%20DCR/ModifyDCR.png)
+
+<br/>
+
+Find the right spot under **dataFlows** to insert your **"transformKql"** JSON statement as described in the commented out JSON example earlier and paste it in, illustrated below:
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_transformKql%20Statement%20for%20DCR_JSON.png)
+
+<br/>
+
+Next we need to **PUT** the new DCR template to production with the **Deploy Update** button:
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_Deploy.png)
+
+<br/>
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_PUT%20succeeded.png)
+
+<br/>
+
+Confirm your deployment:
+
+![](/assets/img/Fortinet%20DCR/DCRToolkit_UpdateDCR_Confirmation.png)
+
+<br/>
 
 
-# Deploy the DCR Template via Azure CLI
+
+
+# Deploy the DCR Template via Azure CLI [Optional]
 
 Step 1 - login to Azure CLI and set Subscription: 
 
