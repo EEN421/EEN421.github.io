@@ -369,7 +369,11 @@ Now that you've installed it from the Content Hub, you can open it by navigating
 
 <br/>
 
-Chances are... if you're reading this far it's because you've already got a DCR in place to collect your Fortinet logs so lets look at how to adjust an existing DCR with our transformationKQL next.
+If you're starting from scratch, you can pretty much copy/paste the template described earlier, preformatted with the network traffic teardown exclusions built-in from [here on my Github](https://github.com/EEN421/Sentinel_Cost_Optimization/blob/Main/Fortinet/Fortinet-DCR-Template.json) to get you started. 
+
+Chances are, though.. if you're reading this far it's because you've already got a DCR in place to collect your Fortinet logs and are concerned about the cost so lets look at how to **Review/Modify** an existing DCR with our transformationKQL for disregarding network teardown traffic for Fortinet firewalls next. 
+
+Select your **Subscription** and **Workspace** from the dropdowns, then select **Review/Modify DCR Rules**:
 
 ![](/assets/img/Fortinet%20DCR/DCRToolkit_ModifyDCR.png)
 
@@ -391,6 +395,8 @@ Find the right spot under **dataFlows** to insert your **"transformKql"** JSON s
 
 ![](/assets/img/Fortinet%20DCR/DCRToolkit_transformKql%20Statement%20for%20DCR_JSON.png)
 
+> ⚠️ If you are **modifying** and existing DCR that _already has a **transformKql** statement_, you should copy it into chatGPT along with our Fortinet transformKql statement and **merge** them, then paste the result back here as a single **transformKql** statement. Make sure to backup the original **transformKql** statement so you can revert back and **always check with the Detection Engineer that built the DCR if you're unsure!** Lastly, definitely make sure they are at least notified if you make any changes. Your SOC will thank you later &#x1F600;	
+
 <br/>
 
 Next we need to **PUT** the new DCR template to production with the **Deploy Update** button:
@@ -409,8 +415,20 @@ Confirm your deployment:
 
 <br/>
 
+And that's it! Now we just wait a few minutes and then query for any of the network teardown traffic we just tuned out and see if our DCR rule did the trick. 
 
+The following KQL query will show you if any of our tuned out traffic has made it to Sentinel in the last 5 minutes:
 
+```bash
+CommonSecurityLog
+| where TimeGenerated > ago(5m)
+| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  
+| where Activity contains "close"
+```
+
+![](/assets/img/Fortinet%20DCR/Success.png)
+
+<br/>
 
 # Deploy the DCR Template via Azure CLI [Optional]
 
@@ -448,17 +466,23 @@ az monitor data-collection rule association create \
 > ⚠️ Note: The **Association** command is part of the **monitor-control-service extension**; the CLI installs it automatically the first time you call it.
 
 Verify and make sure the DCR and LAW are in the same region [(This is the #1 cause of “destination missing” or silent failures).](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection?utm_source=chatgpt.com)
-After some traffic, run a quick sanity query:
+
+After a few minutes, run a quick sanity-check query:
+
 ```bash
 CommonSecurityLog
-| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"
-| where Message has "traffic:" or Activity has "traffic:"
+| where TimeGenerated > ago(5m)
+| where DeviceVendor == "Fortinet" or DeviceProduct startswith "Fortigate"  
+| where Activity contains "close"
 ```
+
+![](/assets/img/Fortinet%20DCR/Success.png)
 
 <br/>
 <br/>
 
 # 🧠 Ian's Insights & Key Takeaways for Other Security Teams
+
 Noise reduction isn’t just about saving money — it’s about sharpening focus.
 By filtering teardown traffic, we transformed our firewalls from noisy log generators into **high-value security signal providers**.
 * **Don’t ingest everything.** More logs ≠ more visibility. Focus on what helps you detect and respond.
