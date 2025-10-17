@@ -514,7 +514,7 @@ Hanley • DevSecOps Dad
 
 - [coalesce() function (Kusto) — valid in general KQL, but not in DCR transforms per the supported list; this is why your Log query worked but the transform didn’t.](https://learn.microsoft.com/en-us/kusto/query/coalesce-function?view=microsoft-fabric)
 
-https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection?utm_source=chatgpt.com
+- [Data collection in Azure Monitor — overview of the data collection process, including DCRs, agents, and pipeline architecture.](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection)
 
 <br/>
 <br/>
