@@ -211,7 +211,7 @@ After taking into account all of the above, here's what your 1-line JSON-ready t
 
 Take the above line and paste it into the following JSON DCR template for Fortinet via AMA as illustrated below, about 2/3 of the way down, where it says ```"transformKql":```:
 
-```json
+```kql
 // Author: Ian D. Hanley | LinkedIn: /in/ianhanley/ | Twitter: @IanDHanley | Github: https://github.com/EEN421 | Blog: Hanley.cloud / DevSecOpsDad.com
 // This KQL filter targets Fortinet/Fortigate logs and removes connection teardown or session-close events (like FINs, resets, and timeouts) at ingestion, ensuring only active or meaningful network traffic is retained for analysis.
 
