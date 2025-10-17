@@ -298,23 +298,7 @@ Take the above line and paste it into the following JSON DCR template for Fortin
         // This runs before the data is written to Log Analytics.
         // In this case, it filters out Fortinet connection teardown events
         // to reduce noise and ingestion cost.
-        "transformKql": "source\n"
-          + "| where DeviceVendor == \"Fortinet\" or DeviceProduct startswith \"Fortigate\"\n"
-          + "| extend tmpMsg = tostring(columnifexists(\"Message\",\"\"))\n"
-          + "| extend tmpAct = tostring(columnifexists(\"Activity\",\"\"))\n"
-          + "| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)\n"
-          + "| where tmpCombined !has \"traffic:forward close\"\n"
-          + "| where tmpCombined !has \"traffic:forward client-rst\"\n"
-          + "| where tmpCombined !has \"traffic:forward server-rst\"\n"
-          + "| where tmpCombined !has \"traffic:forward timeout\"\n"
-          + "| where tmpCombined !has \"traffic:forward cancel\"\n"
-          + "| where tmpCombined !has \"traffic:forward client-fin\"\n"
-          + "| where tmpCombined !has \"traffic:forward server-fin\"\n"
-          + "| where tmpCombined !has \"traffic:local close\"\n"
-          + "| where tmpCombined !has \"traffic:local client-rst\"\n"
-          + "| where tmpCombined !has \"traffic:local timeout\"\n"
-          + "| where tmpCombined !has \"traffic:local server-rst\"\n"
-          + "| project-away tmpMsg, tmpAct, tmpCombined",
+       👉 "transformKql": "transformKql": "source\n| where DeviceVendor == \"Fortinet\" or DeviceProduct startswith \"Fortigate\"\n| extend tmpMsg = tostring(columnifexists(\"Message\",\"\"))\n| extend tmpAct = tostring(columnifexists(\"Activity\",\"\"))\n| extend tmpCombined = iff(isnotempty(tmpMsg), tmpMsg, tmpAct)\n| where tmpCombined !has \"traffic:forward close\"\n| where tmpCombined !has \"traffic:forward client-rst\"\n| where tmpCombined !has \"traffic:forward server-rst\"\n| where tmpCombined !has \"traffic:forward timeout\"\n| where tmpCombined !has \"traffic:forward cancel\"\n| where tmpCombined !has \"traffic:forward client-fin\"\n| where tmpCombined !has \"traffic:forward server-fin\"\n| where tmpCombined !has \"traffic:local close\"\n| where tmpCombined !has \"traffic:local client-rst\"\n| where tmpCombined !has \"traffic:local timeout\"\n| where tmpCombined !has \"traffic:local server-rst\"\n| project-away tmpMsg, tmpAct, tmpCombined",
 
         // Destination reference — must match the logical name under "destinations".
         "destinations": [
