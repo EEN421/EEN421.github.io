@@ -5,7 +5,7 @@ At first glance, they look harmless — just logs marking the end of a session. 
 
 Every log you ingest should earn its place by delivering detection value 🛡️ or investigation value 🔍 — and Fortinet **teardown traffic** fails that test ❌.
 
-This post breaks down what I've learned about Data Collection Rules (DCRs), Fortinet logs, and how to tune them to keep the signal 📡 — _without paying for the noise.🤑_
+This post breaks down what I've learned about Data Collection Rules (DCRs), Fortinet logs, and how to tune them to keep the signal 📡 — _without paying for the noise_.🤑
 
 <br/>
 <br/>
@@ -14,7 +14,7 @@ This post breaks down what I've learned about Data Collection Rules (DCRs), Fort
 - 🔍 Identify The Problem: Too Much Teardown, Too Little Value
 - 💡 Explore the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut
 - ⚡ Build out our DCR Logic for Fortinet
-- 🔧 Convert our query logic into a Data Collection Rule (DCR) transformation that stops them before ingestion
+- 🔧 Convert our query logic into a Data Collection Rule (DCR)
 - 🧪 Build our DCR in JSON
 - 👌 Leverage the DCR Toolkit Workbook to Manage DCRs
 - 🚀 Deploy the DCR Template via Azure CLI
