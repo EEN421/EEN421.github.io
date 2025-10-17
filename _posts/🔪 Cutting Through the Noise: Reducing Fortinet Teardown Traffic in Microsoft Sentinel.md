@@ -350,6 +350,15 @@ Take the above line and paste it into the following JSON DCR template for Fortin
 <br/>
 <br/>
 
+# Leverage the DCR Toolkit Workbook to Manage DCRs
+First, we need to navigate to the **Sentinel > Content Management > Content Hub** and search for **Data Collection Toolkit**:
+
+![](/assets/img//Fortinet%20DCR/ContentHub_DCRToolkit.png)
+
+<br/>
+
+
+
 # Deploy the DCR Template via Azure CLI
 
 Step 1 - login to Azure CLI and set Subscription: 
