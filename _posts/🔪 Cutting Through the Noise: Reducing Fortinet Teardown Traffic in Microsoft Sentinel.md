@@ -15,7 +15,8 @@ This post breaks down what I've learned about Data Collection Rules (DCRs), Fort
 - 💡 Explore the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut
 - ⚡ Build out our DCR Logic for Fortinet
 - 🔧 Convert our query logic into a Data Collection Rule (DCR) transformation that stops them before ingestion
-- 🧪 Add our DCR Rule to a JSON DCR Template
+- 🧪 Build our DCR in JSON
+- 👌 Leverage the DCR Toolkit Workbook to Manage DCRs
 - 🚀 Deploy the DCR Template via Azure CLI
 - ⚠️ Avoid the gotchas that cause DCRs to silently fail
 - 🧠 Ian's Insights & Key Takeaways for Security Teams
@@ -73,7 +74,7 @@ That’s when I stepped back and asked: *do teardown logs really help us detect 
 <br/>
 <br/>
 
-⚡ Build out our DCR Logic for Fortinet to Filter the Noise, not the Signal
+# ⚡ Build out our DCR Logic for Fortinet to Filter the Noise, not the Signal
 
 I refine my Sentinel ingestion rules using **KQL-based filters** that exclude teardown-only messages while retaining high-value network telemetry.
 
@@ -185,7 +186,7 @@ source   // Start from your chosen source table (e.g., CommonSecurityLog, Syslog
 <br/>
 <br/>
 
-# Building the DCR in JSON
+# 🧪 Build our DCR in JSON
 Now that we have our DCR-ready KQL filter ready to rock, it still needs a few adjustments in order to fit into a DCR JSON template. Here are things we need to fix:
 
 - Remove all KQL comments: DCR transformations don’t allow // ... comments. Strip every inline/explanatory comment.
@@ -350,7 +351,7 @@ Take the above line and paste it into the following JSON DCR template for Fortin
 <br/>
 <br/>
 
-# Leverage the DCR Toolkit Workbook to Manage DCRs
+# 👌 Leverage the DCR Toolkit Workbook to Manage DCRs
 First, we need to navigate to the **Sentinel > Content Management > Content Hub** and search for **Data Collection Toolkit**:
 
 ![](/assets/img//Fortinet%20DCR/ContentHub_DCRToolkit.png)
@@ -430,7 +431,7 @@ CommonSecurityLog
 
 <br/>
 
-# Deploy the DCR Template via Azure CLI [Optional]
+# 🚀 Deploy the DCR Template via Azure CLI [Optional]
 
 Step 1 - login to Azure CLI and set Subscription: 
 
@@ -495,7 +496,7 @@ That’s the difference between drowning in data and acting on intelligence.
 <br/>
 <br/>
 
-# Thanks for Reading!
+# 📖 Thanks for Reading!
  &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
 Hanley • DevSecOps Dad
 
