@@ -38,6 +38,11 @@ Multiply that by thousands of clients and microservices, and teardown events qui
 <br/>
 <br/>
 
+![](/assets/img/Fortinet%20DCR/Nu%20Noize.png)
+
+<br/>
+<br/>
+
 # 💡 Detection versus Investigation Value Breakdown - Why Network Teardown Log Traffic Doesn't Make the Cut
 
 Before diving into KQL and JSON, it’s worth defining what “value” means in a logging context; I like to break down logs into 2 categories that either provide Detection Value or Investigation value:
