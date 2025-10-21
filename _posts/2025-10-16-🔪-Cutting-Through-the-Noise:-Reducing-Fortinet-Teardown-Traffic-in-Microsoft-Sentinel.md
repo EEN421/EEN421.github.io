@@ -10,6 +10,11 @@ This post breaks down what I've learned about Data Collection Rules (DCRs), Fort
 <br/>
 <br/>
 
+![](/assets/img/Fortinet%20DCR/Nu%20Noize.png)
+
+<br/>
+<br/>
+
 # In this Post We Will:
 - 🔍 Identify The Problem: Too Much Teardown, Too Little Value
 - 💡 Explore the “Detection vs. Investigation Value” framework — and why teardown logs don’t make the cut
@@ -25,10 +30,6 @@ This post breaks down what I've learned about Data Collection Rules (DCRs), Fort
 <br/>
 <br/>
 
-![](/assets/img/Fortinet%20DCR/Nu%20Noize.png)
-
-<br/>
-<br/>
 
 # 🔍 The Problem: Too Much Teardown, Too Little Value
 
