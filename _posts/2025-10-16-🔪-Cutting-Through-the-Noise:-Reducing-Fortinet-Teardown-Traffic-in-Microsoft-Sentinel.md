@@ -25,6 +25,11 @@ This post breaks down what I've learned about Data Collection Rules (DCRs), Fort
 <br/>
 <br/>
 
+![](/assets/img/Fortinet%20DCR/Nu%20Noize.png)
+
+<br/>
+<br/>
+
 # 🔍 The Problem: Too Much Teardown, Too Little Value
 
 In Fortinet network traffic logs, every connection generates *two* major events:
@@ -35,12 +40,6 @@ In Fortinet network traffic logs, every connection generates *two* major events:
 
 Multiply that by thousands of clients and microservices, and teardown events quickly dominate your ingestion stream.
 
-<br/>
-<br/>
-
-![](/assets/img/Fortinet%20DCR/Nu%20Noize.png)
-
-<br/>
 <br/>
 
 # 💡 Detection versus Investigation Value Breakdown - Why Network Teardown Log Traffic Doesn't Make the Cut
