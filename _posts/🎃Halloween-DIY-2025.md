@@ -5,10 +5,21 @@
 <br/>
 <br/>
 
-# In This Post We Will: 
-- 🛠️ Build our own driver for the GC9A01 to control the display from a Raspberry Pi.
-- 👁️ Program An Animated Eyeball in a Jar (Eye of Newt, anyone?)
-- 🎨 Customize our display with different Eye templates (Goat, Dragon, White-Walker, etc.)
+# In This Post We Will
+### Part 1 — Build the GC9A01 Eye
+- 🔌 Set up a headless Raspberry Pi (Bookworm Lite 32-bit, SSH).
+- 🧪 Enable SPI and install required packages (Pillow, NumPy, spidev).
+- 🛠️ Create the project folder and build a GC9A01 driver (SPI + RGB565).
+- 👁️ Run animated “eyeball-in-a-jar” scripts and swap eye templates (Goat, Dragon, White-Walker).
+
+<br/>
+
+### Part 2 — Deploy, Customize & Optimize
+- ⚙️ Auto-start on boot with systemd (create, enable, manage eyeball.service).
+- 🕹️ Use control commands & logs to start/stop/restart and troubleshoot.
+- 🎨 Customize colors/iris effects and switch between eye scripts quickly.
+- 🩺 Diagnose display issues with single-color and quadrant tests; apply full init & gamma.
+- 🚀 Optimize FPS using NumPy vectorization, chunked SPI writes, and higher SPI clock (≈6× boost).
 
 <br/>
 
@@ -51,7 +62,9 @@
 
 <br/>
 
->&#128161; IMPORTANT --> Make sure you grab the _legacy 32bit Bookworm Lite OS with Security Updates and **no desktop**_; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween25/32BitOSLite.png)
+>&#128161; IMPORTANT --> Make sure you grab the _legacy 32bit Bookworm Lite OS with Security Updates and **no desktop**_; as this software is **not supported as-is on the latest Bookworm OS** 👇
+
+![](/assets/img/Halloween25/32BitOSLite.png)
 
 <br/>
 
@@ -110,7 +123,7 @@ Navigate to:
 After reboot, verify SPI is enabled:
 ```bash
 ls /dev/spidev*
-Should show: /dev/spidev0.0  /dev/spidev0.1
+Should show: /dev/spidev0.0  /dev/spidev0.1  # <-- Look for both 0.0 and 0.1
 ```
 
 <br/>
@@ -663,7 +676,10 @@ After setup, you'll have:
 /etc/systemd/system/
 └── eye.service              # Auto-start service
 ```
+<br/>
+
 ---
+
 <br/>
 <br/>
 <br/>
@@ -977,3 +993,29 @@ Impact: Modest improvement, but every millisecond counts!
 Lesson: Think in batches, not individuals. NumPy can turn 57,600 pixel operations into one efficient computation.
 This project is a perfect example of methodical debugging and performance tuning paying off! 🔍🚀🎉
 
+<br/>
+<br/>
+<br/>
+<br/>
+
+# Thanks for Reading!
+ I hope this was a much fun reading as it was writing. Happy Halloween!  
+
+💡 If you’ve enjoyed this post, you’ll love my book Ultimate Microsoft XDR for Full Spectrum Cyber Defense.
+
+👉 Get your copy here: [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
+
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
