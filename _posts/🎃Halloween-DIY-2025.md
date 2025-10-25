@@ -1,4 +1,4 @@
-🎃 Let's get lit! 🎃 
+
 
 # Complete Step-by-Step Guide: GC9A01 Animated Eye
 ## From Zero to Eyeball-in-a-jar
@@ -36,7 +36,7 @@
 **3.** Select your hardware, desired OS, and destination storage (SD Card) as illustrated below... <br/>
 ![](/assets/img/Halloween24/pi_image_fin.png) <br/>
 
->&#128161; IMPORTANT --> Make sure you grab the **legacy 32bit Bullseye OS**; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
+>&#128161; IMPORTANT --> Make sure you grab the _legacy 32bit Bookworm OS with Security Updates and **no desktop**_; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
 
 <br/>
 
