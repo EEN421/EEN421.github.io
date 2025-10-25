@@ -967,8 +967,7 @@ Impact: Modest improvement, but every millisecond counts!
 
 <br/>
 <br/>
-<br/>
-<br/>
+
 
 
 # 🧠 Key Takeaways
@@ -994,6 +993,26 @@ Lesson: Think in batches, not individuals. NumPy can turn 57,600 pixel operation
 This project is a perfect example of methodical debugging and performance tuning paying off! 🔍🚀🎉
 
 <br/>
+<br/>
+<br/>
+<br/>
+
+# In This Post We
+### Part 1 — Built the GC9A01 Eye
+- 🔌 Set up a headless Raspberry Pi (Bookworm Lite 32-bit, SSH).
+- 🧪 Enabled SPI and installed required packages (Pillow, NumPy, spidev).
+- 🛠️ Created the project folder and built a GC9A01 driver (SPI + RGB565).
+- 👁️ Ran animated “eyeball-in-a-jar” scripts and swapped eye templates (Goat, Dragon, White-Walker).
+
+<br/>
+
+### Part 2 — Deployed, Customized & Optimized
+- ⚙️ Auto-start on boot with systemd (create, enable, manage eyeball.service).
+- 🕹️ Used control commands & logs to start/stop/restart and troubleshoot.
+- 🎨 Customized colors/iris effects and switched between eye scripts quickly.
+- 🩺 Diagnosed display issues with single-color and quadrant tests; applied full init & gamma.
+- 🚀 Optimized FPS using NumPy vectorization, chunked SPI writes, and higher SPI clock (≈6× boost).
+
 <br/>
 <br/>
 <br/>
