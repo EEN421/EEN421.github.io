@@ -1,7 +1,14 @@
 
+# Introduction & Use Case
+🕸️ Every October, the soldering irons come out ⚡, the LEDs start to flicker🚨, and I find myself knee-deep in code👨‍💻, hot glue🧴, and pumpkin guts🎃. It’s tradition at this point — a blend of maker-mayhem and mild madness that turns my workshop into something between a tech lab and Frankenstein’s garage. So fire up your Pi, cue up your synthwave playlist, and let’s raise a few spirits — digitally, of course. 👻
 
-# Complete Step-by-Step Guide: GC9A01 Animated Eye
-## From Zero to Eyeball-in-a-jar
+<br/>
+<br/>
+
+# In This Post We Will: 
+- 🛠️ Build our own driver for the GC9A01 to control the display from a Raspberry Pi.
+- 👁️ Program An Animated Eyeball in a Jar (Eye of Newt, anyone?)
+- 🎨 Customize our display with different Eye templates (Goat, Dragon, White-Walker, etc.)
 
 <br/>
 
@@ -10,17 +17,18 @@
 <br/>
 <br/>
 
-# Hareware Prerequisites
+# Hardware Prerequisites
 - Raspberry Pi board (tested on **Pi3ModelB+**, **PiZeroWH**, and **PiZero2WH**)
 - [GC9A01 1.28" round display](https://www.amazon.com/dp/B0F21G56DB?_encoding=UTF8&psc=1&ref_=cm_sw_r_cp_ud_dp_VQ9BZFGCGSXV7TZBTN7A_6)
 - [Pisugar S Portable 1200 mAh UPS Lithium Battery Pwnagotchi Power Module Power Supply](https://a.co/d/2XTEycB)
 - [Breadboard Jumper Wires (female on both ends)](https://a.co/d/8qe2rfq)
+- [Mason Jar](https://a.co/d/4YH3Baj)
 
 
 <br/>
 <br/>
 
-# Perform a Headless Raspberry Pi Setup (BullseyeOS)
+# Perform a Headless Raspberry Pi Setup (BookwormOS)
 
 
 **1.** Grab the OS image from the [official Raspberry Pi site](https://www.raspberrypi.com/software/operating-systems/) (don't extract, leave it as is).
@@ -108,7 +116,7 @@ Should show: /dev/spidev0.0  /dev/spidev0.1
 <br/>
 <br/>
 
-# PHASE 2: Install Dependencies (5 minutes)
+# PHASE 2: Install Dependencies 
 ```bash
 # Update system
 sudo apt-get update && sudo apt-get upgrade -y
@@ -123,7 +131,7 @@ sudo pip3 install spidev --break-system-packages
 <br/>
 <br/>
 
-# PHASE 3: Create Project Directory (1 minute)
+# PHASE 3: Create Project Directory 
 ```bash
 # Create directory
 cd ~
@@ -502,7 +510,7 @@ Copy and paste the different [python powered eyeballs from my Github page](https
 
 # PHASE 7: Set Up Auto-Start on Boot
 """
-Choose which eye you want to run on boot, then:
+Note which eye you want to run on boot, then:
 """
 
 ```bash
@@ -510,7 +518,7 @@ Choose which eye you want to run on boot, then:
 sudo nano /etc/systemd/system/eyeball.service
 ```
 
-Paste this (change the script name if using a differnt eye.py file): 
+...and paste the following: <br/>
 
 ```bash
 ini[Unit]
@@ -527,24 +535,26 @@ RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
-Save with Ctrl+X, Y, Enter.
-Enable auto-start:
-bash# Reload systemd
+```
+
+Save with Ctrl+X, Y, Enter, then enable auto-start:
+```bash
+# Reload systemd
 sudo systemctl daemon-reload
 ```
 
 
-# Enable service to start on boot
+## Enable service to start on boot
 ```bash
 sudo systemctl enable eyeball.service
 ```
 
-# Start it now (test without rebooting)
+## Start it now (test without rebooting)
 ```bash
 sudo systemctl start eyeball.service
 ```
 
-# Check status
+## Check status
 ```bash
 sudo systemctl status eyeball.service
 ```
@@ -578,12 +588,16 @@ sudo journalctl -u eyeball.service -f
 sudo journalctl -u eyeball.service -n 50
 ```
 
-# Customization Tips
+## Customization Tips
 Change Eye Colors
 ```bash
 sudo nano ~/gc9a01_eye/eyeball.py
+```
+
 Find these lines near the top and modify:
-python# Make it more orange/red
+
+```python
+# Make it more orange/red
 IRIS_COLOR = (255, 100, 0)
 FLAME_INNER = (255, 150, 0)
 
@@ -595,7 +609,7 @@ FLAME_INNER = (150, 255, 100)
 sudo systemctl restart eye.service
 ```
 
-Switch to Different Eye
+## Switch to Different Eye
 ```bash
 # Edit service file
 sudo nano /etc/systemd/system/eye.service
@@ -608,22 +622,30 @@ sudo systemctl daemon-reload
 sudo systemctl restart eye.service
 ```
 
-# Quick Troubleshooting
+## Quick Troubleshooting
 Eye doesn't start on boot:
 ```bash
-bashsudo systemctl status eye.service
+sudo systemctl status eye.service
 sudo journalctl -u eye.service -n 50
-Display shows nothing:
-bash# Check wiring
-# Verify SPI is enabled
-ls /dev/spidev*
-Low FPS:
-bash# Check CPU temperature
-vcgencmd measure_temp
+```
+<br/>
 
-# If overheating, add cooling
-Need to stop it quickly:
-bashsudo systemctl stop eye.service
+Display shows nothing:
+```bash
+# Check wiring & Verify SPI is enabled
+ls /dev/spidev*
+```
+<br/>
+
+Low FPS:
+```bash
+# Check CPU temperature
+vcgencmd measure_temp
+```
+
+### If overheating/Need to stop it quickly:
+```bash
+sudo systemctl stop eye.service
 ```
 
 ---
@@ -632,7 +654,7 @@ bashsudo systemctl stop eye.service
 
 After setup, you'll have:
 ```
-/home/cyclops/gc9a01_eye/
+/home/usr/gc9a01_eye/
 ├── gc9a01_driver.py          # Display driver
 ├── fire_dragon.py            # Fiery dragon eye
 ├── bloodshot_eye.py          # Bloodshot eye
@@ -640,92 +662,62 @@ After setup, you'll have:
 
 /etc/systemd/system/
 └── eye.service              # Auto-start service
-
+```
 ---
+<br/>
+<br/>
+<br/>
+<br/>
 
-✅ Success Checklist
+# Degubbing the Display Voltage and Optimizing the Driver for Maximum FPS
+At first the display would not behave. My first attempt to draw basic PIL circles didn't look right. It took some trial and error to rule out a hardware or soldering fault. At first it would flicker on boot, and the colours with very dark and blurred, with some shapes failing to draw outright.
 
- SPI enabled
- Dependencies installed
- Driver created (gc9a01_driver.py)
- Eye script created (bloodshot.py)
- Eye runs manually with sudo python3
- FPS is 8+ (acceptable performance)
- Service file created
- Auto-start enabled
- Tested reboot - eye starts automatically
+<br/>
+<br/>
 
-You now have a fully working animated eyeball that starts on boot! To change your eye, update the 👁️
-
-
-
-
-
-# The Great **GC9A01** Color Mystery: A Debugging Story 🔍
-
-This is a perfect example of hardware debugging! Here's how we solved it:
-
----
-
-## The Problem
-
-When we first got your display working, we ran into a frustrating issue:
-
-**Symptoms:**
-- ✅ Display turned white when we sent solid white color (so wiring was correct!)
-- ✅ SPI communication was working
-- ❌ But when we tried to draw an animated eye: got weird results
-  - "Dark ring with a white circle in the middle"
-  - Shapes were wrong
-  - Colors looked completely off
-
-**First attempt:** Basic eye with PIL circles → Didn't work right
-
----
-
-## The Breakthrough: The Color Test
+## The Breakthrough: The Colour Test
 
 I created a simple test that filled the entire screen with different solid colors in sequence:
 
 ```python
 # Test each color one by one
-fill_color(255, 0, 0, "RED")      # Should be red
-fill_color(0, 255, 0, "GREEN")    # Should be green  
-fill_color(0, 0, 255, "BLUE")     # Should be blue
-fill_color(255, 255, 0, "YELLOW") # Should be yellow
-fill_color(0, 255, 255, "CYAN")   # Should be cyan
-fill_color(255, 0, 255, "MAGENTA")# Should be magenta
-fill_color(255, 255, 255, "WHITE")# Should be white
+fill_color(255, 0, 0, "RED")        # Should be red
+fill_color(0, 255, 0, "GREEN")      # Should be green  
+fill_color(0, 0, 255, "BLUE")       # Should be blue
+fill_color(255, 255, 0, "YELLOW")   # Should be yellow
+fill_color(0, 255, 255, "CYAN")     # Should be cyan
+fill_color(255, 0, 255, "MAGENTA")  # Should be magenta
+fill_color(255, 255, 255, "WHITE")  # Should be white
 ```
+<br/>
+<br/> 
 
-### Your Results Were Bizarre:
+### Colour Test Results:
 
-❌ **RED**: Dark/invisible - couldn't see it  
-❌ **GREEN**: Dark/invisible - couldn't see it  
-❌ **BLUE**: Dark/invisible - couldn't see it  
-✅ **YELLOW**: Visible!  
-✅ **CYAN**: Visible!  
-✅ **MAGENTA**: Visible!  
-✅ **WHITE**: Visible!
+- ❌ **RED**: Dark/invisible - couldn't see it  
+- ❌ **GREEN**: Dark/invisible - couldn't see it  
+- ❌ **BLUE**: Dark/invisible - couldn't see it  
 
----
+<br/>
 
-## What This Told Us (The Eureka Moment!)
+- ✅ **YELLOW**: Visible!  
+- ✅ **CYAN**: Visible!  
+- ✅ **MAGENTA**: Visible!  
+- ✅ **WHITE**: Visible!
+
+<br/>
 
 This was **THE KEY CLUE**:
-
 - **Single color channels** (pure R, G, or B) = invisible/dark
 - **Mixed color channels** (combinations) = visible!
 
-This pattern meant:
+_This pattern means:_
 
 > **The display's voltage levels and gamma correction were not properly configured!**
 
-When you send pure red (255, 0, 0), the display needs proper voltage levels to drive just the red sub-pixels. Without correct power settings, single colors appeared too dim or dark.
+When you send pure red (255, 0, 0), the display needs proper voltage levels to drive just the red sub-pixels. Without correct power settings, single colors appeared too dim or dark. But when you sent yellow (255, 255, 0), you're driving BOTH red AND green together, which apparently had enough combined voltage to be visible⚡.
 
-But when you sent yellow (255, 255, 0), you're driving BOTH red AND green together, which apparently had enough combined voltage to be visible.
-
----
+<br/>
 
 ## The Solution: Full Power Initialization
 
@@ -745,7 +737,7 @@ def init(self):
 
 This was missing **critical power and gamma settings!**
 
-The GC9A01 datasheet shows it needs **dozens of voltage and gamma registers** configured:
+The [GC9A01 datasheet](https://www.dlcdisplay.com/npublic/opdfjs/web/viewer.html?file=https%3A%2F%2Fomo-oss-file110.thefastfile.com%2Fportal-saas%2Fpg2024011918000385744%2Fcms%2Ffile%2Fgc9a01%20datasheet%20v1.1.pdf) shows it needs **dozens of voltage and gamma registers** configured:
 
 ```python
 # FULL INITIALIZATION (what fixed it)
@@ -768,7 +760,8 @@ def init(self):
     self.cmd(0x29)
 ```
 
----
+<br/>
+<br/>
 
 ## The Quadrant Test (Verification)
 
@@ -781,11 +774,10 @@ After adding the full initialization, I created a **4-quadrant test** to verify:
 # Bottom-right: MAGENTA
 ```
 
-You reported: **"I can't take a photo because my camera sees all the quadrants as 'white' given how bright the display is"**
+🎉 **SUCCESS!** I could see all 4 distinct colored quadrants!
 
-🎉 **SUCCESS!** The display was so bright now that your camera couldn't capture the individual colors - but you could see all 4 distinct colored quadrants with your eyes!
-
----
+<br/>
+<br/>
 
 ## Why This Happens: The Technical Explanation
 
@@ -798,7 +790,7 @@ LCDs need precise voltages to drive the liquid crystal layers:
 ### 2. **Gamma Correction**
 Human eyes don't perceive brightness linearly. A value of 128 doesn't look "half as bright" as 255.
 
-Gamma correction compensates:
+Gamma correction compensation:
 ```
 Without gamma: Input 128 → Display looks too dark
 With gamma:    Input 128 → Display adjusted → Looks "half bright" to human eye
@@ -808,102 +800,180 @@ The GC9A01 has gamma tables (those 0xF0, 0xF1, 0xF2, 0xF3 commands) that map inp
 
 ### 3. **Why Mixed Colors Worked**
 
-When you sent:
+When I sent:
 - **Red only (255, 0, 0)**: One set of sub-pixels trying to light up with wrong voltage = too dim
 - **Yellow (255, 255, 0)**: TWO sets of sub-pixels (red + green) = enough combined light to see
 
-It's like trying to light a room:
-- One dim bulb = can barely see (single color)
-- Two dim bulbs = enough light to navigate (mixed colors)
-- Proper wiring = all bulbs at full brightness (full initialization)
+<br/>
+<br/>
+<br/>
+<br/>
 
----
+# FPS Optimization Techniques for GC9A01 Display - a Performance Journey
+Here's how we went from 1.7 FPS → 10+ FPS (a 6x improvement!):
 
-## The Debugging Process Flow
-
+## Starting Point: 1.7 FPS 😢
+```python
+def show(self, image):
+    img = image.convert('RGB')
+    
+    self.cmd(0x2A, 0, 0, 0, 239)
+    self.cmd(0x2B, 0, 0, 0, 239)
+    self.cmd(0x2C)
+    
+    GPIO.output(DC, GPIO.HIGH)
+    
+    # SLOW: Processing one pixel at a time, one line at a time
+    for y in range(self.height):
+        line = []
+        for x in range(self.width):
+            r, g, b = img.getpixel((x, y))  # ❌ SLOW: PIL getpixel() is expensive
+            rgb565 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
+            line.append(rgb565 >> 8)
+            line.append(rgb565 & 0xFF)
+        self.spi.writebytes(line)  # ❌ SLOW: Many small SPI transactions
 ```
-1. White test → ✅ Display physically works
-           ↓
-2. Animated eye → ❌ Looks wrong (dark shapes)
-           ↓
-3. Color test → 🔍 Discovery: single colors invisible!
-           ↓
-4. Research → "This looks like voltage/gamma issue"
-           ↓
-5. Add full init → 🎉 All colors work!
-           ↓
-6. Quadrant test → ✅ Verified success
-           ↓
-7. Optimize speed → numpy conversion (4→10 FPS)
+### Problems:
+- getpixel() is slow - Python function call overhead per pixel
+- Small SPI writes (480 bytes per line) - too many transactions
+- No optimization - pure Python loops
+
+<br/>
+<br/>
+
+## Optimization 1: Use PIL load() + Chunking (4.2 FPS) 📈
+```python
+def show(self, image):
+    img = image.convert('RGB')
+    
+    self.cmd(0x2A, 0, 0, 0, 239)
+    self.cmd(0x2B, 0, 0, 0, 239)
+    self.cmd(0x2C)
+    
+    GPIO.output(DC, GPIO.HIGH)
+    
+    # ✅ BETTER: Use pixels.load() instead of getpixel()
+    pixels = img.load()  # Faster pixel access
+    buf = []
+    
+    for y in range(self.height):
+        for x in range(self.width):
+            r, g, b = pixels[x, y]  # ✅ Faster than getpixel()
+            rgb565 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
+            buf.append(rgb565 >> 8)
+            buf.append(rgb565 & 0xFF)
+            
+            # ✅ Send in 4KB chunks instead of per-line
+            if len(buf) >= 4096:
+                self.spi.writebytes(buf)
+                buf = []
+    
+    if buf:
+        self.spi.writebytes(buf)
+```
+### Improvements:
+- pixels.load() → Direct pixel buffer access (faster than getpixel())
+- Chunking → Send 4KB at a time instead of 480 bytes
+- Reduced SPI transaction overhead
+- **Result:** 1.7 FPS → 4.2 FPS (2.5x faster)
+
+<br/>
+<br/>
+
+## Optimization 2: NumPy Vectorization (10+ FPS) 🚀
+```python
+import numpy as np  # ✅ Use NumPy for array operations
+
+def show_numpy(self, image):
+    # ✅ Convert entire image to NumPy array at once
+    img_array = np.array(image.convert('RGB'))
+    
+    # ✅ Extract color channels as arrays (vectorized operation)
+    r = img_array[:, :, 0].astype(np.uint16)  # All red pixels at once
+    g = img_array[:, :, 1].astype(np.uint16)  # All green pixels at once
+    b = img_array[:, :, 2].astype(np.uint16)  # All blue pixels at once
+    
+    # ✅ RGB565 conversion on ENTIRE ARRAY at once (NO LOOPS!)
+    # NumPy does this in optimized C code
+    rgb565 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
+    
+    # ✅ Split into bytes using NumPy operations
+    high = (rgb565 >> 8).astype(np.uint8)
+    low = (rgb565 & 0xFF).astype(np.uint8)
+    
+    # ✅ Interleave high/low bytes using NumPy array reshaping
+    buf = np.empty((self.height, self.width, 2), dtype=np.uint8)
+    buf[:, :, 0] = high
+    buf[:, :, 1] = low
+    
+    # ✅ Flatten to 1D array
+    data = buf.flatten().tolist()
+    
+    self.cmd(0x2A, 0, 0, 0, 239)
+    self.cmd(0x2B, 0, 0, 0, 239)
+    self.cmd(0x2C)
+    
+    GPIO.output(DC, GPIO.HIGH)
+    
+    # ✅ Still use chunking for SPI
+    chunk_size = 4096
+    for i in range(0, len(data), chunk_size):
+        self.spi.writebytes(data[i:i+chunk_size])
 ```
 
----
+### Key Advantages:
+- No Python loops - all math happens in compiled C code
+- SIMD operations - CPU can process multiple values simultaneously
+- Memory locality - better CPU cache usage
+- Vectorization - modern CPUs love this pattern
+- **Result:** 4.2 FPS → 10 FPS (2.4x faster, 6x total improvement!) 
 
-## Lessons Learned
 
-### 1. **Systematic Testing**
-We didn't just try random fixes. We:
-- Started simple (solid colors)
-- Isolated variables (one color at a time)
-- Found a pattern (mixed vs single)
-- Formed hypothesis (voltage issue)
-- Tested solution (full init)
-- Verified (quadrant test)
+<br/>
+<br/>
 
-### 2. **The Pattern Was Key**
-"Some colors work, others don't" immediately suggested **incomplete initialization**, not wiring or SPI issues.
+## Optimization 3: Increase SPI Speed (Minor boost)
+```python
+# Original
+self.spi.max_speed_hz = 40000000  # 40 MHz
 
-### 3. **Datasheets Matter**
-The GC9A01 datasheet has a recommended initialization sequence with 50+ register writes. Skipping steps = weird behavior!
+# Optimized
+self.spi.max_speed_hz = 60000000  # 60 MHz (50% faster SPI)
+```
 
-### 4. **Trust Your Hardware**
-Your wiring was perfect from the start. The issue was software configuration, not physical connections.
+### Why this helps:
+- We're sending 115,200 bytes per frame (240×240×2)
+- At 40 MHz: ~2.88ms transfer time
+- At 60 MHz: ~1.92ms transfer time
+- Saves ~1ms per frame
 
----
+Impact: Modest improvement, but every millisecond counts!
 
-## Common GC9A01 Pitfalls (What We Avoided)
+<br/>
+<br/>
+<br/>
+<br/>
 
-❌ **Wrong color order** (RGB vs BGR) → Would show wrong colors, not dark  
-❌ **Wrong SPI speed** → Would show noise/corruption, not selective darkness  
-❌ **Bad wiring** → Would show nothing or random pixels  
-✅ **Missing initialization** → Exactly what we had! Selective color issues
 
----
+# 🧠 Key Takeaways
+✅ Do This:
+- Use NumPy for bulk array operations — vectorize everything!
+- Chunk SPI writes to reduce transaction overhead.
+- Use the maximum safe SPI speed supported by your hardware.
+- Test primary colors individually first — red, green, blue, then combinations.
+- If you see odd selective behavior (some colors or patterns fail):
+    - → It’s rarely wiring or SPI. It’s usually initialization/configuration.
+- Read the display’s datasheet initialization section — those register values exist for a reason!
 
-## Why Online Tutorials Often Work "Out of the Box"
+❌ Avoid This
+- Per-pixel operations like getpixel()
+- Small SPI writes (per line or worse, per pixel)
+- Python loops for math-heavy operations
+- Unnecessary image conversions
 
-Many GC9A01 libraries use the **full initialization by default** because the authors learned this the hard way too!
+<br/>
 
-When I started with a "minimal" init to keep code simple, we hit the same trap that many beginners face.
+🎯 Result - 1.7 FPS → 10 FPS (≈6× improvement) — purely through software optimization and smarter testing.
+Lesson: Think in batches, not individuals. NumPy can turn 57,600 pixel operations into one efficient computation.
+This project is a perfect example of methodical debugging and performance tuning paying off! 🔍🚀🎉
 
----
-
-## The Happy Ending
-
-After adding the full initialization:
-- ✅ All colors work perfectly
-- ✅ Display is bright and vivid  
-- ✅ Dragon eye looks amazing
-- ✅ 8-10 FPS performance
-- ✅ Auto-starts on boot
-
-**Your display went from "barely working" to "production ready" just by properly configuring those internal registers!**
-
----
-
-## Key Takeaway for Future Projects
-
-**When testing displays:**
-
-1. **Always test primary colors individually first**
-   - Red, Green, Blue solo
-   - Then combinations
-
-2. **If you get weird selective behavior** (some things work, others don't):
-   - Not wiring
-   - Not SPI  
-   - Probably **initialization/configuration**
-
-3. **Read the datasheet initialization section** - those register values exist for a reason!
-
-This debugging session is a perfect example of methodical troubleshooting paying off! 🔍🎉
