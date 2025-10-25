@@ -10,12 +10,12 @@
 <br/>
 <br/>
 
-# Prerequisites
+# Hareware Prerequisites
 - Raspberry Pi board (tested on **Pi3ModelB+**, **PiZeroWH**, and **PiZero2WH**)
 - [GC9A01 1.28" round display](https://www.amazon.com/dp/B0F21G56DB?_encoding=UTF8&psc=1&ref_=cm_sw_r_cp_ud_dp_VQ9BZFGCGSXV7TZBTN7A_6)
-- Display wired correctly (we verified our wiring works!)
-- SSH or terminal access
-- Internet connection
+- [Pisugar S Portable 1200 mAh UPS Lithium Battery Pwnagotchi Power Module Power Supply](https://a.co/d/2XTEycB)
+- [Breadboard Jumper Wires (female on both ends)](https://a.co/d/8qe2rfq)
+
 
 <br/>
 <br/>
@@ -34,14 +34,26 @@
 <br/>
 
 **3.** Select your hardware, desired OS, and destination storage (SD Card) as illustrated below... <br/>
-![](/assets/img/Halloween24/pi_image_fin.png) <br/>
 
->&#128161; IMPORTANT --> Make sure you grab the _legacy 32bit Bookworm OS with Security Updates and **no desktop**_; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
+![](/assets/img/Halloween25/SelectHW.png)
 
 <br/>
 
+![](/assets/img/Halloween25/storage.png)
+
+<br/>
+
+>&#128161; IMPORTANT --> Make sure you grab the _legacy 32bit Bookworm Lite OS with Security Updates and **no desktop**_; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween25/32BitOSLite.png)
+
+<br/>
+
+![](/assets/img/Halloween25/RPI_Setup1.png) <br/><br/>
+
+<br/>
+<br/>
+
 **4.** Select **Next** and you will be prompted with the option to **edit OS settings**. Select **Edit** and enter your network SSID and PSK, as well as your desired username and password. <br/>
-![](/assets/img/Halloween24/pi_image_settings.png)
+![](/assets/img/Halloween25/OSCustomization_General.png)
 
 <br/>
 <br/>
@@ -53,22 +65,14 @@
 <br/>
 
 **6.** Click **Next** and let it burn! &#128293; <br/>
-![](/assets/img/Halloween24/pi_image_write.png) <br/>
+![](/assets/img/Halloween24/waiting.png) <br/>
 ![](/assets/img/Halloween24/pi_image_done.png)
 
 **7.** Drop the SD card into your Raspberry Pi board and boot it up.
 
 <br/>
 
-**8.** Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/))
-
-<br/>
-
-**9.** Login and do the needful: <br/>
-
-```bash
-sudo apt-get update && sudo apt-get upgrade
-```
+**8.** Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/)) and SSH into it.
 
 <br/>
 <br/>
@@ -76,7 +80,7 @@ sudo apt-get update && sudo apt-get upgrade
 <br/>
 
 
-# PHASE 1: Enable SPI (2 minutes)
+# PHASE 1: Enable SPI 
 ```bash
 # Enable SPI interface
 sudo raspi-config
@@ -88,6 +92,12 @@ Navigate to:
 - Select **Yes**
 - Select **Finish**
 - Select **Yes** to **reboot**
+
+<br/>
+
+![](/assets/img/Halloween25/enable%20SPI.png)
+
+<br/>
 
 After reboot, verify SPI is enabled:
 ```bash
@@ -122,9 +132,14 @@ cd gc9a01_eye
 ```
 
 <br/>
+
+![](/assets/img/Halloween25/mkdir.png)
+
+<br/>
 <br/>
 
-# PHASE 4: Create the Display Driver (3 minutes)
+# PHASE 4: Build our GC9A01 Display Driver 
+
 ```bash
 sudo nano gc9a01_driver.py
 ```
@@ -472,27 +487,32 @@ class GC9A01:
         """
         self.spi.close()    # Close SPI connection
         GPIO.cleanup()      # Reset all GPIO pins to default state
-        ```
+```
 
 Save with Ctrl+X, Y, Enter.
 
 <br/>
 <br/>
 
-# PHASE 5: Create Eye Scripts (10 minutes)
+# PHASE 5: Create Eye Scripts 
 
-Copy and paste the [different animations from my Github page](https://github.com/EEN421/Halloween-2025/tree/Main/gc9a01/eyes) into the working folder on your Raspberry Pi.
+Copy and paste the different [python powered eyeballs from my Github page](https://github.com/EEN421/Halloween-2025/tree/Main/gc9a01/eyes) into the working folder on your Raspberry Pi.
 
 
 
-# PHASE 7: Set Up Auto-Start on Boot (5 minutes)
+# PHASE 7: Set Up Auto-Start on Boot
 """
 Choose which eye you want to run on boot, then:
 """
+
 ```bash
 # Create systemd service
 sudo nano /etc/systemd/system/eyeball.service
+```
+
 Paste this (change the script name if using a differnt eye.py file): 
+
+```bash
 ini[Unit]
 Description=GC9A01 Eyeball Display
 After=multi-user.target
@@ -501,7 +521,7 @@ After=multi-user.target
 Type=simple
 User=cyclops
 WorkingDirectory=/home/cyclops/gc9a01_eye
-ExecStart=/usr/bin/python3 /home/cyclops/gc9a01_eye/bloodshot.py # Change ThisGuy.py to your preferred eye animation
+ExecStart=/usr/bin/python3 /home/cyclops/gc9a01_eye/bloodshot.py # <-- ⚠️ Change ThisGuy.py to your preferred eye animation 👀
 Restart=on-failure
 RestartSec=10
 
@@ -511,22 +531,35 @@ Save with Ctrl+X, Y, Enter.
 Enable auto-start:
 bash# Reload systemd
 sudo systemctl daemon-reload
+```
+
 
 # Enable service to start on boot
+```bash
 sudo systemctl enable eyeball.service
+```
 
 # Start it now (test without rebooting)
+```bash
 sudo systemctl start eyeball.service
+```
 
 # Check status
+```bash
 sudo systemctl status eyeball.service
+```
 Should show: Active: active (running)
+
 Test by rebooting:
-bashsudo reboot
+```bash
+sudo reboot -h now
+```
+
 Wait 30-60 seconds after boot, and the eye should start automatically!
 
-PHASE 8: Control Commands (Reference)
-bash# Stop the eye
+# PHASE 8: Control Commands (Reference)
+```bash
+# Stop the eye
 sudo systemctl stop eyeball.service
 
 # Start the eye
@@ -543,6 +576,7 @@ sudo journalctl -u eyeball.service -f
 
 # View last 50 log lines
 sudo journalctl -u eyeball.service -n 50
+```
 
 # Customization Tips
 Change Eye Colors
@@ -556,23 +590,29 @@ FLAME_INNER = (255, 150, 0)
 # Make it green
 IRIS_COLOR = (100, 255, 100)
 FLAME_INNER = (150, 255, 100)
-After changing, restart:
-bashsudo systemctl restart dragon-eye.service
+
+#After changing, restart:
+sudo systemctl restart eye.service
+```
+
 Switch to Different Eye
-bash# Edit service file
-sudo nano /etc/systemd/system/dragon-eye.service
+```bash
+# Edit service file
+sudo nano /etc/systemd/system/eye.service
 
 # Change the ExecStart line to:
-ExecStart=/usr/bin/python3 /home/cyclops/gc9a01_eye/bloodshot_eye.py
+ExecStart=/usr/bin/python3 /home/cyclops/gc9a01_eye/bloodshot.py
 
 # Reload and restart
 sudo systemctl daemon-reload
-sudo systemctl restart dragon-eye.service
+sudo systemctl restart eye.service
+```
 
-Quick Troubleshooting
+# Quick Troubleshooting
 Eye doesn't start on boot:
-bashsudo systemctl status dragon-eye.service
-sudo journalctl -u dragon-eye.service -n 50
+```bash
+bashsudo systemctl status eye.service
+sudo journalctl -u eye.service -n 50
 Display shows nothing:
 bash# Check wiring
 # Verify SPI is enabled
@@ -583,7 +623,7 @@ vcgencmd measure_temp
 
 # If overheating, add cooling
 Need to stop it quickly:
-bashsudo systemctl stop dragon-eye.service
+bashsudo systemctl stop eye.service
 ```
 
 ---
@@ -594,11 +634,12 @@ After setup, you'll have:
 ```
 /home/cyclops/gc9a01_eye/
 ├── gc9a01_driver.py          # Display driver
-├── dragon_eye.py             # Fiery dragon eye
-└── bloodshot_eye.py          # Bloodshot eye
+├── fire_dragon.py            # Fiery dragon eye
+├── bloodshot_eye.py          # Bloodshot eye
+└── ...                         ...
 
 /etc/systemd/system/
-└── dragon-eye.service        # Auto-start service
+└── eye.service              # Auto-start service
 
 ---
 
@@ -607,19 +648,16 @@ After setup, you'll have:
  SPI enabled
  Dependencies installed
  Driver created (gc9a01_driver.py)
- Eye script created (dragon_eye.py or bloodshot_eye.py)
+ Eye script created (bloodshot.py)
  Eye runs manually with sudo python3
  FPS is 8+ (acceptable performance)
  Service file created
  Auto-start enabled
  Tested reboot - eye starts automatically
 
+You now have a fully working animated eyeball that starts on boot! To change your eye, update the 👁️
 
-Total Time: ~30 minutes
-You now have a fully working animated eye that starts on boot! 🐉👁️
-For questions or issues, check the logs:
-bashsudo journalctl -u dragon-eye.service -f
-Enjoy your dragon eye! 🎉
+
 
 
 
