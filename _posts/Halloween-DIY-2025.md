@@ -1,7 +1,11 @@
 🎃 Let's get lit! 🎃 
 
 # Complete Step-by-Step Guide: GC9A01 Animated Eye
-## From Zero to Eyeball-in-a-jar in 30 Minutes
+## From Zero to Eyeball-in-a-jar
+
+<br/>
+
+![](/assets/img/Halloween25/EyeJar.jpg)
 
 <br/>
 <br/>
@@ -15,6 +19,62 @@
 
 <br/>
 <br/>
+
+# Perform a Headless Raspberry Pi Setup (BullseyeOS)
+
+
+**1.** Grab the OS image from the [official Raspberry Pi site](https://www.raspberrypi.com/software/operating-systems/) (don't extract, leave it as is).
+
+<br/>
+
+**2.** Insert your SD card into the reader and run the Raspberry Pi Imager ([available here](https://www.raspberrypi.com/software/)). <br/>
+![](/assets/img/Halloween24/pi_image_blank.png)
+
+<br/>
+<br/>
+
+**3.** Select your hardware, desired OS, and destination storage (SD Card) as illustrated below... <br/>
+![](/assets/img/Halloween24/pi_image_fin.png) <br/>
+
+>&#128161; IMPORTANT --> Make sure you grab the **legacy 32bit Bullseye OS**; as this software is **not supported as-is on the latest Bookworm OS** ![](/assets/img/Halloween24/pi_image_OS.png)
+
+<br/>
+
+**4.** Select **Next** and you will be prompted with the option to **edit OS settings**. Select **Edit** and enter your network SSID and PSK, as well as your desired username and password. <br/>
+![](/assets/img/Halloween24/pi_image_settings.png)
+
+<br/>
+<br/>
+
+**5.** Navigate from the **General** tab over to the **SSH** tab and make sure it's **enabled** with **password authentication** as shown below... <br/>
+![](/assets/img/Halloween24/pi_image_settings2.png)
+
+<br/>
+<br/>
+
+**6.** Click **Next** and let it burn! &#128293; <br/>
+![](/assets/img/Halloween24/pi_image_write.png) <br/>
+![](/assets/img/Halloween24/pi_image_done.png)
+
+**7.** Drop the SD card into your Raspberry Pi board and boot it up.
+
+<br/>
+
+**8.** Locate it on the network (login to your router or use [Advanced IP Scanner](https://www.advanced-ip-scanner.com/))
+
+<br/>
+
+**9.** Login and do the needful: <br/>
+
+```bash
+sudo apt-get update && sudo apt-get upgrade
+```
+
+<br/>
+<br/>
+<br/>
+<br/>
+
 
 # PHASE 1: Enable SPI (2 minutes)
 ```bash
