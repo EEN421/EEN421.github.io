@@ -1,4 +1,4 @@
-Got it — here’s the **full whitepaper-style Markdown draft** with the visuals **integrated directly into the relevant sections**.
+TEST
 
 ---
 
