@@ -480,7 +480,13 @@ By filtering teardown traffic, we transformed our firewalls from noisy log gener
 * **Validate before excluding.** Always test filters with a quick `summarize count()` to ensure no legitimate security logs disappear.
 * **Reinvest the savings.** Use your reduced ingestion costs to onboard richer data sources — endpoint, identity, or cloud app telemetry.
 
-That’s the difference between drowning in data and acting on intelligence.
+**That’s the difference between drowning in data and acting on intelligence**; check out the difference this made in an environment after just 2-3 weeks:
+
+![](/assets/img/Fortinet%20DCR/savings.png)
+
+<br/>
+
+> 💡 You can find an example KQL query for the output in the above screenshot [here on my Github](https://github.com/EEN421/KQL-Queries/blob/Main/Log_Sources_with_Greatest_Delta.kql)
 
 <br/>
 <br/>
