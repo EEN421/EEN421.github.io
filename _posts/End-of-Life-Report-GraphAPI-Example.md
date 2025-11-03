@@ -1,17 +1,38 @@
-💡 Why Identifying End-of-Life Systems Matters
+🧰 Intro – The Forgotten Devices Lurking in Your Network
 
-In cybersecurity, “end-of-life” (EoL) doesn’t just mean old — it means unprotected.
-When hardware or software reaches its end-of-support date, vendors stop shipping security patches, firmware updates, and compatibility fixes. Those aging components quickly become soft targets for attackers looking for unpatched vulnerabilities or misconfigurations that can provide an easy foothold into the network.
+Every SOC has a few skeletons in the closet — that dusty Windows Server still running the payroll app, or that vendor workstation quietly humming along on Windows 10 1909. They work, sure… but they’re way past their prime. 🧟‍♂️
 
-From a defender’s standpoint, the business impact of ignoring EoL assets is threefold:
+When hardware or software hits End-of-Life (EoL), the vendor stops sending love letters in the form of patches, firmware updates, and security fixes. That means the next exploit doesn’t need zero-day wizardry — it just needs your old box that’s never seen a patch since 2022. 💀
 
-Exposure: Unpatched legacy systems are common entry points for ransomware and lateral movement.
+So, in true DevSecOpsDad fashion, we’re automating the cleanup. 🧑‍💻
+In this post, we’ll use PowerShell and the Microsoft Graph API to hunt down unsupported devices hiding in Defender’s Threat & Vulnerability Management tables. With one script, we’ll pull real-time EoL data, drop it into a tidy CSV, and hand your security or compliance team an instant report card of what’s aging out across the environment.
 
-Compliance Risk: Frameworks like CIS, NIST CSF, and ISO 27001 require lifecycle management of software and hardware; auditors routinely flag unsupported OS versions or firmware.
+⚙️ Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
 
-Operational Overhead: Unsupported software can break integrations, limit telemetry, and complicate patch automation, creating blind spots in security monitoring.
+In cybersecurity, “end-of-life” doesn’t just mean old — it means unprotected.
+When hardware or software reaches its end-of-support date, vendors stop delivering security patches, firmware updates, and compatibility fixes. Those forgotten assets quickly turn into easy footholds for attackers looking for unpatched vulnerabilities or outdated agents to exploit. 🧟‍♂️
 
-Here’s a clear, end-to-end walkthrough of what your **EOL Stuff Automated.ps1** script is doing, plus ideas for other handy automations you can bolt onto the same Microsoft Graph pipeline.
+From a defender’s standpoint, ignoring EoL assets creates a ripple effect across security, compliance, and operations:
+
+Exposure: Legacy systems are prime entry points for ransomware, privilege escalation, and lateral movement.
+
+Compliance Risk: Frameworks like NIST CSF, CIS v8, and ISO 27001 require active lifecycle management. Unsupported OS versions and firmware are frequent audit findings.
+
+Operational Blind Spots: Unsupported software can break telemetry and patch automation, leaving you flying blind in key parts of your environment.
+
+That’s where automation comes in. With a little PowerShell and Microsoft Graph, you can continuously surface EoL assets and feed them directly into your existing security and IT workflows.
+
+🧩 Practical Use Cases for EoL Automation
+
+Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
+
+Compliance Evidence – Generate on-demand audit reports proving lifecycle management and patch governance are in place.
+
+Patch & Lifecycle Management – Feed EoL findings into Intune, CMDBs, or ServiceNow to trigger upgrades or decommission tasks.
+
+Executive Metrics – Track “% of assets within support lifecycle” as a measurable cyber hygiene KPI.
+
+Defender XDR Integration – Correlate EoL devices with incidents in Microsoft Sentinel to prioritize the riskiest exposures.
 
 # How the script works (step-by-step)
 
