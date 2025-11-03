@@ -72,6 +72,167 @@ Defender XDR Integration – Correlate EoL devices with incidents in Microsoft S
 
      * Run the script in **PowerShell 7+**, **or**
      * Replace `-UseUtf8` with `-Encoding UTF8` on `Out-File`/`Set-Content` (and keep `Export-Csv -Encoding UTF8` if you’re on PS 5.1).
+    
+
+Awesome—here’s a clean, practical breakdown you can drop right into the article. I’ll walk through what the KQL does, how you’d use it in a normal “check EoL” workflow, how to read the results, a few smart variations, and then the PowerShell bit about the `$kql = @"..."@` here-string.
+
+---
+
+# How this Advanced Hunting query finds EoL software
+
+```kusto
+DeviceTvmSoftwareInventory
+| where isnotempty(DeviceName)
+| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
+| summarize 
+    EOLSoftwareCount = count(),
+    EOLSoftwareList = make_set(SoftwareName, 100),
+    OldestEOLDate = min(EndOfSupportDate)
+  by DeviceName
+| order by EOLSoftwareCount desc
+```
+
+### Line-by-line (what it’s doing)
+
+1. **Start with TVM software inventory**
+   `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).
+
+2. **Keep only real devices**
+   `| where isnotempty(DeviceName)` drops any odd/null rows.
+
+3. **Filter to software already past EoL**
+   `| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()`
+
+   * Ensures the vendor actually provided an end-of-support date.
+   * Keeps rows where that date is **now or earlier** (i.e., already out of support today).
+
+4. **Roll up by device**
+   `summarize ... by DeviceName` collapses many rows (one per app) into **one row per device**, with:
+
+   * `EOLSoftwareCount` → how many out-of-support titles are on that device.
+   * `EOLSoftwareList` → up to 100 unique software names (handy for a one-glance review).
+   * `OldestEOLDate` → the **earliest** EoL among those apps—useful to spot *how long* a device has been carrying legacy baggage.
+
+5. **Sort by worst offenders**
+   `order by EOLSoftwareCount desc` puts the noisiest/riskier devices at the top.
+
+---
+
+# The normal “check EoL” workflow (what an analyst actually does)
+
+1. **Run the query** (Hunting page or API)
+
+   * In the Defender portal (Advanced Hunting) for a quick look, or via Microsoft Graph/PowerShell for repeatable reporting.
+
+2. **Scan the top offenders**
+
+   * Devices with high `EOLSoftwareCount` get triaged first.
+   * Skim `EOLSoftwareList` to see if it’s business-critical software (upgrade path needed) vs. dead utilities (safe to remove).
+
+3. **Look at “how stale”**
+
+   * `OldestEOLDate` tells you if you’re weeks vs. years overdue. A very old date = higher risk/visibility with auditors.
+
+4. **Decide the path: upgrade, replace, or remove**
+
+   * **Replace/upgrade**: if it’s a core app with a supported version.
+   * **Remove**: if deprecated/unneeded.
+   * **Isolate/quarantine**: if the device can’t be fixed quickly and is exposed.
+
+5. **Kick off remediation**
+
+   * Create tickets (ServiceNow/Jira), **Intune** assignments, or **Planner** tasks with due dates based on EoL age/severity.
+   * If you automate with Graph, you can do this in the same PowerShell run that produced the CSV.
+
+6. **Report & trend**
+
+   * Export to CSV for your weekly report. Track **% of devices within support** as a KPI and show trend lines improving over time.
+
+---
+
+# How to interpret the columns (at a glance)
+
+* **DeviceName** → Who needs attention.
+* **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort).
+* **EOLSoftwareList** → What exactly is unsupported (helps owners take action).
+* **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first).
+
+---
+
+# Smart variations you might add later
+
+* **Only critical/priority software**
+
+  ```kusto
+  | where SoftwareName in~ ("Java", "OpenJDK", "Apache HTTP Server", "MySQL", "Python", "SQL Server Management Studio")
+  ```
+* **Add owner/context** (join to device info)
+
+  ```kusto
+  DeviceTvmSoftwareInventory
+  | where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
+  | join kind=leftouter (DeviceInfo | project DeviceName, OSPlatform, LoggedOnUsers, DeviceId) on DeviceName
+  | summarize EOLSoftwareCount=count(), EOLSoftwareList=make_set(SoftwareName, 100), OldestEOLDate=min(EndOfSupportDate), any(OSPlatform), any(LoggedOnUsers)
+    by DeviceName
+  ```
+* **Flag “nearly EoL”** (30/60/90 days) to get ahead of the curve:
+
+  ```kusto
+  | where EndOfSupportDate between (now() .. now() + 30d)
+  ```
+* **Prioritize by risk** (join to exposure score or to incidents) for Defender-XDR-aware triage.
+
+---
+
+# The PowerShell piece: what `$kql = @" ... "@` means
+
+You’re using a **double-quoted here-string**:
+
+```powershell
+$kql = @"
+DeviceTvmSoftwareInventory
+| where ...
+"@
+```
+
+Key facts:
+
+* **Here-strings** let you paste multi-line text verbatim without escaping quotes or backticks. Great for KQL, JSON, and HTML.
+* **Double-quoted** (`@"..."@`) means **PowerShell variable expansion is enabled** inside the block. If you write `$Today` in there, it will expand.
+
+  * If you **don’t** want expansion, use a **single-quoted** here-string: `@' ... '@`.
+* The **closing** `@"` or `@'` **must be at the start of the line** (no indentation or trailing characters).
+* The content is stored as a single string—including line breaks—perfect for sending to Graph’s `runHuntingQuery` endpoint or the Graph SDK cmdlets.
+
+Example of parameterizing the window from PowerShell:
+
+```powershell
+$days = 30
+$kql = @"
+DeviceTvmSoftwareInventory
+| where isnotempty(DeviceName)
+| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now($days d)
+| summarize EOLSoftwareCount=count(), EOLSoftwareList=make_set(SoftwareName, 100), OldestEOLDate=min(EndOfSupportDate) by DeviceName
+| order by EOLSoftwareCount desc
+"@
+```
+
+*(Because it’s double-quoted, `$days` expands right into the KQL.)*
+
+---
+
+# Quality checks & gotchas
+
+* **Inventory coverage**: Devices missing TVM/Defender inventory won’t be represented—cross-check onboarding.
+* **Set size**: `make_set(SoftwareName, 100)` caps the list at 100 names; raise if you truly need more (CSV readability may suffer).
+* **Time zone**: `now()` is UTC in AH. That’s fine for lifecycle checks, but note when describing reports to stakeholders.
+* **Names vs. versions**: If you need precision, also project `Version` (e.g., different Java builds).
+* **Old device names**: If you recycle hostnames, consider joining on a stable key like `DeviceId`.
+
+---
+
+If you’d like, I can stitch this directly into the next section of your post—showing the Graph/PowerShell call you’re using to execute the query and export to CSV—so the narrative flows from **why** → **what** → **how** with minimal friction.
+
 
 # Why Graph + Advanced Hunting is the right path
 
