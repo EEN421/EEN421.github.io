@@ -34,50 +34,6 @@ Executive Metrics – Track “% of assets within support lifecycle” as a meas
 
 Defender XDR Integration – Correlate EoL devices with incidents in Microsoft Sentinel to prioritize the riskiest exposures.
 
-# How the script works (step-by-step)
-
-1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
-
-   * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**. ([Microsoft Learn][1])
-
-2. **Build the Advanced Hunting (KQL) query**
-
-   * The query targets the **Threat & Vulnerability Management** software inventory table: `DeviceTvmSoftwareInventory`. That table includes **End-of-Support** columns such as `EndOfSupportStatus` and `EndOfSupportDate`, which is what lets you produce an “EoL report.” A typical shape looks like:
-
-     ```kusto
-     DeviceTvmSoftwareInventory
-     | where isnotempty(EndOfSupportStatus)
-     | project DeviceName, SoftwareVendor, SoftwareName, Version, EndOfSupportStatus, EndOfSupportDate
-     | order by EndOfSupportDate asc
-     ```
-
-     Microsoft’s schema docs explicitly call out the presence of end-of-support info in this table. ([Microsoft Learn][2])
-
-3. **Call the Graph Security “runHuntingQuery” API**
-
-   * With your access token in place, the script posts the KQL to **`/security/runHuntingQuery`** (via the SDK cmdlet or a raw `Invoke-MgGraphRequest`). The API returns a result object that includes **`schema`** and **`results`** (rows) for your query. (This behavior and the PowerShell path are documented and have a sample.) ([Microsoft Learn][1])
-
-4. **Parse the results into PowerShell objects**
-
-   * The JSON payload’s `results` array is turned into a collection of PSCustomObjects. Each property corresponds to a projected KQL column (e.g., `DeviceName`, `SoftwareName`, `EndOfSupportDate`, etc.). If you see a missing-brace parse error in this section, it just means a hashtable or scriptblock wasn’t closed (you already hit and fixed one of those earlier).
-
-5. **Create the output folder (if needed)**
-
-   * The script checks if your chosen output directory (e.g., `C:\Temp`) exists and creates it if not, so the export won’t fail when saving the CSV.
-
-6. **Export the hunting results to CSV**
-
-   * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
-   * If you saw **“parameter … ‘UseUtf8’ not found”**, that comes from running on **Windows PowerShell 5.1**, where `-UseUtf8` isn’t available on `Out-File/Set-Content` (it’s a PowerShell 7+ convenience switch). Fixes:
-
-     * Run the script in **PowerShell 7+**, **or**
-     * Replace `-UseUtf8` with `-Encoding UTF8` on `Out-File`/`Set-Content` (and keep `Export-Csv -Encoding UTF8` if you’re on PS 5.1).
-    
-
-Awesome—here’s a clean, practical breakdown you can drop right into the article. I’ll walk through what the KQL does, how you’d use it in a normal “check EoL” workflow, how to read the results, a few smart variations, and then the PowerShell bit about the `$kql = @"..."@` here-string.
-
----
-
 # How this Advanced Hunting query finds EoL software
 
 ```kusto
@@ -183,6 +139,52 @@ DeviceTvmSoftwareInventory
 * **Prioritize by risk** (join to exposure score or to incidents) for Defender-XDR-aware triage.
 
 ---
+
+# How the script works (step-by-step)
+
+1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
+
+   * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**. ([Microsoft Learn][1])
+
+2. **Build the Advanced Hunting (KQL) query**
+
+   * The query targets the **Threat & Vulnerability Management** software inventory table: `DeviceTvmSoftwareInventory`. That table includes **End-of-Support** columns such as `EndOfSupportStatus` and `EndOfSupportDate`, which is what lets you produce an “EoL report.” A typical shape looks like:
+
+     ```kusto
+     DeviceTvmSoftwareInventory
+     | where isnotempty(EndOfSupportStatus)
+     | project DeviceName, SoftwareVendor, SoftwareName, Version, EndOfSupportStatus, EndOfSupportDate
+     | order by EndOfSupportDate asc
+     ```
+
+     Microsoft’s schema docs explicitly call out the presence of end-of-support info in this table. ([Microsoft Learn][2])
+
+3. **Call the Graph Security “runHuntingQuery” API**
+
+   * With your access token in place, the script posts the KQL to **`/security/runHuntingQuery`** (via the SDK cmdlet or a raw `Invoke-MgGraphRequest`). The API returns a result object that includes **`schema`** and **`results`** (rows) for your query. (This behavior and the PowerShell path are documented and have a sample.) ([Microsoft Learn][1])
+
+4. **Parse the results into PowerShell objects**
+
+   * The JSON payload’s `results` array is turned into a collection of PSCustomObjects. Each property corresponds to a projected KQL column (e.g., `DeviceName`, `SoftwareName`, `EndOfSupportDate`, etc.). If you see a missing-brace parse error in this section, it just means a hashtable or scriptblock wasn’t closed (you already hit and fixed one of those earlier).
+
+5. **Create the output folder (if needed)**
+
+   * The script checks if your chosen output directory (e.g., `C:\Temp`) exists and creates it if not, so the export won’t fail when saving the CSV.
+
+6. **Export the hunting results to CSV**
+
+   * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
+   * If you saw **“parameter … ‘UseUtf8’ not found”**, that comes from running on **Windows PowerShell 5.1**, where `-UseUtf8` isn’t available on `Out-File/Set-Content` (it’s a PowerShell 7+ convenience switch). Fixes:
+
+     * Run the script in **PowerShell 7+**, **or**
+     * Replace `-UseUtf8` with `-Encoding UTF8` on `Out-File`/`Set-Content` (and keep `Export-Csv -Encoding UTF8` if you’re on PS 5.1).
+    
+
+Awesome—here’s a clean, practical breakdown you can drop right into the article. I’ll walk through what the KQL does, how you’d use it in a normal “check EoL” workflow, how to read the results, a few smart variations, and then the PowerShell bit about the `$kql = @"..."@` here-string.
+
+---
+
+
 
 # The PowerShell piece: what `$kql = @" ... "@` means
 
