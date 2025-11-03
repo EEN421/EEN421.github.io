@@ -115,30 +115,6 @@ DeviceTvmSoftwareInventory
 
 ---
 
-# Smart variations you might add later
-
-* **Only critical/priority software**
-
-  ```kusto
-  | where SoftwareName in~ ("Java", "OpenJDK", "Apache HTTP Server", "MySQL", "Python", "SQL Server Management Studio")
-  ```
-* **Add owner/context** (join to device info)
-
-  ```kusto
-  DeviceTvmSoftwareInventory
-  | where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
-  | join kind=leftouter (DeviceInfo | project DeviceName, OSPlatform, LoggedOnUsers, DeviceId) on DeviceName
-  | summarize EOLSoftwareCount=count(), EOLSoftwareList=make_set(SoftwareName, 100), OldestEOLDate=min(EndOfSupportDate), any(OSPlatform), any(LoggedOnUsers)
-    by DeviceName
-  ```
-* **Flag “nearly EoL”** (30/60/90 days) to get ahead of the curve:
-
-  ```kusto
-  | where EndOfSupportDate between (now() .. now() + 30d)
-  ```
-* **Prioritize by risk** (join to exposure score or to incidents) for Defender-XDR-aware triage.
-
----
 
 # How the script works (step-by-step)
 
@@ -174,16 +150,8 @@ DeviceTvmSoftwareInventory
 6. **Export the hunting results to CSV**
 
    * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
-   * If you saw **“parameter … ‘UseUtf8’ not found”**, that comes from running on **Windows PowerShell 5.1**, where `-UseUtf8` isn’t available on `Out-File/Set-Content` (it’s a PowerShell 7+ convenience switch). Fixes:
-
-     * Run the script in **PowerShell 7+**, **or**
-     * Replace `-UseUtf8` with `-Encoding UTF8` on `Out-File`/`Set-Content` (and keep `Export-Csv -Encoding UTF8` if you’re on PS 5.1).
-    
-
-Awesome—here’s a clean, practical breakdown you can drop right into the article. I’ll walk through what the KQL does, how you’d use it in a normal “check EoL” workflow, how to read the results, a few smart variations, and then the PowerShell bit about the `$kql = @"..."@` here-string.
 
 ---
-
 
 
 # The PowerShell piece: what `$kql = @" ... "@` means
@@ -233,8 +201,6 @@ DeviceTvmSoftwareInventory
 
 ---
 
-If you’d like, I can stitch this directly into the next section of your post—showing the Graph/PowerShell call you’re using to execute the query and export to CSV—so the narrative flows from **why** → **what** → **how** with minimal friction.
-
 
 # Why Graph + Advanced Hunting is the right path
 
@@ -271,17 +237,38 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
 
   * Roll up counts by `SoftwareVendor/SoftwareName/EndOfSupportStatus` and push a compact CSV or HTML mail to leadership weekly/monthly (“EoL posture: total devices, top vendors, trend vs last report”).
 
+---
+
+# Smart variations you might add later
+
+* **Only critical/priority software**
+
+  ```kusto
+  | where SoftwareName in~ ("Java", "OpenJDK", "Apache HTTP Server", "MySQL", "Python", "SQL Server Management Studio")
+  ```
+
+* **Add owner/context** (join to device info)
+
+  ```kusto
+  DeviceTvmSoftwareInventory
+  | where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
+  | join kind=leftouter (DeviceInfo | project DeviceName, OSPlatform, LoggedOnUsers, DeviceId) on DeviceName
+  | summarize EOLSoftwareCount=count(), EOLSoftwareList=make_set(SoftwareName, 100), OldestEOLDate=min(EndOfSupportDate), any(OSPlatform), any(LoggedOnUsers)
+    by DeviceName
+  ```
+
+* **Flag “nearly EoL”** (30/60/90 days) to get ahead of the curve:
+
+  ```kusto
+  | where EndOfSupportDate between (now() .. now() + 30d)
+  ```
+  
+* **Prioritize by risk** (join to exposure score or to incidents) for Defender-XDR-aware triage.
+
+---
+
+
 # References (good to keep handy)
-
-* **Run Hunting Query (Graph Security)** – method, scopes, request/response shape, PowerShell example. ([Microsoft Learn][1])
-* **Advanced Hunting overview** – what data is available across Defender XDR. ([Microsoft Learn][3])
-* **DeviceTvmSoftwareInventory table** – includes **End-of-Support** columns used for your report. ([Microsoft Learn][2])
-
-If you want, I can also add a short post-processing block that:
-
-* splits the CSV by owner or BU,
-* mails each owner only their rows,
-* and drops a full consolidated CSV to SharePoint.
 
 [1]: https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0 "security: runHuntingQuery - Microsoft Graph v1.0 | Microsoft Learn"
 [2]: https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table?utm_source=chatgpt.com "DeviceTvmSoftwareInventory table in the advanced ..."
