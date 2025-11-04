@@ -23,7 +23,7 @@ With one PowerShell script, we’ll connect to the Microsoft Graph API, run an A
 - ✅ Why Graph + Advanced Hunting is the Way
 - 🧠 Smart variations you might add later
 - 🚀 Other useful automations you can add (same pattern)
-- 🔄 Automating the Report with an Entra ID Registered App
+- 🔄 Automating the Report FURTHER with an Entra ID Registered App
 - 🩺 Troubleshooting
 - 🏁 Wrapping It Up
 - 📚 Bonus: Want to Go Deeper?
@@ -715,7 +715,7 @@ This simple workflow can help your security team reduce attack surface, stay com
 - ✅ Why Graph + Advanced Hunting is the Way
 - 🧠 Smart variations you might add later
 - 🚀 Other useful automations you can add (same pattern)
-- 🔄 Automating the Report with an Entra ID Registered App
+- 🔄 Automating the Report FURTHER with an Entra ID Registered App
 - 🩺 Troubleshooting
 - 🏁 Wrapping It Up
 - 📚 Bonus: Want to Go Deeper?
