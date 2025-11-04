@@ -1,4 +1,4 @@
-🧰 Intro – The Forgotten Devices Lurking in Your Network
+# 🧰 Intro – The Forgotten Devices Lurking in Your Network
 
 Every SOC has a few skeletons in the closet — that dusty Windows Server still running the payroll app, or that vendor workstation quietly humming along on Windows 10 1909. They work, sure… but they’re way past their prime. 🧟‍♂️
 
@@ -7,24 +7,29 @@ When hardware or software hits End-of-Life (EoL), the vendor stops sending love 
 So, in true DevSecOpsDad fashion, we’re automating the cleanup. 🧑‍💻
 In this post, we’ll use PowerShell and the Microsoft Graph API to hunt down unsupported devices hiding in Defender’s Threat & Vulnerability Management tables. With one script, we’ll pull real-time EoL data, drop it into a tidy CSV, and hand your security or compliance team an instant report card of what’s aging out across the environment.
 
-# In this Post We Will:
-- Understand Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
-- Review Practical Use Cases for End of Life Automation
-- Use Advanced Hunting to Find EoL Devices and Software
-- Automate it! 
-- Review Quality Checks & Gotchas
-- Discover Why Graph + Advanced Hunting is the Way
-- Discuss Smart Variations
-- Cover Other Useful Automations You Might Add
-- Troubleshoot
-- Wrap it Up!
+# In this Post We Will Cover:
+- ⚙️ Understanding Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
+- 📖 Review Practical Use Cases for End of Life Automation
+- 👁️ Using Advanced Hunting to Find EoL Devices and Software
+- 🔍 Interpreting the columns (at a glance)
+- 👨‍💻 The normal “check EoL” workflow (what an analyst actually does)
+- 💡 From KQL to Graph — Why We’re Hunting the Smart Way
+- ⚡ Automating it! 
+- 🛠️ Quality checks & gotchas
+- ✅ Why Graph + Advanced Hunting is the Way
+- 🧠 Smart variations you might add later
+- 🚀 Other useful automations you can add (same pattern)
+- 🩺 Troubleshooting
+- 🏁 Wrapping It Up
+- 📚 Bonus: Want to Go Deeper?
+- 🔗 References (good to keep handy)
 
 <br/>
 <br/>
 <br/>
 <br/>
 
-⚙️ Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
+# ⚙️ Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
 
 In cybersecurity, “end-of-life” doesn’t just mean old — it means unprotected.
 When hardware or software reaches its end-of-support date, vendors stop delivering security patches, firmware updates, and compatibility fixes. Those forgotten assets quickly turn into easy footholds for attackers looking for unpatched vulnerabilities or outdated agents to exploit. 🧟‍♂️
@@ -42,7 +47,7 @@ That’s where automation comes in. With a little PowerShell and Microsoft Graph
 <br/>
 <br/>
 
-🧩 Practical Use Cases for EoL Automation
+### 📖 Practical Use Cases for EoL Automation
 
 - Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
 - Compliance Evidence – Generate on-demand audit reports proving lifecycle management and patch governance are in place.
@@ -55,7 +60,7 @@ That’s where automation comes in. With a little PowerShell and Microsoft Graph
 <br/>
 <br/>
 
-# How this Advanced Hunting query finds EoL software
+# 👁️ How this Advanced Hunting query finds EoL software
 
 ```kusto
 DeviceTvmSoftwareInventory
@@ -69,7 +74,7 @@ DeviceTvmSoftwareInventory
 | order by EOLSoftwareCount desc
 ```
 
-### Line-by-line (what it’s doing)
+### 🕵️‍♂️ Line-by-line (what it’s doing)
 
 1. **Start with TVM software inventory**
    `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).
@@ -98,7 +103,7 @@ DeviceTvmSoftwareInventory
 <br/>
 <br/>
 
-# How to interpret the columns (at a glance)
+# 🔍 How to interpret the columns (at a glance)
 
 * **DeviceName** → Who needs attention.
 * **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort).
@@ -110,7 +115,7 @@ DeviceTvmSoftwareInventory
 <br/>
 <br/>
 
-# The normal “check EoL” workflow (what an analyst actually does)
+# 👨‍💻 The normal “check EoL” workflow (what an analyst actually does)
 
 1. **Run the query** (Hunting page or API)
 
@@ -145,28 +150,20 @@ DeviceTvmSoftwareInventory
 <br/>
 <br/>
 
-# ⚡ From KQL to Graph — Why We’re Hunting the Smart Way
+# 💡 From KQL to Graph — Why We’re Hunting the Smart Way
 
-Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel with a regular KQL query?” — great question. You could try… but here’s the catch. 🧩
+Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel with a regular KQL query?” — great question. You could try… but here’s the catch. 
 
-The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel.
-It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default.
+> The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel. It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default.
 
 That means if you open the Sentinel “Logs” blade in the Azure portal and go hunting for that table, you’ll likely come up empty.
 It’s not that you did anything wrong — it’s just that Defender never forwards TVM tables into the Log Analytics workspace unless you’ve specifically integrated it (and paid the ingest cost).
 
-So if your plan was to build a shiny Power BI dashboard off exported KQL → M Queries → OData connectors… this is where things get messy.
+So if your plan was to build a shiny Power BI dashboard off exported KQL → M Queries → OData connectors… this is where things get messy... You can’t query what you can’t log table. 😬
 
-You can’t query what you can’t log. 😬
+This becomes a real wrench in the works for analysts and compliance teams who want to trend EoL exposure over time. You can’t easily visualize that data monthly if Sentinel never sees it — and exporting manually from Defender’s portal every few weeks is a one-way ticket to Repetitive Strain Injury Repetitive Strain Injury. 🖐️💀
 
-This becomes a real wrench in the works for analysts and compliance teams who want to trend EoL exposure over time. You can’t easily visualize that data monthly if Sentinel never sees it — and exporting manually from Defender’s portal every few weeks is a one-way ticket to RSI. 🖐️💀
-
-That’s why we’re going straight to the source.
-
-By calling Microsoft Graph’s Advanced Hunting endpoint, we can reach directly into the Defender dataset — the same data Sentinel would ingest — and pull exactly what we need, on demand.
-
-No workspace ingestion, no manual exports, no cost surprises.
-Just clean JSON results, ready to automate.
+That’s why we’re going straight to the source; By calling Microsoft Graph’s Advanced Hunting endpoint, we can reach directly into the Defender dataset — the same data Sentinel would ingest — and pull exactly what we need, on demand. No workspace ingestion, no manual exports, no cost surprises. Just clean JSON results, ready to automate.
 
 And with a bit of PowerShell magic, we’ll transform that output into a ready-to-use CSV that you can feed into Power BI, share with your compliance team, or even schedule as a weekly report.
 
@@ -177,7 +174,7 @@ Let’s dig into how it works. 👇
 <br/>
 <br/>
 
-# Automation Script
+# ⚡Automation Script
 
 So far, we’ve looked at how you’d manually check for end-of-life software — running KQL in the portal, eyeballing top offenders, and kicking off tickets one by one. That’s fine for a small lab or proof-of-concept, but in production, you’ll want a repeatable, scriptable workflow that runs quietly in the background while you sip your coffee ☕.
 
@@ -410,7 +407,7 @@ try {
 <br/>
 <br/>
 
-# How the script works (step-by-step)
+### 🕵️‍♂️ How the script works (step-by-step)
 
 1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
 
@@ -450,7 +447,7 @@ try {
 <br/>
 <br/>
 
-# The PowerShell piece: what `$kql = @" ... "@` means
+### 🔌 The PowerShell piece: what `$kql = @" ... "@` means
 
 You’re using a **double-quoted here-string**:
 
@@ -490,7 +487,7 @@ DeviceTvmSoftwareInventory
 <br/>
 <br/>
 
-# Quality checks & gotchas
+# 🛠️ Quality checks & gotchas
 
 * **Inventory coverage**: Devices missing TVM/Defender inventory won’t be represented—cross-check onboarding.
 * **Set size**: `make_set(SoftwareName, 100)` caps the list at 100 names; raise if you truly need more (CSV readability may suffer).
@@ -503,7 +500,7 @@ DeviceTvmSoftwareInventory
 <br/>
 <br/>
 
-# Why Graph + Advanced Hunting is the right path
+# ✅ Why Graph + Advanced Hunting is the Way
 
 * Microsoft’s **Advanced Hunting** via Graph is the modern, cross-workload way to query **Defender XDR** data (devices, identities, email, apps). The **`runHuntingQuery`** endpoint is the supported way to execute your KQL programmatically and get structured results you can transform or report on—exactly what your CSV export is doing.
 
@@ -512,7 +509,7 @@ DeviceTvmSoftwareInventory
 <br/>
 <br/>
 
-# Smart variations you might add later
+# 🧠 Smart variations you might add later
 
 * **Only critical/priority software**
 
@@ -588,7 +585,7 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
 <br/>
 <br/>
 
-# 🧩 Troubleshooting
+# 🩺 Troubleshooting
 
 If you hit snags, here’s what usually goes wrong:
 
@@ -624,17 +621,27 @@ This simple workflow can help your security team reduce attack surface, stay com
 Run it. Report it. Automate it.
 And as always — may your logs be clean and your endpoints up to date. 💀💡
 
-# In this Post We Will:
-- Understand Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
-- Review Practical Use Cases for End of Life Automation
-- Use Advanced Hunting to Find EoL Devices and Software
-- Automate it! 
-- Review Quality Checks & Gotchas
-- Discover Why Graph + Advanced Hunting is the Way
-- Discuss Smart Variations
-- Cover Other Useful Automations You Might Add
-- Troubleshoot
-- Wrap it Up!
+<br/>
+<br/>
+<br/>
+<br/>
+
+# In this Post We Will Cover:
+- ⚙️ Understanding Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
+- 📖 Review Practical Use Cases for End of Life Automation
+- 👁️ Using Advanced Hunting to Find EoL Devices and Software
+- 🔍 Interpreting the columns (at a glance)
+- 👨‍💻 The normal “check EoL” workflow (what an analyst actually does)
+- 💡 From KQL to Graph — Why We’re Hunting the Smart Way
+- ⚡ Automating it! 
+- 🛠️ Quality checks & gotchas
+- ✅ Why Graph + Advanced Hunting is the Way
+- 🧠 Smart variations you might add later
+- 🚀 Other useful automations you can add (same pattern)
+- 🩺 Troubleshooting
+- 🏁 Wrapping It Up
+- 📚 Bonus: Want to Go Deeper?
+- 🔗 References (good to keep handy)
 
 <br/>
 <br/>
@@ -654,7 +661,7 @@ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations 
 <br/>
 <br/>
 
-# References (good to keep handy)
+# 🔗 References (good to keep handy)
 
 - [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](security: runHuntingQuery - Microsoft Graph v1.0 | Microsoft Learn)
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table?utm_source=chatgpt.com](DeviceTvmSoftwareInventory table in the advanced ...)
