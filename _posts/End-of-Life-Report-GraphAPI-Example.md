@@ -68,7 +68,7 @@ So what can we actually do with this visibility once we have it? Here are a few 
 <br/>
 
 # 👁️ How this Advanced Hunting query finds EoL software
-Now that we know what’s at stake — and what you can do with the data — let’s roll up our sleeves and look at how we actually find these aging assets inside Defender’s data. The key is the DeviceTvmSoftwareInventory table. Here’s the exact KQL that makes it all happen. Don’t worry — we’ll unpack it line by line. 👇
+Now that we know what’s at stake — and what you can do with the data — let’s roll up our sleeves and look at how we actually find these aging assets inside Defender’s data. The key is the `DeviceTvmSoftwareInventory` table. Here’s the exact KQL that makes it all happen. Don’t worry — we’ll unpack it line by line. 👇
 
 ```kusto
 DeviceTvmSoftwareInventory
