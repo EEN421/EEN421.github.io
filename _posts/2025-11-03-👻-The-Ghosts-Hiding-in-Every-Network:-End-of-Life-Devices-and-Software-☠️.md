@@ -552,13 +552,14 @@ DeviceTvmSoftwareInventory
 # 🧠 Smart variations you might add later
 
 * **Only critical/priority software**
-
   ```bash
   | where SoftwareName in~ ("Java", "OpenJDK", "Apache HTTP Server", "MySQL", "Python", "SQL Server Management Studio")
   ```
 
-* **Add owner/context** (join to device info)
+<br/>
+<br/>
 
+* **Add owner/context** (join to device info)
   ```bash
   DeviceTvmSoftwareInventory
   | where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
@@ -567,11 +568,16 @@ DeviceTvmSoftwareInventory
     by DeviceName
   ```
 
-* **Flag “nearly EoL”** (30/60/90 days) to get ahead of the curve:
+<br/>
+<br/>
 
+* **Flag “nearly EoL”** (30/60/90 days) to get ahead of the curve:
   ```bash
   | where EndOfSupportDate between (now() .. now() + 30d)
   ```
+  
+  <br/>
+  <br/>
   
 * **Prioritize by risk** (join to exposure score or to incidents) for Defender-XDR-aware triage.
 
