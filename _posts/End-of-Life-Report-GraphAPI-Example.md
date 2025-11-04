@@ -74,6 +74,15 @@ DeviceTvmSoftwareInventory
 
 ---
 
+# How to interpret the columns (at a glance)
+
+* **DeviceName** → Who needs attention.
+* **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort).
+* **EOLSoftwareList** → What exactly is unsupported (helps owners take action).
+* **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first).
+
+---
+
 # The normal “check EoL” workflow (what an analyst actually does)
 
 1. **Run the query** (Hunting page or API)
@@ -106,21 +115,224 @@ DeviceTvmSoftwareInventory
 
 ---
 
-# How to interpret the columns (at a glance)
+# Automation Script
 
-* **DeviceName** → Who needs attention.
-* **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort).
-* **EOLSoftwareList** → What exactly is unsupported (helps owners take action).
-* **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first).
+```ps1
+#Requires -Modules Microsoft.Graph.Authentication
 
----
+<#
+.SYNOPSIS
+  Summarizes devices with End-of-Life (EoL / End-of-Support) software counts per device
+  by running a Defender hunting query via Microsoft Graph and exporting results to CSV.
 
+.DESCRIPTION
+  - Ensures you're connected to Microsoft Graph with ThreatHunting.Read.All (or App-only).
+  - Executes a KQL query against /security/runHuntingQuery.
+  - Produces a CSV with DeviceName, EOLSoftwareCount, OldestEOLDate, and EOLSoftwareList.
 
-# How the script works (step-by-step)
+.PARAMETER OutputPath
+  Full path to the CSV output. The folder is created if it doesn't exist.
+
+.PARAMETER TenantId
+  Optional. If provided, the script will attempt to connect to Graph for that tenant.
+
+.PARAMETER SkipAutoConnect
+  Switch. If set, the script will NOT attempt to connect automatically and will fail if no context exists.
+
+.EXAMPLE
+1. Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+2. Install-Module Microsoft.Graph -Scope CurrentUser -AllowClobber
+3. Connect-MgGraph -Scopes 'ThreatHunting.Read.All'
+4. .\EOLAutomated.ps1 -OutputPath 'C:\Temp\EndOfSupport_DeviceSummary.csv'
+#>
+
+[CmdletBinding()]
+param(
+  [string]$OutputPath = ".\EndOfSupport_DeviceSummary_$(Get-Date -Format 'yyyy-MM-dd_HHmmss').csv",
+  [string]$TenantId,
+  [switch]$SkipAutoConnect
+)
+
+function Ensure-GraphConnection {
+  param(
+    [Parameter(Mandatory)][string]$RequiredScope,
+    [string]$TenantId
+  )
+
+  try {
+    $ctx = Get-MgContext -ErrorAction SilentlyContinue
+  } catch {
+    $ctx = $null
+  }
+
+  if (-not $ctx) {
+    if ($SkipAutoConnect) {
+      throw "Not connected to Microsoft Graph. Re-run after: Connect-MgGraph -Scopes '$RequiredScope'"
+    }
+
+    Write-Host "No Graph context detected. Attempting to connect..." -ForegroundColor Cyan
+    if ($TenantId) {
+      Connect-MgGraph -Scopes $RequiredScope -TenantId $TenantId
+    } else {
+      Connect-MgGraph -Scopes $RequiredScope
+    }
+
+    $ctx = Get-MgContext
+    if (-not $ctx) {
+      throw "Failed to establish a Microsoft Graph connection."
+    }
+  }
+
+  # App-only has no Scopes property
+  if ($ctx.AuthType -eq 'AppOnly') {
+    Write-Host "Connected with App-Only auth. Ensure the application permission 'ThreatHunting.Read.All' has admin consent." -ForegroundColor Yellow
+    return
+  }
+
+  # Verify requested scope present (best-effort)
+  $scopes = @()
+  if ($ctx.Scopes) { $scopes = $ctx.Scopes }
+  if ($scopes.Count -gt 0) {
+    $joined = ($scopes -join ' ')
+    if ($joined -notmatch [regex]::Escape($RequiredScope)) {
+      throw "Connected, but missing required scope '$RequiredScope'. Current scopes: $joined"
+    }
+  }
+}
+
+function Convert-ToStringList {
+  <#
+    Converts the EOLSoftwareList field (could be JSON array string, PS array, or string)
+    into a human-friendly '; '-joined string.
+  #>
+  param([object]$Value)
+
+  if ($null -eq $Value) { return '' }
+
+  try {
+    $typeName = $Value.GetType().Name
+  } catch {
+    $typeName = 'Unknown'
+  }
+
+  try {
+    switch ($typeName) {
+      'String' {
+        $trim = $Value.Trim()
+        if ($trim.StartsWith('[') -and $trim.EndsWith(']')) {
+          $arr = $trim | ConvertFrom-Json -ErrorAction Stop
+          if ($arr -is [System.Array]) { return ($arr -join '; ') }
+        }
+        return $trim
+      }
+      'Object[]' { return ($Value -join '; ') }
+      default    { return [string]$Value }
+    }
+  } catch {
+    return [string]$Value
+  }
+}
+
+# ------------------------------
+# Main
+# ------------------------------
+$ErrorActionPreference = 'Stop'
+
+# 1) Ensure Graph connection & permissions
+$requiredScope = 'ThreatHunting.Read.All'
+Ensure-GraphConnection -RequiredScope $requiredScope -TenantId $TenantId
+
+# 2) Define the hunting query
+$kql = @"
+DeviceTvmSoftwareInventory
+| where isnotempty(DeviceName)
+| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
+| summarize 
+    EOLSoftwareCount = count(),
+    EOLSoftwareList = make_set(SoftwareName, 100),
+    OldestEOLDate = min(EndOfSupportDate)
+  by DeviceName
+| order by EOLSoftwareCount desc
+"@
+
+# 3) Prepare request
+$uri  = "https://graph.microsoft.com/v1.0/security/runHuntingQuery"
+$body = @{ Query = $kql } | ConvertTo-Json -Depth 5
+
+Write-Host "Executing hunting query against Defender via Microsoft Graph..." -ForegroundColor Cyan
+
+try {
+  $response = Invoke-MgGraphRequest -Method POST -Uri $uri -Body $body -ContentType "application/json"
+
+  # 4) Validate results
+  if (-not $response -or -not $response.results) {
+    Write-Host "✓ No devices with EOL/EOS software found (no results returned)." -ForegroundColor Green
+    return
+  }
+
+  $raw = $response.results
+  if (-not $raw.Count) {
+    Write-Host "✓ No devices with EOL/EOS software found." -ForegroundColor Green
+    return
+  }
+
+  # 5) Transform rows (pre-calc complex values; no inline try/catch in hashtable)
+  $results = foreach ($row in $raw) {
+    # OldestEOLDate may come as string; make a best-effort cast
+    $oldest = $null
+    try {
+      $oldest = [datetime]$row.OldestEOLDate
+    } catch {
+      $oldest = $row.OldestEOLDate
+    }
+
+    $list = Convert-ToStringList -Value $row.EOLSoftwareList
+
+    [PSCustomObject]@{
+      DeviceName       = $row.DeviceName
+      EOLSoftwareCount = [int]$row.EOLSoftwareCount
+      OldestEOLDate    = $oldest
+      EOLSoftwareList  = $list
+    }
+  }
+
+  # 6) Ensure destination folder exists
+  $dir = Split-Path -Path $OutputPath -Parent
+  if (-not [string]::IsNullOrWhiteSpace($dir) -and -not (Test-Path -LiteralPath $dir)) {
+    Write-Host "Creating folder: $dir" -ForegroundColor Cyan
+    New-Item -ItemType Directory -Path $dir -Force | Out-Null
+  }
+
+  # 7) Export to CSV (compatible with all PowerShell versions)
+  $results |
+    Sort-Object -Property EOLSoftwareCount -Descending |
+    Export-Csv -NoTypeInformation -Encoding UTF8 -Path $OutputPath
+
+  Write-Host "`n✓ Found $($results.Count) devices with EOL software" -ForegroundColor Green
+  Write-Host "✓ Results saved: $OutputPath" -ForegroundColor Green
+
+  # 8) Console summary: Top 10 offenders
+  Write-Host "`nTop 10 Devices by EOL Software Count:" -ForegroundColor Yellow
+  $results |
+    Sort-Object -Property EOLSoftwareCount -Descending |
+    Select-Object -First 10 DeviceName, EOLSoftwareCount, OldestEOLDate |
+    Format-Table -AutoSize
+
+} catch {
+  Write-Error "Query failed: $($_.Exception.Message)"
+  if ($_.Exception.Response -and $_.Exception.Response.Content) {
+    Write-Host "Response content:" -ForegroundColor DarkYellow
+    Write-Host $_.Exception.Response.Content
+  }
+  throw
+}
+```
+
+### How the script works (step-by-step)
 
 1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
 
-   * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**. ([Microsoft Learn][1])
+   * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**.
 
 2. **Build the Advanced Hunting (KQL) query**
 
@@ -137,7 +349,7 @@ DeviceTvmSoftwareInventory
 
 3. **Call the Graph Security “runHuntingQuery” API**
 
-   * With your access token in place, the script posts the KQL to **`/security/runHuntingQuery`** (via the SDK cmdlet or a raw `Invoke-MgGraphRequest`). The API returns a result object that includes **`schema`** and **`results`** (rows) for your query. (This behavior and the PowerShell path are documented and have a sample.) ([Microsoft Learn][1])
+   * With your access token in place, the script posts the KQL to **`/security/runHuntingQuery`** (via the SDK cmdlet or a raw `Invoke-MgGraphRequest`). The API returns a result object that includes **`schema`** and **`results`** (rows) for your query. (This behavior and the PowerShell path are documented and have a sample).
 
 4. **Parse the results into PowerShell objects**
 
@@ -152,7 +364,6 @@ DeviceTvmSoftwareInventory
    * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
 
 ---
-
 
 # The PowerShell piece: what `$kql = @" ... "@` means
 
@@ -204,38 +415,7 @@ DeviceTvmSoftwareInventory
 
 # Why Graph + Advanced Hunting is the right path
 
-* Microsoft’s **Advanced Hunting** via Graph is the modern, cross-workload way to query **Defender XDR** data (devices, identities, email, apps). The **`runHuntingQuery`** endpoint is the supported way to execute your KQL programmatically and get structured results you can transform or report on—exactly what your CSV export is doing. ([Microsoft Learn][1])
-
-# Other useful automations you can add (same pattern)
-
-Because you already authenticate and post KQL to Graph, you can chain more actions off the results without changing your core plumbing:
-
-* **Auto-open tasks for owners**
-  Create work items automatically when `EndOfSupportDate` ≤ N days:
-
-  * Post to **Teams** channels with a table summary of at-risk software.
-  * Create **Planner** tasks (or share a **To Do** task) assigned to the device owner with due dates tied to the EoL date.
-
-* **Drive remediation with Intune (Graph device management)**
-
-  * Tag devices (Azure AD/Entra or Intune) with a custom attribute like `Needs_EoL_Remediation = True` when they appear in your EoL list; then scope an Intune remediation script or app uninstall policy to that group.
-
-* **Ticketing hooks**
-
-  * If you prefer email-based intake, send a formatted report via **Graph Mail (sendMail)** to your helpdesk queue with CSV attached and device-specific links.
-  * Or call your ticket system’s API in the same loop you export CSV.
-
-* **Evidence snapshots / knowledge base**
-
-  * Write the tabular output into a **SharePoint list** (via Graph Lists API) so you can filter/slice by product, vendor, BU, or owner; keep the CSV as an attachment for audit proof.
-
-* **Alert enrichment flows**
-
-  * On a schedule, join your “EoL software” list to recent **Device*Events** tables; if an out-of-support application is seen spawning processes or making outbound connections, post a **high-priority alert** in Teams or open an incident for investigation. (The same `runHuntingQuery` call returns those event rows you can correlate on.) ([Microsoft Learn][3])
-
-* **Executive summaries**
-
-  * Roll up counts by `SoftwareVendor/SoftwareName/EndOfSupportStatus` and push a compact CSV or HTML mail to leadership weekly/monthly (“EoL posture: total devices, top vendors, trend vs last report”).
+* Microsoft’s **Advanced Hunting** via Graph is the modern, cross-workload way to query **Defender XDR** data (devices, identities, email, apps). The **`runHuntingQuery`** endpoint is the supported way to execute your KQL programmatically and get structured results you can transform or report on—exactly what your CSV export is doing.
 
 ---
 
@@ -267,9 +447,92 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
 
 ---
 
+# 🚀 Other useful automations you can add (same pattern)
+
+Because you already authenticate and post KQL to Graph, you can chain more actions off the results without changing your core plumbing:
+
+* **Auto-open tasks for owners**
+  Create work items automatically when `EndOfSupportDate` ≤ N days:
+
+  * Post to **Teams** channels with a table summary of at-risk software.
+  * Create **Planner** tasks (or share a **To Do** task) assigned to the device owner with due dates tied to the EoL date.
+
+* **Drive remediation with Intune (Graph device management)**
+
+  * Tag devices (Azure AD/Entra or Intune) with a custom attribute like `Needs_EoL_Remediation = True` when they appear in your EoL list; then scope an Intune remediation script or app uninstall policy to that group.
+
+* **Ticketing hooks**
+
+  * If you prefer email-based intake, send a formatted report via **Graph Mail (sendMail)** to your helpdesk queue with CSV attached and device-specific links.
+  * Or call your ticket system’s API in the same loop you export CSV.
+
+* **Evidence snapshots / knowledge base**
+
+  * Write the tabular output into a **SharePoint list** (via Graph Lists API) so you can filter/slice by product, vendor, BU, or owner; keep the CSV as an attachment for audit proof.
+
+* **Alert enrichment flows**
+
+  * On a schedule, join your “EoL software” list to recent **Device*Events** tables; if an out-of-support application is seen spawning processes or making outbound connections, post a **high-priority alert** in Teams or open an incident for investigation. (The same `runHuntingQuery` call returns those event rows you can correlate on).
+
+* **Executive summaries**
+
+  * Roll up counts by `SoftwareVendor/SoftwareName/EndOfSupportStatus` and push a compact CSV or HTML mail to leadership weekly/monthly (“EoL posture: total devices, top vendors, trend vs last report”).
+
+* And many more!
+
+| Goal                           | How to Automate It                                                         |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| 🔔 **Notify via Teams**        | Post a summary card to your SOC channel when new EoL software is detected. |
+| 🎫 **Open ServiceNow tickets** | Create incidents automatically for devices with >3 EoL apps.               |
+| 🪄 **Tag in Intune**           | Assign an “EoL-Remediation” dynamic group so devices get upgrade scripts.  |
+| 🧮 **Trend KPI over time**     | Store CSVs in SharePoint and graph “% of devices within lifecycle” weekly. |
+
+---
+
+🧩 Troubleshooting
+
+If you hit snags, here’s what usually goes wrong:
+
+- No data returned → Verify that Defender TVM is enabled and reporting.
+- Permission error → Make sure the account has the ThreatHunting.Read.All Graph permission.
+- Empty EndOfSupportDate values → Not all software vendors report this to Microsoft; you may need to supplement via CMDB or manual metadata.
+
+---
+
+🏁 Wrapping It Up
+
+With one PowerShell script and the Microsoft Graph API, you now have an automated EoL visibility pipeline:
+
+- Pulls Defender TVM software data
+- Flags out-of-support applications
+- Summarizes by device
+- Exports to CSV for reporting or integration
+
+This simple workflow can help your security team reduce attack surface, stay compliant, and free up cycles that were once spent chasing Excel inventories.
+
+---
+
+📚 Bonus: Want to Go Deeper?
+
+If this kind of automation gets your gears turning, check out my book:
+🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
+ — published by Orange Education, available on Kindle and print.
+
+It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
+
+---
+
+🧰 Grab the Script
+
+👉 Download EOLAutomated.ps1 on GitHub
+
+Run it. Report it. Automate it.
+And as always — may your logs be clean and your endpoints up to date. 💀💡
+
+---
 
 # References (good to keep handy)
 
-[1]: https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0 "security: runHuntingQuery - Microsoft Graph v1.0 | Microsoft Learn"
-[2]: https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table?utm_source=chatgpt.com "DeviceTvmSoftwareInventory table in the advanced ..."
-[3]: https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview?utm_source=chatgpt.com "Overview - Advanced hunting - Microsoft Defender XDR"
+- [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](security: runHuntingQuery - Microsoft Graph v1.0 | Microsoft Learn)
+- [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table?utm_source=chatgpt.com](DeviceTvmSoftwareInventory table in the advanced ...)
+- [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview?utm_source=chatgpt.com](Overview - Advanced hunting - Microsoft Defender XDR)
