@@ -73,7 +73,7 @@ So what can we actually do with this visibility once we have it? Here are a few 
 # 👁️ How this Advanced Hunting query finds EoL software
 Now that we know what’s at stake — and what you can do with the data — let’s roll up our sleeves and look at how we actually find these aging assets inside Defender’s data. The key is the `DeviceTvmSoftwareInventory` table. Here’s the exact KQL that makes it all happen. Don’t worry — we’ll unpack it line by line. 👇
 
-```kusto
+```kql
 DeviceTvmSoftwareInventory
 | where isnotempty(DeviceName)
 | where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
@@ -84,6 +84,8 @@ DeviceTvmSoftwareInventory
   by DeviceName
 | order by EOLSoftwareCount desc
 ```
+<br/>
+<br/>
 
 ### 🕵️‍♂️ Line-by-line (what it’s doing)
 
@@ -214,7 +216,7 @@ The script below does exactly that:
 
 Let’s pop the hood and walk through it. 🧑‍💻👇
 
-```ps1
+```powershell
 #Requires -Modules Microsoft.Graph.Authentication
 
 <#
@@ -444,7 +446,7 @@ try {
 
    * The query targets the **Threat & Vulnerability Management** software inventory table: `DeviceTvmSoftwareInventory`. That table includes **End-of-Support** columns such as `EndOfSupportStatus` and `EndOfSupportDate`, which is what lets you produce an “EoL report.” A typical shape looks like:
 
-     ```kusto
+     ```kql
      DeviceTvmSoftwareInventory
      | where isnotempty(EndOfSupportStatus)
      | project DeviceName, SoftwareVendor, SoftwareName, Version, EndOfSupportStatus, EndOfSupportDate
@@ -546,13 +548,13 @@ DeviceTvmSoftwareInventory
 
 * **Only critical/priority software**
 
-  ```kusto
+  ```kql
   | where SoftwareName in~ ("Java", "OpenJDK", "Apache HTTP Server", "MySQL", "Python", "SQL Server Management Studio")
   ```
 
 * **Add owner/context** (join to device info)
 
-  ```kusto
+  ```kql
   DeviceTvmSoftwareInventory
   | where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()
   | join kind=leftouter (DeviceInfo | project DeviceName, OSPlatform, LoggedOnUsers, DeviceId) on DeviceName
@@ -562,7 +564,7 @@ DeviceTvmSoftwareInventory
 
 * **Flag “nearly EoL”** (30/60/90 days) to get ahead of the curve:
 
-  ```kusto
+  ```kql
   | where EndOfSupportDate between (now() .. now() + 30d)
   ```
   
