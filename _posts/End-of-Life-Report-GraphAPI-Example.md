@@ -1,11 +1,4 @@
----
-title: "Automating End-of-Life Software Reports with Microsoft Graph API"
-date: 2025-11-03
-categories: [Microsoft, Defender, GraphAPI, PowerShell, Automation, DevSecOpsDad]
-description: "Use Microsoft Graph Advanced Hunting to automatically find and report End-of-Life software across your Defender XDR devices — complete with PowerShell automation and CSV export."
-image: /assets/images/EOL-Report-GraphAPI.png
----
-🚨 The Silent Risk Hiding in Every Network
+# Introduction & Use Case: 🚨 The Silent Risk Hiding in Every Network: End of Life Devices and Software
 Every security team has a few ghosts in the machine — the forgotten servers quietly running business-critical software that fell off the vendor’s support list years ago. These devices aren’t just “old,” they’re unpatchable — and that makes them prime real estate for attackers looking for a quick foothold.
 
 The problem? Tracking down end-of-life (EoL) software across an enterprise is a nightmare. Sentinel doesn’t always have the right tables, Defender’s Threat & Vulnerability data only hangs around for 30 days, and exporting reports by hand every month is about as fun as diffing CSVs in Notepad.
