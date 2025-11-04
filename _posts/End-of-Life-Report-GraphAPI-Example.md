@@ -615,7 +615,7 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
 <br/>
 <br/>
 
-🔄 Automating the Report with an Entra ID Registered App
+# 🔄 Automating the Report with an Entra ID Registered App
 
 Once your hunting query works interactively, you can automate it exactly like in my earlier post, Push IoCs with PowerShell via API
 . The process is nearly identical — you’ll just use the Microsoft Graph Security API instead of the TI submission endpoint.
@@ -694,8 +694,9 @@ This simple workflow can help your security team reduce attack surface, stay com
 
 👉 [If you found this useful, download the automation script from my GitHub and try it in your lab!](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
 
-Run it. Report it. Automate it.
-And as always — may your logs be clean and your endpoints up to date. 💀💡
+- Run it. Report it. Automate it. 
+- What will you automate via the Graph API? 
+- As always — may your logs be clean and your endpoints up to date. 💀💡
 
 <br/>
 <br/>
