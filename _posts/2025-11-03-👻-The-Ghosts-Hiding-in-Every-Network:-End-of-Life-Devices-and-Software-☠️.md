@@ -1,4 +1,4 @@
-# Introduction & Use Case: 👻 The Ghosts Hiding in Every Network: End of Life Devices and Software ☠️ 
+# Introduction & Use Case:
 Every security team has a few ghosts in the machine — the forgotten servers quietly running business-critical software that fell off the vendor’s support list years ago. These devices aren’t just “old,” they’re unpatchable — and that makes them prime real estate for attackers looking for a quick foothold.
 
 The problem? Tracking down end-of-life (EoL) software across an enterprise is a nightmare. Sentinel doesn’t always have the right tables, Defender’s Threat & Vulnerability data only hangs around for 30 days, and exporting reports by hand every month is about as fun as diffing CSVs in Notepad.
