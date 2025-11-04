@@ -100,6 +100,8 @@ DeviceTvmSoftwareInventory
 
 ### 🕵️‍♂️ Line-by-line (what it’s doing)
 
+  <br/>
+
 - **1.** **Start with TVM software inventory**
    `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).<br/><br/>
 
@@ -146,26 +148,28 @@ DeviceTvmSoftwareInventory
 
 # 👨‍💻 The normal “check EoL” workflow (what an analyst actually does)
 
-1. **Run the query** (Hunting page or API)
+  <br/>
+
+- **1.** **Run the query** (Hunting page or API)
 
    * In the Defender portal (Advanced Hunting) for a quick look, or via Microsoft Graph/PowerShell for repeatable reporting.
 
    <br/>
 
-2. **Scan the top offenders**
+- **2.** **Scan the top offenders**
 
    * Devices with high `EOLSoftwareCount` get triaged first.
    * Skim `EOLSoftwareList` to see if it’s business-critical software (upgrade path needed) vs. dead utilities (safe to remove).
 
   <br/>
 
-3. **Look at “how stale”**
+- **3.** **Look at “how stale”**
 
    * `OldestEOLDate` tells you if you’re weeks vs. years overdue. A very old date = higher risk/visibility with auditors.
 
   <br/>
 
-4. **Decide the path: upgrade, replace, or remove**
+- **4.** **Decide the path: upgrade, replace, or remove**
 
    * **Replace/upgrade**: if it’s a core app with a supported version.
    * **Remove**: if deprecated/unneeded.
@@ -173,16 +177,18 @@ DeviceTvmSoftwareInventory
 
   <br/>
 
-5. **Kick off remediation**
+- **5.** **Kick off remediation**
 
    * Create tickets (ServiceNow/Jira), **Intune** assignments, or **Planner** tasks with due dates based on EoL age/severity.
    * If you automate with Graph, you can do this in the same PowerShell run that produced the CSV.
 
   <br/>
 
-6. **Report & trend**
+- **6.** **Report & trend**
 
    * Export to CSV for your weekly report. Track **% of devices within support** as a KPI and show trend lines improving over time.
+
+     <br/>
 
 That’s the manual way — click, query, export, repeat. ☕
 💡 But we can do better. Let’s take that same hunting logic and wrap it in a PowerShell script that runs automatically through the Microsoft Graph API, producing a fresh report whenever you need it.
@@ -468,6 +474,8 @@ try {
 
    ![](/assets/img/EoL/start.png)
 
+  <br/>
+  
 2. **Build the Advanced Hunting (KQL) query**
 
    * The query targets the **Threat & Vulnerability Management** software inventory table: `DeviceTvmSoftwareInventory`. That table includes **End-of-Support** columns such as `EndOfSupportStatus` and `EndOfSupportDate`, which is what lets you produce an “EoL report.” A typical shape looks like:
@@ -481,17 +489,25 @@ try {
 
      Microsoft’s schema docs explicitly call out the presence of end-of-support info in this table.
 
+  <br/>
+
 3. **Call the Graph Security “runHuntingQuery” API**
 
    * With your access token in place, the script posts the KQL to **`/security/runHuntingQuery`** (via the SDK cmdlet or a raw `Invoke-MgGraphRequest`). The API returns a result object that includes **`schema`** and **`results`** (rows) for your query. (This behavior and the PowerShell path are documented and have a sample).
+
+     <br/>
 
 4. **Parse the results into PowerShell objects**
 
    * The JSON payload’s `results` array is turned into a collection of PSCustomObjects. Each property corresponds to a projected KQL column (e.g., `DeviceName`, `SoftwareName`, `EndOfSupportDate`, etc.). If you see a missing-brace parse error in this section, it just means a hashtable or scriptblock wasn’t closed (you already hit and fixed one of those earlier).
 
+     <br/>
+
 5. **Create the output folder (if needed)**
 
    * The script checks if your chosen output directory (e.g., `C:\Temp`) exists and creates it if not, so the export won’t fail when saving the CSV.
+
+  <br/>
 
 6. **Export the hunting results to CSV**
 
