@@ -165,7 +165,7 @@ That’s the manual way — click, query, export, repeat. ☕
 
 Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel with a regular KQL query?” — great question. You could try… but here’s the catch. 
 
-> The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel. It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default.
+> The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel unless _explicitly ingested_. It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default, so typically stays there. 
 
 <br/>
 <br/>
@@ -178,7 +178,7 @@ Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel wi
 That means if you open the Sentinel “Logs” blade in the Azure portal and go hunting for that table, you’ll likely come up empty.
 It’s not that you did anything wrong — it’s just that Defender never forwards TVM tables into the Log Analytics workspace unless you’ve specifically integrated it (and paid the ingest cost).
 
-So if your plan was to build a shiny Power BI dashboard off exported KQL → M Queries → OData connectors… this is where things get messy... You can’t query what you can’t log table. 😬
+So if your plan was to build a shiny Power BI dashboard off exported KQL → M Queries → OData connectors… this is where things get messy... You can’t query what you haven't logged to a table. 😬
 
 This becomes a real wrench in the works for analysts and compliance teams who want to trend EoL exposure over time. You can’t easily visualize that data monthly if Sentinel never sees it — and exporting manually from Defender’s portal every few weeks is a one-way ticket to carpal tunnel and caffeine burnout 🖐️💀 — let’s automate it instead 💡.
 
