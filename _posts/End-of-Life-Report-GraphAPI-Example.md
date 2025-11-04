@@ -1,11 +1,17 @@
-# 🧰 Intro – The Forgotten Devices Lurking in Your Network
+---
+title: "Automating End-of-Life Software Reports with Microsoft Graph API"
+date: 2025-11-03
+categories: [Microsoft, Defender, GraphAPI, PowerShell, Automation, DevSecOpsDad]
+description: "Use Microsoft Graph Advanced Hunting to automatically find and report End-of-Life software across your Defender XDR devices — complete with PowerShell automation and CSV export."
+image: /assets/images/EOL-Report-GraphAPI.png
+---
+🚨 The Silent Risk Hiding in Every Network
+Every security team has a few ghosts in the machine — the forgotten servers quietly running business-critical software that fell off the vendor’s support list years ago. These devices aren’t just “old,” they’re unpatchable — and that makes them prime real estate for attackers looking for a quick foothold.
 
-Every SOC has a few skeletons in the closet — that dusty Windows Server still running the payroll app, or that vendor workstation quietly humming along on Windows 10 1909. They work, sure… but they’re way past their prime. 🧟‍♂️
+The problem? Tracking down end-of-life (EoL) software across an enterprise is a nightmare. Sentinel doesn’t always have the right tables, Defender’s Threat & Vulnerability data only hangs around for 30 days, and exporting reports by hand every month is about as fun as diffing CSVs in Notepad.
 
-When hardware or software hits End-of-Life (EoL), the vendor stops sending love letters in the form of patches, firmware updates, and security fixes. That means the next exploit doesn’t need zero-day wizardry — it just needs your old box that’s never seen a patch since 2022. 💀
-
-So, in true DevSecOpsDad fashion, we’re automating the cleanup. 🧑‍💻
-In this post, we’ll use PowerShell and the Microsoft Graph API to hunt down unsupported devices hiding in Defender’s Threat & Vulnerability Management tables. With one script, we’ll pull real-time EoL data, drop it into a tidy CSV, and hand your security or compliance team an instant report card of what’s aging out across the environment.
+So, in true DevSecOpsDad fashion, we’re going to automate it. 🧑‍💻
+With one PowerShell script, we’ll connect to the Microsoft Graph API, run an Advanced Hunting query directly against Defender’s TVM data, and produce a clean, auditable CSV that tells you exactly which devices are running out-of-support software — no dashboards, no data loss, no manual clicks.
 
 # In this Post We Will Cover:
 - ⚙️ Understanding Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
@@ -30,6 +36,7 @@ In this post, we’ll use PowerShell and the Microsoft Graph API to hunt down un
 <br/>
 
 # ⚙️ Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
+But before we dive into the code, let’s talk about why this even matters. EoL systems aren’t just messy IT leftovers — they’re security time bombs ticking quietly in your asset inventory. 💣
 
 In cybersecurity, “end-of-life” doesn’t just mean old — it means unprotected.
 When hardware or software reaches its end-of-support date, vendors stop delivering security patches, firmware updates, and compatibility fixes. Those forgotten assets quickly turn into easy footholds for attackers looking for unpatched vulnerabilities or outdated agents to exploit. 🧟‍♂️
@@ -48,6 +55,7 @@ That’s where automation comes in. With a little PowerShell and Microsoft Graph
 <br/>
 
 ### 📖 Practical Use Cases for EoL Automation
+So what can we actually do with this visibility once we have it? Here are a few ways EoL data can move from “nice-to-know” to “mission-critical:”
 
 - Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
 - Compliance Evidence – Generate on-demand audit reports proving lifecycle management and patch governance are in place.
@@ -61,6 +69,7 @@ That’s where automation comes in. With a little PowerShell and Microsoft Graph
 <br/>
 
 # 👁️ How this Advanced Hunting query finds EoL software
+Now that we know what’s at stake — and what you can do with the data — let’s roll up our sleeves and look at how we actually find these aging assets inside Defender’s data. The key is the DeviceTvmSoftwareInventory table. Here’s the exact KQL that makes it all happen. Don’t worry — we’ll unpack it line by line. 👇
 
 ```kusto
 DeviceTvmSoftwareInventory
@@ -144,6 +153,9 @@ DeviceTvmSoftwareInventory
 6. **Report & trend**
 
    * Export to CSV for your weekly report. Track **% of devices within support** as a KPI and show trend lines improving over time.
+
+That’s the manual way — click, query, export, repeat. ☕
+💡 But we can do better. Let’s take that same hunting logic and wrap it in a PowerShell script that runs automatically through the Microsoft Graph API, producing a fresh report whenever you need it.
 
 <br/>
 <br/>
@@ -599,7 +611,7 @@ If you hit snags, here’s what usually goes wrong:
 <br/>
 
 # 🏁 Wrapping It Up
-
+And that’s it — with just a few lines of code, you’ve automated something most organizations still do by hand. No more monthly exports or stale spreadsheets — just real-time lifecycle visibility baked into your workflows.
 With one PowerShell script and the Microsoft Graph API, you now have an automated EoL visibility pipeline:
 
 - Pulls Defender TVM software data
@@ -616,7 +628,7 @@ This simple workflow can help your security team reduce attack surface, stay com
 
 # 🧰 Grab the Script
 
-👉 [Download the automation script from my GitHub](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
+👉 [If you found this useful, download the automation script from my GitHub and try it in your lab!](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
 
 Run it. Report it. Automate it.
 And as always — may your logs be clean and your endpoints up to date. 💀💡
