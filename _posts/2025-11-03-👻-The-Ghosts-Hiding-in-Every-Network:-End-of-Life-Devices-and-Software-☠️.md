@@ -700,8 +700,7 @@ This simple workflow can help your security team reduce attack surface, stay com
 
 👉 [If you found this useful, download the automation script from my GitHub and try it in your lab!](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
 
-- Run it. Report it. Automate it. 
-- What will you automate via the Graph API? Share your results on LinkedIn with #DevSecOpsDad
+- Run it. Report it. Automate it. - _What will you automate via the Graph API?_ **Share your results on LinkedIn with #DevSecOpsDad**
 - As always — may your logs be clean and your endpoints up to date. 💀💡
 
 <br/>
