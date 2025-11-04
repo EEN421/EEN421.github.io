@@ -97,8 +97,12 @@ DeviceTvmSoftwareInventory
 1. **Start with TVM software inventory**
    `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).
 
+ <br/>
+
 2. **Keep only real devices**
    `| where isnotempty(DeviceName)` drops any odd/null rows.
+
+<br/>
 
 3. **Filter to software already past EoL**
    `| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()`
@@ -106,12 +110,16 @@ DeviceTvmSoftwareInventory
    * Ensures the vendor actually provided an end-of-support date.
    * Keeps rows where that date is **now or earlier** (i.e., already out of support today).
 
+<br/>
+
 4. **Roll up by device**
    `summarize ... by DeviceName` collapses many rows (one per app) into **one row per device**, with:
 
    * `EOLSoftwareCount` → how many out-of-support titles are on that device.
    * `EOLSoftwareList` → up to 100 unique software names (handy for a one-glance review).
    * `OldestEOLDate` → the **earliest** EoL among those apps—useful to spot *how long* a device has been carrying legacy baggage.
+
+<br/>
 
 5. **Sort by worst offenders**
    `order by EOLSoftwareCount desc` puts the noisiest/riskier devices at the top.
@@ -124,8 +132,11 @@ DeviceTvmSoftwareInventory
 # 🔍 How to interpret the columns (at a glance)
 
 * **DeviceName** → Who needs attention.
+
 * **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort).
+
 * **EOLSoftwareList** → What exactly is unsupported (helps owners take action).
+
 * **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first).
 
 <br/>
@@ -139,14 +150,20 @@ DeviceTvmSoftwareInventory
 
    * In the Defender portal (Advanced Hunting) for a quick look, or via Microsoft Graph/PowerShell for repeatable reporting.
 
+   <br/>
+
 2. **Scan the top offenders**
 
    * Devices with high `EOLSoftwareCount` get triaged first.
    * Skim `EOLSoftwareList` to see if it’s business-critical software (upgrade path needed) vs. dead utilities (safe to remove).
 
+<br/>
+
 3. **Look at “how stale”**
 
    * `OldestEOLDate` tells you if you’re weeks vs. years overdue. A very old date = higher risk/visibility with auditors.
+
+<br/>
 
 4. **Decide the path: upgrade, replace, or remove**
 
@@ -154,10 +171,14 @@ DeviceTvmSoftwareInventory
    * **Remove**: if deprecated/unneeded.
    * **Isolate/quarantine**: if the device can’t be fixed quickly and is exposed.
 
+<br/>
+
 5. **Kick off remediation**
 
    * Create tickets (ServiceNow/Jira), **Intune** assignments, or **Planner** tasks with due dates based on EoL age/severity.
    * If you automate with Graph, you can do this in the same PowerShell run that produced the CSV.
+
+<br/>
 
 6. **Report & trend**
 
@@ -594,30 +615,39 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
   Create work items automatically when `EndOfSupportDate` ≤ N days:
 
   * Post to **Teams** channels with a table summary of at-risk software.
-  * Create **Planner** tasks (or share a **To Do** task) assigned to the device owner with due dates tied to the EoL date.
+  * Create **Planner** tasks (or share a **To Do** task) assigned to the device owner with due dates tied to the EoL date. 
+
+  <br/>
 
 * **Drive remediation with Intune (Graph device management)**
 
   * Tag devices (Azure AD/Entra or Intune) with a custom attribute like `Needs_EoL_Remediation = True` when they appear in your EoL list; then scope an Intune remediation script or app uninstall policy to that group.
+
+  <br/>
 
 * **Ticketing hooks**
 
   * If you prefer email-based intake, send a formatted report via **Graph Mail (sendMail)** to your helpdesk queue with CSV attached and device-specific links.
   * Or call your ticket system’s API in the same loop you export CSV.
 
+  <br/>
+
 * **Evidence snapshots / knowledge base**
 
   * Write the tabular output into a **SharePoint list** (via Graph Lists API) so you can filter/slice by product, vendor, BU, or owner; keep the CSV as an attachment for audit proof.
+
+  <br/>
 
 * **Alert enrichment flows**
 
   * On a schedule, join your “EoL software” list to recent **Device*Events** tables; if an out-of-support application is seen spawning processes or making outbound connections, post a **high-priority alert** in Teams or open an incident for investigation. (The same `runHuntingQuery` call returns those event rows you can correlate on).
 
+  <br/>
+
 * **Executive summaries**
 
   * Roll up counts by `SoftwareVendor/SoftwareName/EndOfSupportStatus` and push a compact CSV or HTML mail to leadership weekly/monthly (“EoL posture: total devices, top vendors, trend vs last report”).
 
-* And many more!
 
 <br/>
 <br/>
@@ -647,6 +677,8 @@ Once your hunting query works interactively, you can automate it exactly like in
 
   * Set Supported account type to “Single tenant” (or as needed).
 
+  <br/>
+
 * For headless automation, no redirect URI is required unless you’re testing interactively.
 
   * Assign API Permissions
@@ -669,9 +701,13 @@ Once your hunting query works interactively, you can automate it exactly like in
 
   * The script can then run headlessly as a scheduled task, container job, or Logic App without user interaction.
 
+  <br/>
+
 * Schedule It
 
   * In Windows Task Scheduler, Azure Automation, or a cron-style setup, trigger the PowerShell script to output the CSV report on your chosen cadence (e.g., weekly EoL summary).
+
+  <br/>
 
 >⚡👉 If you’ve already followed my earlier guide on automating TI submissions, you’ll find this setup instantly familiar — just swap in the hunting endpoint and the `ThreatHunting.Read.All` permission: [Push IoCs with PowerShell via API](https://www.hanley.cloud/2024-08-27-Push-IoCs-with-PowerShell-via-API/)
 
