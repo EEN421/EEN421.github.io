@@ -161,7 +161,7 @@ It’s not that you did anything wrong — it’s just that Defender never forwa
 
 So if your plan was to build a shiny Power BI dashboard off exported KQL → M Queries → OData connectors… this is where things get messy... You can’t query what you can’t log table. 😬
 
-This becomes a real wrench in the works for analysts and compliance teams who want to trend EoL exposure over time. You can’t easily visualize that data monthly if Sentinel never sees it — and exporting manually from Defender’s portal every few weeks is a one-way ticket to Repetitive Strain Injury Repetitive Strain Injury. 🖐️💀
+This becomes a real wrench in the works for analysts and compliance teams who want to trend EoL exposure over time. You can’t easily visualize that data monthly if Sentinel never sees it — and exporting manually from Defender’s portal every few weeks is a one-way ticket to carpal tunnel and caffeine burnout 🖐️💀 — let’s automate it instead 💡.
 
 That’s why we’re going straight to the source; By calling Microsoft Graph’s Advanced Hunting endpoint, we can reach directly into the Defender dataset — the same data Sentinel would ingest — and pull exactly what we need, on demand. No workspace ingestion, no manual exports, no cost surprises. Just clean JSON results, ready to automate.
 
