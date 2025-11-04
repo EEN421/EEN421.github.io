@@ -1,6 +1,10 @@
 # Introduction & Use Case:
-Every security team has a few ghosts in the machine 👻 — the forgotten servers quietly running business-critical software that fell off the vendor’s support list years ago ☠️. These devices aren’t just “old,” they’re unpatchable — and that makes them prime real estate for attackers looking for a quick foothold. 
+Every security team has a few ghosts in the machine 👻 — the forgotten servers quietly running business-critical software that fell off the vendor’s support list years ago ☠️.
+
+These devices aren’t just “old,” they’re unpatchable — and that makes them prime real estate for attackers looking for a quick foothold. 
+
 The problem? Tracking down end-of-life (EoL) software across an enterprise is a nightmare. Sentinel doesn’t always have the right tables, Defender’s Threat & Vulnerability data only hangs around for 30 days, and exporting reports by hand every month is about as fun as diffing CSVs in Notepad. 
+
 So, in true DevSecOpsDad fashion, we’re going to automate it. 🧑‍💻
 
 With one PowerShell script, we’ll connect to the Microsoft Graph API, run an Advanced Hunting query directly against Defender’s TVM data, and produce a clean, auditable CSV that tells you exactly which devices are running out-of-support software — no data loss, no manual clicks.
