@@ -757,6 +757,11 @@ If this kind of automation gets your gears turning, check out my book:
 <br/>
 <br/>
 
+![](/assets/img/EoL/Ghost_in_static.jpg)
+
+<br/>
+<br/>
+
 # 🔗 References (good to keep handy)
 
 - [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0)
@@ -770,10 +775,7 @@ If this kind of automation gets your gears turning, check out my book:
 <br/>
 <br/>
 
-![](/assets/img/EoL/Ghost_in_static.jpg)
 
-<br/>
-<br/>
 
 <a href="https://hanleycloudsolutions.com">
     <img src="/assets/img/footer.png">
