@@ -194,7 +194,7 @@ This becomes a real wrench in the works for analysts and compliance teams who wa
 
 That’s why we’re going straight to the source; By calling Microsoft Graph’s Advanced Hunting endpoint, we can reach directly into the Defender dataset — the same data Sentinel would ingest — and pull exactly what we need, on demand. No workspace ingestion, no manual exports, no cost surprises. Just clean JSON results, ready to automate.
 
-And with a bit of PowerShell magic, we’ll transform that output into a ready-to-use CSV that you can feed into Power BI, share with your compliance team, or even schedule as a weekly report.
+And with a bit of PowerShell magic✨, we’ll transform that output into a ready-to-use CSV that you can feed into Power BI, share with your compliance team, or even schedule as a weekly report.
 
 Let’s dig into how it works. 👇
 
@@ -612,6 +612,9 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
   * Roll up counts by `SoftwareVendor/SoftwareName/EndOfSupportStatus` and push a compact CSV or HTML mail to leadership weekly/monthly (“EoL posture: total devices, top vendors, trend vs last report”).
 
 * And many more!
+
+<br/>
+<br/>
 
 | Goal                           | How to Automate It                                                         |
 | ------------------------------ | -------------------------------------------------------------------------- |
