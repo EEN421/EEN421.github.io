@@ -458,7 +458,7 @@ try {
      | order by EndOfSupportDate asc
      ```
 
-     Microsoft’s schema docs explicitly call out the presence of end-of-support info in this table. ([Microsoft Learn][2])
+     Microsoft’s schema docs explicitly call out the presence of end-of-support info in this table.
 
 3. **Call the Graph Security “runHuntingQuery” API**
 
