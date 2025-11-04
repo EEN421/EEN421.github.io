@@ -667,7 +667,7 @@ Once your hunting query works interactively, you can automate it exactly like in
 
   * In Windows Task Scheduler, Azure Automation, or a cron-style setup, trigger the PowerShell script to output the CSV report on your chosen cadence (e.g., weekly EoL summary).
 
-> * 🧠 If you’ve already followed my earlier guide on automating TI submissions, you’ll find this setup instantly familiar — just swap in the hunting endpoint and the `ThreatHunting.Read.All` permission: [Push IoCs with PowerShell via API](https://www.hanley.cloud/2024-08-27-Push-IoCs-with-PowerShell-via-API/)
+>⚡👉 If you’ve already followed my earlier guide on automating TI submissions, you’ll find this setup instantly familiar — just swap in the hunting endpoint and the `ThreatHunting.Read.All` permission: [Push IoCs with PowerShell via API](https://www.hanley.cloud/2024-08-27-Push-IoCs-with-PowerShell-via-API/)
 
 <br/>
 <br/>
