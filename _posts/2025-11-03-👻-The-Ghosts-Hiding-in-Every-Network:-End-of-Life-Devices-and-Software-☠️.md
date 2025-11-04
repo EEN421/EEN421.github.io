@@ -468,6 +468,8 @@ try {
 
 ### 🕵️‍♂️ How the script works (step-by-step)
 
+<br/>
+
 1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
 
    * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**.
