@@ -3,6 +3,8 @@ Every security team has a few ghosts in the machine 👻 — the forgotten serve
 
 These devices aren’t just “old,” they’re unpatchable — and that makes them prime real estate for attackers looking for a quick foothold. 
 
+![](/assets/img/EoL/Ghost_in_machine.jpg)
+
 The problem? Tracking down end-of-life (EoL) software across an enterprise is a nightmare. Sentinel doesn’t always have the right tables, Defender’s Threat & Vulnerability data only hangs around for 30 days, and exporting reports by hand every month is about as fun as diffing CSVs in Notepad. 
 
 So, in true DevSecOpsDad fashion, we’re going to automate it. 🧑‍💻
@@ -760,3 +762,19 @@ If this kind of automation gets your gears turning, check out my book:
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table)
 
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview)
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+![](/assets/img/EoL/Ghost_in_static.jpg)
+
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
