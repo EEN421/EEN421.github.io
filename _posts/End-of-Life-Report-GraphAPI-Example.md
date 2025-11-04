@@ -14,25 +14,24 @@ When hardware or software reaches its end-of-support date, vendors stop deliveri
 
 From a defender’s standpoint, ignoring EoL assets creates a ripple effect across security, compliance, and operations:
 
-Exposure: Legacy systems are prime entry points for ransomware, privilege escalation, and lateral movement.
-
-Compliance Risk: Frameworks like NIST CSF, CIS v8, and ISO 27001 require active lifecycle management. Unsupported OS versions and firmware are frequent audit findings.
-
-Operational Blind Spots: Unsupported software can break telemetry and patch automation, leaving you flying blind in key parts of your environment.
+- Exposure: Legacy systems are prime entry points for ransomware, privilege escalation, and lateral movement.
+- Compliance Risk: Frameworks like NIST CSF, CIS v8, and ISO 27001 require active lifecycle management. Unsupported OS versions and firmware are frequent audit findings.
+- Operational Blind Spots: Unsupported software can break telemetry and patch automation, leaving you flying blind in key parts of your environment.
 
 That’s where automation comes in. With a little PowerShell and Microsoft Graph, you can continuously surface EoL assets and feed them directly into your existing security and IT workflows.
 
 🧩 Practical Use Cases for EoL Automation
 
-Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
+- Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
+- Compliance Evidence – Generate on-demand audit reports proving lifecycle management and patch governance are in place.
+- Patch & Lifecycle Management – Feed EoL findings into Intune, CMDBs, or ServiceNow to trigger upgrades or decommission tasks.
+- Executive Metrics – Track “% of assets within support lifecycle” as a measurable cyber hygiene KPI.
+- Defender XDR Integration – Correlate EoL devices with incidents in Microsoft Sentinel to prioritize the riskiest exposures.
 
-Compliance Evidence – Generate on-demand audit reports proving lifecycle management and patch governance are in place.
-
-Patch & Lifecycle Management – Feed EoL findings into Intune, CMDBs, or ServiceNow to trigger upgrades or decommission tasks.
-
-Executive Metrics – Track “% of assets within support lifecycle” as a measurable cyber hygiene KPI.
-
-Defender XDR Integration – Correlate EoL devices with incidents in Microsoft Sentinel to prioritize the riskiest exposures.
+<br/>
+<br/>
+<br/>
+<br/>
 
 # How this Advanced Hunting query finds EoL software
 
@@ -72,7 +71,10 @@ DeviceTvmSoftwareInventory
 5. **Sort by worst offenders**
    `order by EOLSoftwareCount desc` puts the noisiest/riskier devices at the top.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # How to interpret the columns (at a glance)
 
@@ -81,7 +83,10 @@ DeviceTvmSoftwareInventory
 * **EOLSoftwareList** → What exactly is unsupported (helps owners take action).
 * **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first).
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # The normal “check EoL” workflow (what an analyst actually does)
 
@@ -113,9 +118,57 @@ DeviceTvmSoftwareInventory
 
    * Export to CSV for your weekly report. Track **% of devices within support** as a KPI and show trend lines improving over time.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
+
+⚡ From KQL to Graph — Why We’re Hunting the Smart Way
+
+Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel with a regular KQL query?” — great question. You could try… but here’s the catch. 🧩
+
+The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel.
+It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default.
+
+That means if you open the Sentinel “Logs” blade in the Azure portal and go hunting for that table, you’ll likely come up empty.
+It’s not that you did anything wrong — it’s just that Defender never forwards TVM tables into the Log Analytics workspace unless you’ve specifically integrated it (and paid the ingest cost).
+
+So if your plan was to build a shiny Power BI dashboard off exported KQL → M Queries → OData connectors… this is where things get messy.
+
+You can’t query what you can’t log. 😬
+
+This becomes a real wrench in the works for analysts and compliance teams who want to trend EoL exposure over time. You can’t easily visualize that data monthly if Sentinel never sees it — and exporting manually from Defender’s portal every few weeks is a one-way ticket to RSI. 🖐️💀
+
+That’s why we’re going straight to the source.
+
+By calling Microsoft Graph’s Advanced Hunting endpoint, we can reach directly into the Defender dataset — the same data Sentinel would ingest — and pull exactly what we need, on demand.
+
+No workspace ingestion, no manual exports, no cost surprises.
+Just clean JSON results, ready to automate.
+
+And with a bit of PowerShell magic, we’ll transform that output into a ready-to-use CSV that you can feed into Power BI, share with your compliance team, or even schedule as a weekly report.
+
+Let’s dig into how it works. 👇
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Automation Script
+
+So far, we’ve looked at how you’d manually check for end-of-life software — running KQL in the portal, eyeballing top offenders, and kicking off tickets one by one. That’s fine for a small lab or proof-of-concept, but in production, you’ll want a repeatable, scriptable workflow that runs quietly in the background while you sip your coffee ☕.
+
+That’s where PowerShell and Microsoft Graph come in. With just a few dozen lines, we can connect to Graph’s Advanced Hunting endpoint, run the same query automatically, and export the results to a polished CSV — no clicking through dashboards, no stale data.
+
+The script below does exactly that:
+
+- Authenticates to Microsoft Graph (handling both user and app-only auth)
+- Executes the DeviceTvmSoftwareInventory hunting query
+- Transforms the results into clean, readable data
+- Exports everything to CSV for reporting, trending, or ticket automation
+
+Let’s pop the hood and walk through it. 🧑‍💻👇
 
 ```ps1
 #Requires -Modules Microsoft.Graph.Authentication
@@ -328,7 +381,14 @@ try {
 }
 ```
 
-### How the script works (step-by-step)
+👉 [Download the automation script from my GitHub](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+# How the script works (step-by-step)
 
 1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
 
@@ -363,7 +423,10 @@ try {
 
    * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # The PowerShell piece: what `$kql = @" ... "@` means
 
@@ -524,7 +587,7 @@ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations 
 
 🧰 Grab the Script
 
-👉 Download EOLAutomated.ps1 on GitHub
+👉 [Download the automation script from my GitHub](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
 
 Run it. Report it. Automate it.
 And as always — may your logs be clean and your endpoints up to date. 💀💡
