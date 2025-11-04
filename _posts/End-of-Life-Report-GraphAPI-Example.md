@@ -166,6 +166,14 @@ Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel wi
 
 > The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel. It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default.
 
+<br/>
+<br/>
+
+![](/assets/img/EoL/EoL_Stuff.png)
+
+<br/>
+<br/>
+
 That means if you open the Sentinel “Logs” blade in the Azure portal and go hunting for that table, you’ll likely come up empty.
 It’s not that you did anything wrong — it’s just that Defender never forwards TVM tables into the Log Analytics workspace unless you’ve specifically integrated it (and paid the ingest cost).
 
@@ -181,6 +189,9 @@ Let’s dig into how it works. 👇
 
 <br/>
 <br/>
+
+
+
 <br/>
 <br/>
 
@@ -423,6 +434,8 @@ try {
 
    * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**.
 
+   ![](/assets/img/EoL/start.png)
+
 2. **Build the Advanced Hunting (KQL) query**
 
    * The query targets the **Threat & Vulnerability Management** software inventory table: `DeviceTvmSoftwareInventory`. That table includes **End-of-Support** columns such as `EndOfSupportStatus` and `EndOfSupportDate`, which is what lets you produce an “EoL report.” A typical shape looks like:
@@ -451,6 +464,12 @@ try {
 6. **Export the hunting results to CSV**
 
    * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
+
+<br/>
+<br/>
+
+![](/assets/img/EoL/found.png)
+![](/assets/img/EoL/result.png)
 
 <br/>
 <br/>
