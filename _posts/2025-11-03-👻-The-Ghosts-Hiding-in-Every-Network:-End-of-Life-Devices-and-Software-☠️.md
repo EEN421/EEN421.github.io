@@ -700,8 +700,11 @@ This simple workflow can help your security team reduce attack surface, stay com
 
 👉 [If you found this useful, download the automation script from my GitHub and try it in your lab!](https://github.com/EEN421/Powershell-Stuff/blob/Main/EOL%20Stuff%20Automated.ps1)
 
-- Run it. Report it. Automate it. - _What will you automate via the Graph API?_ **Share your results on LinkedIn with #DevSecOpsDad**
-- As always — may your logs be clean and your endpoints up to date. 💀💡
+**Run it. Report it. Automate it.**
+
+_What will you automate via the Graph API?_ **Share your results on LinkedIn with #DevSecOpsDad**
+  
+As always — may your logs be clean and your endpoints up to date. 💀💡
 
 <br/>
 <br/>
@@ -752,6 +755,6 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
-- [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](security: runHuntingQuery - Microsoft Graph v1.0 | Microsoft Learn)
+- [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](security: runHuntingQuery - Microsoft Graph v1.0 - Microsoft Learn)
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table?utm_source=chatgpt.com](DeviceTvmSoftwareInventory table in the advanced ...)
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview?utm_source=chatgpt.com](Overview - Advanced hunting - Microsoft Defender XDR)
