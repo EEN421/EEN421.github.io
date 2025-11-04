@@ -6,6 +6,11 @@ The problem? Tracking down end-of-life (EoL) software across an enterprise is a 
 So, in true DevSecOpsDad fashion, we’re going to automate it. 🧑‍💻
 With one PowerShell script, we’ll connect to the Microsoft Graph API, run an Advanced Hunting query directly against Defender’s TVM data, and produce a clean, auditable CSV that tells you exactly which devices are running out-of-support software — no dashboards, no data loss, no manual clicks.
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 # In this Post We Will Cover:
 - ⚙️ Understanding Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
 - 📖 Review Practical Use Cases for End of Life Automation
