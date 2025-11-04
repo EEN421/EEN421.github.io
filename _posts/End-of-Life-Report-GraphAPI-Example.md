@@ -37,6 +37,11 @@ From a defender’s standpoint, ignoring EoL assets creates a ripple effect acro
 
 That’s where automation comes in. With a little PowerShell and Microsoft Graph, you can continuously surface EoL assets and feed them directly into your existing security and IT workflows.
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 🧩 Practical Use Cases for EoL Automation
 
 - Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
