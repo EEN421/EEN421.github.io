@@ -84,6 +84,7 @@ DeviceTvmSoftwareInventory
   by DeviceName
 | order by EOLSoftwareCount desc
 ```
+
 <br/>
 <br/>
 
