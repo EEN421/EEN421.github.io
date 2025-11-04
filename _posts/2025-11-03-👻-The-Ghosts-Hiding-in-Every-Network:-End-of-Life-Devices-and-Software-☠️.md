@@ -756,5 +756,7 @@ If this kind of automation gets your gears turning, check out my book:
 # 🔗 References (good to keep handy)
 
 - [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0)
+
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicetvmsoftwareinventory-table)
+
 - [https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview)
