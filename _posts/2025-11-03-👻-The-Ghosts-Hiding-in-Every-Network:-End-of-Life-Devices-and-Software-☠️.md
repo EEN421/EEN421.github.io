@@ -100,8 +100,6 @@ DeviceTvmSoftwareInventory
 
 ### 🕵️‍♂️ Line-by-line (what it’s doing)
 
-  <br/>
-
 - **1.** **Start with TVM software inventory**
    `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).<br/><br/>
 
@@ -470,7 +468,7 @@ try {
 
 <br/>
 
-1. **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
+- **1.** **Authenticate to Microsoft Graph (PowerShell Graph SDK)**
 
    * The script imports the Graph module (e.g., `Microsoft.Graph.Authentication`) and calls `Connect-MgGraph` with the **least-privilege** scope that can run Advanced Hunting (e.g., `ThreatHunting.Read.All`). This establishes a token your session will use for subsequent Graph calls. The Advanced Hunting Graph method you’re ultimately hitting is **`POST /security/runHuntingQuery`**.
 
@@ -478,7 +476,7 @@ try {
 
   <br/>
   
-2. **Build the Advanced Hunting (KQL) query**
+- **2.** **Build the Advanced Hunting (KQL) query**
 
    * The query targets the **Threat & Vulnerability Management** software inventory table: `DeviceTvmSoftwareInventory`. That table includes **End-of-Support** columns such as `EndOfSupportStatus` and `EndOfSupportDate`, which is what lets you produce an “EoL report.” A typical shape looks like:
 
@@ -493,25 +491,25 @@ try {
 
   <br/>
 
-3. **Call the Graph Security “runHuntingQuery” API**
+- **3.** **Call the Graph Security “runHuntingQuery” API**
 
    * With your access token in place, the script posts the KQL to **`/security/runHuntingQuery`** (via the SDK cmdlet or a raw `Invoke-MgGraphRequest`). The API returns a result object that includes **`schema`** and **`results`** (rows) for your query. (This behavior and the PowerShell path are documented and have a sample).
 
      <br/>
 
-4. **Parse the results into PowerShell objects**
+- **4.** **Parse the results into PowerShell objects**
 
    * The JSON payload’s `results` array is turned into a collection of PSCustomObjects. Each property corresponds to a projected KQL column (e.g., `DeviceName`, `SoftwareName`, `EndOfSupportDate`, etc.). If you see a missing-brace parse error in this section, it just means a hashtable or scriptblock wasn’t closed (you already hit and fixed one of those earlier).
 
      <br/>
 
-5. **Create the output folder (if needed)**
+- **5.** **Create the output folder (if needed)**
 
    * The script checks if your chosen output directory (e.g., `C:\Temp`) exists and creates it if not, so the export won’t fail when saving the CSV.
 
   <br/>
 
-6. **Export the hunting results to CSV**
+- **6.** **Export the hunting results to CSV**
 
    * Finally it writes the objects to disk with `Export-Csv` (or a similar file writer).
 
@@ -537,7 +535,9 @@ DeviceTvmSoftwareInventory
 "@
 ```
 
-Key facts:
+<br/>
+
+**Key facts:**
 
 * **Here-strings** let you paste multi-line text verbatim without escaping quotes or backticks. Great for KQL, JSON, and HTML.
 * **Double-quoted** (`@"..."@`) means **PowerShell variable expansion is enabled** inside the block. If you write `$Today` in there, it will expand.
@@ -568,10 +568,16 @@ DeviceTvmSoftwareInventory
 
 # 🛠️ Quality checks & gotchas
 
+<br/>
+
 * **Inventory coverage**: Devices missing TVM/Defender inventory won’t be represented—cross-check onboarding.
+
 * **Set size**: `make_set(SoftwareName, 100)` caps the list at 100 names; raise if you truly need more (CSV readability may suffer).
+
 * **Time zone**: `now()` is UTC in AH. That’s fine for lifecycle checks, but note when describing reports to stakeholders.
+
 * **Names vs. versions**: If you need precision, also project `Version` (e.g., different Java builds).
+
 * **Old device names**: If you recycle hostnames, consider joining on a stable key like `DeviceId`.
 
 <br/>
@@ -581,7 +587,7 @@ DeviceTvmSoftwareInventory
 
 # ✅ Why Graph + Advanced Hunting is the Way
 
-* Microsoft’s **Advanced Hunting** via Graph is the modern, cross-workload way to query **Defender XDR** data (devices, identities, email, apps). The **`runHuntingQuery`** endpoint is the supported way to execute your KQL programmatically and get structured results you can transform or report on—exactly what your CSV export is doing.
+> Microsoft’s **Advanced Hunting** via Graph is the modern, cross-workload way to query **Defender XDR** data (devices, identities, email, apps). The **`runHuntingQuery`** endpoint is the supported way to execute your KQL programmatically and get structured results you can transform or report on—exactly what your CSV export is doing.
 
 <br/>
 <br/>
@@ -589,6 +595,8 @@ DeviceTvmSoftwareInventory
 <br/>
 
 # 🧠 Smart variations you might add later
+
+<br/>
 
 * **Only critical/priority software**
   ```bash
