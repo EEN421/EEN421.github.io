@@ -23,6 +23,7 @@ With one PowerShell script, we’ll connect to the Microsoft Graph API, run an A
 - ✅ Why Graph + Advanced Hunting is the Way
 - 🧠 Smart variations you might add later
 - 🚀 Other useful automations you can add (same pattern)
+- 🔄 Automating the Report with an Entra ID Registered App
 - 🩺 Troubleshooting
 - 🏁 Wrapping It Up
 - 📚 Bonus: Want to Go Deeper?
@@ -614,6 +615,52 @@ Because you already authenticate and post KQL to Graph, you can chain more actio
 <br/>
 <br/>
 
+🔄 Automating the Report with an Entra ID Registered App
+
+Once your hunting query works interactively, you can automate it exactly like in my earlier post, Push IoCs with PowerShell via API
+. The process is nearly identical — you’ll just use the Microsoft Graph Security API instead of the TI submission endpoint.
+
+* Register an Application in Entra ID
+
+  * Go to Entra ID → App registrations → New registration.
+
+  * Give it a recognizable name like EOL-Automation-Graph.
+
+  * Set Supported account type to “Single tenant” (or as needed).
+
+* For headless automation, no redirect URI is required unless you’re testing interactively.
+
+  * Assign API Permissions
+
+  * Under API permissions → Add a permission → Microsoft Graph → Application permissions, add:
+
+  * ThreatHunting.Read.All
+
+  * Click Grant admin consent.
+
+  * Create a Client Secret
+
+  * Under Certificates & secrets, generate a new secret and note the Value (you’ll need it in your script).
+
+  * Capture your Tenant ID, Client ID, and Client Secret.
+
+  * Update the Script
+
+  * Modify the authentication block to use Connect-MgGraph -ClientId $clientId -TenantId $tenantId -ClientSecret $clientSecret.
+
+  * The script can then run headlessly as a scheduled task, container job, or Logic App without user interaction.
+
+* Schedule It
+
+  * In Windows Task Scheduler, Azure Automation, or a cron-style setup, trigger the PowerShell script to output the CSV report on your chosen cadence (e.g., weekly EoL summary).
+
+> * 🧠 If you’ve already followed my earlier guide on automating TI submissions, you’ll find this setup instantly familiar — just swap in the hunting endpoint and the `ThreatHunting.Read.All` permission.
+
+<br/>
+<br/>
+<br/>
+<br/>
+
 # 🩺 Troubleshooting
 
 If you hit snags, here’s what usually goes wrong:
@@ -655,7 +702,7 @@ And as always — may your logs be clean and your endpoints up to date. 💀💡
 <br/>
 <br/>
 
-# In this Post We Will Cover:
+# In this Post We Covered:
 - ⚙️ Understanding Why Identifying End-of-Life Systems Matters (and What You Can Do About It)
 - 📖 Review Practical Use Cases for End of Life Automation
 - 👁️ Using Advanced Hunting to Find EoL Devices and Software
@@ -667,6 +714,7 @@ And as always — may your logs be clean and your endpoints up to date. 💀💡
 - ✅ Why Graph + Advanced Hunting is the Way
 - 🧠 Smart variations you might add later
 - 🚀 Other useful automations you can add (same pattern)
+- 🔄 Automating the Report with an Entra ID Registered App
 - 🩺 Troubleshooting
 - 🏁 Wrapping It Up
 - 📚 Bonus: Want to Go Deeper?
