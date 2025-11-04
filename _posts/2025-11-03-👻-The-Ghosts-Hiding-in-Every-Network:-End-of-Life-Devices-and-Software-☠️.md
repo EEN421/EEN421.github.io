@@ -50,7 +50,9 @@ When hardware or software reaches its end-of-support date, vendors stop deliveri
 From a defender’s standpoint, ignoring EoL assets creates a ripple effect across security, compliance, and operations:
 
 - Exposure: Legacy systems are prime entry points for ransomware, privilege escalation, and lateral movement.
+
 - Compliance Risk: Frameworks like NIST CSF, CIS v8, and ISO 27001 require active lifecycle management. Unsupported OS versions and firmware are frequent audit findings.
+
 - Operational Blind Spots: Unsupported software can break telemetry and patch automation, leaving you flying blind in key parts of your environment.
 
 That’s where automation comes in. With a little PowerShell and Microsoft Graph, you can continuously surface EoL assets and feed them directly into your existing security and IT workflows.
@@ -64,9 +66,13 @@ That’s where automation comes in. With a little PowerShell and Microsoft Graph
 So what can we actually do with this visibility once we have it? Here are a few ways EoL data can move from “nice-to-know” to “mission-critical:”
 
 - Attack Surface Reduction – Automatically identify and quarantine devices running out-of-support software before adversaries find them.
+
 - Compliance Evidence – Generate on-demand audit reports proving lifecycle management and patch governance are in place.
+
 - Patch & Lifecycle Management – Feed EoL findings into Intune, CMDBs, or ServiceNow to trigger upgrades or decommission tasks.
+
 - Executive Metrics – Track “% of assets within support lifecycle” as a measurable cyber hygiene KPI.
+
 - Defender XDR Integration – Correlate EoL devices with incidents in Microsoft Sentinel to prioritize the riskiest exposures.
 
 <br/>
@@ -94,34 +100,26 @@ DeviceTvmSoftwareInventory
 
 ### 🕵️‍♂️ Line-by-line (what it’s doing)
 
-1. **Start with TVM software inventory**
-   `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).
+- **1.** **Start with TVM software inventory**
+   `DeviceTvmSoftwareInventory` is Defender’s Threat & Vulnerability Management table that lists discovered software per device, with lifecycle metadata (including end-of-support where Microsoft/Vendor provides it).<br/><br/>
 
- <br/>
+- **2.** **Keep only real devices**
+   `| where isnotempty(DeviceName)` drops any odd/null rows.<br/><br/>
 
-2. **Keep only real devices**
-   `| where isnotempty(DeviceName)` drops any odd/null rows.
-
-<br/>
-
-3. **Filter to software already past EoL**
+- **3.** **Filter to software already past EoL**
    `| where isnotempty(EndOfSupportDate) and EndOfSupportDate <= now()`
 
    * Ensures the vendor actually provided an end-of-support date.
-   * Keeps rows where that date is **now or earlier** (i.e., already out of support today).
+   * Keeps rows where that date is **now or earlier** (i.e., already out of support today).<br/><br/>
 
-<br/>
-
-4. **Roll up by device**
+- **4.** **Roll up by device** <br/>
    `summarize ... by DeviceName` collapses many rows (one per app) into **one row per device**, with:
 
    * `EOLSoftwareCount` → how many out-of-support titles are on that device.
    * `EOLSoftwareList` → up to 100 unique software names (handy for a one-glance review).
-   * `OldestEOLDate` → the **earliest** EoL among those apps—useful to spot *how long* a device has been carrying legacy baggage.
+   * `OldestEOLDate` → the **earliest** EoL among those apps—useful to spot *how long* a device has been carrying legacy baggage.<br/><br/>
 
-<br/>
-
-5. **Sort by worst offenders**
+- **5.** **Sort by worst offenders**
    `order by EOLSoftwareCount desc` puts the noisiest/riskier devices at the top.
 
 <br/>
@@ -131,13 +129,15 @@ DeviceTvmSoftwareInventory
 
 # 🔍 How to interpret the columns (at a glance)
 
-* **DeviceName** → Who needs attention.
+<br/>
 
-* **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort).
+* **DeviceName** → Who needs attention. <br/><br/>
 
-* **EOLSoftwareList** → What exactly is unsupported (helps owners take action).
+* **EOLSoftwareCount** → Volume of unsupported titles (a proxy for risk + cleanup effort). <br/><br/>
 
-* **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first).
+* **EOLSoftwareList** → What exactly is unsupported (helps owners take action). <br/><br/>
+
+* **OldestEOLDate** → How long you’ve been out of compliance (prioritize older first). 
 
 <br/>
 <br/>
@@ -157,13 +157,13 @@ DeviceTvmSoftwareInventory
    * Devices with high `EOLSoftwareCount` get triaged first.
    * Skim `EOLSoftwareList` to see if it’s business-critical software (upgrade path needed) vs. dead utilities (safe to remove).
 
-<br/>
+  <br/>
 
 3. **Look at “how stale”**
 
    * `OldestEOLDate` tells you if you’re weeks vs. years overdue. A very old date = higher risk/visibility with auditors.
 
-<br/>
+  <br/>
 
 4. **Decide the path: upgrade, replace, or remove**
 
@@ -171,14 +171,14 @@ DeviceTvmSoftwareInventory
    * **Remove**: if deprecated/unneeded.
    * **Isolate/quarantine**: if the device can’t be fixed quickly and is exposed.
 
-<br/>
+  <br/>
 
 5. **Kick off remediation**
 
    * Create tickets (ServiceNow/Jira), **Intune** assignments, or **Planner** tasks with due dates based on EoL age/severity.
    * If you automate with Graph, you can do this in the same PowerShell run that produced the CSV.
 
-<br/>
+  <br/>
 
 6. **Report & trend**
 
