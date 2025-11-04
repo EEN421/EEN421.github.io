@@ -168,7 +168,7 @@ That’s the manual way — click, query, export, repeat. ☕
 
 Now, if you’re thinking, “Wait, couldn’t I just pull this from Sentinel with a regular KQL query?” — great question. You could try… but here’s the catch. 
 
-> The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel unless _explicitly ingested_. It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days by default, so typically stays there. 
+> The DeviceTvmSoftwareInventory table — the one that holds all that rich lifecycle and end-of-support data — doesn’t usually live in Sentinel unless _explicitly ingested_. It’s part of Defender’s Threat & Vulnerability Management (TVM) dataset, which is stored directly in the Defender XDR portal and retained there for around 30 days **for free** by default, so it typically stays there. 
 
 <br/>
 <br/>
