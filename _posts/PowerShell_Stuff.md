@@ -1,8 +1,15 @@
-Absolutely — let’s break down the **`Write-Progress`** cmdlet in PowerShell, explain what it does, how it works, and then demonstrate it in a full example script with inline comments.
+# Introduction & Use Case: Audit Readiness Without the Burnout
 
----
+Let’s be honest — nobody looks forward to audit season.
+Between spreadsheets, evidence collection, screenshots of portal settings, and the dreaded “please export that to CSV,” most security teams burn entire weekends chasing compliance data that PowerShell could have gathered in minutes.
 
-## 🧠 What `Write-Progress` Does
+That’s where this PowerShell Toolbox comes in.
+I built and refined these four scripts to automate the grunt work behind CIS Benchmarks, NIST 800-53, CMMC 2.0, and other security assessments. They surface exactly what auditors ask for — privileged roles, network exposure, GPO compliance, and end-of-life assets — in repeatable, exportable formats.
+
+So grab your coffee, crack open VS Code, and let’s make audit prep something you actually look forward to (or at least don’t dread).
+
+
+# 🧠 What `Write-Progress` Does
 
 `Write-Progress` displays a progress bar in the PowerShell console to give the user visual feedback on long-running tasks.
 
