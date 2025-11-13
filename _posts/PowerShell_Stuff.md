@@ -15,7 +15,10 @@ So grab your coffee, crack open VS Code, and let’s make audit prep something y
 
 It’s **purely informational** — it doesn’t affect the logic of the script; it just shows the *status*, *percentage complete*, and *activity description*.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## ⚙️ Syntax Overview
 
@@ -41,7 +44,10 @@ Write-Progress
 | **`-Id`**               | Identifies the progress bar instance (useful when running multiple progress bars). |
 | **`-ParentId`**         | Groups child progress bars under a parent (for nested tasks).                      |
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## 🧩 Example Script — Simulated File Processing
 
@@ -80,7 +86,10 @@ Write-Progress -Activity "Processing files..." -Completed
 Write-Host "✅ All $totalFiles files have been processed successfully!"
 ```
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## 🪄 Output Behavior
 
@@ -112,6 +121,31 @@ Write-Progress -Activity "Main Task" -Completed
 
 This creates **a main progress bar with sub-progress bars** underneath — great for loops within loops (e.g., scanning folders and then files).
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
-Would you like me to adapt this into a **real-world cybersecurity example** (like scanning endpoints, exporting results, or analyzing log files) so it fits your typical blog/project style?
+# 📚 Bonus: Want to Go Deeper?
+
+If this kind of automation gets your gears turning, check out my book:
+🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
+ — published by Orange Education, available on Kindle and print. 👉 Get your copy here: [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
+
+⚡ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
+
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)

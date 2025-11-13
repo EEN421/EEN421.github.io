@@ -12,7 +12,10 @@ Effective cost optimization in Sentinel is not simply about spending less. It is
 
 This whitepaper explores proven techniques for cost optimization in Microsoft Sentinel, backed by **KQL (Kusto Query Language) queries** that provide actionable insights. We will cover trend analysis, identification of expensive data sources, daily forecasting, and operational tuning—equipping both CISOs and SOC leaders with the strategies necessary to optimize costs while preserving the integrity of their security posture.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## The Economics of Sentinel Ingestion
 
@@ -31,7 +34,10 @@ Thus, the optimization question is not *“How do I stop collecting logs?”* bu
 
 KQL provides the analytical framework to answer these questions.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Trend Analysis: Understanding Log Ingestion Over Time
 
@@ -77,8 +83,10 @@ Period90Days
 ![Log Ingestion Trends](sandbox:/mnt/data/trend_chart.png)
 
 
-
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Identifying High-Cost Log Sources
 
@@ -105,9 +113,10 @@ search *
 
 ![Top Costly Log Sources](sandbox:/mnt/data/cost_chart.png)
 
-
-
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Cost Attribution by Table
 
@@ -127,9 +136,10 @@ SecurityEvent
 * Useful for **executive reporting**: “This table costs \$X/month—here’s why we keep it.”
 * Enables **retention trade-offs**: retain high-value logs for 2 years, archive or drop low-value ones after 30 days.
 
-
-
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Average Daily Ingestion and Forecasting
 
@@ -151,9 +161,10 @@ Usage
 * Converts complex ingestion metrics into **simple financial language** (“We spend \$X/day”).
 * Enables **what-if scenarios**: *If we add this log source, what will daily and monthly costs look like?*
 
-
-
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Reducing Noise: Security Log Reasons and Device Actions
 
@@ -187,9 +198,10 @@ let Period90Days = CommonSecurityLog
 * Overly verbose logs can be **filtered before ingestion**, reducing costs dramatically.
 * Tracking device actions helps confirm that **policy changes reduce noise as expected**.
 
-
-
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Operational Optimization: Alert Fatigue and Analyst Time
 
@@ -221,9 +233,10 @@ SecurityAlert
 
 ![Top Alerts by Volume](sandbox:/mnt/data/alerts_chart.png)
 
-
-
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## Strategic Recommendations
 
