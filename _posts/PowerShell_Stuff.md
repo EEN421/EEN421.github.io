@@ -12,13 +12,16 @@ Great call—let’s buckle in deep. Crafting a “PowerShell Toolbox” post fo
 
 ---
 
+🧰 Intro – The PowerShell Toolbox You Didn’t Know You Needed
 
-### Introduction & Use Case
+As your friendly DevSecOpsDad, I’ve got two things that keep me up at night: 1) the constant drift across cloud and on-prem environments, and 2) the ghosts of unpatched servers and lingering admin rights.
 
-As your friendly DevSecOpsDad, I’ve got two things that keep me up at night: 1) the youth-baseball banner sponsor chasing, and 2) unchecked drift across cloud, on-prem GPOs, RBAC chaos and those “ghost servers” (you know the kind) lurking past end-of-support.
-This week I set aside my Traeger brisket (okay maybe just delayed it) and fired up the PowerShell ISE to build out a toolbox. Four scripts from the GitHub repo at EEN421 / “Powershell-Stuff” (yes, that’s the repo name) came up big in cleaning up the mess.
+This week I set aside my Traeger brisket (okay, maybe just delayed it a bit) and fired up the PowerShell ISE to build out a toolbox. Four scripts from the EEN421 PowerShell-Stuff repo
+ came up big in cleaning up the mess — and they’ve earned a permanent spot in my rotation.
 
-Use case: You’re an MSSP or corporate security lead, and you need to build repeatable, automatable checks — not just one-offs. You want to shift left, catch configuration drift, GPO weakness, privilege creep, and end-of-life ghosts *before* the adversary does. Sound familiar? Good. Let’s dig in.
+If you’re an MSSP engineer, security architect, or just the kind of person who likes to know exactly what’s running in your network before the adversary does, this one’s for you. These scripts help you assess, audit, and automate — across your cloud, your directory, and your endpoints — all with the simplicity of native PowerShell.
+
+Grab your coffee, crack open VS Code, and let’s dig in.
 
 ---
 
