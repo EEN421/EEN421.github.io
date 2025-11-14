@@ -15,32 +15,26 @@ So grab your coffee, crack open VS Code, and let’s make audit prep something y
 <br/>
 
 # Tool #1 – Cloud & Network Assessment.ps1
-
 ### Purpose
-
 This script is your first-pass “what’s the attack surface looking like” tool for your cloud subscriptions and network estate. Think: did someone spin up a public subnet without NSGs? Are there unused VMs still powered on in the test subscription? Are resource groups tagged for ownership? It spreads across cloud + network (hence the name).
 
 ### Breakdown
-
 * Connects to Azure (or AWS if you adapt it) to enumerate subscriptions, resource groups, VMs, NSGs, public IPs.
 * Checks for common mis-configurations: open inbound internet facing RDP/SSH, idle VM status, lack of tags, resource-group naming drift.
 * Generates output (CSV/JSON) that you can feed into a workbook in Microsoft Sentinel or a PowerBI dashboard.
 * Key functions include: `Get-SubscriptionList`, `Get-ResourceGroupSummary`, `Get-NetworkSecurityGroupRules`, `Get-PublicIPInsights`, `Get-IdleVMs`.
 
 ### Use Case Example
-
 Imagine you inherited a client with multiple Azure subscriptions (Prod, DR, Dev, Sandbox) and no consistent tagging or NSG rules. You run Cloud_Network_Assessment.ps1:
 
 ```powershell
 .\Cloud_Network_Assessment.ps1 -SubscriptionList @('sub-prod','sub-dev') -OutputPath 'C:\Reports\CloudNet_Assess_2025-11-07.csv'
 ```
 
-You get a CSV with columns: Subscription, ResourceGroup, VMName, PublicIp, InboundOpen (Yes/No), TagOwner, LastLogin, IdleStatus (Days).
+You get a CSV with columns: **Subscription, ResourceGroup, VMName, PublicIp, InboundOpen (Yes/No), TagOwner, LastLogin, IdleStatus (Days)**.
 You sort by IdleStatus >30 days, flag those VMs. You filter where InboundOpen=Yes and PublicIp exists → drill into those NSGs, tighten rules.
-You push the CSV into Sentinel via LogicApp or Enterprise Alert so you get automated email when new open inbound ports are detected.
 
 ### Pro Tips & Caveats
-
 * Ensure you have **Compute**/Network/**Security Reader** role in Azure (or equivalent) so the script can query.
 * Idle VM detection might require you to define what “idle” means (e.g., no CPU >5% and no logons in last 30 days) — you may want to customize.
 * This is a **snapshot**-type script; if you want continuous monitoring, schedule it (eg weekly) and diff outputs.
@@ -58,13 +52,11 @@ You push the CSV into Sentinel via LogicApp or Enterprise Alert so you get autom
 On-premises and hybrid AD still exist (yes, I’m looking at you, brick-and-mortar K-12 district). GPO_Audit.ps1 helps you dig into your Group Policy Objects (GPOs) to find policy drift, missing links, and compliance issues. It’s your “what has changed under the hood” lens for domain controls.
 
 ### Breakdown
-
 * Connects to Active Directory via PowerShell (e.g., `Get-GPO`, `Get-GPOReport`) to enumerate all GPOs, their linked OUs, settings, WMI filters, delegated permissions.
 * Checks for: stale/unlinked GPOs, GPOs with no “last modified” timestamp recently, GPOs with overly permissive delegation (e.g., Authenticated Users have “Edit settings”), missing baseline settings (e.g., required password policy not applied).
 * Generates an HTML/CSV report for compliance review — attach to your monthly briefing for the board or MSSP SOC.
 
 ### Use Case Example
-
 Your SME team complains “we applied the new password complexity domain-wide but a few laptops aren’t getting it”. You run:
 
 ```powershell
@@ -75,7 +67,6 @@ You open the HTML, find that a sub-OU (OU=LegacyDevices) has a GPO with override
 You archive previous reports to establish trendlines (GPO drift reducing over time = good score for your SOC board).
 
 ### Pro Tips
-
 * Run from a domain-joined workstation with RSAT/GPMC module installed.
 * Mind AD replication latency — if you query right after many changes, you might get inconsistent results. Wait for replication or specify domain controller.
 * For hybrid Azure AD + Intune + on-prem AD, consider extending this logic or making it part of your overall compliance pipeline.
