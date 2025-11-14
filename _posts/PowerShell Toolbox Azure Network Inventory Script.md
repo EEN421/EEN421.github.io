@@ -1,4 +1,4 @@
-🧰 PowerShell Toolbox
+# 🧰 PowerShell Toolbox
 If you’ve ever inherited a messy Azure environment and someone asked, “Hey, can you tell us how this thing is actually networked?” — this script is for you. 🧰🔍
 Azure’s network layer is incredibly powerful, but it’s scattered across VNets, NSGs, Firewalls, Gateways, App Gateways, ExpressRoute, and dozens of blades in the portal. Trying to manually stitch all that together? Pure pain. 😵‍💫🧵
 This script flips the table on that chaos by giving you one clean CSV containing your entire network topology + security configuration across the subscription. 📊✨
@@ -10,7 +10,7 @@ Let’s break it all down.
 <br/>
 <br/>
 
-🎯 What This Script Actually Does
+# 🎯 What This Script Actually Does
 
 This script performs a full subscription-wide network inventory by collecting:
 
@@ -41,7 +41,7 @@ This CSV becomes a one-stop view of your entire Azure network — perfect for CI
 <br/>
 <br/>
 
-🛠️ Why This Script Belongs in Your Assessment Workflow
+# 🛠️ Why This Script Belongs in Your Assessment Workflow
 
 If you're doing any of these:
 
@@ -84,7 +84,7 @@ You get a single CSV with every detail flattened and ready to filter.
 <br/>
 <br/>
 
-⚙️ Full Technical Breakdown (Every Section Explained)
+# ⚙️ Full Technical Breakdown (Every Section Explained)
 
 Below is a line-by-line understanding of the entire script so you can explain it clearly in your article.
 
@@ -431,7 +431,7 @@ Friendly success message — because good scripts should be human-friendly.
 <br/>
 <br/>
 
-▶️ How to Run This Script (Step-By-Step)
+# ▶️ How to Run This Script (Step-By-Step)
 1. Install modules
 Install-Module Az -Scope CurrentUser
 
@@ -458,7 +458,7 @@ C:\AzureNetworkReport\
 <br/>
 <br/>
 
-🎉 Final Thoughts
+# 🎉 Final Thoughts
 
 This script is exactly the kind of tool I wish Microsoft shipped out-of-the-box. It lets you understand your environment in minutes, not hours. It’s perfect for:
 
