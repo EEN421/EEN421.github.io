@@ -1,29 +1,19 @@
-# Introduction & Use Case: Audit Readiness Without the Burnout
+# Introduction & Use Case: 🧰Audit Readiness Without the Burnout – The PowerShell Toolbox You Didn’t Know You Needed
 
 Let’s be honest — nobody looks forward to audit season.
 Between spreadsheets, evidence collection, screenshots of portal settings, and the dreaded “please export that to CSV,” most security teams burn entire weekends chasing compliance data that PowerShell could have gathered in minutes.
 
 That’s where this PowerShell Toolbox comes in.
-I built and refined these four scripts to automate the grunt work behind CIS Benchmarks, NIST 800-53, CMMC 2.0, and other security assessments. They surface exactly what auditors ask for — privileged roles, network exposure, GPO compliance, and end-of-life assets — in repeatable, exportable formats.
-
-So grab your coffee, crack open VS Code, and let’s make audit prep something you actually look forward to (or at least don’t dread).
-
-Great call—let’s buckle in deep. Crafting a “PowerShell Toolbox” post for **DevSecOpsDad.com** means getting the style, tone and structure right—so here’s the plan:
-
----
-
-🧰 Intro – The PowerShell Toolbox You Didn’t Know You Needed
-
-As your friendly DevSecOpsDad, I’ve got two things that keep me up at night: 1) the constant drift across cloud and on-prem environments, and 2) the ghosts of unpatched servers and lingering admin rights.
-
-This week I set aside my Traeger brisket (okay, maybe just delayed it a bit) and fired up the PowerShell ISE to build out a toolbox. Four scripts from the EEN421 PowerShell-Stuff repo
- came up big in cleaning up the mess — and they’ve earned a permanent spot in my rotation.
+I built and refined these scripts to automate the grunt work behind CIS Benchmarks, NIST 800-53, CMMC 2.0, and other security assessments. They surface exactly what auditors ask for — privileged roles, network exposure, GPO compliance, and end-of-life assets — in repeatable, exportable formats.
 
 If you’re an MSSP engineer, security architect, or just the kind of person who likes to know exactly what’s running in your network before the adversary does, this one’s for you. These scripts help you assess, audit, and automate — across your cloud, your directory, and your endpoints — all with the simplicity of native PowerShell.
 
-Grab your coffee, crack open VS Code, and let’s dig in.
+So grab your coffee, crack open VS Code, and let’s make audit prep something you actually look forward to (or at least don’t dread), and let's dig in.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Tool #1 – Cloud & Network Assessment.ps1
 
@@ -57,7 +47,10 @@ You push the CSV into Sentinel via LogicApp or Enterprise Alert so you get autom
 * This is a **snapshot**-type script; if you want continuous monitoring, schedule it (eg weekly) and diff outputs.
 * As a DevSecOpsDad note: *"Don’t run this at 3 am when you forgot to pause the Traeger"*. Use proper scheduling and alerting.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Tool #2 – GPO_Audit.ps1
 
@@ -88,7 +81,10 @@ You archive previous reports to establish trendlines (GPO drift reducing over ti
 * Mind AD replication latency — if you query right after many changes, you might get inconsistent results. Wait for replication or specify domain controller.
 * For hybrid Azure AD + Intune + on-prem AD, consider extending this logic or making it part of your overall compliance pipeline.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Tool #3 – Privileged_RBAC_Roles.ps1
 
@@ -121,7 +117,10 @@ These findings get exported to your MSSP ticketing system and you tag high-risk 
 * Be careful with large tenants — you may hit throttling; implement batching.
 * Consider connecting results to a governance workbook or email digest for monthly review.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Tool #4 – Automated EoL Stuff.ps1
 
@@ -153,7 +152,10 @@ You automate weekly runs and feed into your incident-response queue: “Unpatche
 * Use scheduling (Task Scheduler / Azure Automation) and archive the historical data so you can show trend (“we had 12 EoL assets last quarter; now down to 4”).
 * Prioritize high-risk assets (internet-facing, business-critical) first — don’t try to boil the ocean.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Putting It All Together
 
@@ -166,7 +168,10 @@ Here’s how I (DevSecOpsDad) integrate these into my workflow:
 * Maintain a “Toolbox” repository (GitHub) version-controlled, adding custom modules (e.g., for logging, notification, tagging).
 * Challenge myself annually during the Halloween maker project to “refactor one script as a module and automate its deployment from GitHub Actions” (yes, the Traeger-smoke-and-code weekend tradition lives on).
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Next Steps & Your Challenge
 
@@ -177,7 +182,10 @@ Now it’s your turn:
 * Write a “what-changed” diff process: e.g., store last output, compare new run, highlight new risk items.
 * Let me know the results. Post a screenshot of your workbook or alert summary (with any sensitive info redacted) on LinkedIn using #DevSecOpsDad and tag me.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 # Bonus Tool: `Write-Progress`
 
