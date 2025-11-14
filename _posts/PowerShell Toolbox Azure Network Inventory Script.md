@@ -1,13 +1,14 @@
 🧰 PowerShell Toolbox
-Azure Network Inventory Script — Map Your Cloud Without Clicking Through 47 Azure Blades
-
-If you’ve ever inherited a messy Azure environment and someone asked, “Hey, can you tell us how this thing is actually networked?” — this script is for you.
-
-Azure’s network layer is powerful, but it’s spread across VNets, NSGs, Firewalls, Gateways, App Gateways, ExpressRoute, and dozens of blades in the portal. Doing a true network assessment manually is a headache. This script gives you a single CSV containing the entire network topology and security configuration across your subscription.
-
-This belongs in every cloud engineer’s, security architect’s, and consultant’s toolkit — especially during audits, onboarding, incident response, or pre-migration planning.
-
+If you’ve ever inherited a messy Azure environment and someone asked, “Hey, can you tell us how this thing is actually networked?” — this script is for you. 🧰🔍
+Azure’s network layer is incredibly powerful, but it’s scattered across VNets, NSGs, Firewalls, Gateways, App Gateways, ExpressRoute, and dozens of blades in the portal. Trying to manually stitch all that together? Pure pain. 😵‍💫🧵
+This script flips the table on that chaos by giving you one clean CSV containing your entire network topology + security configuration across the subscription. 📊✨
+This belongs in every cloud engineer’s, security architect’s, and consultant’s toolkit — especially during audits, onboarding, incident response, or pre-migration planning. 🚀🛡️📋
 Let’s break it all down.
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 🎯 What This Script Actually Does
 
@@ -34,6 +35,11 @@ C:\AzureNetworkReport\AzureNetworkReport.zip
 
 
 This CSV becomes a one-stop view of your entire Azure network — perfect for CIS audits, security reviews, architectural mapping, segmentation validation, dataflow documentation, or just learning what you’re actually working with.
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 🛠️ Why This Script Belongs in Your Assessment Workflow
 
@@ -73,6 +79,11 @@ Searching through the portal for that one VPN gateway named “Test-Gw-Old-DoNot
 
 You get a single CSV with every detail flattened and ready to filter.
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 ⚙️ Full Technical Breakdown (Every Section Explained)
 
 Below is a line-by-line understanding of the entire script so you can explain it clearly in your article.
@@ -98,6 +109,9 @@ The zipped version of that CSV
 -Force ensures the folder is created even if it already exists
 
 Output is suppressed using Out-Null for cleanliness
+
+<br/>
+<br/>
 
 2. Azure Login + Subscription Selection UI
 Connect-AzAccount -ErrorAction SilentlyContinue
@@ -132,6 +146,9 @@ Exits gracefully if you cancel the picker
 Sets the active Azure context to that subscription
 
 Stores the subscription name for CSV tagging
+
+<br/>
+<br/>
 
 3. Inventory Array Initialization
 $inventory = @()
@@ -228,6 +245,11 @@ Helps build network diagrams
 
 Required for NIST/CIS segmentation controls
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 7. VPN Gateways
 $gateways = Get-AzVirtualNetworkGateway -ResourceGroupName $rgName -ErrorAction SilentlyContinue
 foreach ($gw in $gateways) {
@@ -259,6 +281,11 @@ Why this matters:
 Required for hybrid connectivity mapping
 
 Useful in incident response or route debugging
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 8. VPN Connections
 $connections = Get-AzVirtualNetworkGatewayConnection -ResourceGroupName $rgName -ErrorAction SilentlyContinue
@@ -374,6 +401,11 @@ Bandwidth
 
 Provisioning state
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 12. Export and ZIP the Results
 $inventory | Export-Csv -Path $CombinedCsv -NoTypeInformation
 
@@ -393,6 +425,11 @@ Write-Host "📦 Zipped as: $ZipPath" -ForegroundColor Green
 
 
 Friendly success message — because good scripts should be human-friendly.
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 ▶️ How to Run This Script (Step-By-Step)
 1. Install modules
@@ -415,6 +452,11 @@ It prints each RG being processed.
 
 6. Results appear here:
 C:\AzureNetworkReport\
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 🎉 Final Thoughts
 
