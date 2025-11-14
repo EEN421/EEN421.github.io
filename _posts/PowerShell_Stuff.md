@@ -8,6 +8,177 @@ I built and refined these four scripts to automate the grunt work behind CIS Ben
 
 So grab your coffee, crack open VS Code, and let’s make audit prep something you actually look forward to (or at least don’t dread).
 
+Great call—let’s buckle in deep. Crafting a “PowerShell Toolbox” post for **DevSecOpsDad.com** means getting the style, tone and structure right—so here’s the plan:
+
+---
+
+
+### Introduction & Use Case
+
+As your friendly DevSecOpsDad, I’ve got two things that keep me up at night: 1) the youth-baseball banner sponsor chasing, and 2) unchecked drift across cloud, on-prem GPOs, RBAC chaos and those “ghost servers” (you know the kind) lurking past end-of-support.
+This week I set aside my Traeger brisket (okay maybe just delayed it) and fired up the PowerShell ISE to build out a toolbox. Four scripts from the GitHub repo at EEN421 / “Powershell-Stuff” (yes, that’s the repo name) came up big in cleaning up the mess.
+
+Use case: You’re an MSSP or corporate security lead, and you need to build repeatable, automatable checks — not just one-offs. You want to shift left, catch configuration drift, GPO weakness, privilege creep, and end-of-life ghosts *before* the adversary does. Sound familiar? Good. Let’s dig in.
+
+---
+
+### Tool #1 – Cloud & Network Assessment.ps1
+
+#### Purpose
+
+This script is your first-pass “what’s the attack surface looking like” tool for your cloud subscriptions and network estate. Think: did someone spin up a public subnet without NSGs? Are there unused VMs still powered on in the test subscription? Are resource groups tagged for ownership? It spreads across cloud + network (hence the name).
+
+#### Breakdown
+
+* Connects to Azure (or AWS if you adapt it) to enumerate subscriptions, resource groups, VMs, NSGs, public IPs.
+* Checks for common mis-configurations: open inbound internet facing RDP/SSH, idle VM status, lack of tags, resource-group naming drift.
+* Generates output (CSV/JSON) that you can feed into a workbook in Microsoft Sentinel or a PowerBI dashboard.
+* Key functions include: `Get-SubscriptionList`, `Get-ResourceGroupSummary`, `Get-NetworkSecurityGroupRules`, `Get-PublicIPInsights`, `Get-IdleVMs`.
+
+#### Use Case Example
+
+Imagine you inherited a client with multiple Azure subscriptions (Prod, DR, Dev, Sandbox) and no consistent tagging or NSG rules. You run Cloud_Network_Assessment.ps1:
+
+```powershell
+.\Cloud_Network_Assessment.ps1 -SubscriptionList @('sub-prod','sub-dev') -OutputPath 'C:\Reports\CloudNet_Assess_2025-11-07.csv'
+```
+
+You get a CSV with columns: Subscription, ResourceGroup, VMName, PublicIp, InboundOpen (Yes/No), TagOwner, LastLogin, IdleStatus (Days).
+You sort by IdleStatus >30 days, flag those VMs. You filter where InboundOpen=Yes and PublicIp exists → drill into those NSGs, tighten rules.
+You push the CSV into Sentinel via LogicApp or Enterprise Alert so you get automated email when new open inbound ports are detected.
+
+#### Pro Tips & Caveats
+
+* Ensure you have **Compute**/Network/**Security Reader** role in Azure (or equivalent) so the script can query.
+* Idle VM detection might require you to define what “idle” means (e.g., no CPU >5% and no logons in last 30 days) — you may want to customize.
+* This is a **snapshot**-type script; if you want continuous monitoring, schedule it (eg weekly) and diff outputs.
+* As a DevSecOpsDad note: *"Don’t run this at 3 am when you forgot to pause the Traeger"*. Use proper scheduling and alerting.
+
+---
+
+### Tool #2 – GPO_Audit.ps1
+
+#### Purpose
+
+On-premises and hybrid AD still exist (yes, I’m looking at you, brick-and-mortar K-12 district). GPO_Audit.ps1 helps you dig into your Group Policy Objects (GPOs) to find policy drift, missing links, and compliance issues. It’s your “what has changed under the hood” lens for domain controls.
+
+#### Breakdown
+
+* Connects to Active Directory via PowerShell (e.g., `Get-GPO`, `Get-GPOReport`) to enumerate all GPOs, their linked OUs, settings, WMI filters, delegated permissions.
+* Checks for: stale/unlinked GPOs, GPOs with no “last modified” timestamp recently, GPOs with overly permissive delegation (e.g., Authenticated Users have “Edit settings”), missing baseline settings (e.g., required password policy not applied).
+* Generates an HTML/CSV report for compliance review — attach to your monthly briefing for the board or MSSP SOC.
+
+#### Use Case Example
+
+Your SME team complains “we applied the new password complexity domain-wide but a few laptops aren’t getting it”. You run:
+
+```powershell
+.\GPO_Audit.ps1 -DomainContoso.local -OutputReport 'C:\Reports\GPO_Audit_Contoso_2025-11-07.html'
+```
+
+You open the HTML, find that a sub-OU (OU=LegacyDevices) has a GPO with override permissions by local admins and isn’t linked properly. You remediate: link baseline GPO, remove delegated permissions, then re-run after replication.
+You archive previous reports to establish trendlines (GPO drift reducing over time = good score for your SOC board).
+
+#### Pro Tips
+
+* Run from a domain-joined workstation with RSAT/GPMC module installed.
+* Mind AD replication latency — if you query right after many changes, you might get inconsistent results. Wait for replication or specify domain controller.
+* For hybrid Azure AD + Intune + on-prem AD, consider extending this logic or making it part of your overall compliance pipeline.
+
+---
+
+### Tool #3 – Privileged_RBAC_Roles.ps1
+
+#### Purpose
+
+Now we move into privilege creep and RBAC — one of my favorite “silent killers”. This script helps you inventory privileged roles (cloud and on-prem) and check for risky assignments (excessive nested groups, too many assignments, stale role holders). Essentially: “who can do what” and “should they still?”
+
+#### Breakdown
+
+* Queries Azure AD / Azure RBAC (or on-prem AD roles if modified) for all role assignments, nested groups, belonging accounts.
+* Identifies: accounts with *Owner* or *PrivilegedRoleAdmin* that have not logged on in X days, role assignments via groups that have external members, inherited assignments.
+* Outputs CSV/JSON for analysis and optionally invokes remediation suggestions (e.g., “remove this member from this role”).
+* Key functions: `Get-AzureADDirectoryRole`, `Get-AzRoleAssignment`, `Get-GroupMembershipRecursive`, `Get-SignInActivity`.
+
+#### Use Case Example
+
+You suspect that former contractors still retain high privileges in your cloud tenant. You run:
+
+```powershell
+.\Privileged_RBAC_Roles.ps1 -TenantId 'contoso.onmicrosoft.com' -DaysInactive 90 -Output 'C:\Reports\PrivRoles_2025-11-07.csv'
+```
+
+You spot “[UserX@externaldomain.com](mailto:UserX@externaldomain.com)” as member of *Owner* in a Prod subscription and last login 180 days ago. You escalate to remove.
+You also see “GroupLegacyAdmins” still has 50+ members, many inactive. You schedule a cleanup.
+These findings get exported to your MSSP ticketing system and you tag high-risk issues for SOC review.
+
+#### Pro Tips
+
+* Ensure you have appropriate permissions (Global Reader / Security Reader / Role Administrator) to query.
+* Be careful with large tenants — you may hit throttling; implement batching.
+* Consider connecting results to a governance workbook or email digest for monthly review.
+
+---
+
+### Tool #4 – Automated EoL Stuff.ps1
+
+#### Purpose
+
+This is a gem for cleaning up ghosts: servers, OS versions, software platforms that have reached End-Of-Life (EoL) and are still running. You and I both know the drill: they’re hiding quietly, unpatched, un-monitored, and waiting for a bad actor (or worst-case: your auditor). This script automates discovery.
+
+#### Breakdown
+
+* Scans across servers (on-prem + cloud) to gather OS version, installed software version, last patch date, last reboot, vendor end-of-support date (if you maintain a database or feed).
+* Flags assets that are: OS version unsupported, no patches in last 90 days, software EoL and still installed, etc.
+* Generates list for deprecation or migration. Sends alerts for high-visibility assets (e.g., internet-facing, ICS/OT segments).
+* Functions: `Get-ComputerSystem`, `Get-InstalledSoftware`, `Get-HotFix`, `Compare-EoLDate`, `Export-Csv`.
+
+#### Use Case Example
+
+In your home-lab (or MSSP customer), you run:
+
+```powershell
+.\Automated EoL Stuff.ps1 -ServerListPath 'C:\servers.txt' -EoLFeed 'C:\feeds\VendorEoL.csv' -Output 'C:\Reports\EoL_Assets_2025-11-07.xlsx'
+```
+
+You open the Excel, filter for “InternetFacing=Yes” and “EoL=Yes” → you find an old server running Windows Server 2008 R2 still hosting a legacy app. You flag for immediate migration.
+You automate weekly runs and feed into your incident-response queue: “Unpatched/EoL asset discovered – escalate now”.
+
+#### Pro Tips
+
+* Maintain your EoL feed (vendor EoL dates) — this is the “database” you compare against.
+* Use scheduling (Task Scheduler / Azure Automation) and archive the historical data so you can show trend (“we had 12 EoL assets last quarter; now down to 4”).
+* Prioritize high-risk assets (internet-facing, business-critical) first — don’t try to boil the ocean.
+
+---
+
+### Putting It All Together
+
+Here’s how I (DevSecOpsDad) integrate these into my workflow:
+
+* Weekly scheduled runs (Sunday morning, while the family sleeps) of Cloud_Network_Assessment and Privileged_RBAC_Roles.
+* Monthly run of GPO_Audit and Automated EoL Stuff with the results fed into our MSSP’s ticketing system (Jira/ServiceNow) and a summary slide for the “Security Review” meeting.
+* Use PowerShell Core (7.x) so the scripts run cross-platform (even on my MacBook when I’m remote from Beaumont, KY).
+* Push CSV outputs into Azure Sentinel via LogicApps + Azure Blob Storage + Workbook; create alerts when thresholds exceeded (e.g., > 5 inbound open ports, > 10 stale role members).
+* Maintain a “Toolbox” repository (GitHub) version-controlled, adding custom modules (e.g., for logging, notification, tagging).
+* Challenge myself annually during the Halloween maker project to “refactor one script as a module and automate its deployment from GitHub Actions” (yes, the Traeger-smoke-and-code weekend tradition lives on).
+
+---
+
+### Next Steps & Your Challenge
+
+Now it’s your turn:
+
+* Pick one of the four scripts and **customize** it for **your environment**. Maybe add a Teams/Slack alert, or feed it into your KQL workbook.
+* Consider adding **unit-tests** (Pester) so your toolbox grows from script to reusable module.
+* Write a “what-changed” diff process: e.g., store last output, compare new run, highlight new risk items.
+* Let me know the results. Post a screenshot of your workbook or alert summary (with any sensitive info redacted) on LinkedIn using #DevSecOpsDad and tag me.
+
+---
+
+
+
+
 
 # 🧠 What `Write-Progress` Does
 
