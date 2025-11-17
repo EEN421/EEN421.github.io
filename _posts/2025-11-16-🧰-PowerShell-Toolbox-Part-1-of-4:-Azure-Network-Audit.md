@@ -39,12 +39,15 @@ This script performs a full subscription-wide network inventory by collecting:
 - ExpressRoute Circuits
 
 It flattens all findings into a unified schema and exports to the following output:
-
+```bash
 C:\AzureNetworkReport\AzureNetworkInventory.csv
 C:\AzureNetworkReport\AzureNetworkReport.zip
-
-
+```
 This CSV becomes a one-stop view of your entire Azure network — perfect for CIS audits, security reviews, architectural mapping, segmentation validation, dataflow documentation, or just learning what you’re actually working with.
+
+<br/>
+
+>⚡ You can get your copy from my GitHub here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 👈
 
 <br/>
 <br/>
@@ -92,7 +95,7 @@ _You get a single CSV with every detail flattened and ready to filter...👇_
 
 # ⚙️ Full Technical Breakdown (Every Section Explained)
 
-Below is a line-by-line understanding of the entire script so you can explain it clearly in your article.
+Below is a line-by-line breakdown (You can view the entire script on my GitHub here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)**):
 
 ## 1). Output Paths and Folder Setup
 
@@ -544,7 +547,6 @@ This script is exactly the kind of tool I wish Microsoft shipped out-of-the-box.
 - Governance and segmentation reviews
 
 <br/>
-<br/>
 
 ### 🔜 Up Next in the PowerShell Toolbox Series
 
@@ -578,11 +580,17 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
-- [https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
+- [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
 
-- [https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles_)
+- [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
 
+- [Azure permissions - Azure RBAC](https://docs.azure.cn/en-us/role-based-access-control/resource-provider-operations)
 
+- [Azure permissions for Networking](https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/networking)
+
+- [Get-AzVirtualNetworkGatewayConnection (Az.Network)](https://learn.microsoft.com/en-us/powershell/module/az.network/get-azvirtualnetworkgatewayconnection?view=azps-14.6.0)
+
+- [About ExpressRoute roles and permissions](https://learn.microsoft.com/en-us/azure/expressroute/roles-permissions)
 
 
 <br/>
