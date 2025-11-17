@@ -15,6 +15,8 @@ So strap in — this series is all about moving you from clicking chaos to autom
 
 ### ⚡ Check out the full script here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)** 
 
+![](/assets/img/Powershell%20Toolbox%202/Designer.png)
+
 <br/>
 <br/>
 <br/>
