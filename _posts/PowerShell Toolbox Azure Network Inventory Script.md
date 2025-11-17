@@ -20,6 +20,11 @@ So buckle up — this series is all about turning your day-to-day operational ch
 
 <br/>
 <br/>
+
+![](/assets/img/Powershell%20Toolbox%201/Red_Toolbox.jpg)
+
+<br/>
+<br/>
 <br/>
 <br/>
 
@@ -492,6 +497,12 @@ This script is exactly the kind of tool I wish Microsoft shipped out-of-the-box.
 - Network redesign planning
 - Governance and segmentation reviews
 
+<br/>
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%201/Conveyor.jpg)
+
+<br/>
 <br/>
 
 ### 🔜 Up Next in the PowerShell Toolbox Series
