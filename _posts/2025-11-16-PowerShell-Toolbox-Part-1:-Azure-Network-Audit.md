@@ -50,11 +50,6 @@ This CSV becomes a one-stop view of your entire Azure network — perfect for CI
 
 <br/>
 <br/>
-
-![](/assets/img/Powershell%20Toolbox%201/Conveyor.jpg)
-
-<br/>
-<br/>
 <br/>
 <br/>
 
@@ -86,6 +81,11 @@ If you're doing any of these:
 - Searching through the portal for that one VPN gateway named “Test-Gw-Old-DoNotDelete”
 
 _You get a single CSV with every detail flattened and ready to filter._
+
+<br/>
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%201/Conveyor.jpg)
 
 <br/>
 <br/>
