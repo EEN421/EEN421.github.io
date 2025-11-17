@@ -491,7 +491,7 @@ If you (or a client) want a custom **least-privilege** role instead of the gener
 [5]: https://learn.microsoft.com/en-us/azure/expressroute/roles-permissions "About ExpressRoute roles and permissions"
 
 
-> ⚠️ **Network Reader** is a networking-scoped role; to _actually see the subscription in your tools,_ users _still need enough rights_ to **enumerate that subscription** (usually granted as part of the role assignment at subscription scope).
+> ⚠️ **Network Reader** is a networking-scoped role; to _actually see the subscription in your tools,_ users _still need enough rights_ to **enumerate that subscription** (granted as part of the role assignment at subscription scope).
 
 <br/>
 <br/>
