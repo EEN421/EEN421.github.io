@@ -16,6 +16,8 @@ How to lint your own PowerShell code like a pro, avoid sloppy mistakes, and buil
 
 So buckle up — this series is all about turning your day-to-day operational chaos into clean, automated clarity. Let’s dive into Part 1 and map the network like a pro. 💪🗺️
 
+### ⚡ Grab the full script here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 
+
 <br/>
 <br/>
 
