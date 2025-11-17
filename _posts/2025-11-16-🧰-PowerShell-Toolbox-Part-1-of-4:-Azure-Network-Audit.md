@@ -47,7 +47,7 @@ This CSV becomes a one-stop view of your entire Azure network — perfect for CI
 
 <br/>
 
-### ⚡ Check out the full script here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 
+### ⚡ Check out the full script here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 
 
 <br/>
 <br/>
@@ -303,7 +303,7 @@ foreach ($conn in $connections) {
 }
 ```
 
-> ⚠️ **Important**: 👉 This exports the **shared key**, which is sensitive‼️
+> ⚠️ **Important**: ☝️ This exports the **shared key**, which is **sensitive**‼️
 
 <br/>
 <br/>
@@ -502,7 +502,7 @@ Install-Module Az -Scope CurrentUser
 <br/>
 
 ### 2. Save script as:
-```bash
+```powershell 
 C:\Scripts\Cloud_Network_Assessment.ps1
 ```
 <br/>
@@ -582,7 +582,7 @@ Together, this Network Inventory script + the EoL “Ghost Hunter” script give
 <br/>
 <br/>
 
-# 📚 Bonus: Want to Go Deeper?
+# 📚 Want to Go Deeper?
 
 If this kind of automation gets your gears turning, check out my book:
 🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
