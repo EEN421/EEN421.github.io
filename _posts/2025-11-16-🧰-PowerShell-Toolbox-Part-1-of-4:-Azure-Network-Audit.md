@@ -1,5 +1,5 @@
 # Introduction & Use Case: 
-Welcome to the very first entry in my new PowerShell Toolbox series — a four-part deep-dive built for cloud engineers, security architects, auditors, and anyone who’s ever inherited an Azure environment held together by duct tape and wishful thinking. If you’ve ever been asked, “Hey, can you tell us how this thing is actually networked?” — this script is your new best friend. 🧰🔍
+Welcome to the very first entry in my new 🧰 PowerShell Toolbox series — a four-part deep-dive built for cloud engineers, security architects, auditors, and anyone who’s ever inherited an Azure environment held together by duct tape and wishful thinking. If you’ve ever been asked, “Hey, can you tell us how this thing is actually networked?” — this script is your new best friend.
 
 Azure’s network layer is incredibly powerful, but it’s scattered across VNets, NSGs, Firewalls, Gateways, App Gateways, ExpressRoute, and a dozen different portal blades. Trying to manually stitch that together? Pure pain. 😵‍💫🧵 This script flips the table on that chaos by giving you one clean CSV containing your entire network topology plus every relevant security configuration across the subscription. 📊✨ It’s a must-have for audits, onboarding, incident response, or pre-migration planning. 🚀🛡️📋
 

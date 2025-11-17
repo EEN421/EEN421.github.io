@@ -1,9 +1,19 @@
 # Introduction & Use Case:
-Azure RBAC Privileged Roles Audit Script — Who Really Has the Keys to Your Cloud? You can build the most beautiful Azure landing zone on earth… and still get wrecked if too many people are walking around with Owner, Contributor, or broad admin roles. Azure RBAC is where Zero Trust either lives or quietly dies. This script, the Azure RBAC Privileged Roles Audit Script, is your spotlight. It crawls your subscription, finds who actually holds privileged roles, and spits out:
+Welcome back to the 🧰 PowerShell Toolbox series — your four-part deep-dive into must-have scripts for cloud engineers, security architects, auditors, and anyone who’s ever stared at an Azure tenant and thought: “Who really has access to what?” If you’ve ever asked, “Who has elevated permissions across my subscription, and when did they last use them?” — this script is your _second_ new best friend.
 
-- A detailed CSV for deep technical analysis
-- An optional HTML report you can hand to your CISO, manager, or auditor without shame
-- Let’s walk through what it does, how it works, and how to run it in your own environment.
+We’ve already taken on the network chaos of VNets, NSGs, firewalls, and connectivity with Part 1. Now it’s time to shine a light on the who side of your Azure environment. This script delivers a comprehensive audit: it collects every role assignment and privilege (including active vs. eligible, permanent vs. just-in-time) across your subscriptions and then exports it into one clear CSV for you to filter, analyze, and act on. 📊✨ It’s essential for audit-proofing, access governance, incident response, or cleaning up messy tenant sprawl. 🚀🛡️📋
+
+...And again — this is just Part 2. In the rest of the series we’ll continue onward with:
+
+🏛️ Part 3 — GPO HTML Export Script:
+Inventory every Group Policy Object-from your Active Directory estate in one step. Perfect for Windows hardening, audit documentation, and landing-zone modernization.
+
+🧹 Part 4 — Invoke-ScriptAnalyzer for Real-World Ops:
+How to lint and polish your own PowerShell code, avoid embarrassing mistakes, and build scripts that scale in production environments.
+
+So strap in — this series is all about moving you from clicking chaos to automated, clean clarity. Let’s dive into Part 2 and reveal exactly who holds the keys in your Azure tenant. 💪🔐
+
+### ⚡ Check out the full script here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)** 
 
 <br/>
 <br/>
@@ -57,7 +67,7 @@ You’d reach for this script when:
 - Leadership wants evidence that you’re not handing out Owner like Halloween candy
 - You’re documenting privileged access as part of a security architecture engagement
 
-Run it, get your CSV + HTML, and you immediately move from “we think” to “we know.”
+Run it, get your CSV + HTML, and you immediately move from “we think” to “we know.” You can view the entire script on my GitHub here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)**
 
 <br/>
 <br/>
