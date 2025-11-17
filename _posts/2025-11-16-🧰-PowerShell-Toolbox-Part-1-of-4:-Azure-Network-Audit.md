@@ -618,6 +618,7 @@ If this kind of automation gets your gears turning, check out my book:
 
 - [About ExpressRoute roles and permissions](https://learn.microsoft.com/en-us/azure/expressroute/roles-permissions)
 
+- [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)
 
 <br/>
 <br/>
