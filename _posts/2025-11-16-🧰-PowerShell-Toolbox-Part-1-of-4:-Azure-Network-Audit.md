@@ -39,7 +39,7 @@ This script performs a full subscription-wide network inventory by collecting:
 - ExpressRoute Circuits
 
 It flattens all findings into a unified schema and exports to the following output:
-```bash
+```powershell
 C:\AzureNetworkReport\AzureNetworkInventory.csv
 C:\AzureNetworkReport\AzureNetworkReport.zip
 ```
