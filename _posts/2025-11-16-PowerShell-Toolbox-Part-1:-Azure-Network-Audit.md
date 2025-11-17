@@ -50,6 +50,11 @@ This CSV becomes a one-stop view of your entire Azure network — perfect for CI
 
 <br/>
 <br/>
+
+![](/assets/img/Powershell%20Toolbox%201/Conveyor.jpg)
+
+<br/>
+<br/>
 <br/>
 <br/>
 
@@ -72,7 +77,7 @@ If you're doing any of these:
 <br/>
 <br/>
 
-Instead of:
+**Instead of:**
 
 - Clicking 10+ NSGs hoping you didn’t miss a rule
 - Hunting through Application Gateway listeners
@@ -80,7 +85,7 @@ Instead of:
 - Wondering which subnets live in which VNet
 - Searching through the portal for that one VPN gateway named “Test-Gw-Old-DoNotDelete”
 
-You get a single CSV with every detail flattened and ready to filter.
+_You get a single CSV with every detail flattened and ready to filter._
 
 <br/>
 <br/>
@@ -496,11 +501,6 @@ This script is exactly the kind of tool I wish Microsoft shipped out-of-the-box.
 - Incident response
 - Network redesign planning
 - Governance and segmentation reviews
-
-<br/>
-<br/>
-
-![](/assets/img/Powershell%20Toolbox%201/Conveyor.jpg)
 
 <br/>
 <br/>
