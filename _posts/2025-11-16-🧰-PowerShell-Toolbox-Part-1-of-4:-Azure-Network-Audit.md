@@ -3,8 +3,7 @@ Welcome to the very first entry in my new PowerShell Toolbox series — a four-p
 
 Azure’s network layer is incredibly powerful, but it’s scattered across VNets, NSGs, Firewalls, Gateways, App Gateways, ExpressRoute, and a dozen different portal blades. Trying to manually stitch that together? Pure pain. 😵‍💫🧵 This script flips the table on that chaos by giving you one clean CSV containing your entire network topology plus every relevant security configuration across the subscription. 📊✨ It’s a must-have for audits, onboarding, incident response, or pre-migration planning. 🚀🛡️📋
 
-And this is just Part 1.
-In the coming chapters of the series, we’ll dig into:
+...And this is just Part 1; In the coming chapters of the series, we’ll dig into:
 
 🔐 Part 2 — Privileged RBAC Roles Audit Script:
 A complete breakdown of who has elevated access in your tenant, what they can do, and why it matters during compliance checks like NIST, CMMC, and CIS.
@@ -96,63 +95,53 @@ _You get a single CSV with every detail flattened and ready to filter...👇_
 Below is a line-by-line understanding of the entire script so you can explain it clearly in your article.
 
 ## 1). Output Paths and Folder Setup
+
+```powershell
 $OutputDir = "C:\AzureNetworkReport"
 $ZipPath = "$OutputDir\AzureNetworkReport.zip"
 $CombinedCsv = "$OutputDir\AzureNetworkInventory.csv"
 
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
+```
 
+### What this does:
 
-What this does:
+Creates a local folder where all results will be stored and defines paths for:
+- The final CSV
+- The zipped version of that CSV
 
-Creates a local folder where all results will be stored
-
-Defines paths for:
-
-The final CSV
-
-The zipped version of that CSV
-
--Force ensures the folder is created even if it already exists
-
-Output is suppressed using Out-Null for cleanliness
+Then it force ensures the folder is created even if it already exists. Output is suppressed using Out-Null for cleanliness
 
 <br/>
 <br/>
 
 ## 2). Azure Login + Subscription Selection UI
+```powershell
 Connect-AzAccount -ErrorAction SilentlyContinue
+```
+☝️ Signs you into Azure & Silently ignores the error if you're already authenticated
 
+<br/>
 
-Signs you into Azure
-
-Silently ignores the error if you're already authenticated
-
+```powershell
 $subs = Get-AzSubscription | Sort-Object Name
 $selection = $subs | Out-GridView -Title "Select Azure Subscription" -PassThru
+```
 
+☝️ Retrieves all subscriptions your account can access & Sorts them alphabetically. Also uses Out-GridView (a pop-up GUI picker) to let you choose the subscription; PassThru returns your selection.
 
-Retrieves all subscriptions your account can access
+<br/>
 
-Sorts them alphabetically
-
-Uses Out-GridView (a pop-up GUI picker) to let you choose the subscription
-
--PassThru returns your selection
-
+```powershell
 if (-not $selection) {
     Write-Warning "No subscription selected. Exiting."
     return
 }
 Set-AzContext -SubscriptionId $selection.Id
 $subName = $selection.Name
+```
 
-
-Exits gracefully if you cancel the picker
-
-Sets the active Azure context to that subscription
-
-Stores the subscription name for CSV tagging
+☝️ Exits gracefully if you cancel the picker and sets the active Azure context to that subscription, then stores the subscription name for CSV tagging.
 
 <br/>
 <br/>
@@ -162,9 +151,7 @@ Stores the subscription name for CSV tagging
 $inventory = @()
 ```
 
-This creates an empty PowerShell array that will store every row of data we gather.
-
-Each network object will become a standardized PSCustomObject and be appended here.
+☝️ This creates an empty PowerShell array that will store every row of data we gather. Each network object will become a standardized PSCustomObject and be appended here.
 
 <br/>
 <br/>
@@ -206,9 +193,6 @@ foreach ($nsg in $nsgs) {
     }
 }
 ```
-
-<br/>
-<br/>
 
 ### What it does:
 
@@ -316,7 +300,7 @@ foreach ($conn in $connections) {
 }
 ```
 
-> ⚠️ **Important**: This exports the shared key, which is sensitive!
+> ⚠️ **Important**: 👉 This exports the **shared key**, which is sensitive‼️
 
 <br/>
 <br/>
@@ -435,12 +419,16 @@ $inventory | Export-Csv -Path $CombinedCsv -NoTypeInformation
 
 ☝️Writes the full inventory into a clean CSV with headers☝️
 
+<br/>
+
 ```powershell
 if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
 Compress-Archive -Path $CombinedCsv -DestinationPath $ZipPath
 ```
 
 ☝️Removes old ZIP if it exists, then creates a new one containing the CSV☝️
+
+<br/>
 
 ```powershell
 Write-Host "`n✅ All results written to: $CombinedCsv"
@@ -455,36 +443,90 @@ Write-Host "📦 Zipped as: $ZipPath" -ForegroundColor Green
 <br/>
 
 # ▶️ How to Run This Script (Step-By-Step)
-### 1. Install modules
-Install-Module Az -Scope CurrentUser
 
+### 1. Built-in roles that work
+
+Any of these (at subscription scope) is sufficient:
+
+- **Reader** – can **view** _all resources, **no changes**_. This already includes all */read operations on Microsoft.Network resources. 
+
+- **Network Reader** – can **view all networking resources** (VNets, NSGs, gateways, ExpressRoute, etc.), but **not non-network resources**. For this script, **Network Reader + the ability to list the subscription itself** is functionally equivalent. 
+
+In most client environments, I ask for:
+
+“Reader on the target subscription (or Network Reader + rights to list the subscription).”
+
+That’s all you really need.
+
+<br/>
+
+### 2. Permission matrix (cmdlet → resource → actions)
+
+If you (or a client) want a custom **least-privilege** role instead of the generic Reader role, here’s the breakdown by script section (because you know we're all about zero-trust and principle of least privilige in this house 😎).
+
+| Script area / cmdlet                                       | Azure resource type                              | Required RBAC actions (minimum)                                                                                                                          | Covered by built-in roles?                         |
+| ---------------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `Connect-AzAccount`, `Get-AzSubscription`, `Set-AzContext` | Subscription                                     | `Microsoft.Resources/subscriptions/read`                                                                                                                 | Reader, Network Reader* ([Microsoft Learn][1])     |
+| `Get-AzResourceGroup`                                      | Resource groups                                  | `Microsoft.Resources/subscriptions/resourceGroups/read`                                                                                                  | Reader, Network Reader* ([Azure Documentation][2]) |
+| `Get-AzNetworkSecurityGroup` + rules                       | NSGs & rules                                     | `Microsoft.Network/networkSecurityGroups/read`  + `Microsoft.Network/networkSecurityGroups/securityRules/read`                                           | Reader, Network Reader ([Microsoft Learn][3])      |
+| `Get-AzVirtualNetwork` + subnets                           | VNets & subnets                                  | `Microsoft.Network/virtualNetworks/read` + `Microsoft.Network/virtualNetworks/subnets/read`                                                              | Reader, Network Reader ([Microsoft Learn][3])      |
+| `Get-AzVirtualNetworkGateway`                              | Virtual network gateways                         | `Microsoft.Network/virtualNetworkGateways/read`                                                                                                          | Reader, Network Reader ([Microsoft Learn][3])      |
+| `Get-AzVirtualNetworkGatewayConnection`                    | VPN connections                                  | `Microsoft.Network/connections/read` (and/or `Microsoft.Network/virtualNetworkGatewayConnections/read`, depending on API version) ([Microsoft Learn][4]) | Reader, Network Reader                             |
+| `Get-AzFirewall`                                           | Azure Firewall                                   | `Microsoft.Network/azureFirewalls/read`                                                                                                                  | Reader, Network Reader ([Microsoft Learn][3])      |
+| `Get-AzApplicationGateway`                                 | Application Gateways                             | `Microsoft.Network/applicationGateways/read`                                                                                                             | Reader, Network Reader ([Microsoft Learn][3])      |
+| `Get-AzExpressRouteCircuit`                                | ExpressRoute Circuits                            | `Microsoft.Network/expressRouteCircuits/read`                                                                                                            | Reader, Network Reader ([Microsoft Learn][5])      |
+| (all of the above, subscription-wide)                      | All selected resource groups in the subscription | `Microsoft.Resources/subscriptions/resourcegroups/resources/read` (to enumerate resources within RGs)                                                    | Reader, Network Reader ([Azure Documentation][2])  |
+
+<!--Table Links-->
+[1]: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles "Azure built-in roles"
+[2]: https://docs.azure.cn/en-us/role-based-access-control/resource-provider-operations "Azure permissions - Azure RBAC"
+[3]: https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/networking "Azure permissions for Networking"
+[4]: https://learn.microsoft.com/en-us/powershell/module/az.network/get-azvirtualnetworkgatewayconnection?view=azps-14.6.0 "Get-AzVirtualNetworkGatewayConnection (Az.Network)"
+[5]: https://learn.microsoft.com/en-us/azure/expressroute/roles-permissions "About ExpressRoute roles and permissions"
+
+
+> ⚠️ **Network Reader** is a networking-scoped role; to _actually see the subscription in your tools,_ users _still need enough rights_ to **enumerate that subscription** (usually granted as part of the role assignment at subscription scope).
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+### 1. Install modules
+```powershell
+Install-Module Az -Scope CurrentUser
+```
 <br/>
 
 ### 2. Save script as:
+```bash
 C:\Scripts\Cloud_Network_Assessment.ps1
-
+```
 <br/>
 
 ### 3. Run it:
+```powershell
 Set-Location C:\Scripts
 .\Cloud_Network_Assessment.ps1
-
+```
 <br/>
 
 ### 4. Select subscription via GUI
 
-A pop-up appears. Click → choose → OK.
+- A pop-up appears. Click → choose your sub → OK.
 
 <br/>
 
 ### 5. Script runs and collects everything
 
-It prints each RG being processed.
+- It prints each RG being processed.
 
 <br/>
 
 ### 6. Results appear here:
+```bash
 C:\AzureNetworkReport\
+```
 
 <br/>
 <br/>
@@ -536,7 +578,12 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
-- [https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0](https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery?view=graph-rest-1.0)
+- [https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
+
+- [https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles_)
+
+
+
 
 <br/>
 <br/>
