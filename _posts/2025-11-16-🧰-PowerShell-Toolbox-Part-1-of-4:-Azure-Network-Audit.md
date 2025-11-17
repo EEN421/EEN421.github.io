@@ -47,7 +47,7 @@ This CSV becomes a one-stop view of your entire Azure network — perfect for CI
 
 <br/>
 
->⚡ You can get your copy from my GitHub here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 👈
+### ⚡ Check out the full script here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 
 
 <br/>
 <br/>
@@ -552,7 +552,30 @@ This script is exactly the kind of tool I wish Microsoft shipped out-of-the-box.
 
 Now that you’ve mapped the entire Azure network with a single script, the next logical question is: “Okay… but who actually has the keys to all of this?” That’s exactly where we’re headed in Part 2 of the PowerShell Toolbox series. We’ll break down a purpose-built RBAC Privileged Roles Audit script that cuts through the noise and surfaces every user, group, and service principal with elevated access across your subscription — along with why that visibility is crucial for NIST, CMMC, CIS, and even day-to-day operational sanity. 🔐✨
 
-Stay tuned — if Part 1 showed you how the environment is wired, Part 2 will show you who can flip the switches on RBAC roles.
+### Stay tuned — if Part 1 showed you how the environment is wired, Part 2 will show you who can flip the switches on RBAC roles.
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+# 🎃 Bonus Tool Spotlight: “The Ghosts Hiding in Every Network”
+
+### 💡 Toolbox Tip: Once you’ve mapped your entire Azure network with this script, the next smart move is finding out what’s lurking inside it.
+
+In case you missed it, I already broke down a powerful PowerShell + Graph API tool that uncovers all the End-of-Life devices, outdated OS builds, and unsupported software haunting your tenant.
+It’s wrapped in a fun Halloween theme, but don’t let the spooky aesthetic fool you — this tool is pure security value.
+
+### 👉 Check it out here: [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)}
+
+Together, this Network Inventory script + the EoL “Ghost Hunter” script give you a powerful one-two punch for:
+
+- Full environment discovery
+- Risk identification
+- Audit readiness
+- Modernization and cleanup planning
+
+### It’s all part of building out your complete PowerShell Toolbox for real-world cloud security work. 🧰⚡
 
 <br/>
 <br/>
