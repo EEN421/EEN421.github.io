@@ -45,6 +45,9 @@ C:\AzureNetworkReport\AzureNetworkReport.zip
 ```
 This CSV becomes a one-stop view of your entire Azure network — perfect for CIS audits, security reviews, architectural mapping, segmentation validation, dataflow documentation, or just learning what you’re actually working with.
 
+![](/assets/img/Powershell%20Toolbox%201/Results.png)
+
+<br/>
 <br/>
 
 ### ⚡ Check out the full script here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)** 
