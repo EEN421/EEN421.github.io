@@ -80,7 +80,7 @@ If you're doing any of these:
 - Wondering which subnets live in which VNet
 - Searching through the portal for that one VPN gateway named “Test-Gw-Old-DoNotDelete”
 
-_You get a single CSV with every detail flattened and ready to filter._
+_You get a single CSV with every detail flattened and ready to filter...👇_
 
 <br/>
 <br/>
