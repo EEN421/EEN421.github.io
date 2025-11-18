@@ -26,33 +26,36 @@ So strap in — this series is all about moving you from clicking chaos to autom
 
 At a high level, this script:
 
-Targets a specific subscription (either current context or one you pass in) and looks up role assignments at:
-- Subscription scope
-- Resource Group scope (optional toggle)
-- Filters to a curated list of privileged RBAC roles, including:
-- Owner, Contributor, User Access Administrator
-- Security Administrator, Key Vault Administrator, VM Admin Login
-- AKS Cluster Admin, various “Contributor” roles to critical services, and more
+Targets a specific subscription (either current context or one you pass in) and...
 
-- Resolves who the principal actually is:
+-  **looks up role assignments at:**
+    - Subscription scope
+    - Resource Group scope (optional toggle)
+    - Filters to a curated list of privileged RBAC roles, including:
+    - Owner, Contributor, User Access Administrator
+    - Security Administrator, Key Vault Administrator, VM Admin Login
+    - AKS Cluster Admin, various “Contributor” roles to critical services, and more
+
+- **Resolves who the principal actually is:**
     - User → Display name
     - Group → Group display name
     - Service Principal → App display name
 
-- Builds a collection of privileged role assignment rows with:
+- **Builds a collection of privileged role assignment rows with:**
     - Role name, scope, resource group (if applicable)
     - Principal type (User/Group/ServicePrincipal)
     - Principal name and sign-in name
 
-Generates:
-- Detailed CSV report
-- HTML summary with nice styling and visual breakdowns (roles, principal types, scope)
+- **Generates:**
+    - Detailed CSV report
+    - HTML summary with nice styling and visual breakdowns (roles, principal types, scope)
 
-This is ideal for:
+### This is ideal for:
 - CIS / NIST / CMMC / SOC 2 RBAC reviews
 - Least-privilege enforcement efforts
 - Quarterly access recertification
 - “We think too many folks are Owners” interventions
+- Identifying custom roles before activating Unified RBAC
 - MSSP onboarding and baselining
 
 <br/>
@@ -95,6 +98,8 @@ Run it, get your CSV + HTML, and you immediately move from “we think” to “
     - HTML export (if desired) with tables and basic styling.
     - Returns $results so you can pipe it into other tooling.
 
+<br/>
+
 _Now let’s break down each part in detail.👇_
 
 ## 1. Parameters & Script Inputs
@@ -118,7 +123,7 @@ param(
 )
 ```
 
-### Key knobs:
+### Key Parameters:
 ```powershell
 $SubscriptionId:
 ```
@@ -126,17 +131,27 @@ If empty → script uses your current Az context.
 
 If provided → script switches to that subscription.
 
+<br/>
+<br/>
+
+
 ```powershell
 $OutputCSVPath / $OutputHTMLPath:
 ```
-- Default to timestamped filenames in the current directory.
-- Prevents accidental overwrites and makes report runs easy to track over time.
+Default to timestamped filenames in the current directory. This presents accidental overwrites and makes report trends easy to track over time.
+
+<br/>
+<br/>
+
 ```powershell
 $IncludeResourceGroups (switch, default: $true):
 ```
 If set → the script inspects resource group-level role assignments in addition to subscription-level.
 
-You can disable for a quick high-level check:
+<br/>
+<br/>
+
+You can disable this for a quick high-level check at the subscription level:
 ```powershell
 -IncludeResourceGroups:$false
 ```
@@ -181,6 +196,8 @@ function Write-ProgressHelper {
 <br/>
 
 ## 3. Defining “Privileged” Roles
+This is your threat surface definition, telling the script: “These roles are privileged enough that I want to track and report on them.”
+
 ```powershell
 $privilegedRoles = @(
     "Owner",
@@ -206,22 +223,20 @@ $privilegedRoles = @(
 )
 ```
 
-This is your threat surface definition. You’re essentially telling the script: “These roles are privileged enough that I want to track and report on them.”
 
-It includes:
+This list includes:
 - Broad-scoped roles: Owner, Contributor, User Access Administrator
 - Admin-level service roles: Key Vault Administrator, Security Administrator, VM Admin Login, AKS Cluster Admin, etc.
 - Operationally powerful roles: Log Analytics Contributor, Storage Account Contributor, Automation Contributor
-- You can easily extend this list in your article for readers:
-    - Add custom roles
-    - Add additional built-in roles relevant to their governance model
+
+> 💡 You can easily extend this list and define additional roles you'd like to flag relative to your governance model.
 
 <br/>
 <br/>
 <br/>
 <br/>
 
-## 4. Result Collection & Script Banner
+## 4. Results Collection & Script Banner
 ```powershell
 $results = @()
 
@@ -230,7 +245,19 @@ Write-Host "Starting Azure RBAC Privileged Roles Audit..." -ForegroundColor Cyan
 
 ```$results``` will store all privileged role assignments as PSCustomObjects. A nice, visible banner to show the script has started.
 
-5. Subscription Selection Logic
+<br/>
+<br/>
+<br/>
+<br/>
+
+## 5. Subscription Selection Logic
+
+There are two usage patterns in this section:
+- 1). No SubscriptionId provided.
+- 2). Uses the current Az context from Get-AzContext.
+
+<br/>
+
 ```powershell
 if ([string]::IsNullOrEmpty($SubscriptionId)) {
     try {
@@ -256,10 +283,6 @@ else {
     }
 }
 ```
-
-Two usage patterns:
-- No SubscriptionId provided:
-- Uses the current Az context from Get-AzContext.
 
 If you’re not connected, it tells you to run Connect-AzAccount. SubscriptionId provided calls Select-AzSubscription to switch context. This gives you flexibility as a consultant or in multi-tenant scenarios.
 
@@ -306,7 +329,7 @@ $subRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$SubscriptionI
 $privilegedAssignments = $subRoleAssignments | Where-Object { $privilegedRoles -contains $_.RoleDefinitionName }
 ```
 
-☝️ Filters assignments down to just the roles you defined as privileged.
+☝️ Filters assignments down to just the roles we defined as earlier.
 
 <br/>
 <br/>
@@ -354,6 +377,8 @@ foreach ($assignment in $privilegedAssignments) {
         Write-Host "Warning: Could not resolve display name for $($assignment.ObjectId)" -ForegroundColor Yellow
     }
 ```
+<br/>
+<br/>
 
 Based on ObjectType, the script attempts to pull the latest display name from Entra ID:
 ```powershell
@@ -364,7 +389,7 @@ Get-AzADGroup
 Get-AzADServicePrincipal
 ```
 
-Falls back to assignment.DisplayName if lookups fail and logs a warning if it can’t resolve the principal (handy for stale/deleted objects).
+...Then falls back to ```assignment.DisplayName``` if lookups fail and logs a warning if it can’t resolve the principal (handy for stale/deleted objects).
 
 <br/>
 <br/>
@@ -408,7 +433,7 @@ Write-Host "Found $($privilegedAssignments.Count) privileged role assignments at
 <br/>
 <br/>
 
-## 8. Resource Group-Level Role Assignments (Optional)
+## 8. Resource Group-Level Role Assignments
 
 Wrapped in:
 ```powershell
@@ -416,6 +441,8 @@ if ($IncludeResourceGroups) {
     ...
 }
 ``` 
+<br/>
+<br/>
 
 ### 8.1 Progress & RG Discovery
 ```powershell
@@ -476,6 +503,8 @@ This time, ```Scope = "Resource Group"``` and **ResourceGroupName** is **populat
 
 <br/>
 <br/>
+<br/>
+<br/>
 
 ## 9. Summary Statistics
 
@@ -523,7 +552,8 @@ Write-Host "`nBreakdown by Scope:" -ForegroundColor Green
 $scopeStats | Format-Table -AutoSize
 ```
 
-☝️ Gives you an immediate CLI-friendly summary. This is super useful during live reviews or incident response.
+☝️ Gives you an immediate CLI-friendly summary. This is super cool
+ during live reviews.
 
 <br/>
 <br/>
@@ -690,23 +720,27 @@ The HTML report is perfect for:
 <br/>
 <br/>
 
-# 🎃 Bonus Tool Spotlight: “The Ghosts Hiding in Every Network”
+# 🧰 Missed Part 1? Build Your Foundation First
+💡 Toolbox Tip: Before you dive deep into RBAC and privileged access auditing, make sure your network fundamentals are squared away.
 
-### 💡 Toolbox Tip: Once you’ve mapped your entire Azure network with this script, the next smart move is finding out what’s lurking inside it.
+If you didn’t catch the first installment of this series, now’s the perfect time to go back and grab it.
+PowerShell Toolbox Part 1: Azure Network Audit walks you through a full, subscription-wide network discovery — VNets, subnets, NSGs, routes, firewalls, gateways, ExpressRoute, the whole stack.
 
-In case you missed it, I already broke down a powerful PowerShell + Graph API tool that uncovers all the End-of-Life devices, outdated OS builds, and unsupported software haunting your tenant.
-It’s wrapped in a fun Halloween theme, but don’t let the spooky aesthetic fool you — this tool is pure security value.
+It’s the “baseline truth” every cloud engineer and security architect needs before tackling identity, access, or governance. Once you know how traffic flows, you can finally understand how permissions should behave.
 
-### 👉 Check it out here: [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)}
+👉 Start with Part 1 here: [PowerShell Toolbox Part 1 of 4 — Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
 
-Together, this Network Inventory script + the EoL “Ghost Hunter” script give you a powerful one-two punch for:
+Together, Part 1 (Network Audit) + Part 2 (RBAC Privileged Roles Audit) give you:
 
-- Full environment discovery
-- Risk identification
-- Audit readiness
-- Modernization and cleanup planning
+A full map of your cloud network
 
-### It’s all part of building out your complete PowerShell Toolbox for real-world cloud security work. 🧰⚡
+Clear visibility into who has elevated access
+
+Faster audit readiness for CIS, NIST, CMMC, ISO, etc.
+
+A living toolbox of reusable PowerShell skills
+
+Build your toolbox one script at a time — each piece makes you sharper, faster, and more dangerous. ⚡
 
 <br/>
 <br/>
