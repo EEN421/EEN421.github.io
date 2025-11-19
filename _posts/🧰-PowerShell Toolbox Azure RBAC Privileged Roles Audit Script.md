@@ -3,7 +3,7 @@ Welcome back to the 🧰 PowerShell Toolbox series — your four-part deep-dive 
 
 We’ve already taken on the network chaos of VNets, NSGs, firewalls, and connectivity with Part 1. Now it’s time to shine a light on the who side of your Azure environment. This script delivers a comprehensive audit: it collects every role assignment and privilege (including active vs. eligible, permanent vs. just-in-time) across your subscriptions and then exports it into one clear CSV for you to filter, analyze, and act on. 📊✨ It’s essential for audit-proofing, access governance, incident response, or cleaning up messy tenant sprawl. 🚀🛡️📋
 
-...And again — this is just Part 2. In the rest of the series we’ll continue onward with:
+...And again — this is just Part 2! In the rest of the series we’ll continue with:
 
 🏛️ Part 3 — GPO HTML Export Script:
 Inventory every Group Policy Object-from your Active Directory estate in one step. Perfect for Windows hardening, audit documentation, and landing-zone modernization.
