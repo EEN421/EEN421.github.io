@@ -744,6 +744,21 @@ Build your toolbox one script at a time — each piece makes you sharper, faster
 
 <br/>
 <br/>
+
+Thanks for following along — you’ve now equipped yourself with a reusable PowerShell script to audit privileged roles and RBAC across your Azure tenant. As you integrate this into your toolbox, remember: discovering and documenting access is the first step; remediating over-privilege and enforcing least-privilege are what turn insight into security. Stay tuned for the next installment and Keep building, keep refining, and let’s keep your cloud environment both secure and auditable!
+
+In our next installment we'll break down part's 3 and 4:
+
+- 🏛️ Part 3 — GPO HTML Export Script:
+Inventory every Group Policy Object-from your Active Directory estate in one step. Perfect for Windows hardening, audit documentation, and landing-zone modernization.
+
+<br/>
+
+- 🧹 Part 4 — Invoke-ScriptAnalyzer for Real-World Ops:
+How to lint and polish your own PowerShell code, avoid embarrassing mistakes, and build scripts that scale in production environments.
+
+<br/>
+<br/>
 <br/>
 <br/>
 
