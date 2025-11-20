@@ -88,7 +88,7 @@ You’d reach for this script when:
 - Leadership wants evidence that you’re not handing out Owner like Halloween candy
 - You’re documenting privileged access as part of a security architecture engagement
 
-Run it, get your CSV + HTML, and you immediately move from “we think” to “we know.” You can view the entire script on my GitHub here 👉 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)**
+Run it, get your CSV + HTML, and you immediately move from “we think” to “we know.” You can view the entire script on my GitHub here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)**
 
 <br/>
 <br/>
