@@ -15,6 +15,9 @@ So strap in — this series is all about moving you from clicking chaos to autom
 
 ### ⚡ Check out the full script here 👇 **[https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)** 
 
+<br/>
+<br/>
+
 ![](/assets/img/Powershell%20Toolbox%202/Designer.png)
 
 <br/>
@@ -50,6 +53,14 @@ Targets a specific subscription (either current context or one you pass in) and.
     - Detailed CSV report
     - HTML summary with nice styling and visual breakdowns (roles, principal types, scope)
 
+<br/>
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%202/Report1.png)
+
+<br/>
+<br/>
+
 ### This is ideal for:
 - CIS / NIST / CMMC / SOC 2 RBAC reviews
 - Least-privilege enforcement efforts
@@ -57,6 +68,11 @@ Targets a specific subscription (either current context or one you pass in) and.
 - “We think too many folks are Owners” interventions
 - Identifying custom roles before activating Unified RBAC
 - MSSP onboarding and baselining
+
+<br/>
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%202/Report2.png)
 
 <br/>
 <br/>
@@ -188,7 +204,11 @@ function Write-ProgressHelper {
 }
 ```
 
-☝️ This is a small wrapper around Write-Progress to keep the main logic tidy and allows you to update a progress bar with an activity (“Analyzing Azure RBAC”) and a status message (“Getting resource group role assignments”). You can use it throughout the script to keep the user informed instead of staring at a blinking cursor.
+☝️ This is a small wrapper around Write-Progress to keep the main logic tidy and allows you to update a progress bar with an activity (“Analyzing Azure RBAC”) and a status message (“Getting resource group role assignments”). You can use it throughout the script to keep the user informed instead of staring at a blinking cursor. Check out the below screenshot of it in action. 👇
+
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%202/write-progress.png)
 
 <br/>
 <br/>
