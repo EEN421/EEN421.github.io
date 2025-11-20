@@ -752,13 +752,10 @@ It’s the “baseline truth” every cloud engineer and security architect need
 
 Together, Part 1 (Network Audit) + Part 2 (RBAC Privileged Roles Audit) give you:
 
-A full map of your cloud network
-
-Clear visibility into who has elevated access
-
-Faster audit readiness for CIS, NIST, CMMC, ISO, etc.
-
-A living toolbox of reusable PowerShell skills
+- A full map of your cloud network
+- Clear visibility into who has elevated access
+- Faster audit readiness for CIS, NIST, CMMC, ISO, etc.
+- A living toolbox of reusable PowerShell skills
 
 Build your toolbox one script at a time — each piece makes you sharper, faster, and more dangerous. ⚡
 
