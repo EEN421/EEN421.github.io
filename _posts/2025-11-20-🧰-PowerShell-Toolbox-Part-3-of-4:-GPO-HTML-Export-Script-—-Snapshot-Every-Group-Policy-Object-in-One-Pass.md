@@ -1,7 +1,5 @@
 # Introduction & Use Case:
-Welcome back to the 🧰 PowerShell Toolbox series on DevSecOpsDad.com — your four-part, no-nonsense tour through the scripts I rely on for audits, baselines, IR, and cloud security hygiene.
-
-You’ve already mapped your Azure network (Part 1) and audited privileged RBAC roles (Part 2).
+Welcome back to the 🧰 PowerShell Toolbox series on DevSecOpsDad.com — your four-part, no-nonsense tour through the scripts I rely on for audits, baselines, IR, and cloud security hygiene. You’ve already mapped your Azure network (Part 1) and audited privileged RBAC roles (Part 2).
 Now, in Part 3, we shift gears from cloud to classic enterprise security: Group Policy.
 
 Because let’s be honest—Group Policy is where good intentions go to retire.
