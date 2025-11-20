@@ -1,4 +1,4 @@
-# Introduction & Use Case: GPO HTML Export Script — Snapshot Every Group Policy Object in One Pass
+# Introduction & Use Case:
 Welcome back to the 🧰 PowerShell Toolbox series on DevSecOpsDad.com — your four-part, no-nonsense tour through the scripts I rely on for audits, baselines, IR, and cloud security hygiene.
 
 You’ve already mapped your Azure network (Part 1) and audited privileged RBAC roles (Part 2).
