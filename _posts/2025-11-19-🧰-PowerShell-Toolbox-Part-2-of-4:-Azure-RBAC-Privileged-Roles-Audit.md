@@ -427,16 +427,14 @@ Get-AzADServicePrincipal
         PrincipalName    = $principalName
         SignInName       = $assignment.SignInName
         AssignmentId     = $assignment.RoleAssignmentId
-        IsPIM            = "Unknown"
+        IsPIM            = $pimStatus
     }
     
     $results += $resultObject
 }
 ```
 
-Each privileged role assignment becomes one row in ```$results```. ```IsPIM``` is set to ```"Unknown"``` because you’d need dedicated PIM APIs to know if the assignment is permanent, active, eligible, etc. 
-
-> I am going to add this later and post another update, stay tuned!
+Each privileged role assignment becomes one row in ```$results```. 
 
 <br/>
 <br/>
@@ -515,7 +513,7 @@ $resultObject = [PSCustomObject]@{
     PrincipalName    = $principalName
     SignInName       = $assignment.SignInName
     AssignmentId     = $assignment.RoleAssignmentId
-    IsPIM            = "Unknown"
+    IsPIM            = $pimStatus
 }
 ```
 
