@@ -570,6 +570,8 @@ Write-Host "`nBreakdown by Scope:" -ForegroundColor Green
 $scopeStats | Format-Table -AutoSize
 ```
 
+![](/assets/img/Powershell%20Toolbox%202/Complete.png)
+
 ☝️ Gives you an immediate CLI-friendly summary. This is super cool
  during live reviews.
 
