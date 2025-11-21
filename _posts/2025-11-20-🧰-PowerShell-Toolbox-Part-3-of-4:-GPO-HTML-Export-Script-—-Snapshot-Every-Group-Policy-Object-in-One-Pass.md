@@ -14,8 +14,14 @@ Nobody has time to click through 200+ GPOs in GPMC like it’s 2009.
 
 ### Enter the next tool in your Toolbox.
 
-This lightweight PowerShell script gives you a one-click, full-domain HTML export of every GPO.
-That means you suddenly have:
+And yes — this is the one that lets you slice straight through the “Bad GPOs” tentacle monster lurking in every legacy domain.
+
+![](/assets/img/Powershell%20Toolbox%203/approach.png)
+
+<br/>
+<br/>
+
+This lightweight PowerShell script gives you a one-click, full-domain HTML export of every Group Policy Object. Think of it as wielding your own glowing red PowerShell katana: one strike, and suddenly you have:
 
 - Auditor-ready documentation.
 - Offline review capability.
@@ -37,16 +43,15 @@ reduce audit overhead, accelerate security clarity, and eliminate manual recon w
 
 Think of this script as your GPO time machine + documentation engine. It shines in scenarios like:
 
-✔️ Audit Preparation (CIS, STIG, ISO, NIST, CMMC… pick your poison)
+### ✔️ Audit Preparation (CIS, STIG, ISO, NIST, CMMC… pick your poison)
 
 Need to hand an auditor a complete snapshot of every GPO in the domain?
 Export once → zip → done.
 No console clicking, no screenshots, no “hang on, let me find that setting.”
 
 <br/>
-<br/>
 
-✔️ Baseline Validation
+### ✔️ Baseline Validation
 
 Running Microsoft Security Baselines?
 Verifying CIS L1/L2?
@@ -54,17 +59,15 @@ Double-checking password policies, security options, or audit settings?
 Having the HTML reports makes validation trivial.
 
 <br/>
-<br/>
 
-✔️ Cleanup / Modernization Campaigns
+### ✔️ Cleanup / Modernization Campaigns
 
 Before you clean up 20 years of GPO drift—or migrate them into Intune/MDM—you need a static point-in-time snapshot.
 This script gives you that insurance.
 
 <br/>
-<br/>
 
-✔️ Incident Response & Threat Hunting
+### ✔️ Incident Response & Threat Hunting
 
 When things get weird and you suspect a GPO was weaponized:
 - Unexpected logon scripts
@@ -75,12 +78,16 @@ When things get weird and you suspect a GPO was weaponized:
 This script dumps everything in minutes.
 
 <br/>
-<br/>
 
-✔️ Migration Planning (Intune, AzureAD, or Hybrid Scenarios)
+### ✔️ Migration Planning (Intune, AzureAD, or Hybrid Scenarios)
 
 If you're converting GPOs to MDM policies, you need to know exactly what's configured today.
 This gives you clean documentation to drive that process.
+
+<br/>
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%203/attack.png)
 
 <br/>
 <br/>
@@ -130,20 +137,6 @@ End result: a folder full of clickable HTML reports, one per GPO, ready for:
 - CIS / STIG baseline verification
 - Change documentation
 - Incident response “what is actually being applied to these OUs?” questions
-
-<br/>
-<br/>
-<br/>
-<br/>
-
-# 🔐 When You’d Use This Script
-
-This script shines in scenarios like:
-- **Audit prep**: You want to hand an auditor a snapshot of every GPO applied in the domain.
-- **Baseline validation**: “Are we really aligned with CIS / Microsoft Security Baselines / internal standards?”
-- **Cleanup campaigns**: Before you refactor GPOs, take a snapshot so you know what you had.
-- **Incident response**: You suspect GPO abuse (e.g., startup scripts, security config changes) and need quick visibility.
-- **Migration planning**: Moving to Intune/MDM and want to understand what existing GPOs are doing.
 
 <br/>
 <br/>
@@ -429,10 +422,15 @@ you’re ready for the final tool in the set.
 
 <br/>
 <br/>
+
+![](/assets/img/Powershell%20Toolbox%203/victory.png)
+
+<br/>
+<br/>
 <br/>
 <br/>
 
-# A Sneak Peek at What’s Coming in Part 4
+# 👀 A Sneak Peek at What’s Coming in Part 4
 
 Next up in the series?
 We’re shifting gears from infrastructure + identity to something that quietly strengthens every script in your arsenal:
@@ -463,6 +461,11 @@ Think of it as _the tool that makes every other tool safer._
 
 _**Stay tuned** — Part 4 is going to be a fun one!_
 
+<br/>
+<br/>
+<br/>
+<br/>
+
 # 📚 Want to Go Deeper?
 
 If this kind of automation gets your gears turning, check out my book:
@@ -475,8 +478,6 @@ If this kind of automation gets your gears turning, check out my book:
 
 ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
-
-
 <br/>
 <br/>
 <br/>
@@ -484,6 +485,7 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
+- [GPO_Audit.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1)
 - [Privileged_RBAC_Roles_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)
 - [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
 
