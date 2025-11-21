@@ -237,9 +237,13 @@ This is the workhorse of the script: ```Get-GPOReport -Name $gpo.DisplayName -Re
 - ```ReportType Html``` → generates a fully formatted HTML report.
 - ```Path $reportPath``` → saves that HTML content into the file path we built.
 
+<br/>
+
 **The resulting HTML report includes:**
 - GPO name, GUID, domain, owner, creation/modification date.
 - Links, WMI filters (if any).
+
+<br/>
 
 **Settings under:**
 - Computer Configuration
