@@ -291,17 +291,6 @@ if ($failures) {
 <br/>
 <br/>
 
-# 🎯 Final Thoughts
-Invoke-ScriptAnalyzer isn’t glamorous. It doesn’t spin up VMs, query Sentinel, or summon KQL magic. But it does help you write cleaner, safer, more maintainable PowerShell — and that’s the foundation of every mature DevSecOps practice.
-
-It’s one of those tools that quietly saves you from:
-- Future bugs
-- Future rework
-- Future “who wrote this?” moments
-- Future weekend firefights
-
-Add it to your toolbox now; Your future self — and your clients — will thank you. ⚔️🛡️💻
-
 # Bonus Tool: `Write-Progress`
 
 `Write-Progress` displays a progress bar in the PowerShell console to give the user visual feedback on long-running tasks.
@@ -441,6 +430,17 @@ Together, this Network Inventory script + the EoL “Ghost Hunter” script give
 <br/>
 <br/>
 <br/>
+
+# 🎯 Final Thoughts
+Invoke-ScriptAnalyzer isn’t glamorous. It doesn’t spin up VMs, query Sentinel, or summon KQL magic. But it does help you write cleaner, safer, more maintainable PowerShell — and that’s the foundation of every mature DevSecOps practice.
+
+It’s one of those tools that quietly saves you from:
+- Future bugs
+- Future rework
+- Future “who wrote this?” moments
+- Future weekend firefights
+
+Add it to your toolbox now; Your future self — and your clients — will thank you. ⚔️🛡️💻
 
 # 📚 Want to Go Deeper?
 
