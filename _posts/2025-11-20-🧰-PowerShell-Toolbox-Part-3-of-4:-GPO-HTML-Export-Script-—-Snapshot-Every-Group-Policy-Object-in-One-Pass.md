@@ -92,6 +92,9 @@ This gives you clean documentation to drive that process.
 <br/>
 
 ### Here's the small but super handy script:
+
+<br/>
+
 ```powershell
 $reportFolder = "C:\GPOReports"
 if (-not (Test-Path $reportFolder)) {
@@ -130,7 +133,6 @@ In one run, this script:
 - Saves each report as: ```C:\GPOReports\<GPO-Name>.html```
 - Logs a warning if any individual GPO fails to export (e.g., permissions or weird corruption), but keeps going.
 
-<br/>
 <br/>
 
 End result: a folder full of clickable HTML reports, one per GPO, ready for:
@@ -180,14 +182,14 @@ If it does not exist: ```New-Item -ItemType Directory``` creates the folder.
 - Owner
 - CreationTime, ModificationTime, etc.
 
-<br/>
-
 > ⚠️ Note: This requires you to be running the script on a **domain-joined machine** with the Group Policy Management tools installed (RSAT or GPMC on a DC / management server). 
 
 <br/>
 <br/>
 
 ### 4. Loop Through Each GPO
+<br/>
+
 ```powershell
 foreach ($gpo in $GPOs) {
     try {
@@ -256,6 +258,8 @@ Basically, everything you’d see in GPMC → Right-click GPO → Save Report…
 <br/>
 
 ### 8. Error Handling
+<br/>
+
 ```powershell
 catch {
     Write-Warning "Failed to export report for $($gpo.DisplayName): $_"
@@ -290,7 +294,6 @@ C:\GPOReports <br/>
   +-- Hardening_ Domain Controllers _ Tier0.html <br/>
   +-- Legacy_App_Compatibility.html <br/>
   +-- ...
-
 
 Each .html file is fully clickable in any browser and shows all settings for that GPO.
 
