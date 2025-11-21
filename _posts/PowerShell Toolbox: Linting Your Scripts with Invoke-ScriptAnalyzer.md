@@ -1,4 +1,5 @@
 # 🧰 PowerShell Toolbox: Linting Your Scripts with `Invoke-ScriptAnalyzer`
+
 *Because even your PowerShell scripts deserve a code review ☕🔍*
 
 If there’s one universal truth in DevSecOps, it’s this:  
@@ -10,7 +11,7 @@ We lint YAML because *of course* we forgot a space after a colon somewhere.
 
 PowerShell? Yep — it has a linter too. And a sneaky good one.
 
-Let me introduce you to your new best friend:  
+Let me introduce you to your _third_ new best friend:  
 **`Invoke-ScriptAnalyzer`** — the PowerShell code reviewer that never sleeps, never sugarcoats, and definitely never lets you ship a half-asleep `Write-Host` to production.
 
 ---
