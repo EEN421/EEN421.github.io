@@ -12,14 +12,13 @@ Over the years, GPOs accumulate like digital barnacles:
 And when an audit hits, or security wants clarity, or you need to prep for a migration?
 Nobody has time to click through 200+ GPOs in GPMC like it’s 2009.
 
+<br/>
+
 ### Enter the next tool in your Toolbox.
 
 And yes — this is the one that lets you slice straight through the “Bad GPOs” tentacle monster lurking in every legacy domain.
 
 ![](/assets/img/Powershell%20Toolbox%203/approach.png)
-
-<br/>
-<br/>
 
 This lightweight PowerShell script gives you a one-click, full-domain HTML export of every Group Policy Object. Think of it as wielding your own glowing red PowerShell katana: one strike, and suddenly you have:
 
@@ -111,10 +110,12 @@ foreach ($gpo in $GPOs) {
 }
 ```
 
+<br/>
+<br/>
+
 Let’s unpack it... 👇
 
-<br/>
-<br/>
+
 <br/>
 <br/>
 
@@ -224,6 +225,7 @@ This is the target file path for the HTML report for this specific GPO.
 <br/>
 
 ### 7. Export the GPO to HTML
+
 This is the workhorse of the script: ```Get-GPOReport -Name $gpo.DisplayName -ReportType Html -Path $reportPath```
 
 > ☝️ ```Get-GPOReport``` is another cmdlet from the GroupPolicy module.
@@ -235,21 +237,14 @@ This is the workhorse of the script: ```Get-GPOReport -Name $gpo.DisplayName -Re
 - ```ReportType Html``` → generates a fully formatted HTML report.
 - ```Path $reportPath``` → saves that HTML content into the file path we built.
 
-
-<br/>
-
 **The resulting HTML report includes:**
 - GPO name, GUID, domain, owner, creation/modification date.
 - Links, WMI filters (if any).
-
-<br/>
 
 **Settings under:**
 - Computer Configuration
 - User Configuration
 - Each policy area (Windows settings, Administrative Templates, Security Settings, Scripts, etc.)
-
-<br/>
 
 Basically, everything you’d see in GPMC → Right-click GPO → Save Report…, but automated and done in bulk.
 
@@ -309,7 +304,6 @@ Each .html file is fully clickable in any browser and shows all settings for tha
     - >⚡ On a domain controller, these tools are usually already present.
 
 <br/>
-<br/>
 
 ### 2. Permissions
 
@@ -319,7 +313,6 @@ You need permissions to read GPOs in the domain. Typically, members of the follo
 - Group Policy Creator Owners
 - Or any delegated admin granted GPO read access
 
-<br/>
 <br/>
 
 ### 3. Save the Script
@@ -345,6 +338,8 @@ foreach ($gpo in $GPOs) {
     }
 }
 ```
+
+<br/>
 
 ### 4. Run It
 
@@ -463,6 +458,9 @@ _**Stay tuned** — Part 4 is going to be a fun one!_
 
 <br/>
 <br/>
+
+![](/assets/img/Powershell%20Toolbox%203/trilogy.png)
+
 <br/>
 <br/>
 
