@@ -367,7 +367,7 @@ When it finishes, browse to ```C:\GPOReports\``` and double-click any .html file
 
 Here are a few practical workflows:
 
-### ✅ CIS / STIG Compliance
+### 📋 CIS / STIG Compliance
 - Re-run this script before every quarterly GPO review.
 - Use the HTML reports to check:
     - Password policy
@@ -379,7 +379,7 @@ Here are a few practical workflows:
 <br/>
 <br/>
 
-### ✅ Before-and-After Snapshots
+### 📷 Before-and-After Snapshots
 - Run the script before a GPO refactor.
 - Zip up ```C:\GPOReports``` and archive it.
 - After changes, run it again.
@@ -405,7 +405,7 @@ This way you can provide a static, point-in-time view of GPOs to the IR team.
 <br/>
 
 
-# 🧩 Wrapping Up Part 3 — Your GPO Snapshot Superpower
+# ⚡ Wrapping Up Part 3 — Your GPO Snapshot Superpower
 
 By now, you’ve seen how this tiny script punches way above its weight class. With one quick run, you get:
 
@@ -493,6 +493,7 @@ If this kind of automation gets your gears turning, check out my book:
 - [GPO_Audit.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1)
 - [Privileged_RBAC_Roles_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)
 - [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
+- [Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 
 <br/>
 <br/>
