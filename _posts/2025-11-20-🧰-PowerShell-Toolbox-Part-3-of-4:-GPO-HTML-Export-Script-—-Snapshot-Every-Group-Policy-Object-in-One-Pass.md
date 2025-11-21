@@ -441,7 +441,7 @@ you’re ready for the final tool in the set.
 Next up in the series?
 We’re shifting gears from infrastructure + identity to something that quietly strengthens every script in your arsenal:
 
-🧰 PowerShell Toolbox (Part 4): Linting Your Scripts with Invoke-ScriptAnalyzer
+🧰 PowerShell Toolbox (Part 4): Auditing Your Scripts with Invoke-ScriptAnalyzer
 
 If Parts 1–3 gave you visibility into your environment,
 Part 4 will give you visibility into your code; Because let’s be honest — half of our automation is written either:
