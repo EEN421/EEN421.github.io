@@ -15,7 +15,7 @@ In real DevSecOps environments, PowerShell code isn’t always a masterpiece. It
 
 That’s why the final tool in this series focuses on PowerShell auditing and static code analysis using one of the most important modules in the PowerShell ecosystem:
 
-⚡ Meet **Invoke-ScriptAnalyzer** — the PowerShell auditer for secure, high-quality automation
+### ⚡ Meet **_Invoke-ScriptAnalyzer_** — the PowerShell auditer for secure, high-quality automation
 
 Invoke-ScriptAnalyzer gives you consistent, secure, and production-ready PowerShell by automatically detecting:
 - Security risks
@@ -28,16 +28,15 @@ Invoke-ScriptAnalyzer gives you consistent, secure, and production-ready PowerSh
 
 <br/>
 
-![](/assets/img/Powershell%20Toolbox%204/DevSecOpsDad_NinjaCat_PowershellBlade.png)
-
-<br/>
-<br/>
-
 Whether you’re building SOC automation, Azure governance scripts, IR tooling, or client-facing MSSP workflows, ScriptAnalyzer enforces PowerShell best practices before your code ever reaches production. _**This isn’t about pretty formatting** — it’s about safer DevSecOps automation, fewer regressions, and scripts you can trust across every tenant you manage._
 
 That’s where **`Invoke-ScriptAnalyzer`** swoops in. It’s like having a PowerShell code reviewer living inside your terminal — one that doesn’t judge you (too harshly), but still calls you out when you forget indentation, misuse cmdlets, or resurrect `Write-Host` like it’s 2012. Whether you’re pushing scripts to production, running tools in a client’s tenant, or polishing code for your next blog post, ScriptAnalyzer keeps you honest, clean, and safe.
 
 Let’s break down how ScriptAnalyzer works, why it matters for cloud security engineers, and how to use it to level-up the quality of your PowerShell projects.
+
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%204/DevSecOpsDad_NinjaCat_PowershellBlade.png)
 
 <br/>
 <br/>
@@ -332,6 +331,11 @@ Write-Progress
 
 <br/>
 <br/>
+
+![](/assets/img/Powershell%20Toolbox%204/invoke-results.png)
+
+<br/>
+<br/>
 <br/>
 <br/>
 
@@ -406,6 +410,10 @@ Write-Progress -Activity "Main Task" -Completed
 ```
 
 This creates **a main progress bar with sub-progress bars** underneath — great for loops within loops (e.g., scanning folders and then files).
+
+<br/>
+
+![](/assets/img/Powershell%20Toolbox%204/Nested_Progress.png)
 
 <br/>
 <br/>
