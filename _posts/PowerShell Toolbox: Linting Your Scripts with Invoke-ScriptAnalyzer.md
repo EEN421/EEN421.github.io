@@ -28,6 +28,11 @@ Invoke-ScriptAnalyzer gives you consistent, secure, and production-ready PowerSh
 
 <br/>
 
+![](/assets/img/Powershell%20Toolbox%204/DevSecOpsDad_NinjaCat_PowershellBlade.png)
+
+<br/>
+<br/>
+
 Whether you’re building SOC automation, Azure governance scripts, IR tooling, or client-facing MSSP workflows, ScriptAnalyzer enforces PowerShell best practices before your code ever reaches production. _**This isn’t about pretty formatting** — it’s about safer DevSecOps automation, fewer regressions, and scripts you can trust across every tenant you manage._
 
 That’s where **`Invoke-ScriptAnalyzer`** swoops in. It’s like having a PowerShell code reviewer living inside your terminal — one that doesn’t judge you (too harshly), but still calls you out when you forget indentation, misuse cmdlets, or resurrect `Write-Host` like it’s 2012. Whether you’re pushing scripts to production, running tools in a client’s tenant, or polishing code for your next blog post, ScriptAnalyzer keeps you honest, clean, and safe.
@@ -274,7 +279,6 @@ else {
 Want to enforce PowerShell best practices automatically? Add this to GitHub Actions or Azure DevOps:
 
 ```powershell
-Copy code
 $failures = Invoke-ScriptAnalyzer -Path .\Scripts -Recurse -Severity Error
 if ($failures) {
     Write-Error "❌ ScriptAnalyzer found issues. Fix before merging."
@@ -442,13 +446,20 @@ It’s one of those tools that quietly saves you from:
 
 Add it to your toolbox now; Your future self — and your clients — will thank you. ⚔️🛡️💻
 
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
 # 📚 Want to Go Deeper?
 
 If this kind of automation gets your gears turning, check out my book:
 🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
  — published by Orange Education, available on Kindle and print. 👉 Get your copy here: [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
 
-⚡ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
+⚡ It dives into Defender XDR, Sentinel, Entra ID, and other Microsoft automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
 
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
