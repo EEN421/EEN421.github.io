@@ -276,10 +276,8 @@ else {
 
 <br/>
 <br/>
-<br/>
-<br/>
 
-# 🚀 Pro Tip: Add ScriptAnalyzer to Your CI/CD Pipeline
+### 🚀 Pro Tip: Add ScriptAnalyzer to Your CI/CD Pipeline
 
 Want to enforce PowerShell best practices automatically? Add this to GitHub Actions or Azure DevOps:
 
@@ -307,11 +305,13 @@ if ($failures) {
 It’s **purely informational** — it doesn’t affect the logic of the script; it just shows the *status*, *percentage complete*, and *activity description*.
 
 <br/>
-<br/>
+
+![](/assets/img/Powershell%20Toolbox%202/write-progress.png)
+
 <br/>
 <br/>
 
-## ⚙️ Syntax Overview
+### ⚙️ Syntax Overview
 
 ```powershell
 Write-Progress
@@ -323,6 +323,8 @@ Write-Progress
     [-ParentId <int>]
     [<CommonParameters>]
 ```
+<br/>
+<br/>
 
 ### Key Parameters Explained:
 
@@ -340,7 +342,7 @@ Write-Progress
 <br/>
 <br/>
 
-## 🧩 Example Script — Simulated File Processing
+### ⚙️ Example Script — Simulated File Processing
 
 Here’s a **fully commented PowerShell script** that demonstrates `Write-Progress` in action:
 
