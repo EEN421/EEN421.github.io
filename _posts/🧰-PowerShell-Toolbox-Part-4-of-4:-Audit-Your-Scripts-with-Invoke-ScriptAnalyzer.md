@@ -76,9 +76,9 @@ Security folks aren’t just worried about whether a script runs — we’re wor
 - Privileged permissions  
 - Customer tenants (for MSSPs)
 
-That makes secure coding a **defensive discipline**, not just a dev task.
+That makes secure coding a **defensive discipline**, not just a dev task. Here’s why ScriptAnalyzer is essential for security pros:
 
-Here’s why ScriptAnalyzer is essential for security pros:
+<br/>
 
 ### 🔐 1. Prevents accidental security weaknesses  
 It flags things like:
