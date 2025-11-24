@@ -1,9 +1,7 @@
 # Introduction & Use Case:
-Welcome back to the 🧰 PowerShell Toolbox series on DevSecOpsDad.com; If you’ve followed this PowerShell Toolbox series so far, you’ve mapped your Azure network (Part 1), audited privileged RBAC roles (Part 2), and exported every Group Policy Object into a single offline HTML snapshot (Part 3). These tools strengthen your Azure security posture, streamline audits, and reduce manual work — but they all depend on one critical foundation:
+Welcome back to the 🧰 PowerShell Toolbox series on DevSecOpsDad.com; If you’ve followed this PowerShell Toolbox series so far, you’ve mapped your Azure network (Part 1), audited privileged RBAC roles (Part 2), and exported every Group Policy Object into a single offline HTML snapshot (Part 3). These tools strengthen your Azure security posture, streamline audits, and reduce manual work — but they all depend on one critical foundation: The quality and security of your PowerShell scripts.
 
-👉 The quality and security of your PowerShell scripts.
-
-In real DevSecOps environments, PowerShell code isn’t always a masterpiece. It’s often written quickly to automate a task, support an incident response workflow, or fix something in a client tenant. And while PowerShell is flexible, inconsistent or unsafe scripts can introduce:
+👉 In real DevSecOps environments, PowerShell code isn’t always a masterpiece. It’s often written quickly to automate a task, support an incident response workflow, or fix something in a client tenant. And while PowerShell is flexible, inconsistent or unsafe scripts can introduce:
 
 - Security vulnerabilities
 - Hidden bugs
@@ -13,7 +11,10 @@ In real DevSecOps environments, PowerShell code isn’t always a masterpiece. It
 
 <br/>
 
-That’s why the final tool in this series focuses on PowerShell auditing and static code analysis using one of the most important modules in the PowerShell ecosystem:
+That’s why the final tool in this series focuses on PowerShell auditing and static code analysis using one of the most important modules in the PowerShell ecosystem.
+
+<br/>
+<br/>
 
 ### ⚡ Meet **_Invoke-ScriptAnalyzer_** — the PowerShell auditer for secure, high-quality automation
 
