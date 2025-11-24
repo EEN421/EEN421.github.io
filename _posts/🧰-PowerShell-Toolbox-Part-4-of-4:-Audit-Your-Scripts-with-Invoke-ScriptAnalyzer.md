@@ -9,14 +9,14 @@ Welcome back to the 🧰 PowerShell Toolbox series on DevSecOpsDad.com; If you�
 - CI/CD pipeline failures
 - Automation outages
 
-<br/>
-
 That’s why the final tool in this series focuses on PowerShell auditing and static code analysis using one of the most important modules in the PowerShell ecosystem.
 
 <br/>
 <br/>
+<br/>
+<br/>
 
-### ⚡ Meet **_Invoke-ScriptAnalyzer_** — the PowerShell auditer for secure, high-quality automation
+# ⚡ Meet **_Invoke-ScriptAnalyzer_** — the PowerShell auditer for secure, high-quality automation
 
 Invoke-ScriptAnalyzer gives you consistent, secure, and production-ready PowerShell by automatically detecting:
 - Security risks
@@ -271,6 +271,11 @@ else {
 
 <br/>
 <br/>
+
+![](/assets/img/Powershell%20Toolbox%204/invoke-results.png)
+
+<br/>
+<br/>
 <br/>
 <br/>
 
@@ -329,11 +334,6 @@ Write-Progress
 | **`-CurrentOperation`** | More detail about what’s currently happening within the task.                      |
 | **`-Id`**               | Identifies the progress bar instance (useful when running multiple progress bars). |
 | **`-ParentId`**         | Groups child progress bars under a parent (for nested tasks).                      |
-
-<br/>
-<br/>
-
-![](/assets/img/Powershell%20Toolbox%204/invoke-results.png)
 
 <br/>
 <br/>
