@@ -87,8 +87,6 @@ If a device ever reports a public IP through this channel:
 ✔ Or it *was* the public edge of something
 ✔ Or it’s behind a 1:N NAT but still exposes public hops
 
-Good detection method #1.
-
 <br/><br/><br/><br/>
 
 ### 🏠 Step 3: Devices with Public *Local* IPs
@@ -106,11 +104,13 @@ Some devices literally have public IPs **assigned directly** to a network interf
 * Load balancers
 * Cloud VMs with public NICs
 
+<br/>
+
 If you see a device with a public LocalIP…
 
-🔥 It *is* exposed
-🔥 It *is* reachable
-🔥 It *is* Internet-facing
+🔥 It *is* exposed <br/>
+🔥 It *is* reachable <br/>
+🔥 It *is* Internet-facing <br/>
 
 This is one of the most trustworthy signals in the entire diagram.
 
@@ -124,11 +124,7 @@ let InboundConnections = DeviceNetworkEvents
 ```
 
 This looks for `InboundConnectionAccepted` events **from public IPs only**.
-Meaning: a real-world outsider connected to the device.
-
-This is the part where the device is basically shouting:
-
-> “Yes, stranger! Come on in!”
+Meaning: _a real-world outsider connected to the device._
 
 We gather:
 
@@ -137,9 +133,8 @@ We gather:
 * Ports targeted
 * Samples of RemoteIP
 
-Then we threshold (e.g., only devices with >5 accepted inbound connections).
+Then we threshold (e.g., only devices with >5 accepted inbound connections. This is great for tackling the biggest offenders first, then you can adjust the threshold as you see fit).
 
-This is detection method #3—and it's extremely practical.
 
 <br/><br/><br/><br/>
 
@@ -157,7 +152,7 @@ We examine inbound connections on common high-risk ports:
 | 22        | SSH             |
 | 3389      | RDP             |
 | 80/443    | Web Servers     |
-| 21/23     | FTP / Telnet 😬 |
+| 21/23     | FTP / Telnet    |
 | 5900      | VNC             |
 | 5985/5986 | WinRM           |
 
@@ -181,9 +176,7 @@ let IsInternetFacingDevices = DeviceInfo
 ...
 ```
 
-We include Microsoft’s opinion—but we don’t rely on it.
-
-Think of this as the friend who shows up late to the party, but still gets included in the group photo.
+While we do include Microsoft’s opinion via ```IsInternetFacing```  —we don’t rely on it. This is the last source to take into consideration in our logic. Taken together with whether it has a public IP and if any ports are listening, we can make a more informed decision than relying on ```IsInternetFacing``` alone. 
 
 <br/><br/><br/><br/>
 
@@ -273,9 +266,9 @@ Zero Trust cannot rely on a single boolean flag.
 | Detects RDP/SSH/Web exposure             | ❌                  | ✅          |
 | Finds NAT-exposed devices                | ❌                  | ✅          |
 | Captures temporary / historical exposure | ❌                  | ✅          |
-| Sees public LocalIPs                     | ⚠️ Sometimes       | ✅ Always   |
+| Sees public LocalIPs                     | ⚠️ Sometimes        | ✅ Always   |
 | Evidence-driven                          | ❌                  | ✅          |
-| Ideal for compliance & audits            | Meh                | Excellent  |
+| Ideal for compliance & audits            | Meh                 | Excellent  |
 
 <br/><br/>
 
@@ -305,3 +298,44 @@ And most importantly:
 > If your device accepts inbound connections from the Internet…
 > **it’s Internet-facing—whether Defender agrees or not.**
 
+<br/>
+<br/>
+<br/>
+<br/>
+
+# 📚 Want to Go Deeper?
+
+If this kind of automation gets your gears turning, check out my book:
+🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
+ — published by Orange Education, available on Kindle and print. 👉 Get your copy here: [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
+
+⚡ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
+
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+# 🔗 References (good to keep handy)
+
+- [GPO_Audit.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1)
+- [Privileged_RBAC_Roles_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)
+- [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
+- [Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+<a href="https://hanleycloudsolutions.com">
+    <img src="/assets/img/footer.png">
+</a>
+
+![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
