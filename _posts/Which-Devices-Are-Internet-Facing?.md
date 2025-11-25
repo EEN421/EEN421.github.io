@@ -39,13 +39,13 @@ It’s like running a security investigation with **multiple witnesses instead o
 
 <br/><br/><br/><br/>
 
-# 🧩 Breakdown of the Query (Explained Like DevSecOpsDad)
+# 🧩 Breakdown of the Query
 
 Below are the major components—explained in normal human language, not “Kusto-ese.”
 
 <br/><br/><br/><br/>
 
-# 🏷️ Step 0: Define What Counts as a Private IP
+### 🏷️ Step 0: Define What Counts as a Private IP
 
 ```kql
 let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
@@ -62,7 +62,7 @@ Anything **not matching** this regex is, for practical purposes, considered *pub
 
 <br/><br/><br/><br/>
 
-# 🕰️ Step 1: Define the Lookback Window
+### 🕰️ Step 1: Define the Lookback Window
 
 ```kql
 let LookbackDays = 30d;
@@ -72,14 +72,14 @@ Most exposure patterns are visible within 30 days. Adjust as needed (14d for str
 
 <br/><br/><br/><br/>
 
-# 🌍 Step 2: Devices Reporting Public IPs via Connected Networks
+### 🌍 Step 2: Devices Reporting Public IPs via Connected Networks
 
 ```kql
 let PublicIPDevices = DeviceNetworkInfo
 ...
 ```
 
-This is gold. When Defender collects `ConnectedNetworks`, it may include a **PublicIP** property.
+When Defender collects `ConnectedNetworks`, it may include a **PublicIP** property.
 
 If a device ever reports a public IP through this channel:
 
@@ -91,7 +91,7 @@ Good detection method #1.
 
 <br/><br/><br/><br/>
 
-# 🏠 Step 3: Devices with Public *Local* IPs
+### 🏠 Step 3: Devices with Public *Local* IPs
 
 ```kql
 let PublicLocalIP = DeviceNetworkInfo
@@ -116,7 +116,7 @@ This is one of the most trustworthy signals in the entire diagram.
 
 <br/><br/><br/><br/>
 
-# 🚪 Step 4: Devices Accepting Inbound Public Connections
+### 🚪 Step 4: Devices Accepting Inbound Public Connections
 
 ```kql
 let InboundConnections = DeviceNetworkEvents
@@ -143,7 +143,7 @@ This is detection method #3—and it's extremely practical.
 
 <br/><br/><br/><br/>
 
-# 🔐 Step 5: Devices Listening on Remote-Access Ports
+### 🔐 Step 5: Devices Listening on Remote-Access Ports
 
 ```kql
 let RemoteAccessServices = DeviceNetworkEvents
@@ -174,7 +174,7 @@ It’s a personal favorite.
 
 <br/><br/><br/><br/>
 
-# 🏷️ Step 6: Devices Flagged as Internet-Facing in DeviceInfo
+### 🏷️ Step 6: Devices Flagged as Internet-Facing in DeviceInfo
 
 ```kql
 let IsInternetFacingDevices = DeviceInfo
@@ -187,7 +187,7 @@ Think of this as the friend who shows up late to the party, but still gets inclu
 
 <br/><br/><br/><br/>
 
-# 🔄 Step 7: Union All Signals Into a Final Answer
+### 🔄 Step 7: Union All Signals Into a Final Answer
 
 The full-outer joins bring all devices from all signals together.
 We use:
