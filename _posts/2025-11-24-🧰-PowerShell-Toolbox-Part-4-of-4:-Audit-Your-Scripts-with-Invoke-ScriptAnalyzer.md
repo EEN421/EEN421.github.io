@@ -190,7 +190,7 @@ Ensures scripts work across platforms and PowerShell versions.
 
 <br/>
 
-### 🧩 **6. Maintainability Rules**
+### 🛠️ **6. Maintainability Rules**
 *"Future you will want to hug present you for using these."*
 
 Encourages clean function structures, comments, and reusable logic.
@@ -380,11 +380,8 @@ Write-Host "✅ All $totalFiles files have been processed successfully!"
 ```
 
 <br/>
-<br/>
-<br/>
-<br/>
 
-## 🪄 Output Behavior
+### 🪄 Output Behavior
 
 When run in a PowerShell console:
 
@@ -399,7 +396,7 @@ When run in a PowerShell console:
 <br/>
 <br/>
 
-## 💡 Bonus Tip — Nested Progress Bars
+# 💡 Bonus Tip — Nested Progress Bars
 
 You can track sub-tasks with **`-ParentId`**:
 
@@ -441,6 +438,16 @@ Together, this Network Inventory script + the EoL “Ghost Hunter” script give
 - Risk identification
 - Audit readiness
 - Modernization and cleanup planning
+
+<br/>
+
+![](/assets/img/EoL/EoL_Stuff.png)
+
+<br/>
+
+![](/assets/img/EoL/found.png)
+
+<br/>
 
 ### It’s all part of building out your complete PowerShell Toolbox for real-world cloud security work. 🧰⚡
 
@@ -486,19 +493,14 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
+- [GPO_Audit.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1)
+- [Privileged_RBAC_Roles_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)
 - [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
-
-- [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
-
-- [Azure permissions - Azure RBAC](https://docs.azure.cn/en-us/role-based-access-control/resource-provider-operations)
-
-- [Azure permissions for Networking](https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/networking)
-
-- [Get-AzVirtualNetworkGatewayConnection (Az.Network)](https://learn.microsoft.com/en-us/powershell/module/az.network/get-azvirtualnetworkgatewayconnection?view=azps-14.6.0)
-
-- [About ExpressRoute roles and permissions](https://learn.microsoft.com/en-us/azure/expressroute/roles-permissions)
-
-- [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)
+- [🧰 Powershell Toolbox Part 1 Of 4: Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
+- [🧰 Powershell Toolbox Part 2 Of 4: Azure Rbac Privileged Roles Audit](https://www.hanley.cloud/2025-11-19-PowerShell-Toolbox-Part-2-of-4-Azure-RBAC-Privileged-Roles-Audit/)
+- [🧰 Powershell Toolbox Part 3 Of 4: Gpo Html Export Script — Snapshot Every Group Policy Object In One Pass](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
+- [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)
+- [😼 Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 
 <br/>
 <br/>
