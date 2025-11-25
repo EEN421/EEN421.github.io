@@ -17,7 +17,7 @@ And then—after about seven seconds of experience in the real world—you learn
 So today, we’re leveling up.
 We’re diving into a **multi-signal, evidence-driven** KQL detection that actually answers the question:
 
-## **“Which of my machines is exposed to the public Internet?”**
+### **“Which of my machines is exposed to the public Internet?”**
 
 And we’re answering it using telemetry—not hope.
 
