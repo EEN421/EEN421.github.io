@@ -2,6 +2,8 @@
 If you’ve spent any amount of time in Microsoft Defender, you’ve definitely seen the `IsInternetFacing` field in `DeviceInfo` and thought:
 > “Cool… Microsoft already tells me what’s Internet-facing. Easy win!”
 
+<br/><br/>
+
 # 🌐 How to *Actually* Identify Internet-Facing Devices with KQL
 ### (*Because sometimes “IsInternetFacing = true” just lies to you.*)
 
