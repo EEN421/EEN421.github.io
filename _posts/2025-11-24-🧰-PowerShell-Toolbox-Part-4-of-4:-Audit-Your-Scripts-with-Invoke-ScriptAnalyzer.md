@@ -394,7 +394,10 @@ When run in a PowerShell console:
 * The **progress percentage** automatically updates.
 * When finished, `-Completed` removes the progress bar.
 
----
+<br/>
+<br/>
+<br/>
+<br/>
 
 ## 💡 Bonus Tip — Nested Progress Bars
 
@@ -475,8 +478,6 @@ If this kind of automation gets your gears turning, check out my book:
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
 ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
-
-
 
 <br/>
 <br/>
