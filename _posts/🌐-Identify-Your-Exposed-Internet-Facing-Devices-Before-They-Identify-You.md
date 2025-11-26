@@ -1,3 +1,5 @@
+🌐-Internet-Facing-Devices:-Mapping-Your-Attack-Surface-Before-the-Hackers-Do
+
 # Introduction & Use Case:
 **Identifying Internet-Facing Devices Matters to Every Framework You Care About.** Before we even dive into tooling, let’s anchor the importance of this work in the actual security and compliance frameworks that govern nearly every mature organization. Pretty much every major framework assumes you know which assets are exposed to the public internet — because this shapes your entire risk profile.
 
@@ -16,7 +18,7 @@ And then—after about seven seconds of experience in the real world—you learn
   …**absolutely do not care** about that boolean flag
 
 So today, we’re leveling up.
-We’re diving into a **multi-signal, evidence-driven** KQL detection that actually answers the question: **“Which of my machines is exposed to the public Internet?”** And we’re answering it using telemetry—not hope.
+We’re diving into a **multi-signal, evidence-driven** KQL detection like an **attack surface samurai** and cut straight to the point: **“Which of my machines is exposed to the public Internet?”** And we’re answering it using telemetry—not hope.
 
 <br/> <br/>
 
