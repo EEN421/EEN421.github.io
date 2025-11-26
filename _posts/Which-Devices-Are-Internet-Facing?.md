@@ -392,45 +392,44 @@ This query gives you a **field manual** of exposure scenarios.
 
 ### 📍 External Attack Surface Mapping
 
-Immediately know which machines are reachable from the Internet.
+✔️ Immediately know which machines are reachable from the Internet.
 
 <br/>
 
 ### 👤 Shadow IT Discovery
 
-Find those random Azure VMs someone spun up with public NICs and an RDP port “just for testing.”
+✔️ Find those random Azure VMs someone spun up with public NICs and an RDP port “just for testing.”
 
 <br/>
 
 ### 🧱 Firewall Misconfiguration Detection
 
-If inbound connections are hitting servers that shouldn’t be public…
+✔️ If inbound connections are hitting servers that shouldn’t be public…
 …fix your perimeter.
 
 <br/>
 
 ### ⚔️ Compromise Triaging
 
-Inbound traffic spikes from unusual countries? You’ll see it here.
+✔️ Inbound traffic spikes from unusual countries? You’ll see it here.
 
 <br/>
 
 ### 📋 Compliance Evidence (CIS, NIST, ISO)
 
-Provides documented proof of systems exposed to the public Internet.
+✔️ Provides documented proof of systems exposed to the public Internet.
 
 <br/>
 
 ### 📡 Identify Stealth Exposures
 
-If a device’s NIC is private, but inbound connections are still happening → NAT or unusual routing.
+✔️ If a device’s NIC is private, but inbound connections are still happening → NAT or unusual routing.
 
 <br/>
 
 ### 🛡️ Validate Zero Trust Assumptions
 
-Trust but verify.
-Zero Trust cannot rely on a single boolean flag.
+✔️ **Trust but verify.** Zero Trust cannot rely on a single boolean flag.
 
 <br/><br/><br/><br/>
 
