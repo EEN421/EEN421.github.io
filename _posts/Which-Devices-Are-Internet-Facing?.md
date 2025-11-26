@@ -21,6 +21,10 @@ We’re diving into a **multi-signal, evidence-driven** KQL detection that actua
 
 And we’re answering it using telemetry—not hope.
 
+<br/> <br/>
+
+![](/assets/img/Internet-Facing/Internet-Facing1.jpg)
+
 <br/><br/><br/><br/>
 
 # 🧠 Why We Need a Better Method
