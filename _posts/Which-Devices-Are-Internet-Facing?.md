@@ -1,6 +1,7 @@
 # Introduction & Use Case:
-If you’ve spent any amount of time in Microsoft Defender, you’ve definitely seen the `IsInternetFacing` field in `DeviceInfo` and thought:
-> “Cool… Microsoft already tells me what’s Internet-facing. Easy win!”
+**Identifying Internet-Facing Devices Matters to Every Framework You Care About.** Before we even dive into tooling, let’s anchor the importance of this work in the actual security and compliance frameworks that govern nearly every mature organization. Pretty much every major framework assumes you know which assets are exposed to the public internet — because this shapes your entire risk profile.
+
+If you’ve spent any amount of time in Microsoft Defender, you’ve definitely seen the `IsInternetFacing` field in `DeviceInfo` and thought: _“Cool… Microsoft already tells me what’s Internet-facing. Easy win!”_ — But is it _really??_ 🤔
 
 <br/><br/>
 
@@ -15,11 +16,7 @@ And then—after about seven seconds of experience in the real world—you learn
   …**absolutely do not care** about that boolean flag
 
 So today, we’re leveling up.
-We’re diving into a **multi-signal, evidence-driven** KQL detection that actually answers the question:
-
-### **“Which of my machines is exposed to the public Internet?”**
-
-And we’re answering it using telemetry—not hope.
+We’re diving into a **multi-signal, evidence-driven** KQL detection that actually answers the question: **“Which of my machines is exposed to the public Internet?”** And we’re answering it using telemetry—not hope.
 
 <br/> <br/>
 
@@ -43,11 +40,11 @@ It’s like running a security investigation with **multiple witnesses instead o
 
 <br/><br/><br/><br/>
 
-# 🧩 Breakdown of the Query
+# 🛠️ Query Breakdown
 
 Below are the major components—explained in normal human language, not “Kusto-ese.”
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🏷️ Step 0: Define What Counts as a Private IP
 
@@ -64,7 +61,7 @@ This regex defines **non-routable** address spaces:
 
 Anything **not matching** this regex is, for practical purposes, considered *public-ish*.
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🕰️ Step 1: Define the Lookback Window
 
@@ -74,7 +71,7 @@ let LookbackDays = 30d;
 
 Most exposure patterns are visible within 30 days. Adjust as needed (14d for strict, 90d for historical).
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🌍 Step 2: Devices Reporting Public IPs via Connected Networks
 
@@ -91,7 +88,7 @@ If a device ever reports a public IP through this channel:
 ✔ Or it *was* the public edge of something
 ✔ Or it’s behind a 1:N NAT but still exposes public hops
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🏠 Step 3: Devices with Public *Local* IPs
 
@@ -118,7 +115,7 @@ If you see a device with a public LocalIP…
 
 This is one of the most trustworthy signals in the entire diagram.
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🚪 Step 4: Devices Accepting Inbound Public Connections
 
@@ -140,7 +137,7 @@ We gather:
 Then we threshold (e.g., only devices with >5 accepted inbound connections. This is great for tackling the biggest offenders first, then you can adjust the threshold as you see fit).
 
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🔐 Step 5: Devices Listening on Remote-Access Ports
 
@@ -171,7 +168,7 @@ This detection reveals:
 
 It’s a personal favorite.
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🏷️ Step 6: Devices Flagged as Internet-Facing in DeviceInfo
 
@@ -182,7 +179,7 @@ let IsInternetFacingDevices = DeviceInfo
 
 While we do include Microsoft’s opinion via ```IsInternetFacing```  —we don’t rely on it. This is the last source to take into consideration in our logic. Taken together with whether it has a public IP and if any ports are listening, we can make a more informed decision than relying on ```IsInternetFacing``` alone. 
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 ### 🔄 Step 7: Union All Signals Into a Final Answer
 
@@ -194,75 +191,76 @@ We use:
 * `make_set()` for public IPs, service ports, etc.
 * `arg_max()` to dedupe intelligently
 
+<br/><br/>
+
 The final result:
 
-```kql
-DeviceId
-DeviceName
-PublicIPList
-DetectionMethods
-InboundCount
-UniqueRemoteIPs
-RemotePortsStr
-ServicePortsStr
-```
+- DeviceId
+- DeviceName
+- PublicIPList
+- DetectionMethods
+- InboundCount
+- UniqueRemoteIPs
+- RemotePortsStr
+- ServicePortsStr
+
+<br/>
 
 Each row is a **multi-signal threat picture** of how and why the device appears exposed.
 
 <br/><br/><br/><br/>
 
-# 🛡️ Practical Security Use Cases
+# ⚡ Practical Security Use Cases
 
 This query gives you a **field manual** of exposure scenarios.
 
-<br/><br/>
+<br/>
 
-### ✔ External Attack Surface Mapping
+### 📍 External Attack Surface Mapping
 
 Immediately know which machines are reachable from the Internet.
 
-<br/><br/>
+<br/>
 
-### ✔ Shadow IT Discovery
+### 👤 Shadow IT Discovery
 
 Find those random Azure VMs someone spun up with public NICs and an RDP port “just for testing.”
 
-<br/><br/>
+<br/>
 
-### ✔ Firewall Misconfiguration Detection
+### 🧱 Firewall Misconfiguration Detection
 
 If inbound connections are hitting servers that shouldn’t be public…
 …fix your perimeter.
 
-<br/><br/>
+<br/>
 
-### ✔ Compromise Triaging
+### ⚔️ Compromise Triaging
 
-Inbound traffic spikes from unusual countries?
-You’ll see it here.
+Inbound traffic spikes from unusual countries? You’ll see it here.
 
-<br/><br/>
+<br/>
 
-### ✔ Compliance Evidence (CIS, NIST, ISO)
+### 📋 Compliance Evidence (CIS, NIST, ISO)
 
 Provides documented proof of systems exposed to the public Internet.
 
-<br/><br/>
+<br/>
 
-### ✔ Identify Stealth Exposures
+### 📡 Identify Stealth Exposures
 
 If a device’s NIC is private, but inbound connections are still happening → NAT or unusual routing.
 
-<br/><br/>
+<br/>
 
-### ✔ Validate Zero Trust Assumptions
+### 🛡️ Validate Zero Trust Assumptions
 
 Trust but verify.
 Zero Trust cannot rely on a single boolean flag.
 
 <br/><br/><br/><br/>
 
-# 🥊 Why This Beats Relying on `IsInternetFacing`
+# 🤺 Why This Beats Relying on `IsInternetFacing`
 
 | Metric                                   | `IsInternetFacing` | This Query |
 | ---------------------------------------- | ------------------ | ---------- |
@@ -274,7 +272,7 @@ Zero Trust cannot rely on a single boolean flag.
 | Evidence-driven                          | ❌                  | ✅          |
 | Ideal for compliance & audits            | Meh                 | Excellent  |
 
-<br/><br/>
+<br/>
 
 ### The bottom line:
 
@@ -301,6 +299,11 @@ And most importantly:
 
 > If your device accepts inbound connections from the Internet…
 > **it’s Internet-facing—whether Defender agrees or not.**
+
+<br/>
+<br/>
+
+![](/assets/img/Internet-Facing/Exposed.jpg)
 
 <br/>
 <br/>
