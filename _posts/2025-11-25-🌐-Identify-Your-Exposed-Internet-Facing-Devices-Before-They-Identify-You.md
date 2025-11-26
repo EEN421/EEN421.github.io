@@ -3,6 +3,97 @@
 
 If you’ve spent any amount of time in Microsoft Defender, you’ve definitely seen the `IsInternetFacing` field in `DeviceInfo` and thought: _“Cool… Microsoft already tells me what’s Internet-facing. Easy win!”_ — But is it _really??_ 🤔
 
+You'll want to know for the following **_really good_** reasons:
+
+
+### 🔐 NIST Cybersecurity Framework (CSF)
+
+- ID.AM-1 — Physical Devices & Systems Are Inventoried
+You cannot inventory devices meaningfully without knowing which ones are externally reachable.
+
+- ID.AM-2 — Software Platforms & Applications Are Inventoried
+Public exposure affects patching, configuration, and lifecycle decisions.
+
+- ID.RA-1 — Asset Vulnerabilities Are Identified and Documented
+Internet-facing assets have a dramatically higher threat frequency and must be treated differently.
+
+- PR.AC-3 — Remote Access Is Managed
+Internet-accessible services are remote access — even when not intended to be.
+
+- DE.CM-8 — Vulnerability Scans Are Performed
+External scans start with knowing what is internet-facing in the first place.
+
+<br/>
+
+### 🛡️ ISO/IEC 27001:2022
+
+- A.5.9 — Inventory of Information and Other Associated Assets
+Asset inventories must distinguish externally accessible systems.
+
+- A.8.23 — Web Filtering / Internet Exposure Management
+Controls require that externally reachable systems be treated as higher-risk.
+
+- A.13.1.1 — Network Security Controls
+Segmentation, firewalls, and external exposure fall directly under this clause.
+
+- A.5.24 — Information Security Incident Management Planning
+Internet-facing devices represent higher incident probability and require forward planning.
+
+<br/>
+
+### 🧰 CIS Critical Security Controls (v8)
+
+- CSC 1 — Inventory of Enterprise Assets
+External exposure is part of classification.
+
+- CSC 4 — Secure Configuration of Enterprise Assets
+Internet-facing = hardened baseline required.
+
+- CSC 14 — Security Awareness & Skills Training
+Teams must recognize risky external assets.
+
+- CSC 18 — Penetration Testing
+Internet-exposed assets are always in-scope by default for pen tests & red teams.
+
+<br/>
+
+### ☁️ CIS Azure / M365 Benchmarks
+
+- Azure 1.1 — Ensure Public Network Access Is Disabled Unless Required
+Exactly the scenario we’re evaluating.
+
+- Azure 3.4 — Ensure VM NICs Are Not Assigned Public IPs
+Direct mapping to identifying internet-facing VMs.
+
+- M365 5.6 — Monitor External Exposure
+External accessibility increases alerting requirements.
+
+<br/>
+
+### 🏥 HIPAA (if PHI is involved)
+
+Even though HIPAA doesn’t explicitly say “internet-facing,” auditors consistently tie this topic to:
+
+- §164.308(a)(1)(ii)(A) — Risk Analysis
+Internet-exposed assets are higher likelihood/impact.
+
+- §164.312(e)(1) — Transmission Security
+Public endpoints require encryption and strong access control. 
+
+<br/>
+
+### 🏛️ CMMC / NIST 800-171
+
+For DoD contractors or manufacturing:
+
+- 3.1.3 — Control Remote Access
+
+- 3.13.1 — Boundary Protection
+
+- 3.14.1 — Scan for Vulnerabilities
+
+Internet-facing endpoints are the _**first thing**_ your CMMC assessor will ask about.
+
 <br/><br/>
 
 # 🌐 How to *Actually* Identify Internet-Facing Devices with KQL
@@ -283,15 +374,10 @@ Some devices literally have public IPs **assigned directly** to a network interf
 * Load balancers
 * Cloud VMs with public NICs
 
-<br/>
-
-If you see a device with a public LocalIP…
-
-🔥 It *is* exposed <br/>
-🔥 It *is* reachable <br/>
-🔥 It *is* Internet-facing <br/>
-
-This is one of the most trustworthy signals in the entire diagram.
+> If you see a device with a public LocalIP… <br/>
+>🔥 It *is* exposed <br/>
+>🔥 It *is* reachable <br/>
+>🔥 It *is* Internet-facing <br/>
 
 <br/><br/>
 
@@ -370,7 +456,7 @@ We use:
 * `make_set()` for public IPs, service ports, etc.
 * `arg_max()` to dedupe intelligently
 
-<br/><br/>
+<br/>
 
 The final result:
 
@@ -391,7 +477,7 @@ Each row is a **multi-signal threat picture** of _how and why_ the device appear
 
 # 🛡️ Practical Security Use Cases
 
-This query gives you a **field manual** of exposure scenarios.
+This query gives you a **field manual** of exposure scenarios on top of previously mentioned audit use cases.
 
 <br/>
 
