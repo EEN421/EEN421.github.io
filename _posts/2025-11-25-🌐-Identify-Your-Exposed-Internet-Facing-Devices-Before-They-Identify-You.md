@@ -54,7 +54,7 @@ DeviceInfo
 <br/><br/>
 
 ### ✅ Our New and Improved Query:
-```kql
+```bash
 // Define a regex that matches *private* and non-routable IP ranges
 // Includes: 10.0.0.0/8, 172.16.0.0–172.31.255.255, 192.168.0.0/16,
 // loopback (127.*), link-local (169.254.*), and some special ranges (224.*, 240.*)
