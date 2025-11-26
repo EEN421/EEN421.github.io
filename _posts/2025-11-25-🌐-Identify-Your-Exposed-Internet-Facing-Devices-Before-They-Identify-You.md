@@ -44,7 +44,7 @@ It’s like running a security investigation with **multiple witnesses instead o
 
 Here's the full KQL query breakdown and comparison with comments:
 
-### Using 'IsInternetFacing == True'
+### ❌ Using 'IsInternetFacing == True'
 ```kql
 DeviceInfo
 | where IsInternetFacing == True
@@ -53,7 +53,7 @@ DeviceInfo
 
 <br/><br/>
 
-### Our New and Improved Query:
+### ✅ Our New and Improved Query:
 ```kql
 // Define a regex that matches *private* and non-routable IP ranges
 // Includes: 10.0.0.0/8, 172.16.0.0–172.31.255.255, 192.168.0.0/16,
@@ -222,9 +222,9 @@ PublicIPDevices
 
 <br/><br/><br/><br/> 
 
-# Below are the major components for our new and improved method—explained in normal human language, not “Kusto-ese.”
+# ⚡ Below are the major components for our new and improved method—explained in normal human language, translated from “Kusto-ese.”
 
-### 🏷️ Step 0: Define What Counts as a Private IP
+### 📃 Step 0: Define What Counts as a Private IP
 
 ```kql
 let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
@@ -241,7 +241,7 @@ Anything **not matching** this regex is, for practical purposes, considered *pub
 
 <br/><br/>
 
-### 🕰️ Step 1: Define the Lookback Window
+### ⏱️ Step 1: Define the Lookback Window
 
 ```kql
 let LookbackDays = 30d;
@@ -349,7 +349,7 @@ This detection (a personal favourite) reveals:
 
 <br/><br/>
 
-### 🏷️ Step 6: Devices Flagged as Internet-Facing in DeviceInfo
+### 🚩 Step 6: Devices Flagged as Internet-Facing in DeviceInfo
 
 ```kql
 let IsInternetFacingDevices = DeviceInfo
@@ -389,7 +389,7 @@ Each row is a **multi-signal threat picture** of _how and why_ the device appear
 
 <br/><br/><br/><br/>
 
-# ⚡ Practical Security Use Cases
+# 🛡️ Practical Security Use Cases
 
 This query gives you a **field manual** of exposure scenarios.
 
@@ -432,7 +432,7 @@ This query gives you a **field manual** of exposure scenarios.
 
 <br/>
 
-### 🛡️ Validate Zero Trust Assumptions
+### 🗝️ Validate Zero Trust Assumptions
 
 ✔️ **Trust but verify.** Zero Trust cannot rely on a single boolean flag.
 
@@ -478,7 +478,22 @@ And most importantly:
 > 👉 If your device accepts inbound connections from the Internet…
 > **it’s Internet-facing—whether Defender agrees or not.**
 
-<br/>
+If you’ve followed the steps above, you now have a clearer view of which devices in your environment are Internet-facing — and which are silently gobbling up risk and cost.
+Don’t stop here. Grab your network inventory, fire up your scanner, and map every inbound point from the public Internet. Then ask yourself:
+
+- What unnecessary services are exposed?
+
+- Which endpoints haven’t been patched or reviewed in months?
+
+- Where can I tighten firewall rules, disable unused ports, or shift systems behind a VPN/DMZ?
+
+Locking down these devices isn’t just about reducing noise in your logs — it’s about reclaiming control over your attack surface, cutting ingestion costs, and reducing audit risk.
+
+⚙️ So go ahead — run the scan, clean house, and harden your perimeter. Then come back and tell me what you found. If you hit surprises or want to share weird edge cases (I bet you will), drop a comment below, or ping me on LinkedIn. I want to see your results, learn what you ran into, and help you tighten up your baseline before your next compliance push.
+
+### Stay sharp out there — and may the only open ports in your environment be the ones you absolutely need. 🔐
+
+
 <br/>
 
 ![](/assets/img/Internet-Facing/Exposed.jpg)
