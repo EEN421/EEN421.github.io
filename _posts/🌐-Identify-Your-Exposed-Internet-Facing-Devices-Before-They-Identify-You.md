@@ -220,7 +220,7 @@ PublicIPDevices
 
 <br/>
 
-### 👉 You can grab your copy [HERE](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Internet%20Facing%3F.kql)
+### 👉 You can grab your copy [HERE](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Internet%20Facing%3F.kql) 👈
 
 <br/><br/><br/><br/> 
 
@@ -387,7 +387,7 @@ The final result:
 
 <br/>
 
-Each row is a **multi-signal threat picture** of how and why the device appears exposed.
+Each row is a **multi-signal threat picture** of _how and why_ the device appears exposed.
 
 <br/><br/><br/><br/>
 
