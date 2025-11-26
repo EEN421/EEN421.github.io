@@ -212,6 +212,11 @@ PublicIPDevices
 // (arg_max uses the lexicographically max DetectionMethods as the tiebreaker)
 | summarize arg_max(DetectionMethods, *) by DeviceId, DeviceName
 ```
+<br/>
+
+![](/assets/img/Internet-Facing/Results.png)
+
+<br/>
 
 ### 👉 You can grab your copy [HERE](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Internet%20Facing%3F.kql)
 
