@@ -23,7 +23,7 @@ And we’re answering it using telemetry—not hope.
 
 <br/> <br/>
 
-![](/assets/img/Internet-Facing/Internet-Facing1.jpg)
+![](/assets/img/Internet-Facing/internet-facing-cat.png)
 
 <br/><br/><br/><br/>
 
