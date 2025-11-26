@@ -53,7 +53,7 @@ Internet-facing = hardened baseline required.
 Teams must recognize risky external assets.
 
 - CSC 18 — Penetration Testing
-Internet-exposed assets are always in-scope by default for pen tests & red teams.
+Internet-exposed assets are _always in-scope by default_ for pen tests & red teams.
 
 <br/>
 
@@ -107,11 +107,11 @@ And then—after about seven seconds of experience in the real world—you learn
   …**absolutely do not care** about that boolean flag
 
 So today, we’re leveling up.
-We’re diving into a **multi-signal, evidence-driven** KQL detection like an **attack surface samurai** and cut straight to the point: **“Which of my machines is exposed to the public Internet?”** And we’re answering it using telemetry—not hope.
+We’re diving into a **multi-signal, evidence-driven** KQL detection like an **attack surface samurai** cutting straight to the point: **“Which of my machines is exposed to the public Internet?”** And we’re answering it using telemetry—not hope.
 
 <br/> <br/>
 
-![](/assets/img/Internet-Facing/internet-facing-cat.png)
+![](/assets/img/Internet-Facing/internet-facing-cat.png "You cannot haz my internet-facing device!")
 
 <br/><br/><br/><br/>
 
@@ -127,8 +127,6 @@ But Internet exposure isn’t a simple binary state—it's a pattern of behavior
 
 This blog post covers a **KQL query that unifies all of these signals** into one answer.
 
-It’s like running a security investigation with **multiple witnesses instead of one sleepy intern.**
-
 <br/><br/><br/><br/>
 
 # 🛠️ Query Breakdown
@@ -136,7 +134,7 @@ It’s like running a security investigation with **multiple witnesses instead o
 Here's the full KQL query breakdown and comparison with comments:
 
 ### ❌ Using 'IsInternetFacing == True'
-```kql
+```bash
 DeviceInfo
 | where IsInternetFacing == True
 ```
@@ -145,6 +143,7 @@ DeviceInfo
 <br/><br/>
 
 ### ✅ Our New and Improved Query:
+ 👉 Grab your copy [HERE](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Internet%20Facing%3F.kql)
 ```bash
 // Define a regex that matches *private* and non-routable IP ranges
 // Includes: 10.0.0.0/8, 172.16.0.0–172.31.255.255, 192.168.0.0/16,
@@ -317,7 +316,7 @@ PublicIPDevices
 
 ### 📃 Step 0: Define What Counts as a Private IP
 
-```kql
+```bash
 let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
 ```
 
@@ -334,7 +333,7 @@ Anything **not matching** this regex is, for practical purposes, considered *pub
 
 ### ⏱️ Step 1: Define the Lookback Window
 
-```kql
+```bash
 let LookbackDays = 30d;
 ```
 
@@ -344,7 +343,7 @@ Most exposure patterns are visible within 30 days. Adjust as needed (14d for str
 
 ### 🌍 Step 2: Devices Reporting Public IPs via Connected Networks
 
-```kql
+```bash
 let PublicIPDevices = DeviceNetworkInfo
 ...
 ```
@@ -353,15 +352,15 @@ When Defender collects `ConnectedNetworks`, it may include a **PublicIP** proper
 
 If a device ever reports a public IP through this channel:
 
-✔ It touched the Internet
-✔ Or it *was* the public edge of something
+✔ It touched the Internet <br/>
+✔ Or it *was* the public edge of something <br/>
 ✔ Or it’s behind a 1:N NAT but still exposes public hops
 
 <br/><br/>
 
 ### 🏠 Step 3: Devices with Public *Local* IPs
 
-```kql
+```bash
 let PublicLocalIP = DeviceNetworkInfo
 ...
 ```
@@ -383,7 +382,7 @@ Some devices literally have public IPs **assigned directly** to a network interf
 
 ### 🚪 Step 4: Devices Accepting Inbound Public Connections
 
-```kql
+```bash
 let InboundConnections = DeviceNetworkEvents
 ...
 ```
@@ -405,7 +404,7 @@ Then we threshold (e.g., only devices with >5 accepted inbound connections. This
 
 ### 🔐 Step 5: Devices Listening on Remote-Access Ports
 
-```kql
+```bash
 let RemoteAccessServices = DeviceNetworkEvents
 ...
 ```
@@ -437,7 +436,7 @@ This detection (a personal favourite) reveals:
 
 ### 🚩 Step 6: Devices Flagged as Internet-Facing in DeviceInfo
 
-```kql
+```bash
 let IsInternetFacingDevices = DeviceInfo
 ...
 ```
@@ -448,7 +447,7 @@ While we do include Microsoft’s opinion via ```IsInternetFacing```  —we don�
 
 ### 🔄 Step 7: Union All Signals Into a Final Answer
 
-The full-outer joins bring all devices from all signals together.
+The **full-outer joins** bring all devices from all signals together.
 We use:
 
 * `coalesce()` to merge various DeviceId columns
@@ -575,7 +574,7 @@ Don’t stop here. Grab your network inventory, fire up your scanner, and map ev
 
 Locking down these devices isn’t just about reducing noise in your logs — it’s about reclaiming control over your attack surface, cutting ingestion costs, and reducing audit risk.
 
-⚙️ So go ahead — run the scan, clean house, and harden your perimeter. Then come back and tell me what you found. If you hit surprises or want to share weird edge cases (I bet you will), drop a comment below, or ping me on LinkedIn. I want to see your results, learn what you ran into, and help you tighten up your baseline before your next compliance push.
+⚙️ So go ahead — run the scan, clean house, and harden your perimeter. If you hit surprises or want to share weird edge cases (I bet you will), ping me on LinkedIn! I sincerely hope this will help you tighten up your baseline before your next compliance push.
 
 ### Stay sharp out there — and may the only open ports in your environment be the ones you absolutely need. 🔐
 
