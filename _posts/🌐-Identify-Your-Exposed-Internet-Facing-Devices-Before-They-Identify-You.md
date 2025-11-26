@@ -1,5 +1,3 @@
-🌐-Internet-Facing-Devices:-Mapping-Your-Attack-Surface-Before-the-Hackers-Do
-
 # Introduction & Use Case:
 **Identifying Internet-Facing Devices Matters to Every Framework You Care About.** Before we even dive into tooling, let’s anchor the importance of this work in the actual security and compliance frameworks that govern nearly every mature organization. Pretty much every major framework assumes you know which assets are exposed to the public internet — because this shapes your entire risk profile.
 
