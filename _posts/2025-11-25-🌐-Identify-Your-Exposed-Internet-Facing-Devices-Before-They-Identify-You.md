@@ -231,7 +231,7 @@ let RemoteAccessServices = DeviceNetworkEvents
     | where not(RemoteIP matches regex PrivateIPRegex)
     // Summarize per device: which service ports and how many connections
     | summarize 
-        ServicePorts     = make_set(RemotePort),
+        ServicePorts     = make_set(LocalPort),
         ConnectionCount  = count()
       by DeviceId, DeviceName
     // Tag detection method
