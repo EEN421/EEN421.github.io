@@ -338,102 +338,113 @@ PublicIPDevices
 
 # ⚡ Below are the major components for our new and improved method—explained in normal human language, translated from “Kusto-ese.”
 
-### 📃 Step 0: Define What Counts as a Private IP
+Think of this query as a multi-sensor perimeter alarm.
 
-```bash
-let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
-```
+### 📃 Step 1: Decide what “public” actually means (IPv4 and IPv6)
 
-This regex defines **non-routable** address spaces:
+First, we teach Kusto the difference between “inside the fence” and “outside the fence” for IP addresses:
 
-* RFC1918 ranges
-* Loopback
-* Link-local
-* Multicast/special blocks
+- PrivateIPRegex covers the usual IPv4 private and non-routable ranges (**RFC1918 ranges like** **10/8**, **172.16–31**, **192.168/16**, **loopback**, **link-local**, and **Multicast/special blocks** etc.).
+    - ```let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';```
 
-Anything **not matching** this regex is, for practical purposes, considered *public-ish*.
+- PrivateIPv6Regex does the same for IPv6 (ULA ranges like **fc00:**, **fd00:**, **link-local fe80:**, and **loopback ::1**).
+    - ```let PrivateIPv6Regex = @'^(fc00:|fd00:|fe80:|::1)';```
 
-<br/><br/>
+- LookbackDays tells the query how far back in time to scan (30 days by default).
+    - ```let LookbackDays = 30d;```
 
-### ⏱️ Step 1: Define the Lookback Window
+    <br/>
 
-```bash
-let LookbackDays = 30d;
-```
-
-Most exposure patterns are visible within 30 days. Adjust as needed (14d for strict, 90d for historical).
+> 💡 Anything that doesn’t match those patterns during that window gets treated as “public-ish” and therefore interesting.
 
 <br/><br/>
 
-### 🌍 Step 2: Devices Reporting Public IPs via Connected Networks
+### ⏱️ Step 2: Devices that show up with public IPs in ConnectedNetworks
 
-```bash
-let PublicIPDevices = DeviceNetworkInfo
-...
-```
+This is our first “hard” signal; We look at **DeviceNetworkInfo** and expand **ConnectedNetworks**, which is a JSON blob of how the device is connected. For each connection, we pull out **ConnectedNetwork.PublicIP**. Then We split IPs into IPv4 vs IPv6, keeping only the ones that are not in our private/non-routable lists.
 
-When Defender collects `ConnectedNetworks`, it may include a **PublicIP** property.
+We end up with:
+- PublicIPv4s = all public IPv4s observed for that device
 
-If a device ever reports a public IP through this channel:
+- PublicIPv6s = all public IPv6s observed for that device
 
-✔ It touched the Internet <br/>
-✔ Or it *was* the public edge of something <br/>
-✔ Or it’s behind a 1:N NAT but still exposes public hops
+If a device shows up here, it has been seen using a public IP at the network edge (e.g., VPN, gateway, or direct exposure), and we tag it with DetectionMethod = "PublicIP".
 
 <br/><br/>
 
-### 🏠 Step 3: Devices with Public *Local* IPs
+### 🌍 Step 3: Devices whose local IP address is actually public
 
-```bash
-let PublicLocalIP = DeviceNetworkInfo
-...
-```
+Next, we look for devices that are themselves wearing a public IP badge: Still in **DeviceNetworkInfo**, we expand **IPAddresses** (the local interfaces on the device). Extract each **IPAddress.IPAddress* value and split into IPv4 vs IPv6 again, then filter out the private stuff using our regexes.
 
-Some devices literally have public IPs **assigned directly** to a network interface:
+This way, we collect:
 
-* Web servers
-* Firewalls
-* VPN appliances
-* Load balancers
-* Cloud VMs with public NICs
+- LocalIPv4s = public IPv4s bound directly to the device
+
+- LocalIPv6s = public IPv6s bound directly to the device
+
+If a server lands here, it means the box has a public IP assigned locally, not just hiding behind NAT. That’s a much stronger “internet-facing” signal, and we tag it as **PublicLocalIP**.
+
+<br/><br/>
+
+### 🏠 Step 4: Devices that are actually taking inbound hits from the internet
+
+Now we move from “what IP does it have?” to “who’s knocking on the door?” We query DeviceNetworkEvents for InboundConnectionAccepted events and for each event, we look at RemoteIP:
+
+- If it’s IPv4, it must not match PrivateIPRegex.
+
+- If it’s IPv6, it must not match PrivateIPv6Regex.
+
+Next we **summarize** _per device:_
+
+- `InboundCount` = total accepted inbound connections
+
+- `UniqueRemoteIPs` = how many different sources hit us
+
+- `RemotePorts` = which ports were hit
+
+- `SampleRemoteIPv4s` / `SampleRemoteIPv6s` = a small sample of remote internet IPs observed
+
+Then we filter to devices with more than 5 inbound connections; this is great for tackling the biggest offenders first, then you can adjust the threshold as you see fit. These are the systems that aren’t just technically reachable — they’re actually getting real inbound traffic from the internet. We tag these with `InboundConnections`.
 
 > If you see a device with a public LocalIP… <br/>
 >🔥 It *is* exposed <br/>
 >🔥 It *is* reachable <br/>
 >🔥 It *is* Internet-facing <br/>
 
-<br/><br/>
 
-### 🚪 Step 4: Devices Accepting Inbound Public Connections
+<br/>
 
-```bash
-let InboundConnections = DeviceNetworkEvents
-...
-```
+Pro-Tip: Some devices can literally have public IPs **assigned directly** to a network interface, such as:
+* Web servers
+* Firewalls
+* VPN appliances
+* Load balancers
+* Cloud VMs with public NICs
 
-This looks for `InboundConnectionAccepted` events **from public IPs only**.
-Meaning: _a real-world outsider connected to the device._
+<br/>
 
-We gather:
-
-* Count of inbound connections
-* Unique external IPs
-* Ports targeted
-* Samples of RemoteIP
-
-Then we threshold (e.g., only devices with >5 accepted inbound connections. This is great for tackling the biggest offenders first, then you can adjust the threshold as you see fit).
-
+> 💡 To trap for these devices, we can look to the following detection methods and check ```InboundConnections```, ```RemoteAccessServices```, and ```Ports``` etc, discussed next. 
 
 <br/><br/>
 
-### 🔐 Step 5: Devices Listening on Remote-Access Ports
+### 🚪 Step 5: Devices listening on classic “remote access” ports from the internet
 
-```bash
-let RemoteAccessServices = DeviceNetworkEvents
-...
-```
+Some ports are the “VIP entrance” for attackers: RDP, SSH, HTTP(S), FTP/Telnet, VNC, WinRM, etc. We again use DeviceNetworkEvents and stick to InboundConnectionAccepted.
 
-We examine inbound connections on common high-risk ports:
+This time we focus on ```LocalPort in```:
+`22`, `3389`, `443`, `80`, `21`, `23`, `5900`, `5985`, `5986`
+
+We keep only events where RemoteIP is public (using the same IPv4/IPv6 logic as above).
+
+Summarize per device:
+
+- `ServicePorts` = which of those ports are actually exposed and being used
+
+- `ConnectionCount` = how often those ports are being hit
+
+If a device shows up here, it’s not just online — it’s running interesting services that internet clients are talking to. We tag this as `RemoteAccessPorts`.
+
+<br/>
 
 | Port      | Use Case        |
 | --------- | --------------- |
@@ -448,13 +459,13 @@ We examine inbound connections on common high-risk ports:
 
 > ⚠️ If a public IP hits you on RDP or SSH, you’re exposed—**period** 👀
 
-This detection (a personal favourite) reveals:
+<br/><br/>
 
-* Compromised servers
-* Shadow IT
-* Misconfigured firewalls
-* Random cloud-hosted VMs someone forgot about
+### 🔐 Step 6: Devices Defender already thinks are internet-facing
 
+We don’t ignore Microsoft’s own smarts, we integrate it and pull from ```DeviceInfo``` where ```IsInternetFacing == true```.
+
+That gives us the built-in Defender view of internet-facing devices. Any device on that list is tagged with `DetectionMethod` = `"IsInternetFacing"` so we can see where our logic and Microsoft’s logic agree or disagree.
 
 <br/><br/>
 
