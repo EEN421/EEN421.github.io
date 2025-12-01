@@ -224,7 +224,7 @@ let RemoteAccessServices = DeviceNetworkEvents
     | where Timestamp > ago(LookbackDays)
     // Focus on common remote access / admin / web ports
     // (22=SSH, 3389=RDP, 443/80=HTTPS/HTTP, 21=FTP, 23=Telnet, 5900=VNC, 5985/5986=WinRM)
-    | where RemotePort in (22, 3389, 443, 80, 21, 23, 5900, 5985, 5986)
+    | where LocalPort in (22, 3389, 443, 80, 21, 23, 5900, 5985, 5986)
     // Only inbound accepted events
     | where ActionType == "InboundConnectionAccepted"
     // From non-private IPs (i.e., likely internet-originated)
