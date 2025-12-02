@@ -469,43 +469,65 @@ That gives us the built-in Defender view of internet-facing devices. Any device 
 
 <br/><br/>
 
-### 🚩 Step 6: Devices Flagged as Internet-Facing in DeviceInfo
+### 🚩 Step 7: Merge all the signals into one “internet-exposed device” view
 
-```bash
-let IsInternetFacingDevices = DeviceInfo
-...
-```
+Now we glue all of this together. Full-outer-join all four detection streams plus the IsInternetFacing list so no device gets dropped just because it only appeared in one dataset. Use coalesce() to pick the real DeviceId / DeviceName when multiple join copies exist, then merge IP address arrays:
 
-While we do include Microsoft’s opinion via ```IsInternetFacing```  —we don’t rely on it. This is the last source to take into consideration in our logic. Taken together with whether it has a public IP and if any ports are listening, we can make a more informed decision than relying on ```IsInternetFacing``` alone. 
+- **AllPublicIPv4s** = `PublicIPv4s ∪ LocalIPv4s`
+
+- **AllPublicIPv6s** = `PublicIPv6s ∪ LocalIPv6s`
+
+- Build a clean `DetectionMethods` list by:
+
+    - Combining all `DetectionMethod` values,
+
+    - Removing `empties`,
+
+    - And using `make_set` so each method appears _only once._
+
+We also carry along activity context: inbound counts, unique remote IPs, sample remote IPv4/IPv6, and the service ports we saw in use.
+
+At this point we effectively have: **_“Here is every device that might be internet-exposed, plus why we think so and how it’s being reached.”_**
 
 <br/><br/>
 
-### 🔄 Step 7: Union All Signals Into a Final Answer
+### 🔄 Step 8: Assign a simple risk score and emoji risk level
+With all the raw data in one place, we distill it down into something a human can triage at 8:30am with coffee. The `RiskScore` is a numeric score based on the following:
 
-The **full-outer joins** bring all devices from all signals together.
-We use:
+- **10** – If the device exposes RDP or SSH (3389 or 22). These are “break glass now” surfaces.
+- **9** – If it exposes Telnet or FTP (23 or 21). Legacy and usually very bad news.
+- **8 / 7** – If inbound traffic volume is very high (InboundCount > 100 or > 50).
+- **6** – If the device has any public IPs at all (IPv4 or IPv6).
+- **5** – If Defender itself says IsInternetFacing == true.
+- **3** – Default if none of the above applied.
 
-* `coalesce()` to merge various DeviceId columns
-* `strcat_array()` to merge detection method tags
-* `make_set()` for public IPs, service ports, etc.
-* `arg_max()` to dedupe intelligently
-
-<br/>
-
-The final result:
-
-- DeviceId
-- DeviceName
-- PublicIPList
-- DetectionMethods
-- InboundCount
-- UniqueRemoteIPs
-- RemotePortsStr
-- ServicePortsStr
+> 👆 These thresholds can be adjusted based on your specific use cases
 
 <br/>
 
-Each row is a **multi-signal threat picture** of _how and why_ the device appears exposed.
+RiskLevel wraps that in a quick, dashboard-friendly label, illustrated below:
+
+- 🔴 Critical – Top of the queue, you probably want to know about these first.
+- 🟠 High
+- 🟡 Medium
+- 🟢 Low
+
+We also derive **ExposedServices** so you can glance at a row and see what kind of doorway is open (RDP, SSH, HTTPS, HTTP, FTP, Telnet, VNC, WinRM, or just “Other”).
+
+<br/><br/>
+
+### Step 9: Pretty it up for humans and sort by “what should I look at first?”
+Finally, we **convert arrays (IP lists, ports, sample remote IPs) into strings** so they display nicely in the UI, then **project the most important columns up front**: RiskLevel, RiskScore, DeviceName, ExposedServices, DetectionMethods, public IPs, inbound counts, remote samples, etc. Next, we **sort by RiskScore** (highest first), then by **InboundCount**. The end result is a ranked, annotated list of internet-exposed devices with:
+
+- What we saw (IPs, ports, traffic),
+
+- Why they’re on the list (detection methods),
+
+- How worried you should be (risk score + emoji),
+
+- And what kind of services are sitting on the edge.
+
+In other words: _a practical, opinionated “what’s actually exposed right now, and where should I aim my next hardening sprint?”_ view.
 
 <br/><br/><br/><br/>
 
