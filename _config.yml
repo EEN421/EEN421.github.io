@@ -10,7 +10,7 @@
 ############################
 
 # Name of website
-title: hanley.cloud | DevSecOpsDad.com
+title: DevSecOpsDad.com
 subtitle: "Microsoft XDR, KQL, Real-World Security Engineering, & Random Nerd Stuff"
 
 # Your name to show in the footer
@@ -47,7 +47,7 @@ round-avatar: true
 
 # If you want to have an image logo in the top-left corner instead of having the title of the website,
 # then specify the following parameter
-title-img: /assets/img/NewFooter_DevSecOpsDad.png
+# title-img: /assets/img/NewFooter_DevSecOpsDad.png
 
 
 #####################################
