@@ -290,18 +290,20 @@
     }
 
     /* ======================================================
-       Keep "DevSecOpsDad" on one line on the home page title
+       Keep "DevSecOpsDad" on one line in the page title
+       (your index.html uses <h1 class="page-title"><a>DevSecOpsDad</a></h1>)
        ====================================================== */
-    .home .page-title a {
+    h1.page-title a {
       white-space: nowrap !important;
       display: inline-block;
     }
 
     /* Slightly scale the title down on very small screens
-       so it stays comfortable within the viewport */
-    @media (max-width: 420px) {
-      .home .page-title {
-        font-size: 2rem !important;
+       so it fits comfortably on one line */
+    @media (max-width: 480px) {
+      h1.page-title {
+        font-size: 2.4rem !important;
+        line-height: 1.1;
       }
     }
 
