@@ -224,17 +224,6 @@
 
     /* ======================================================
        Footer social icons
-       HTML:
-       <ul class="list-inline text-center footer-links">
-         <li class="list-inline-item">
-           <a href="...">
-             <span class="fa-stack fa-lg">
-               <i class="fas fa-circle fa-stack-2x"></i>
-               <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-             </span>
-           </a>
-         </li>
-       </ul>
        ====================================================== */
 
     .beautiful-jekyll-footer .footer-links {
@@ -298,6 +287,22 @@
       max-width: 760px;
       margin: 0.75rem auto;
       color: #9BA8B8;
+    }
+
+    /* ======================================================
+       Keep "DevSecOpsDad" on one line on the home page title
+       ====================================================== */
+    .home .page-title a {
+      white-space: nowrap !important;
+      display: inline-block;
+    }
+
+    /* Slightly scale the title down on very small screens
+       so it stays comfortable within the viewport */
+    @media (max-width: 420px) {
+      .home .page-title {
+        font-size: 2rem !important;
+      }
     }
 
   </style>
