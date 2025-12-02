@@ -172,36 +172,45 @@ html,
   color: #E6EEF8 !important;
 }
 
-/* --- FOOTER SOCIAL ICON VISIBILITY FIX ---------------------- */
+/* --- FOOTER SOCIAL ICON VISIBILITY & STYLE ------------------ */
 
-/* Font Awesome-style icons */
-footer .fa,
-footer .fab,
-footer .fas,
-footer .far {
-  color: #E6EEF8 !important;    /* bright light grey/white */
-  opacity: 1 !important;        /* remove dimming */
+/* Remove the pale circle bubble from Beautiful Jekyll's default */
+footer .social-icon,
+footer .social-icon:hover {
+  background: none !important;        /* remove bubble */
+  box-shadow: none !important;        /* remove soft shadow */
+  border: none !important;            /* remove circle outline */
 }
 
-/* Hover effect for font icons */
-footer .fa:hover,
-footer .fab:hover,
-footer .fas:hover,
-footer .far:hover {
-  color: #38C0FF !important;    /* electric blue hover */
-  opacity: 1 !important;
-  transition: color 0.2s ease;
-}
-
-/* SVG icons (GitHub, LinkedIn, etc.) */
-footer svg {
+/* Base icon style (font + svg) */
+footer .social-icon .fa,
+footer .social-icon .fab,
+footer .social-icon .fas,
+footer .social-icon .far,
+footer .social-icon svg {
+  color: #E6EEF8 !important;          /* bright white-grey */
   fill: #E6EEF8 !important;
   opacity: 1 !important;
 }
 
-footer svg:hover {
+/* Hover: electric DevSecOpsDad blue */
+footer .social-icon:hover .fa,
+footer .social-icon:hover .fab,
+footer .social-icon:hover .fas,
+footer .social-icon:hover .far,
+footer .social-icon:hover svg {
+  color: #38C0FF !important;
   fill: #38C0FF !important;
   opacity: 1 !important;
+  transition: color 0.2s ease, fill 0.2s ease;
+}
+
+/* Enlarge icons slightly so they stand out */
+footer .social-icon i,
+footer .social-icon svg {
+  font-size: 1.4rem !important;
+  width: 1.4rem !important;
+  height: 1.4rem !important;
 }
 
 /* Improve clickable hitbox on mobile */
