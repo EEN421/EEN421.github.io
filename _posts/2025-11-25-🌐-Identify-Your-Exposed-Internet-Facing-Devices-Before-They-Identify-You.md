@@ -144,14 +144,18 @@ DeviceInfo
 ### ✅ Our New and Improved Query:
  👉 Grab your copy [HERE](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Internet%20Facing%3F.kql)
 ```bash
+// -------------------------------------------
+// 1) Decide what “public” actually means (IPv4 and IPv6)
+// -------------------------------------------
 // Define private IP ranges for IPv4
 let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';
 // Define private IP ranges for IPv6
 let PrivateIPv6Regex = @'^(fc00:|fd00:|fe80:|::1)';
 // Lookback period
 let LookbackDays = 30d;
+//
 // -------------------------------------------
-// 1) Devices with public IPs seen in ConnectedNetworks
+// 2) Devices that show up with public IPs in ConnectedNetworks
 // -------------------------------------------
 let PublicIPDevices = DeviceNetworkInfo
     | where Timestamp > ago(LookbackDays)
@@ -167,8 +171,9 @@ let PublicIPDevices = DeviceNetworkInfo
         PublicIPv6s = make_set_if(PublicIP, IsIPv6)
         by DeviceId, DeviceName
     | extend DetectionMethod = "PublicIP";
+//
 // -------------------------------------------
-// 2) Devices whose local IP is actually public
+// 3) Devices whose local IP address is actually public
 // -------------------------------------------
 let PublicLocalIP = DeviceNetworkInfo
     | where Timestamp > ago(LookbackDays)
@@ -184,8 +189,9 @@ let PublicLocalIP = DeviceNetworkInfo
         LocalIPv6s = make_set_if(LocalIP, IsIPv6)
         by DeviceId, DeviceName
     | extend DetectionMethod = "PublicLocalIP";
+//
 // -------------------------------------------
-// 3) Devices with significant inbound connections
+// 4) Devices that are actually taking inbound hits from the internet
 // -------------------------------------------
 let InboundConnections = DeviceNetworkEvents
     | where Timestamp > ago(LookbackDays)
@@ -203,8 +209,9 @@ let InboundConnections = DeviceNetworkEvents
         by DeviceId, DeviceName
     | where InboundCount > 5
     | extend DetectionMethod = "InboundConnections";
+//
 // -------------------------------------------
-// 4) Devices listening on remote access/service ports
+// 5) Devices listening on classic “remote access” ports from the internet
 // -------------------------------------------
 let RemoteAccessServices = DeviceNetworkEvents
     | where Timestamp > ago(LookbackDays)
@@ -218,16 +225,18 @@ let RemoteAccessServices = DeviceNetworkEvents
         ConnectionCount = count() 
         by DeviceId, DeviceName
     | extend DetectionMethod = "RemoteAccessPorts";
+//
 // -------------------------------------------
-// 5) Devices flagged as Internet-facing in DeviceInfo
+// 6) Devices Defender already thinks are internet-facing
 // -------------------------------------------
 let IsInternetFacingDevices = DeviceInfo
     | where Timestamp > ago(LookbackDays)
     | where IsInternetFacing == true
     | distinct DeviceId, DeviceName
     | extend DetectionMethod = "IsInternetFacing";
+//
 // -------------------------------------------
-// 6) Union all detections and build final result
+// 7) Merge all the signals into one “internet-exposed device” view
 // -------------------------------------------
 PublicIPDevices
 | join kind=fullouter (PublicLocalIP) on DeviceId, DeviceName
@@ -279,6 +288,10 @@ PublicIPDevices
         DetectionMethods has "IsInternetFacing", 5,                 // Flagged by Defender
         3                                                           // Default
     )
+//
+// -------------------------------------------
+// 8) Assign a simple risk score and emoji risk level
+// -------------------------------------------
 // Add Risk Level labels with emoji indicators
 | extend RiskLevel = case(
     RiskScore >= 9, "🔴 Critical",
@@ -286,6 +299,10 @@ PublicIPDevices
     RiskScore >= 5, "🟡 Medium",
     "🟢 Low"
 )
+//
+// -------------------------------------------
+// 9) Pretty it up for humans and sort by “what should I look at first?”
+// -------------------------------------------
 // Add human-readable service names
 | extend ExposedServices = case(
     ServicePorts has "3389", "RDP",
