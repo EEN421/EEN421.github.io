@@ -37,7 +37,7 @@
   border-radius: 0 !important;
 }
 
-/* --- LINK COLORS (reinforce theme even if theme CSS overrides) --- */
+/* --- LINK COLORS -------------------------------------------- */
 
 a,
 a:visited {
@@ -59,7 +59,6 @@ code {
   color: #E6EEF8;
 }
 
-/* Make code blocks pop visually */
 pre {
   padding: 1rem;
   overflow-x: auto;
@@ -76,10 +75,7 @@ pre {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HOMEPAGE HERO PANEL -------------------------------------
-   This applies only if you enable:
-   before-content: devsecopsdad-hero.html
-   ----------------------------------------------------------- */
+/* --- HOMEPAGE HERO PANEL ------------------------------------- */
 
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
@@ -120,7 +116,6 @@ pre {
 
 /* --- MISC / UTILITY OVERRIDES ------------------------------- */
 
-/* Make dropdown menus match dark theme */
 .dropdown-menu {
   background-color: #04111E;
   border: 1px solid #0A4C8D;
@@ -135,7 +130,6 @@ pre {
   color: #E6EEF8;
 }
 
-/* Fix search button in dark navbar */
 #nav-search-link {
   color: #E6EEF8 !important;
 }
@@ -144,14 +138,12 @@ pre {
   color: #38C0FF !important;
 }
 
-/* Better blockquote visibility on dark backgrounds */
 blockquote {
   border-left: 4px solid #1DA4FF;
   padding-left: 1rem;
   color: #B7C6D8;
 }
 
-/* Improve footer link contrast */
 footer a {
   color: #1DA4FF !important;
 }
@@ -172,43 +164,49 @@ html,
   color: #E6EEF8 !important;
 }
 
-/* --- FOOTER SOCIAL ICON BUBBLES ----------------------------- */
-/* Dark grey bubbles by default; blue on hover; icons always visible */
+/* -----------------------------------------------------------
+   FOOTER SOCIAL ICON BUBBLES (FINAL FIX)
+   Dark grey bubbles by default, electric blue bubbles on hover
+   Icons are always bright and fully opaque
+   ----------------------------------------------------------- */
 
-footer .social-icon {
-  background-color: #2A2A2A !important;   /* darker grey bubble */
+footer .social-icons .social-icon {
+  background-color: #2A2A2A !important;  /* dark grey bubble */
   border-radius: 50% !important;
+  width: 42px !important;
+  height: 42px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 42px !important;
-  height: 42px !important;
   box-shadow: none !important;
   border: none !important;
-}
-
-/* Icon inside the bubble (font + svg) */
-footer .social-icon i,
-footer .social-icon svg {
-  color: #E6EEF8 !important;  /* bright icon */
-  fill: #E6EEF8 !important;
   opacity: 1 !important;
-  font-size: 1.2rem !important;
 }
 
-/* Hover: electric-blue bubble and white icon */
-footer .social-icon:hover {
-  background-color: #1DA4FF !important;   /* DevSecOpsDad blue */
+/* Icon inside bubble */
+footer .social-icons .social-icon i,
+footer .social-icons .social-icon svg {
+  color: #FFFFFF !important;
+  fill: #FFFFFF !important;
+  opacity: 1 !important;
+  font-size: 1.25rem !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
 }
 
-footer .social-icon:hover i,
-footer .social-icon:hover svg {
-  color: #FFFFFF !important;               /* white icon on blue */
+/* Hover: switch bubble to electric blue */
+footer .social-icons .social-icon:hover {
+  background-color: #1DA4FF !important;
+}
+
+footer .social-icons .social-icon:hover i,
+footer .social-icons .social-icon:hover svg {
+  color: #FFFFFF !important;
   fill: #FFFFFF !important;
   opacity: 1 !important;
 }
 
-/* Improve clickable hitbox on mobile */
+/* slightly larger click area */
 footer a {
   padding: 0.3rem;
 }
