@@ -159,7 +159,7 @@ blockquote {
   color: #B7C6D8;
 }
 
-/* --- FOOTER LINKS ------------------------------------------- */
+/* --- FOOTER LINKS (text) ------------------------------------ */
 
 footer a {
   color: #1DA4FF !important;
@@ -169,59 +169,71 @@ footer a:hover {
   color: #38C0FF !important;
 }
 
-/* --- FOOTER LAYOUT TWEAKS ----------------------------------- */
-
-footer .fa-stack {
-  width: 2.4rem;
-  height: 2.4rem;
-  line-height: 2.4rem;
-  transition: transform 0.15s ease;
-}
-
-footer a:hover .fa-stack {
-  transform: scale(1.05);
-}
-
 /* -----------------------------------------------------------
-   FINAL FIX:
-   Replace Font Awesome circle with our OWN background bubble.
-   Completely solves pale icon / washed-out circle issue.
+   FOOTER SOCIAL ICONS — HARD OVERRIDE
+   Ignore FA's bubble, draw our own on the <a>.
    ----------------------------------------------------------- */
 
-/* Hide built-in FA circle */
-.footer-links .fa-stack-2x.fas.fa-circle {
+/* 1) Hide the "background" icon inside the stack entirely */
+.footer-links .fa-stack-2x {
   display: none !important;
 }
 
-/* Draw our own bubble */
-.footer-links .fa-stack.fa-lg {
-  background-color: #2A2A2A !important;   /* dark grey bubble */
-  border-radius: 50% !important;
-  width: 2.4rem !important;
-  height: 2.4rem !important;
-  line-height: 2.4rem !important;
+/* 2) Turn the <a> itself into a circular bubble */
+.footer-links .list-inline-item a {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  opacity: 1 !important;
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+  border-radius: 50% !important;
+  background-color: #2A2A2A !important;   /* dark grey bubble */
+  text-decoration: none !important;
+  padding: 0 !important;
+  margin: 0 0.15rem !important;
+  box-shadow: none !important;
 }
 
-/* Icon inside bubble */
-.footer-links .fa-stack-1x,
-.footer-links .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;
+/* 3) Style the actual icon glyph */
+.footer-links .list-inline-item a .fa-stack-1x,
+.footer-links .list-inline-item a .fa-stack-1x.fa-inverse,
+.footer-links .list-inline-item a i.fab,
+.footer-links .list-inline-item a i.fas {
+  color: #FFFFFF !important;             /* bright white icon */
   opacity: 1 !important;
   font-size: 1.2rem !important;
 }
 
-/* Hover bubble = DevSecOpsDad electric blue */
-.footer-links a:hover .fa-stack.fa-lg {
-  background-color: #1DA4FF !important;
+/* 4) Hover state: blue bubble, white icon */
+.footer-links .list-inline-item a:hover {
+  background-color: #1DA4FF !important;  /* DevSecOpsDad blue */
 }
 
-/* Hover icon stays white */
-.footer-links a:hover .fa-stack-1x,
-.footer-links a:hover .fa-stack-1x.fa-inverse {
+.footer-links .list-inline-item a:hover .fa-stack-1x,
+.footer-links .list-inline-item a:hover .fa-stack-1x.fa-inverse,
+.footer-links .list-inline-item a:hover i.fab,
+.footer-links .list-inline-item a:hover i.fas {
   color: #FFFFFF !important;
   opacity: 1 !important;
+}
+
+/* 5) Slight hover scale for feedback */
+.footer-links .list-inline-item a {
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.footer-links .list-inline-item a:hover {
+  transform: scale(1.05);
+}
+
+/* 6) Make sure the sr-only spans don't affect layout */
+.footer-links .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
 }
