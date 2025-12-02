@@ -53,10 +53,10 @@ a:focus {
 
 pre,
 code {
-  background-color: #050B13 !important;
+  background-color: #1A1A1A !important;
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
-  color: #D7E2F0;
+  color: #E6EEF8;
 }
 
 /* Make code blocks pop visually */

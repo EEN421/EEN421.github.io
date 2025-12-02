@@ -143,8 +143,12 @@ navbar-text-col:   "#E6EEF8"   # light text
 navbar-children-col: "#04111E"
 
 #page-col:          "#020811"   # main page background
-page-col:          "#FFFFFF"
-text-col:          "#D7E2F0"   # body text (works on dark bg if your Beautiful Jekyll version supports text-col)
+#page-col:          "#FFFFFF"
+#text-col:          "#D7E2F0"   # body text (works on dark bg if your Beautiful Jekyll version supports text-col)
+
+page-col:          "#1A1A1A"   # neutral charcoal dark
+text-col:          "#E6EEF8"   # slightly brighter body text for visibility
+
 
 link-col:          "#1DA4FF"   # electric blue (bolt)
 hover-col:         "#38C0FF"   # lighter blue hover
