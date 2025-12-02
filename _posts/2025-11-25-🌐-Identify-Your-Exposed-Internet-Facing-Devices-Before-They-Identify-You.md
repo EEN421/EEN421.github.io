@@ -356,7 +356,7 @@ PublicIPDevices
 
 Think of this query as a multi-sensor perimeter alarm.
 
-### 📃 Step 1: Decide what “public” actually means (IPv4 and IPv6)
+### 🧭 Step 1: Decide what “public” actually means (IPv4 and IPv6)
 
 First, we teach Kusto the difference between “inside the fence” and “outside the fence” for IP addresses:
 
@@ -375,7 +375,7 @@ First, we teach Kusto the difference between “inside the fence” and “outsi
 
 <br/><br/>
 
-### ⏱️ Step 2: Devices that show up with public IPs in ConnectedNetworks
+### 🔌 Step 2: Devices that show up with public IPs in ConnectedNetworks
 
 This is our first “hard” signal; We look at **DeviceNetworkInfo** and expand **ConnectedNetworks**, which is a JSON blob of how the device is connected. For each connection, we pull out **ConnectedNetwork.PublicIP**. Then We split IPs into IPv4 vs IPv6, keeping only the ones that are not in our private/non-routable lists.
 
@@ -388,7 +388,7 @@ If a device shows up here, it has been seen using a public IP at the network edg
 
 <br/><br/>
 
-### 🌍 Step 3: Devices whose local IP address is actually public
+### 🛰️ Step 3: Devices whose local IP address is actually public
 
 Next, we look for devices that are themselves wearing a public IP badge: Still in **DeviceNetworkInfo**, we expand **IPAddresses** (the local interfaces on the device). Extract each **IPAddress.IPAddress* value and split into IPv4 vs IPv6 again, then filter out the private stuff using our regexes.
 
@@ -402,7 +402,7 @@ If a server lands here, it means the box has a public IP assigned locally, not j
 
 <br/><br/>
 
-### 🏠 Step 4: Devices that are actually taking inbound hits from the internet
+### 🎯 Step 4: Devices that are actually taking inbound hits from the internet
 
 Now we move from “what IP does it have?” to “who’s knocking on the door?” We query DeviceNetworkEvents for InboundConnectionAccepted events and for each event, we look at RemoteIP:
 
@@ -443,7 +443,7 @@ Pro-Tip: Some devices can literally have public IPs **assigned directly** to a n
 
 <br/><br/>
 
-### 🚪 Step 5: Devices listening on classic “remote access” ports from the internet
+### 📡 Step 5: Devices listening on classic “remote access” ports from the internet
 
 Some ports are the “VIP entrance” for attackers: RDP, SSH, HTTP(S), FTP/Telnet, VNC, WinRM, etc. We again use DeviceNetworkEvents and stick to InboundConnectionAccepted.
 
@@ -477,7 +477,7 @@ If a device shows up here, it’s not just online — it’s running interesting
 
 <br/><br/>
 
-### 🔐 Step 6: Devices Defender already thinks are internet-facing
+### 🌍 Step 6: Devices Defender already thinks are internet-facing
 
 We don’t ignore Microsoft’s own smarts, we integrate it and pull from ```DeviceInfo``` where ```IsInternetFacing == true```.
 
@@ -485,7 +485,7 @@ That gives us the built-in Defender view of internet-facing devices. Any device 
 
 <br/><br/>
 
-### 🚩 Step 7: Merge all the signals into one “internet-exposed device” view
+### 🗂️ Step 7: Merge all the signals into one “internet-exposed device” view
 
 Now we glue all of this together. Full-outer-join all four detection streams plus the IsInternetFacing list so no device gets dropped just because it only appeared in one dataset. Use coalesce() to pick the real DeviceId / DeviceName when multiple join copies exist, then merge IP address arrays:
 
@@ -507,7 +507,7 @@ At this point we effectively have: **_“Here is every device that might be inte
 
 <br/><br/>
 
-### 🔄 Step 8: Assign a simple risk score and emoji risk level
+### 🛡️ Step 8: Assign a simple risk score and emoji risk level
 With all the raw data in one place, we distill it down into something a human can triage at 8:30am with coffee. The `RiskScore` is a numeric score based on the following:
 
 - **10** – If the device exposes RDP or SSH (3389 or 22). These are “break glass now” surfaces.
@@ -532,7 +532,7 @@ We also derive **ExposedServices** so you can glance at a row and see what kind 
 
 <br/><br/>
 
-### Step 9: Pretty it up for humans and sort by “what should I look at first?”
+### 📋 Step 9: Pretty it up for humans and sort by “what should I look at first?”
 Finally, we **convert arrays (IP lists, ports, sample remote IPs) into strings** so they display nicely in the UI, then **project the most important columns up front**: RiskLevel, RiskScore, DeviceName, ExposedServices, DetectionMethods, public IPs, inbound counts, remote samples, etc. Next, we **sort by RiskScore** (highest first), then by **InboundCount**. The end result is a ranked, annotated list of internet-exposed devices with:
 
 - What we saw (IPs, ports, traffic),
@@ -555,7 +555,7 @@ Below is your cheat sheet for separating expected DC behavior from actual exposu
 
 <br/><br/>
 
-### 🎯 Expected, Totally-Normal Domain Controller Noise™
+### 📶 Expected, Totally-Normal Domain Controller Noise™
 
 These ports and patterns are supposed to appear in your dataset. They do not indicate internet exposure:
 
