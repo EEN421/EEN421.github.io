@@ -298,6 +298,66 @@
   margin: 0.75rem auto;  /* centers as a block */
   color: #9BA8B8;        /* matches your existing subtitle color */
     }
+
+    /* -----------------------------------------------------------
+   Post-level "Newer / Older" navigation (per-article pager)
+   ----------------------------------------------------------- */
+
+.pager.blog-pager {
+  margin-top: 3rem;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+/* Base look for both Newer and Older links */
+.pager.blog-pager li > a {
+  display: inline-block;
+  padding: 0.55rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid #1DA4FF !important;
+  background-color: #020811 !important;  /* dark DevSecOpsDad background */
+  color: #E6EEF8 !important;             /* light text */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(0,0,0,0.65);
+}
+
+/* Hover / focus state – same vibe as homepage buttons */
+.pager.blog-pager li > a:hover,
+.pager.blog-pager li > a:focus {
+  background-color: #1DA4FF !important;  /* electric blue */
+  color: #020811 !important;             /* dark text on blue */
+  text-decoration: none;
+  box-shadow: 0 0 14px rgba(29,164,255,0.75);
+}
+
+/* Align left/right buttons nicely on wider viewports */
+.pager.blog-pager li.previous {
+  float: left;
+}
+
+.pager.blog-pager li.next {
+  float: right;
+}
+
+/* On small screens, stack them vertically */
+@media (max-width: 576px) {
+  .pager.blog-pager li.previous,
+  .pager.blog-pager li.next {
+    float: none;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .pager.blog-pager li > a {
+    width: 100%;
+    text-align: center;
+  }
+}
+
   </style>
   
 </head>
