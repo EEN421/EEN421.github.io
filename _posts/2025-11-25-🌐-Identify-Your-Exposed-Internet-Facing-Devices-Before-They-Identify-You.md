@@ -384,9 +384,9 @@ First, we teach Kusto the difference between “inside the fence” and “outsi
 This is our first “hard” signal; We look at **DeviceNetworkInfo** and expand **ConnectedNetworks**, which is a JSON blob of how the device is connected. For each connection, we pull out **ConnectedNetwork.PublicIP**. Then We split IPs into IPv4 vs IPv6, keeping only the ones that are not in our private/non-routable lists.
 
 We end up with:
-- `PublicIPv4s` = all public IPv4s observed for that device
+- `PublicIPv4s` = all public IPv4s **observed** for that device
 
-- `PublicIPv6s` = all public IPv6s observed for that device
+- `PublicIPv6s` = all public IPv6s **observed** for that device
 
 If a device shows up here, it has been seen using a public IP at the network edge (e.g., VPN, gateway, or direct exposure), and we tag it with DetectionMethod = "PublicIP".
 
@@ -398,9 +398,9 @@ Next, we look for devices that are themselves wearing a public IP badge: Still i
 
 This way, we collect:
 
-- `LocalIPv4s` = public IPv4s bound directly to the device
+- `LocalIPv4s` = public IPv4s **bound** directly to the device
 
-- `LocalIPv6s` = public IPv6s bound directly to the device
+- `LocalIPv6s` = public IPv6s **bound** directly to the device
 
 If a server lands here, it means the box has a public IP assigned locally, not just hiding behind NAT. That’s a much stronger “internet-facing” signal, and we tag it as **PublicLocalIP**.
 
