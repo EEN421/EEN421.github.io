@@ -68,7 +68,8 @@ code {
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
   color: #E6EEF8;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 
 pre {
@@ -168,36 +169,8 @@ footer a:hover {
   color: #38C0FF !important;
 }
 
-/* -----------------------------------------------------------
-   FOOTER SOCIAL ICON FIX (Guaranteed Working)
-   Clean version before neon/pulse effects
-   ----------------------------------------------------------- */
+/* --- FOOTER LAYOUT TWEAKS ----------------------------------- */
 
-/* Default: dark grey bubble */
-footer .fa-stack-2x.fa-circle {
-  color: #2A2A2A !important;     /* dark grey circle */
-}
-
-/* Default: icon is bright white */
-footer .fa-stack-1x,
-footer .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;     /* white icon */
-  opacity: 1 !important;
-}
-
-/* Hover: blue circle */
-footer a:hover .fa-stack-2x.fa-circle {
-  color: #1DA4FF !important;     /* DevSecOpsDad blue */
-}
-
-/* Hover: icon stays white */
-footer a:hover .fa-stack-1x,
-footer a:hover .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;
-  opacity: 1 !important;
-}
-
-/* Improve click target */
 footer .fa-stack {
   width: 2.4rem;
   height: 2.4rem;
@@ -207,4 +180,48 @@ footer .fa-stack {
 
 footer a:hover .fa-stack {
   transform: scale(1.05);
+}
+
+/* -----------------------------------------------------------
+   FINAL FIX:
+   Replace Font Awesome circle with our OWN background bubble.
+   Completely solves pale icon / washed-out circle issue.
+   ----------------------------------------------------------- */
+
+/* Hide built-in FA circle */
+.footer-links .fa-stack-2x.fas.fa-circle {
+  display: none !important;
+}
+
+/* Draw our own bubble */
+.footer-links .fa-stack.fa-lg {
+  background-color: #2A2A2A !important;   /* dark grey bubble */
+  border-radius: 50% !important;
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+  line-height: 2.4rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+}
+
+/* Icon inside bubble */
+.footer-links .fa-stack-1x,
+.footer-links .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+  font-size: 1.2rem !important;
+}
+
+/* Hover bubble = DevSecOpsDad electric blue */
+.footer-links a:hover .fa-stack.fa-lg {
+  background-color: #1DA4FF !important;
+}
+
+/* Hover icon stays white */
+.footer-links a:hover .fa-stack-1x,
+.footer-links a:hover .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
 }
