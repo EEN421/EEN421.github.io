@@ -12,7 +12,7 @@
 }
 
 .devsecopsdad-brand .brand-devsecops {
-  color: #1DA4FF; /* Electric blue (bolt) */
+  color: #1DA4FF; /* Electric blue */
 }
 
 .devsecopsdad-brand .brand-dad {
@@ -32,7 +32,6 @@
   box-shadow: 0 0 12px rgba(29,164,255,0.35);
 }
 
-/* Ensure avatar shape stays square if round-avatar is false */
 .avatar-img {
   border-radius: 0 !important;
 }
@@ -165,48 +164,50 @@ html,
 }
 
 /* -----------------------------------------------------------
-   FOOTER SOCIAL ICON BUBBLES (FINAL FIX)
-   Dark grey bubbles by default, electric blue bubbles on hover
-   Icons are always bright and fully opaque
+   FOOTER SOCIAL ICON BUBBLES (WORKING FINAL FIX)
+   These icons use Font Awesome stacks, so the "bubble" is
+   actually a white <i class="fa fa-circle"> icon underneath.
+   We override that directly and reliably.
    ----------------------------------------------------------- */
 
-footer .social-icons .social-icon {
-  background-color: #2A2A2A !important;  /* dark grey bubble */
-  border-radius: 50% !important;
-  width: 42px !important;
-  height: 42px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: none !important;
-  border: none !important;
+/* NON-HOVER STATE: dark grey bubble, bright icon */
+footer .social-icons .fa-stack-2x.fa-circle {
+  color: #2A2A2A !important;   /* dark grey bubble */
+}
+
+footer .social-icons .fa-stack-1x,
+footer .social-icons .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;   /* white icon */
   opacity: 1 !important;
 }
 
-/* Icon inside bubble */
-footer .social-icons .social-icon i,
-footer .social-icons .social-icon svg {
-  color: #FFFFFF !important;
-  fill: #FFFFFF !important;
-  opacity: 1 !important;
-  font-size: 1.25rem !important;
-  width: 1.25rem !important;
-  height: 1.25rem !important;
+/* HOVER: blue bubble, white icon */
+footer .social-icons .social-icon:hover .fa-stack-2x.fa-circle {
+  color: #1DA4FF !important;   /* electric blue bubble */
 }
 
-/* Hover: switch bubble to electric blue */
-footer .social-icons .social-icon:hover {
-  background-color: #1DA4FF !important;
-}
-
-footer .social-icons .social-icon:hover i,
-footer .social-icons .social-icon:hover svg {
-  color: #FFFFFF !important;
-  fill: #FFFFFF !important;
+footer .social-icons .social-icon:hover .fa-stack-1x,
+footer .social-icons .social-icon:hover .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;   /* white icon */
   opacity: 1 !important;
 }
 
-/* slightly larger click area */
+/* Make the icons slightly larger for clarity */
+footer .social-icons .fa-stack {
+  width: 2.1em !important;
+  height: 2.1em !important;
+  line-height: 2.1em !important;
+}
+
+footer .social-icons .fa-stack-1x {
+  font-size: 1.2rem !important;
+}
+
+footer .social-icons .fa-stack-2x {
+  font-size: 2.1rem !important;
+}
+
+/* Improve mobile click area */
 footer a {
   padding: 0.3rem;
 }
