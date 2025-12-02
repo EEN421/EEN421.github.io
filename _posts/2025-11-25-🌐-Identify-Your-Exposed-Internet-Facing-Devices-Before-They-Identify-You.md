@@ -8,64 +8,64 @@ If you’ve spent any amount of time in Microsoft Defender, you’ve definitely 
 
 ### 🔐 NIST Cybersecurity Framework (CSF)
 
-- ID.AM-1 — Physical Devices & Systems Are Inventoried
+- **ID.AM-1** — Physical Devices & Systems Are Inventoried
 You cannot inventory devices meaningfully without knowing which ones are externally reachable.
 
-- ID.AM-2 — Software Platforms & Applications Are Inventoried
+- **ID.AM-2** — Software Platforms & Applications Are Inventoried
 Public exposure affects patching, configuration, and lifecycle decisions.
 
-- ID.RA-1 — Asset Vulnerabilities Are Identified and Documented
+- **ID.RA-1** — Asset Vulnerabilities Are Identified and Documented
 Internet-facing assets have a dramatically higher threat frequency and must be treated differently.
 
-- PR.AC-3 — Remote Access Is Managed
+- **PR.AC-3** — Remote Access Is Managed
 Internet-accessible services are remote access — even when not intended to be.
 
-- DE.CM-8 — Vulnerability Scans Are Performed
+- **DE.CM-8** — Vulnerability Scans Are Performed
 External scans start with knowing what is internet-facing in the first place.
 
 <br/>
 
 ### 🛡️ ISO/IEC 27001:2022
 
-- A.5.9 — Inventory of Information and Other Associated Assets
+- **A.5.9** — Inventory of Information and Other Associated Assets
 Asset inventories must distinguish externally accessible systems.
 
-- A.8.23 — Web Filtering / Internet Exposure Management
+- **A.8.23** — Web Filtering / Internet Exposure Management
 Controls require that externally reachable systems be treated as higher-risk.
 
-- A.13.1.1 — Network Security Controls
+- **A.13.1.1** — Network Security Controls
 Segmentation, firewalls, and external exposure fall directly under this clause.
 
-- A.5.24 — Information Security Incident Management Planning
+- **A.5.24** — Information Security Incident Management Planning
 Internet-facing devices represent higher incident probability and require forward planning.
 
 <br/>
 
 ### 🧰 CIS Critical Security Controls (v8)
 
-- CSC 1 — Inventory of Enterprise Assets
+- **CSC 1** — Inventory of Enterprise Assets
 External exposure is part of classification.
 
-- CSC 4 — Secure Configuration of Enterprise Assets
+- **CSC 4** — Secure Configuration of Enterprise Assets
 Internet-facing = hardened baseline required.
 
-- CSC 14 — Security Awareness & Skills Training
+- **CSC 14** — Security Awareness & Skills Training
 Teams must recognize risky external assets.
 
-- CSC 18 — Penetration Testing
+- **CSC 18** — Penetration Testing
 Internet-exposed assets are _always in-scope by default_ for pen tests & red teams.
 
 <br/>
 
 ### ☁️ CIS Azure / M365 Benchmarks
 
-- Azure 1.1 — Ensure Public Network Access Is Disabled Unless Required
+- **Azure 1.1** — Ensure Public Network Access Is Disabled Unless Required
 Exactly the scenario we’re evaluating.
 
-- Azure 3.4 — Ensure VM NICs Are Not Assigned Public IPs
+- **Azure 3.4** — Ensure VM NICs Are Not Assigned Public IPs
 Direct mapping to identifying internet-facing VMs.
 
-- M365 5.6 — Monitor External Exposure
+- **M365 5.6** — Monitor External Exposure
 External accessibility increases alerting requirements.
 
 <br/>
@@ -74,10 +74,10 @@ External accessibility increases alerting requirements.
 
 Even though HIPAA doesn’t explicitly say “internet-facing,” auditors consistently tie this topic to:
 
-- §164.308(a)(1)(ii)(A) — Risk Analysis
+- **§164.308(a)(1)(ii)(A)** — Risk Analysis
 Internet-exposed assets are higher likelihood/impact.
 
-- §164.312(e)(1) — Transmission Security
+- **§164.312(e)(1)** — Transmission Security
 Public endpoints require encryption and strong access control. 
 
 <br/>
@@ -86,11 +86,11 @@ Public endpoints require encryption and strong access control.
 
 For DoD contractors or manufacturing:
 
-- 3.1.3 — Control Remote Access
+- **3.1.3** — Control Remote Access
 
-- 3.13.1 — Boundary Protection
+- **3.13.1** — Boundary Protection
 
-- 3.14.1 — Scan for Vulnerabilities
+- **3.14.1** — Scan for Vulnerabilities
 
 Internet-facing endpoints are the _**first thing**_ your CMMC assessor will ask about.
 
@@ -363,8 +363,12 @@ First, we teach Kusto the difference between “inside the fence” and “outsi
 - PrivateIPRegex covers the usual IPv4 private and non-routable ranges (**RFC1918 ranges like** **10/8**, **172.16–31**, **192.168/16**, **loopback**, **link-local**, and **Multicast/special blocks** etc.).
     - ```let PrivateIPRegex = @'^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.|224\.|240\.)';```
 
+<br/>
+
 - PrivateIPv6Regex does the same for IPv6 (ULA ranges like **fc00:**, **fd00:**, **link-local fe80:**, and **loopback ::1**).
     - ```let PrivateIPv6Regex = @'^(fc00:|fd00:|fe80:|::1)';```
+
+<br/>
 
 - LookbackDays tells the query how far back in time to scan (30 days by default).
     - ```let LookbackDays = 30d;```
@@ -380,9 +384,9 @@ First, we teach Kusto the difference between “inside the fence” and “outsi
 This is our first “hard” signal; We look at **DeviceNetworkInfo** and expand **ConnectedNetworks**, which is a JSON blob of how the device is connected. For each connection, we pull out **ConnectedNetwork.PublicIP**. Then We split IPs into IPv4 vs IPv6, keeping only the ones that are not in our private/non-routable lists.
 
 We end up with:
-- PublicIPv4s = all public IPv4s observed for that device
+- `PublicIPv4s` = all public IPv4s observed for that device
 
-- PublicIPv6s = all public IPv6s observed for that device
+- `PublicIPv6s` = all public IPv6s observed for that device
 
 If a device shows up here, it has been seen using a public IP at the network edge (e.g., VPN, gateway, or direct exposure), and we tag it with DetectionMethod = "PublicIP".
 
@@ -394,9 +398,9 @@ Next, we look for devices that are themselves wearing a public IP badge: Still i
 
 This way, we collect:
 
-- LocalIPv4s = public IPv4s bound directly to the device
+- `LocalIPv4s` = public IPv4s bound directly to the device
 
-- LocalIPv6s = public IPv6s bound directly to the device
+- `LocalIPv6s` = public IPv6s bound directly to the device
 
 If a server lands here, it means the box has a public IP assigned locally, not just hiding behind NAT. That’s a much stronger “internet-facing” signal, and we tag it as **PublicLocalIP**.
 
@@ -406,9 +410,9 @@ If a server lands here, it means the box has a public IP assigned locally, not j
 
 Now we move from “what IP does it have?” to “who’s knocking on the door?” We query DeviceNetworkEvents for InboundConnectionAccepted events and for each event, we look at RemoteIP:
 
-- If it’s IPv4, it must not match PrivateIPRegex.
+- If it’s **IPv4**, it must not match **PrivateIPRegex**.
 
-- If it’s IPv6, it must not match PrivateIPv6Regex.
+- If it’s **IPv6**, it must not match **PrivateIPv6Regex**.
 
 Next we **summarize** _per device:_
 
@@ -430,29 +434,27 @@ Then we filter to devices with more than 5 inbound connections; this is great fo
 
 <br/>
 
-Pro-Tip: Some devices can literally have public IPs **assigned directly** to a network interface, such as:
-* Web servers
-* Firewalls
-* VPN appliances
-* Load balancers
-* Cloud VMs with public NICs
+>😎 **Pro-Tip** 👉 Some devices can literally have public IPs **assigned directly** to a network interface, such as:
+>- Web servers
+>- Firewalls
+>- VPN appliances
+>- Load balancers
+>- Cloud VMs with public NICs
 
 <br/>
 
-> 💡 To trap for these devices, we can look to the following detection methods and check ```InboundConnections```, ```RemoteAccessServices```, and ```Ports``` etc, discussed next. 
+> 💡 To trap for these devices, we can look to the following detection methods and check ```InboundConnections```, ```RemoteAccessServices```, and ```Ports``` etc, discussed **next**. 
 
 <br/><br/>
 
 ### 📡 Step 5: Devices listening on classic “remote access” ports from the internet
 
-Some ports are the “VIP entrance” for attackers: RDP, SSH, HTTP(S), FTP/Telnet, VNC, WinRM, etc. We again use DeviceNetworkEvents and stick to InboundConnectionAccepted.
-
-This time we focus on ```LocalPort in```:
+Some ports are the _“VIP entrance”_ for attackers: **RDP, SSH, HTTP(S), FTP/Telnet, VNC, WinRM**, etc. We again use `DeviceNetworkEvents` and stick to `InboundConnectionAccepted` while we focus on ```LocalPort in```:
 `22`, `3389`, `443`, `80`, `21`, `23`, `5900`, `5985`, `5986`
 
-We keep only events where RemoteIP is public (using the same IPv4/IPv6 logic as above).
+We keep only events where `RemoteIP` is **public** (using the same IPv4/IPv6 logic as above).
 
-Summarize per device:
+**Summarize** per device:
 
 - `ServicePorts` = which of those ports are actually exposed and being used
 
@@ -479,9 +481,9 @@ If a device shows up here, it’s not just online — it’s running interesting
 
 ### 🌍 Step 6: Devices Defender already thinks are internet-facing
 
-We don’t ignore Microsoft’s own smarts, we integrate it and pull from ```DeviceInfo``` where ```IsInternetFacing == true```.
+We don’t ignore Microsoft’s own smarts, we integrate it as a tertiary detection source and pull from ```DeviceInfo``` where ```IsInternetFacing == true``` to take into account in our final decision.
 
-That gives us the built-in Defender view of internet-facing devices. Any device on that list is tagged with `DetectionMethod` = `"IsInternetFacing"` so we can see where our logic and Microsoft’s logic agree or disagree.
+This gives us the built-in Defender view of internet-facing devices. Any device on that list is tagged with `DetectionMethod` = `"IsInternetFacing"` so we can see where our logic and Microsoft’s logic agree or disagree.
 
 <br/><br/>
 
@@ -508,7 +510,7 @@ At this point we effectively have: **_“Here is every device that might be inte
 <br/><br/>
 
 ### 🛡️ Step 8: Assign a simple risk score and emoji risk level
-With all the raw data in one place, we distill it down into something a human can triage at 8:30am with coffee. The `RiskScore` is a numeric score based on the following:
+With all the raw data in one place, we distill it down into something a human can triage at 8:30am with coffee. The `RiskScore` is a numeric score based on the following(These thresholds can be adjusted based on your specific use cases):
 
 - **10** – If the device exposes RDP or SSH (3389 or 22). These are “break glass now” surfaces.
 - **9** – If it exposes Telnet or FTP (23 or 21). Legacy and usually very bad news.
@@ -516,8 +518,6 @@ With all the raw data in one place, we distill it down into something a human ca
 - **6** – If the device has any public IPs at all (IPv4 or IPv6).
 - **5** – If Defender itself says IsInternetFacing == true.
 - **3** – Default if none of the above applied.
-
-> 👆 These thresholds can be adjusted based on your specific use cases
 
 <br/>
 
