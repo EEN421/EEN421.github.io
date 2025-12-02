@@ -172,45 +172,40 @@ html,
   color: #E6EEF8 !important;
 }
 
-/* --- FOOTER SOCIAL ICON VISIBILITY & STYLE ------------------ */
+/* --- FOOTER SOCIAL ICON BUBBLES ----------------------------- */
+/* Dark grey bubbles by default; blue on hover; icons always visible */
 
-/* Remove the pale circle bubble from Beautiful Jekyll's default */
-footer .social-icon,
-footer .social-icon:hover {
-  background: none !important;        /* remove bubble */
-  box-shadow: none !important;        /* remove soft shadow */
-  border: none !important;            /* remove circle outline */
+footer .social-icon {
+  background-color: #2A2A2A !important;   /* darker grey bubble */
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 42px !important;
+  height: 42px !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
-/* Base icon style (font + svg) */
-footer .social-icon .fa,
-footer .social-icon .fab,
-footer .social-icon .fas,
-footer .social-icon .far,
-footer .social-icon svg {
-  color: #E6EEF8 !important;          /* bright white-grey */
-  fill: #E6EEF8 !important;
-  opacity: 1 !important;
-}
-
-/* Hover: electric DevSecOpsDad blue */
-footer .social-icon:hover .fa,
-footer .social-icon:hover .fab,
-footer .social-icon:hover .fas,
-footer .social-icon:hover .far,
-footer .social-icon:hover svg {
-  color: #38C0FF !important;
-  fill: #38C0FF !important;
-  opacity: 1 !important;
-  transition: color 0.2s ease, fill 0.2s ease;
-}
-
-/* Enlarge icons slightly so they stand out */
+/* Icon inside the bubble (font + svg) */
 footer .social-icon i,
 footer .social-icon svg {
-  font-size: 1.4rem !important;
-  width: 1.4rem !important;
-  height: 1.4rem !important;
+  color: #E6EEF8 !important;  /* bright icon */
+  fill: #E6EEF8 !important;
+  opacity: 1 !important;
+  font-size: 1.2rem !important;
+}
+
+/* Hover: electric-blue bubble and white icon */
+footer .social-icon:hover {
+  background-color: #1DA4FF !important;   /* DevSecOpsDad blue */
+}
+
+footer .social-icon:hover i,
+footer .social-icon:hover svg {
+  color: #FFFFFF !important;               /* white icon on blue */
+  fill: #FFFFFF !important;
+  opacity: 1 !important;
 }
 
 /* Improve clickable hitbox on mobile */
