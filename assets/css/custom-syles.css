@@ -12,7 +12,7 @@
 }
 
 .devsecopsdad-brand .brand-devsecops {
-  color: #1DA4FF; /* Electric blue (bolt) */
+  color: #1DA4FF; /* Electric blue */
 }
 
 .devsecopsdad-brand .brand-dad {
@@ -29,15 +29,14 @@
 
 .avatar-img-border {
   border-color: #1DA4FF !important;
-  box-shadow: 0 0 12px rgba(29, 164, 255, 0.35);
+  box-shadow: 0 0 12px rgba(29,164,255,0.35);
 }
 
 .avatar-img {
-  /* Keep square if round-avatar is false in _config.yml */
   border-radius: 0 !important;
 }
 
-/* --- LINK COLORS (reinforce theme even if theme CSS overrides) --- */
+/* --- LINK COLORS -------------------------------------------- */
 
 a,
 a:visited {
@@ -49,19 +48,29 @@ a:focus {
   color: #38C0FF;
 }
 
+/* --- PAGE BACKGROUND OVERRIDE ------------------------------- */
+
+body,
+html,
+.container-lg,
+.container,
+.page-content,
+.wrapper {
+  background-color: #1A1A1A !important;
+  color: #E6EEF8 !important;
+}
+
 /* --- CODE BLOCKS & INLINE CODE ------------------------------ */
 
 pre,
 code {
-  background-color: #1A1A1A !important;
+  background-color: #111319 !important;
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
   color: #E6EEF8;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Make code blocks pop visually */
 pre {
   padding: 1rem;
   overflow-x: auto;
@@ -78,18 +87,15 @@ pre {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HOMEPAGE HERO PANEL -------------------------------------
-   This applies only if you enable:
-   before-content: devsecopsdad-hero.html
-   ----------------------------------------------------------- */
+/* --- HOMEPAGE HERO PANEL ------------------------------------- */
 
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
-  background: radial-gradient(circle at top, rgba(29, 164, 255, 0.23) 0, transparent 55%),
+  background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%),
               #020811;
   border-radius: 1.5rem;
   margin-bottom: 2.5rem;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 40px rgba(0,0,0,0.75);
   text-align: center;
 }
 
@@ -120,9 +126,8 @@ pre {
   color: #9BA8B8;
 }
 
-/* --- MISC / UTILITY OVERRIDES ------------------------------- */
+/* --- DROPDOWN & SEARCH --------------------------------------- */
 
-/* Make dropdown menus match dark theme */
 .dropdown-menu {
   background-color: #04111E;
   border: 1px solid #0A4C8D;
@@ -137,7 +142,6 @@ pre {
   color: #E6EEF8;
 }
 
-/* Fix search button in dark navbar */
 #nav-search-link {
   color: #E6EEF8 !important;
 }
@@ -146,14 +150,16 @@ pre {
   color: #38C0FF !important;
 }
 
-/* Better blockquote visibility on dark backgrounds */
+/* --- BLOCKQUOTES -------------------------------------------- */
+
 blockquote {
   border-left: 4px solid #1DA4FF;
   padding-left: 1rem;
   color: #B7C6D8;
 }
 
-/* Improve footer link contrast */
+/* --- FOOTER LINKS ------------------------------------------- */
+
 footer a {
   color: #1DA4FF !important;
 }
@@ -163,54 +169,42 @@ footer a:hover {
 }
 
 /* -----------------------------------------------------------
-   FOOTER SOCIAL ICONS (GitHub / Twitter / LinkedIn)
+   FOOTER SOCIAL ICON FIX (Guaranteed Working)
+   Clean version before neon/pulse effects
    ----------------------------------------------------------- */
 
-/* Tidy up icon sizing */
-.footer-links .fa-stack {
-  width: 2.6rem;
-  height: 2.6rem;
-  line-height: 2.6rem;
+/* Default: dark grey bubble */
+footer .fa-stack-2x.fa-circle {
+  color: #2A2A2A !important;     /* dark grey circle */
 }
 
-/* The outer circle (Font Awesome uses fa-circle.fa-stack-2x) */
-.footer-links .fa-stack-2x {
-  /* Dark base circle so the icon is visible on load */
-  color: #101b2a !important;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
-  transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
-  animation: devsecopsdad-footer-pulse 3.2s ease-in-out infinite;
+/* Default: icon is bright white */
+footer .fa-stack-1x,
+footer .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;     /* white icon */
+  opacity: 1 !important;
 }
 
-/* Inner brand icons (GitHub / Twitter / LinkedIn) */
-.footer-links .fa-stack-1x,
-.footer-links .fa-stack-1x.fab,
-.footer-links .fa-stack-1x.fas {
-  color: #f3f6fb !important; /* bright, readable icon */
+/* Hover: blue circle */
+footer a:hover .fa-stack-2x.fa-circle {
+  color: #1DA4FF !important;     /* DevSecOpsDad blue */
 }
 
-/* Hover state – neon blue ring + dark icon */
-.footer-links a:hover .fa-stack-2x {
-  color: #1DA4FF !important; /* electric blue ring */
-  text-shadow: 0 0 14px rgba(56, 192, 255, 0.9);
-  transform: translateY(-1px) scale(1.05);
+/* Hover: icon stays white */
+footer a:hover .fa-stack-1x,
+footer a:hover .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
 }
 
-.footer-links a:hover .fa-stack-1x,
-.footer-links a:hover .fa-stack-1x.fab,
-.footer-links a:hover .fa-stack-1x.fas {
-  color: #020811 !important; /* near-black icon for contrast on blue */
+/* Improve click target */
+footer .fa-stack {
+  width: 2.4rem;
+  height: 2.4rem;
+  line-height: 2.4rem;
+  transition: transform 0.15s ease;
 }
 
-/* Subtle pulsing neon-glow animation on the outer ring */
-@keyframes devsecopsdad-footer-pulse {
-  0% {
-    text-shadow: 0 0 0 rgba(29, 164, 255, 0.0);
-  }
-  40% {
-    text-shadow: 0 0 10px rgba(29, 164, 255, 0.7);
-  }
-  100% {
-    text-shadow: 0 0 0 rgba(29, 164, 255, 0.0);
-  }
+footer a:hover .fa-stack {
+  transform: scale(1.05);
 }
