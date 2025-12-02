@@ -1,7 +1,6 @@
 /* -----------------------------------------------------------
    DevSecOpsDad Custom Brand Styles
    Applies site-wide via site-css in _config.yml
-   Path: assets/css/custom-styles.css
    ----------------------------------------------------------- */
 
 /* --- GLOBAL LAYOUT / BACKGROUND --------------------------- */
@@ -72,13 +71,11 @@ code {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Make code blocks pop visually */
 pre {
   padding: 1rem 1.25rem;
   overflow-x: auto;
 }
 
-/* Inline code smaller padding */
 p code,
 li code {
   padding: 0.1rem 0.3rem;
@@ -123,10 +120,7 @@ code .cs {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HOMEPAGE HERO PANEL -----------------------------------
-   Applies if you include devsecopsdad-hero.html via:
-   before-content: [devsecopsdad-hero.html]
-   --------------------------------------------------------- */
+/* --- HOMEPAGE HERO PANEL ----------------------------------- */
 
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
@@ -198,102 +192,8 @@ blockquote {
   color: #B7C6D8;
 }
 
-/* --- FOOTER & SOCIAL ICONS --------------------------------
-   This is the important part for the “bubbles” issue.
-   We:
-     1) Hide Font Awesome’s inner circle glyph
-     2) Style the .fa-stack wrapper as our neon ring
-   --------------------------------------------------------- */
+/* --- FOOTER TEXT & LINKS ---------------------------------- */
 
-/* Footer background & text already set via _config.yml,
-   but we reinforce a bit here just in case */
-.beautiful-jekyll-footer {
-  background-color: #020811;
-  padding-top: 1.75rem;
-  padding-bottom: 1.75rem;
-}
-
-/* Layout for the icons */
-.footer-links {
-  margin-bottom: 0.75rem;
-}
-
-/* Space icons out a bit */
-.footer-links .list-inline-item {
-  margin: 0 0.4rem;
-}
-
-/* Base style for the stacked icon wrapper */
-.footer-links .fa-stack {
-  position: relative;
-  width: 2.5em;
-  height: 2.5em;
-  line-height: 2.5em;
-  border-radius: 50%;
-  background-color: #0B1520 !important;           /* dark disc so it’s visible on footer */
-  border: 1px solid rgba(29,164,255,0.7) !important;
-  box-shadow:
-    0 0 6px rgba(0,0,0,0.9),
-    0 0 12px rgba(29,164,255,0.35);
-  transition:
-    background-color 0.18s ease-out,
-    box-shadow 0.18s ease-out,
-    transform 0.18s ease-out;
-}
-
-/* Hide the Font Awesome inner circle glyph – we don’t need it */
-.footer-links .fa-stack-2x.fa-circle {
-  color: transparent !important;
-}
-
-/* Actual brand glyph (GitHub/Twitter/LinkedIn) */
-.footer-links .fa-stack-1x.fa-inverse {
-  color: #E6EEF8 !important;
-  text-shadow: 0 0 4px rgba(0,0,0,0.65);
-}
-
-/* Neutral (non-hover) state: subtle neon pulse */
-.footer-links .fa-stack {
-  animation: footerPulse 3.2s ease-in-out infinite;
-}
-
-/* Hover: go full electric blue + slight lift */
-.footer-links a:hover .fa-stack {
-  background-color: #1DA4FF !important;
-  box-shadow:
-    0 0 14px rgba(29,164,255,0.9),
-    0 0 28px rgba(29,164,255,0.65);
-  transform: translateY(-1px);
-}
-
-/* On hover, flip icon to dark so it reads on blue */
-.footer-links a:hover .fa-stack-1x.fa-inverse {
-  color: #020811 !important;
-}
-
-/* Pulse animation for the ring */
-@keyframes footerPulse {
-  0% {
-    box-shadow:
-      0 0 6px rgba(0,0,0,0.9),
-      0 0 12px rgba(29,164,255,0.25);
-    border-color: rgba(29,164,255,0.6);
-  }
-  50% {
-    box-shadow:
-      0 0 10px rgba(0,0,0,0.9),
-      0 0 18px rgba(29,164,255,0.6);
-    border-color: rgba(29,164,255,0.95);
-  }
-  100% {
-    box-shadow:
-      0 0 6px rgba(0,0,0,0.9),
-      0 0 12px rgba(29,164,255,0.25);
-    border-color: rgba(29,164,255,0.6);
-  }
-}
-
-/* Footer text & links */
 .beautiful-jekyll-footer .copyright,
 .beautiful-jekyll-footer .theme-by {
   color: #9BA8B8 !important;
@@ -307,14 +207,77 @@ blockquote {
   color: #38C0FF !important;
 }
 
-/* --- MISC UTILITIES --------------------------------------- */
+/* -----------------------------------------------------------
+   FOOTER SOCIAL ICONS — AGGRESSIVE OVERRIDE
+   Targeting markup from social-networks-links.html:
+   <ul class="footer-links">
+     <li class="list-inline-item">
+       <a ...>
+         <span class="fa-stack fa-lg">
+           <i class="fas fa-circle fa-stack-2x"></i>
+           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+         </span>
+       </a>
+     </li>
+   ----------------------------------------------------------- */
 
-/* Make sure intro header doesn’t eat vertical space */
-.intro-header {
-  margin-bottom: 1.5rem;
+/* Make sure links/icons are fully opaque */
+.footer-links,
+.footer-links .list-inline-item,
+.footer-links a,
+.footer-links .fa-stack,
+.footer-links .fa-stack-1x,
+.footer-links .fa-stack-2x {
+  opacity: 1 !important;
 }
 
-/* A little breathing room under the main content before footer */
-[role="main"] {
-  padding-bottom: 2.5rem;
+/* Layout for icon list */
+.footer-links {
+  margin-bottom: 0.75rem;
+}
+
+/* Space icons */
+.footer-links .list-inline-item {
+  margin: 0 0.4rem;
+}
+
+/* Base stack behaviour */
+.footer-links .fa-stack {
+  width: 2.6rem !important;
+  height: 2.6rem !important;
+  line-height: 2.6rem !important;
+}
+
+/* The “bubble” (circle glyph) — force dark disc */
+.footer-links .fa-stack-2x {
+  color: #222831 !important;            /* circle glyph color (acts like fill) */
+  background-color: #222831 !important; /* in case theme uses background */
+}
+
+/* Icon glyph on top — force bright white */
+.footer-links .fa-stack-1x,
+.footer-links .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;
+  text-shadow: 0 0 3px rgba(0,0,0,0.65);
+}
+
+/* Hover: blue disc + white icon */
+.footer-links a:hover .fa-stack-2x {
+  color: #1DA4FF !important;
+  background-color: #1DA4FF !important;
+}
+
+.footer-links a:hover .fa-stack-1x,
+.footer-links a:hover .fa-stack-1x.fa-inverse {
+  color: #FFFFFF !important;
+}
+
+/* Minor hover scale for feedback */
+.footer-links a {
+  display: inline-block;
+  transition: transform 0.15s ease-in-out;
+}
+
+.footer-links a:hover {
+  transform: scale(1.05);
 }
