@@ -3,20 +3,7 @@
    Applies site-wide via site-css in _config.yml
    ----------------------------------------------------------- */
 
-/* --- GLOBAL LAYOUT / BACKGROUND --------------------------- */
-
-html, body {
-  background-color: #020811;
-  color: #D7E2F0;
-}
-
-/* Keep content nicely centered but not cramped */
-.container-md {
-  max-width: 1100px;
-}
-
 /* --- NAVBAR BRAND TEXT ------------------------------------- */
-
 .devsecopsdad-brand {
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -24,95 +11,53 @@ html, body {
 }
 
 .devsecopsdad-brand .brand-devsecops {
-  color: #1DA4FF; /* Electric blue (bolt) */
+  color: #1DA4FF;
 }
 
 .devsecopsdad-brand .brand-dad {
-  color: #C0CAD8; /* Metallic silver */
+  color: #C0CAD8;
   margin-left: 0.18em;
 }
 
-/* Navbar border glow effect */
+/* Navbar border glow */
 .navbar-custom {
   border-bottom: 1px solid #0A4C8D;
 }
 
-/* --- NAVBAR AVATAR / LOGO --------------------------------- */
-
+/* --- NAVBAR AVATAR / LOGO ----------------------------------- */
 .avatar-img-border {
   border-color: #1DA4FF !important;
   box-shadow: 0 0 12px rgba(29,164,255,0.35);
 }
 
 .avatar-img {
-  border-radius: 0 !important; /* keep square logo */
+  border-radius: 0 !important;
 }
 
-/* --- LINK COLORS (GLOBAL) --------------------------------- */
-
-a,
-a:visited {
+/* --- LINK COLORS -------------------------------------------- */
+a, a:visited {
   color: #1DA4FF;
 }
 
-a:hover,
-a:focus {
+a:hover, a:focus {
   color: #38C0FF;
 }
 
-/* --- CODE BLOCKS & INLINE CODE ---------------------------- */
-
-pre,
-code {
-  background-color: #050B14 !important;
+/* --- CODE BLOCKS -------------------------------------------- */
+pre, code {
+  background-color: #1A1A1A !important;
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
-  color: #E6EEF8;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: #E6EEF8 !important;
 }
 
 pre {
-  padding: 1rem 1.25rem;
+  padding: 1rem;
   overflow-x: auto;
 }
 
-p code,
-li code {
-  padding: 0.1rem 0.3rem;
-}
-
-/* --- SIMPLE BRANDED SYNTAX HIGHLIGHTING ------------------- */
-
-code .k,      /* keyword */
-code .kd,
-code .kn {
-  color: #FF6B81; /* pinkish red */
-}
-
-code .s,      /* string */
-code .s1,
-code .s2 {
-  color: #FFE083; /* warm yellow */
-}
-
-code .n,      /* name */
-code .nx,
-code .na {
-  color: #7FD3FF; /* light cyan */
-}
-
-code .c,      /* comment */
-code .cm,
-code .c1,
-code .cs {
-  color: #6A7A91;
-  font-style: italic;
-}
-
-/* --- TAG BADGES ------------------------------------------- */
-
-.label-default,
-.tag {
+/* --- TAG BADGES --------------------------------------------- */
+.label-default, .tag {
   background-color: #04111E !important;
   border: 1px solid #1DA4FF !important;
   color: #D7E2F0 !important;
@@ -120,12 +65,10 @@ code .cs {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HOMEPAGE HERO PANEL ----------------------------------- */
-
+/* --- HERO PANEL --------------------------------------------- */
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
-  background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%),
-              #020811;
+  background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%), #020811;
   border-radius: 1.5rem;
   margin-bottom: 2.5rem;
   box-shadow: 0 0 40px rgba(0,0,0,0.75);
@@ -159,8 +102,7 @@ code .cs {
   color: #9BA8B8;
 }
 
-/* --- NAVBAR DROPDOWNS & SEARCH ---------------------------- */
-
+/* --- DROPDOWNS ---------------------------------------------- */
 .dropdown-menu {
   background-color: #04111E;
   border: 1px solid #0A4C8D;
@@ -175,7 +117,7 @@ code .cs {
   color: #E6EEF8;
 }
 
-/* Fix search button in dark navbar */
+/* --- SEARCH BUTTON FIX -------------------------------------- */
 #nav-search-link {
   color: #E6EEF8 !important;
 }
@@ -184,100 +126,84 @@ code .cs {
   color: #38C0FF !important;
 }
 
-/* --- BLOCKQUOTES ------------------------------------------ */
-
+/* --- BLOCKQUOTE --------------------------------------------- */
 blockquote {
   border-left: 4px solid #1DA4FF;
   padding-left: 1rem;
   color: #B7C6D8;
 }
 
-/* --- FOOTER TEXT & LINKS ---------------------------------- */
-
-.beautiful-jekyll-footer .copyright,
-.beautiful-jekyll-footer .theme-by {
-  color: #9BA8B8 !important;
-}
-
-.beautiful-jekyll-footer a {
+/* --- FOOTER LINKS ------------------------------------------- */
+footer a {
   color: #1DA4FF !important;
 }
 
-.beautiful-jekyll-footer a:hover {
+footer a:hover {
   color: #38C0FF !important;
 }
 
 /* -----------------------------------------------------------
-   FOOTER SOCIAL ICONS — AGGRESSIVE OVERRIDE
-   Targeting markup from social-networks-links.html:
-   <ul class="footer-links">
-     <li class="list-inline-item">
-       <a ...>
-         <span class="fa-stack fa-lg">
-           <i class="fas fa-circle fa-stack-2x"></i>
-           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-         </span>
-       </a>
-     </li>
+   FOOTER SOCIAL ICON FIX
+   Target FA circle background + icon
    ----------------------------------------------------------- */
 
-/* Make sure links/icons are fully opaque */
-.footer-links,
-.footer-links .list-inline-item,
-.footer-links a,
-.footer-links .fa-stack,
-.footer-links .fa-stack-1x,
-.footer-links .fa-stack-2x {
-  opacity: 1 !important;
-}
-
-/* Layout for icon list */
-.footer-links {
-  margin-bottom: 0.75rem;
-}
-
-/* Space icons */
-.footer-links .list-inline-item {
-  margin: 0 0.4rem;
-}
-
-/* Base stack behaviour */
 .footer-links .fa-stack {
-  width: 2.6rem !important;
-  height: 2.6rem !important;
-  line-height: 2.6rem !important;
+  height: 2.5rem !important;
+  width: 2.5rem !important;
+  margin: 0 0.2rem;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-/* The “bubble” (circle glyph) — force dark disc */
-.footer-links .fa-stack-2x {
-  color: #222831 !important;            /* circle glyph color (acts like fill) */
-  background-color: #222831 !important; /* in case theme uses background */
+.footer-links .fa-circle.fa-stack-2x {
+  color: #28323F !important; /* darker neutral background */
 }
 
-/* Icon glyph on top — force bright white */
-.footer-links .fa-stack-1x,
-.footer-links .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;
-  text-shadow: 0 0 3px rgba(0,0,0,0.65);
+.footer-links .fa-inverse {
+  color: #E6EEF8 !important; /* bright white icon */
 }
 
-/* Hover: blue disc + white icon */
-.footer-links a:hover .fa-stack-2x {
+/* Hover = neon blue pulse */
+.footer-links a:hover .fa-circle.fa-stack-2x {
   color: #1DA4FF !important;
-  background-color: #1DA4FF !important;
+  box-shadow: 0 0 10px #1DA4FF;
 }
 
-.footer-links a:hover .fa-stack-1x,
-.footer-links a:hover .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;
+.footer-links a:hover .fa-inverse {
+  color: #020811 !important;
 }
 
-/* Minor hover scale for feedback */
-.footer-links a {
-  display: inline-block;
-  transition: transform 0.15s ease-in-out;
+.footer-links a:hover .fa-stack {
+  transform: scale(1.08);
 }
 
-.footer-links a:hover {
-  transform: scale(1.05);
+/* -----------------------------------------------------------
+   FIX "OLDER POSTS" / "NEWER POSTS" PAGER BUTTONS
+   ----------------------------------------------------------- */
+
+.pager {
+  background-color: #04111E !important; /* match site background */
+  padding: 1.2rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  border: 1px solid #0A4C8D;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+  margin-top: 2rem;
 }
+
+.pager a {
+  color: #E6EEF8 !important;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.pager a:hover {
+  color: #1DA4FF !important;
+  transform: translateY(-1px);
+}
+
+/* -----------------------------------------------------------
+   END OF FILE
+   ----------------------------------------------------------- */
