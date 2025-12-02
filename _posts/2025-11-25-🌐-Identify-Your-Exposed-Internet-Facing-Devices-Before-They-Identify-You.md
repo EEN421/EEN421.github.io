@@ -728,7 +728,7 @@ Don’t stop here. Grab your network inventory, fire up your scanner, and map ev
 
 Locking down these devices isn’t just about reducing noise in your logs — it’s about reclaiming control over your attack surface, cutting ingestion costs, and reducing audit risk.
 
-⚙️ So go ahead — run the scan, clean house, and harden your perimeter. If you hit surprises or want to share weird edge cases (I bet you will), ping me on LinkedIn! I sincerely hope this will help you tighten up your baseline before your next compliance push.
+So go ahead — run the scan, clean house, and harden your perimeter. If you hit surprises or want to share weird edge cases (_I bet you will_), ping me on LinkedIn! I sincerely hope this will help you tighten up your baseline before your next compliance push.
 
 ### Stay sharp out there — and may the only open ports in your environment be the ones you absolutely need. 🔐
 
