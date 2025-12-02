@@ -48,11 +48,23 @@ a:focus {
   color: #38C0FF;
 }
 
+/* --- PAGE BACKGROUND OVERRIDE ------------------------------- */
+
+body,
+html,
+.container-lg,
+.container,
+.page-content,
+.wrapper {
+  background-color: #1A1A1A !important;
+  color: #E6EEF8 !important;
+}
+
 /* --- CODE BLOCKS & INLINE CODE ------------------------------ */
 
 pre,
 code {
-  background-color: #1A1A1A !important;
+  background-color: #111319 !important;
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
   color: #E6EEF8;
@@ -74,7 +86,41 @@ pre {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HOMEPAGE HERO PANEL ------------------------------------- */
+/* --- BLOCKQUOTES -------------------------------------------- */
+
+blockquote {
+  border-left: 4px solid #1DA4FF;
+  padding-left: 1rem;
+  color: #B7C6D8;
+}
+
+/* --- DROPDOWN / NAV SEARCH FIXES ---------------------------- */
+
+.dropdown-menu {
+  background-color: #04111E;
+  border: 1px solid #0A4C8D;
+}
+
+.dropdown-item {
+  color: #D7E2F0;
+}
+
+.dropdown-item:hover {
+  background-color: #0A4C8D;
+  color: #E6EEF8;
+}
+
+#nav-search-link {
+  color: #E6EEF8 !important;
+}
+
+#nav-search-link:hover {
+  color: #38C0FF !important;
+}
+
+/* -----------------------------------------------------------
+   HOMEPAGE HERO PANEL
+   ----------------------------------------------------------- */
 
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
@@ -84,6 +130,7 @@ pre {
   margin-bottom: 2.5rem;
   box-shadow: 0 0 40px rgba(0,0,0,0.75);
   text-align: center;
+  border: 1px solid rgba(29,164,255,0.4);
 }
 
 .devsecopsdad-hero-logo {
@@ -113,35 +160,9 @@ pre {
   color: #9BA8B8;
 }
 
-/* --- MISC / UTILITY OVERRIDES ------------------------------- */
-
-.dropdown-menu {
-  background-color: #04111E;
-  border: 1px solid #0A4C8D;
-}
-
-.dropdown-item {
-  color: #D7E2F0;
-}
-
-.dropdown-item:hover {
-  background-color: #0A4C8D;
-  color: #E6EEF8;
-}
-
-#nav-search-link {
-  color: #E6EEF8 !important;
-}
-
-#nav-search-link:hover {
-  color: #38C0FF !important;
-}
-
-blockquote {
-  border-left: 4px solid #1DA4FF;
-  padding-left: 1rem;
-  color: #B7C6D8;
-}
+/* -----------------------------------------------------------
+   FOOTER LINKS
+   ----------------------------------------------------------- */
 
 footer a {
   color: #1DA4FF !important;
@@ -151,63 +172,61 @@ footer a:hover {
   color: #38C0FF !important;
 }
 
-/* --- PAGE BACKGROUND OVERRIDE (neutral dark) ---------------- */
-
-body,
-html,
-.container-lg,
-.container,
-.page-content,
-.wrapper {
-  background-color: #1A1A1A !important;
-  color: #E6EEF8 !important;
-}
-
 /* -----------------------------------------------------------
-   FOOTER SOCIAL ICON BUBBLES (WORKING FINAL FIX)
-   These icons use Font Awesome stacks, so the "bubble" is
-   actually a white <i class="fa fa-circle"> icon underneath.
-   We override that directly and reliably.
+   SOCIAL ICONS — NEON RING WITH PULSE EFFECT
    ----------------------------------------------------------- */
 
-/* NON-HOVER STATE: dark grey bubble, bright icon */
+/* Remove default FA circle fill */
 footer .social-icons .fa-stack-2x.fa-circle {
-  color: #2A2A2A !important;   /* dark grey bubble */
+  color: transparent !important;
 }
 
+/* Keyframes for subtle neon pulse */
+@keyframes neonPulse {
+  0%   { box-shadow: 0 0 8px rgba(29,164,255,0.35); }
+  50%  { box-shadow: 0 0 14px rgba(29,164,255,0.55); }
+  100% { box-shadow: 0 0 8px rgba(29,164,255,0.35); }
+}
+
+/* Default neon ring */
+footer .social-icons .fa-stack-2x {
+  border: 2px solid #1DA4FF !important;
+  border-radius: 50% !important;
+  animation: neonPulse 3s infinite ease-in-out;
+}
+
+/* Icon (inner glyph) */
 footer .social-icons .fa-stack-1x,
 footer .social-icons .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;   /* white icon */
+  color: #FFFFFF !important;
   opacity: 1 !important;
+  font-size: 1.2rem !important;
 }
 
-/* HOVER: blue bubble, white icon */
-footer .social-icons .social-icon:hover .fa-stack-2x.fa-circle {
-  color: #1DA4FF !important;   /* electric blue bubble */
+/* Hover: stronger glow and lighter blue */
+footer .social-icons .social-icon:hover .fa-stack-2x {
+  border-color: #38C0FF !important;
+  box-shadow:
+    0 0 22px rgba(56,192,255,0.75),
+    0 0 8px rgba(56,192,255,1);
 }
 
-footer .social-icons .social-icon:hover .fa-stack-1x,
-footer .social-icons .social-icon:hover .fa-stack-1x.fa-inverse {
-  color: #FFFFFF !important;   /* white icon */
-  opacity: 1 !important;
+footer .social-icons .social-icon:hover .fa-stack-1x {
+  color: #FFFFFF !important;
 }
 
-/* Make the icons slightly larger for clarity */
+/* Increase icon stack size slightly */
 footer .social-icons .fa-stack {
   width: 2.1em !important;
   height: 2.1em !important;
   line-height: 2.1em !important;
 }
 
-footer .social-icons .fa-stack-1x {
-  font-size: 1.2rem !important;
-}
-
 footer .social-icons .fa-stack-2x {
   font-size: 2.1rem !important;
 }
 
-/* Improve mobile click area */
+/* Improve touch targets */
 footer a {
   padding: 0.3rem;
 }
