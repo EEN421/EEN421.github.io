@@ -310,9 +310,4 @@ A big thank you to everyone who’s already bought a copy — if you’ve read i
 <br/>
 <br/>
 
-<a href="https://hanleycloudsolutions.com">
-    <img src="/assets/img/footer.png">
-</a>
-
-![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
-
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)

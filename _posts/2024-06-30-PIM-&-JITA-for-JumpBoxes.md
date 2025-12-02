@@ -201,8 +201,4 @@ The non-screenshot images featured in this article were generated from either [M
 <br/>
 <br/>
 
-<a href="https://hanleycloudsolutions.com">
-    <img src="/assets/img/footer.png">
-</a>
-
-![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)

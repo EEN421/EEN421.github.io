@@ -380,10 +380,5 @@ Hanley • DevSecOps Dad
 
 <br/>
 
-<a href="https://hanleycloudsolutions.com">
-    <img src="/assets/img/footer.png">
-</a>
-
-![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
-
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
 
