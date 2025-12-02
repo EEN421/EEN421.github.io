@@ -84,7 +84,7 @@ pre {
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
   background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%),
-              #020811;
+              #1A1A1A;
   border-radius: 1.5rem;
   margin-bottom: 2.5rem;
   box-shadow: 0 0 40px rgba(0,0,0,0.75);
@@ -158,4 +158,53 @@ footer a {
 
 footer a:hover {
   color: #38C0FF !important;
+}
+
+/* --- PAGE BACKGROUND OVERRIDE (neutral dark) ---------------- */
+
+body,
+html,
+.container-lg,
+.container,
+.page-content,
+.wrapper {
+  background-color: #1A1A1A !important;
+  color: #E6EEF8 !important;
+}
+
+/* --- FOOTER SOCIAL ICON VISIBILITY FIX ---------------------- */
+
+/* Font Awesome-style icons */
+footer .fa,
+footer .fab,
+footer .fas,
+footer .far {
+  color: #E6EEF8 !important;    /* bright light grey/white */
+  opacity: 1 !important;        /* remove dimming */
+}
+
+/* Hover effect for font icons */
+footer .fa:hover,
+footer .fab:hover,
+footer .fas:hover,
+footer .far:hover {
+  color: #38C0FF !important;    /* electric blue hover */
+  opacity: 1 !important;
+  transition: color 0.2s ease;
+}
+
+/* SVG icons (GitHub, LinkedIn, etc.) */
+footer svg {
+  fill: #E6EEF8 !important;
+  opacity: 1 !important;
+}
+
+footer svg:hover {
+  fill: #38C0FF !important;
+  opacity: 1 !important;
+}
+
+/* Improve clickable hitbox on mobile */
+footer a {
+  padding: 0.3rem;
 }
