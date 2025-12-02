@@ -142,7 +142,8 @@ navbar-col:        "#04111E"   # dark navy like the logo background
 navbar-text-col:   "#E6EEF8"   # light text
 navbar-children-col: "#04111E"
 
-page-col:          "#020811"   # main page background
+#page-col:          "#020811"   # main page background
+page-col:          "#FFFFFF"
 text-col:          "#D7E2F0"   # body text (works on dark bg if your Beautiful Jekyll version supports text-col)
 
 link-col:          "#1DA4FF"   # electric blue (bolt)
