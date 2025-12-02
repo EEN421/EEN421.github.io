@@ -503,8 +503,5 @@ If this kind of automation gets your gears turning, check out my book:
 - [😼 Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 
 <br/>
-<br/>
-<br/>
-<br/>
 
 ![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)

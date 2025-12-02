@@ -795,9 +795,6 @@ If this kind of automation gets your gears turning, check out my book:
 ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
 
-
-<br/>
-<br/>
 <br/>
 <br/>
 
@@ -806,9 +803,6 @@ If this kind of automation gets your gears turning, check out my book:
 - [Privileged_RBAC_Roles_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Privileged_RBAC_Roles.ps1)
 - [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
 
-<br/>
-<br/>
-<br/>
 <br/>
 
 ![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)

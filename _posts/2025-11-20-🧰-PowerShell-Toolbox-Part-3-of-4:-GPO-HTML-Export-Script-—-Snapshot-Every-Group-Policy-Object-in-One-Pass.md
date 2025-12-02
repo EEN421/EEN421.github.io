@@ -501,9 +501,7 @@ If this kind of automation gets your gears turning, check out my book:
 - [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
 - [Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 
-<br/>
-<br/>
-<br/>
+
 <br/>
 
 ![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)

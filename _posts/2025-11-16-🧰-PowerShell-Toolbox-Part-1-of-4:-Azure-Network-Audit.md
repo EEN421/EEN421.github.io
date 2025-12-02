@@ -599,32 +599,19 @@ If this kind of automation gets your gears turning, check out my book:
 
 ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
-
-
-<br/>
-<br/>
 <br/>
 <br/>
 
 # 🔗 References (good to keep handy)
 
 - [Cloud_Network_Assessment.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/Cloud_Network_Assessment.ps1)
-
 - [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
-
 - [Azure permissions - Azure RBAC](https://docs.azure.cn/en-us/role-based-access-control/resource-provider-operations)
-
 - [Azure permissions for Networking](https://learn.microsoft.com/en-us/azure/role-based-access-control/permissions/networking)
-
 - [Get-AzVirtualNetworkGatewayConnection (Az.Network)](https://learn.microsoft.com/en-us/powershell/module/az.network/get-azvirtualnetworkgatewayconnection?view=azps-14.6.0)
-
 - [About ExpressRoute roles and permissions](https://learn.microsoft.com/en-us/azure/expressroute/roles-permissions)
-
 - [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)
 
-<br/>
-<br/>
-<br/>
 <br/>
 
 ![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
