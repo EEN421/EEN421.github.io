@@ -3,7 +3,20 @@
    Applies site-wide via site-css in _config.yml
    ----------------------------------------------------------- */
 
+/* --- GLOBAL LAYOUT / BACKGROUND (light touch) ------------- */
+
+html, body {
+  background-color: #020811;
+  color: #D7E2F0;
+}
+
+/* Keep content nicely centered but not cramped */
+.container-md {
+  max-width: 1100px;
+}
+
 /* --- NAVBAR BRAND TEXT ------------------------------------- */
+
 .devsecopsdad-brand {
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -11,11 +24,11 @@
 }
 
 .devsecopsdad-brand .brand-devsecops {
-  color: #1DA4FF;
+  color: #1DA4FF; /* Electric blue */
 }
 
 .devsecopsdad-brand .brand-dad {
-  color: #C0CAD8;
+  color: #C0CAD8; /* Metallic silver */
   margin-left: 0.18em;
 }
 
@@ -24,40 +37,83 @@
   border-bottom: 1px solid #0A4C8D;
 }
 
-/* --- NAVBAR AVATAR / LOGO ----------------------------------- */
+/* --- NAVBAR AVATAR / LOGO --------------------------------- */
+
 .avatar-img-border {
   border-color: #1DA4FF !important;
   box-shadow: 0 0 12px rgba(29,164,255,0.35);
 }
 
 .avatar-img {
-  border-radius: 0 !important;
+  border-radius: 0 !important; /* square logo */
 }
 
-/* --- LINK COLORS -------------------------------------------- */
-a, a:visited {
+/* --- LINK COLORS ------------------------------------------- */
+
+a,
+a:visited {
   color: #1DA4FF;
 }
 
-a:hover, a:focus {
+a:hover,
+a:focus {
   color: #38C0FF;
 }
 
-/* --- CODE BLOCKS -------------------------------------------- */
-pre, code {
-  background-color: #1A1A1A !important;
+/* --- CODE BLOCKS & INLINE CODE ---------------------------- */
+
+pre,
+code {
+  background-color: #050B14 !important;
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
   color: #E6EEF8 !important;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 
 pre {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   overflow-x: auto;
 }
 
-/* --- TAG BADGES --------------------------------------------- */
-.label-default, .tag {
+p code,
+li code {
+  padding: 0.1rem 0.3rem;
+}
+
+/* --- SIMPLE SYNTAX HIGHLIGHTING (optional, subtle) -------- */
+
+code .k,
+code .kd,
+code .kn {
+  color: #FF6B81; /* keywords */
+}
+
+code .s,
+code .s1,
+code .s2 {
+  color: #FFE083; /* strings */
+}
+
+code .n,
+code .nx,
+code .na {
+  color: #7FD3FF; /* identifiers */
+}
+
+code .c,
+code .cm,
+code .c1,
+code .cs {
+  color: #6A7A91;
+  font-style: italic;
+}
+
+/* --- TAG BADGES -------------------------------------------- */
+
+.label-default,
+.tag {
   background-color: #04111E !important;
   border: 1px solid #1DA4FF !important;
   color: #D7E2F0 !important;
@@ -65,10 +121,12 @@ pre {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HERO PANEL --------------------------------------------- */
+/* --- HOMEPAGE HERO PANEL ----------------------------------- */
+
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
-  background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%), #020811;
+  background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%),
+              #020811;
   border-radius: 1.5rem;
   margin-bottom: 2.5rem;
   box-shadow: 0 0 40px rgba(0,0,0,0.75);
@@ -102,7 +160,8 @@ pre {
   color: #9BA8B8;
 }
 
-/* --- DROPDOWNS ---------------------------------------------- */
+/* --- NAVBAR DROPDOWNS & SEARCH ---------------------------- */
+
 .dropdown-menu {
   background-color: #04111E;
   border: 1px solid #0A4C8D;
@@ -117,7 +176,7 @@ pre {
   color: #E6EEF8;
 }
 
-/* --- SEARCH BUTTON FIX -------------------------------------- */
+/* Search link in navbar */
 #nav-search-link {
   color: #E6EEF8 !important;
 }
@@ -126,84 +185,152 @@ pre {
   color: #38C0FF !important;
 }
 
-/* --- BLOCKQUOTE --------------------------------------------- */
+/* --- BLOCKQUOTES ------------------------------------------- */
+
 blockquote {
   border-left: 4px solid #1DA4FF;
   padding-left: 1rem;
   color: #B7C6D8;
 }
 
-/* --- FOOTER LINKS ------------------------------------------- */
-footer a {
+/* --- FOOTER TEXT & LINKS ----------------------------------- */
+
+.beautiful-jekyll-footer .copyright,
+.beautiful-jekyll-footer .theme-by {
+  color: #9BA8B8 !important;
+}
+
+.beautiful-jekyll-footer a {
   color: #1DA4FF !important;
 }
 
-footer a:hover {
+.beautiful-jekyll-footer a:hover {
   color: #38C0FF !important;
 }
 
-/* -----------------------------------------------------------
-   FOOTER SOCIAL ICON FIX
-   Target FA circle background + icon
-   ----------------------------------------------------------- */
+/* ===========================================================
+   1) PAGINATION – "Older Posts" / "Newer Posts"
+   HTML (from DevTools):
+   <ul class="pagination main-pager">
+     <li class="page-item next">
+       <a class="page-link" href="...">Older Posts →</a>
+     </li>
+   </ul>
+   =========================================================== */
 
-.footer-links .fa-stack {
-  height: 2.5rem !important;
-  width: 2.5rem !important;
-  margin: 0 0.2rem;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
+.pagination.main-pager {
+  justify-content: center;                 /* center it */
+  margin: 2rem 0;
 }
 
-.footer-links .fa-circle.fa-stack-2x {
-  color: #28323F !important; /* darker neutral background */
-}
-
-.footer-links .fa-inverse {
-  color: #E6EEF8 !important; /* bright white icon */
-}
-
-/* Hover = neon blue pulse */
-.footer-links a:hover .fa-circle.fa-stack-2x {
-  color: #1DA4FF !important;
-  box-shadow: 0 0 10px #1DA4FF;
-}
-
-.footer-links a:hover .fa-inverse {
-  color: #020811 !important;
-}
-
-.footer-links a:hover .fa-stack {
-  transform: scale(1.08);
-}
-
-/* -----------------------------------------------------------
-   FIX "OLDER POSTS" / "NEWER POSTS" PAGER BUTTONS
-   ----------------------------------------------------------- */
-
-.pager {
-  background-color: #04111E !important; /* match site background */
-  padding: 1.2rem;
-  border-radius: 0.75rem;
-  text-align: center;
-  border: 1px solid #0A4C8D;
-  box-shadow: 0 0 12px rgba(0,0,0,0.5);
-  margin-top: 2rem;
-}
-
-.pager a {
-  color: #E6EEF8 !important;
+.pagination.main-pager .page-item .page-link {
+  background-color: #04111E !important;   /* dark pill */
+  color: #E6EEF8 !important;              /* bright text */
+  border-radius: 999px;                   /* pill shape */
+  border: 1px solid #1DA4FF !important;   /* DevSecOpsDad blue border */
+  padding: 0.6rem 1.8rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+  transition:
+    background-color 0.18s ease-out,
+    color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    transform 0.15s ease-out;
 }
 
-.pager a:hover {
-  color: #1DA4FF !important;
+/* Hover / focus */
+.pagination.main-pager .page-item .page-link:hover,
+.pagination.main-pager .page-item .page-link:focus {
+  background-color: #1DA4FF !important;
+  color: #020811 !important;
+  box-shadow:
+    0 0 16px rgba(29,164,255,0.85),
+    0 0 4px rgba(0,0,0,0.9);
   transform: translateY(-1px);
 }
 
-/* -----------------------------------------------------------
-   END OF FILE
-   ----------------------------------------------------------- */
+/* Disabled, if Beautiful Jekyll outputs it */
+.pagination.main-pager .page-item.disabled .page-link {
+  background-color: #141824 !important;
+  border-color: #444C5A !important;
+  color: #6F7B8D !important;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* ===========================================================
+   2) FOOTER SOCIAL ICONS
+   HTML (from DevTools):
+   <ul class="list-inline text-center footer-links">
+     <li class="list-inline-item">
+       <a href="https://github.com/EEN421" title="GitHub">
+         <span class="fa-stack fa-lg" aria-hidden="true">
+           <i class="fas fa-circle fa-stack-2x"></i>
+           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+         </span>
+         <span class="sr-only">GitHub</span>
+       </a>
+     </li>
+   </ul>
+   We’ll ignore the circle glyph and draw our own bubble on the span.
+   =========================================================== */
+
+/* Layout for footer icon row */
+.beautiful-jekyll-footer .footer-links {
+  margin-bottom: 0.75rem;
+}
+
+/* Base bubble on the span.fa-stack */
+.beautiful-jekyll-footer .footer-links .fa-stack.fa-lg {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background-color: #04111E !important;        /* dark disc */
+  border: 1px solid rgba(29,164,255,0.8) !important;
+  box-shadow:
+    0 0 6px rgba(0,0,0,0.9),
+    0 0 10px rgba(29,164,255,0.35);
+  transition:
+    background-color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    transform 0.15s ease-out;
+}
+
+/* Hide the Font Awesome circle glyph – we don't need its color */
+.beautiful-jekyll-footer .footer-links .fa-stack.fa-lg .fas.fa-circle.fa-stack-2x {
+  display: none !important;
+}
+
+/* Actual icons (GitHub, Twitter, LinkedIn) */
+.beautiful-jekyll-footer .footer-links .fa-stack.fa-lg .fa-stack-1x,
+.beautiful-jekyll-footer .footer-links .fa-stack.fa-lg .fa-stack-1x.fa-inverse {
+  color: #E6EEF8 !important;       /* bright white symbol */
+  font-size: 1.3rem;
+  opacity: 1 !important;
+  text-shadow: 0 0 4px rgba(0,0,0,0.7);
+}
+
+/* Hover: electric-blue bubble, dark icon for contrast */
+.beautiful-jekyll-footer .footer-links a:hover .fa-stack.fa-lg {
+  background-color: #1DA4FF !important;
+  box-shadow:
+    0 0 14px rgba(29,164,255,0.9),
+    0 0 24px rgba(29,164,255,0.6);
+  transform: translateY(-1px);
+}
+
+.beautiful-jekyll-footer .footer-links a:hover .fa-stack.fa-lg .fa-stack-1x,
+.beautiful-jekyll-footer .footer-links a:hover .fa-stack.fa-lg .fa-stack-1x.fa-inverse {
+  color: #020811 !important;
+}
+
+/* Slight spacing between icons */
+.beautiful-jekyll-footer .footer-links .list-inline-item {
+  margin: 0 0.35rem;
+}
