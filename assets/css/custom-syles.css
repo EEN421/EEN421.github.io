@@ -1,0 +1,161 @@
+/* -----------------------------------------------------------
+   DevSecOpsDad Custom Brand Styles
+   Applies site-wide via site-css in _config.yml
+   ----------------------------------------------------------- */
+
+/* --- NAVBAR BRAND TEXT ------------------------------------- */
+
+.devsecopsdad-brand {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.devsecopsdad-brand .brand-devsecops {
+  color: #1DA4FF; /* Electric blue (bolt) */
+}
+
+.devsecopsdad-brand .brand-dad {
+  color: #C0CAD8; /* Metallic silver */
+  margin-left: 0.18em;
+}
+
+/* Navbar border glow effect */
+.navbar-custom {
+  border-bottom: 1px solid #0A4C8D;
+}
+
+/* --- NAVBAR AVATAR / LOGO ----------------------------------- */
+
+.avatar-img-border {
+  border-color: #1DA4FF !important;
+  box-shadow: 0 0 12px rgba(29,164,255,0.35);
+}
+
+/* Ensure avatar shape stays square if round-avatar is false */
+.avatar-img {
+  border-radius: 0 !important;
+}
+
+/* --- LINK COLORS (reinforce theme even if theme CSS overrides) --- */
+
+a,
+a:visited {
+  color: #1DA4FF;
+}
+
+a:hover,
+a:focus {
+  color: #38C0FF;
+}
+
+/* --- CODE BLOCKS & INLINE CODE ------------------------------ */
+
+pre,
+code {
+  background-color: #050B13 !important;
+  border-radius: 0.75rem;
+  border: 1px solid #0A4C8D !important;
+  color: #D7E2F0;
+}
+
+/* Make code blocks pop visually */
+pre {
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* --- TAG BADGES --------------------------------------------- */
+
+.label-default,
+.tag {
+  background-color: #04111E !important;
+  border: 1px solid #1DA4FF !important;
+  color: #D7E2F0 !important;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.5rem;
+}
+
+/* --- HOMEPAGE HERO PANEL -------------------------------------
+   This applies only if you enable:
+   before-content: devsecopsdad-hero.html
+   ----------------------------------------------------------- */
+
+.devsecopsdad-hero {
+  padding: 3rem 1rem 2.5rem;
+  background: radial-gradient(circle at top, rgba(29,164,255,0.23) 0, transparent 55%),
+              #020811;
+  border-radius: 1.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 0 40px rgba(0,0,0,0.75);
+  text-align: center;
+}
+
+.devsecopsdad-hero-logo {
+  width: 140px;
+  max-width: 40vw;
+  margin-bottom: 1.25rem;
+}
+
+.devsecopsdad-hero-title {
+  margin-bottom: 0.25rem;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.devsecopsdad-hero-title .brand-devsecops {
+  color: #1DA4FF;
+}
+
+.devsecopsdad-hero-title .brand-dad {
+  color: #C0CAD8;
+}
+
+.devsecopsdad-hero-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  color: #9BA8B8;
+}
+
+/* --- MISC / UTILITY OVERRIDES ------------------------------- */
+
+/* Make dropdown menus match dark theme */
+.dropdown-menu {
+  background-color: #04111E;
+  border: 1px solid #0A4C8D;
+}
+
+.dropdown-item {
+  color: #D7E2F0;
+}
+
+.dropdown-item:hover {
+  background-color: #0A4C8D;
+  color: #E6EEF8;
+}
+
+/* Fix search button in dark navbar */
+#nav-search-link {
+  color: #E6EEF8 !important;
+}
+
+#nav-search-link:hover {
+  color: #38C0FF !important;
+}
+
+/* Better blockquote visibility on dark backgrounds */
+blockquote {
+  border-left: 4px solid #1DA4FF;
+  padding-left: 1rem;
+  color: #B7C6D8;
+}
+
+/* Improve footer link contrast */
+footer a {
+  color: #1DA4FF !important;
+}
+
+footer a:hover {
+  color: #38C0FF !important;
+}
