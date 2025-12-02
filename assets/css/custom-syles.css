@@ -1,7 +1,20 @@
 /* -----------------------------------------------------------
    DevSecOpsDad Custom Brand Styles
    Applies site-wide via site-css in _config.yml
+   Path: assets/css/custom-styles.css
    ----------------------------------------------------------- */
+
+/* --- GLOBAL LAYOUT / BACKGROUND --------------------------- */
+
+html, body {
+  background-color: #020811;
+  color: #D7E2F0;
+}
+
+/* Keep content nicely centered but not cramped */
+.container-md {
+  max-width: 1100px;
+}
 
 /* --- NAVBAR BRAND TEXT ------------------------------------- */
 
@@ -12,7 +25,7 @@
 }
 
 .devsecopsdad-brand .brand-devsecops {
-  color: #1DA4FF; /* Electric blue */
+  color: #1DA4FF; /* Electric blue (bolt) */
 }
 
 .devsecopsdad-brand .brand-dad {
@@ -25,7 +38,7 @@
   border-bottom: 1px solid #0A4C8D;
 }
 
-/* --- NAVBAR AVATAR / LOGO ----------------------------------- */
+/* --- NAVBAR AVATAR / LOGO --------------------------------- */
 
 .avatar-img-border {
   border-color: #1DA4FF !important;
@@ -33,10 +46,10 @@
 }
 
 .avatar-img {
-  border-radius: 0 !important;
+  border-radius: 0 !important; /* keep square logo */
 }
 
-/* --- LINK COLORS -------------------------------------------- */
+/* --- LINK COLORS (GLOBAL) --------------------------------- */
 
 a,
 a:visited {
@@ -48,36 +61,58 @@ a:focus {
   color: #38C0FF;
 }
 
-/* --- PAGE BACKGROUND OVERRIDE ------------------------------- */
-
-body,
-html,
-.container-lg,
-.container,
-.page-content,
-.wrapper {
-  background-color: #1A1A1A !important;
-  color: #E6EEF8 !important;
-}
-
-/* --- CODE BLOCKS & INLINE CODE ------------------------------ */
+/* --- CODE BLOCKS & INLINE CODE ---------------------------- */
 
 pre,
 code {
-  background-color: #111319 !important;
+  background-color: #050B14 !important;
   border-radius: 0.75rem;
   border: 1px solid #0A4C8D !important;
   color: #E6EEF8;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* Make code blocks pop visually */
 pre {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   overflow-x: auto;
 }
 
-/* --- TAG BADGES --------------------------------------------- */
+/* Inline code smaller padding */
+p code,
+li code {
+  padding: 0.1rem 0.3rem;
+}
+
+/* --- SIMPLE BRANDED SYNTAX HIGHLIGHTING ------------------- */
+
+code .k,      /* keyword */
+code .kd,
+code .kn {
+  color: #FF6B81; /* pinkish red */
+}
+
+code .s,      /* string */
+code .s1,
+code .s2 {
+  color: #FFE083; /* warm yellow */
+}
+
+code .n,      /* name */
+code .nx,
+code .na {
+  color: #7FD3FF; /* light cyan */
+}
+
+code .c,      /* comment */
+code .cm,
+code .c1,
+code .cs {
+  color: #6A7A91;
+  font-style: italic;
+}
+
+/* --- TAG BADGES ------------------------------------------- */
 
 .label-default,
 .tag {
@@ -88,7 +123,10 @@ pre {
   padding: 0.2rem 0.5rem;
 }
 
-/* --- HOMEPAGE HERO PANEL ------------------------------------- */
+/* --- HOMEPAGE HERO PANEL -----------------------------------
+   Applies if you include devsecopsdad-hero.html via:
+   before-content: [devsecopsdad-hero.html]
+   --------------------------------------------------------- */
 
 .devsecopsdad-hero {
   padding: 3rem 1rem 2.5rem;
@@ -127,7 +165,7 @@ pre {
   color: #9BA8B8;
 }
 
-/* --- DROPDOWN & SEARCH --------------------------------------- */
+/* --- NAVBAR DROPDOWNS & SEARCH ---------------------------- */
 
 .dropdown-menu {
   background-color: #04111E;
@@ -143,6 +181,7 @@ pre {
   color: #E6EEF8;
 }
 
+/* Fix search button in dark navbar */
 #nav-search-link {
   color: #E6EEF8 !important;
 }
@@ -151,7 +190,7 @@ pre {
   color: #38C0FF !important;
 }
 
-/* --- BLOCKQUOTES -------------------------------------------- */
+/* --- BLOCKQUOTES ------------------------------------------ */
 
 blockquote {
   border-left: 4px solid #1DA4FF;
@@ -159,81 +198,123 @@ blockquote {
   color: #B7C6D8;
 }
 
-/* --- FOOTER LINKS (text) ------------------------------------ */
+/* --- FOOTER & SOCIAL ICONS --------------------------------
+   This is the important part for the “bubbles” issue.
+   We:
+     1) Hide Font Awesome’s inner circle glyph
+     2) Style the .fa-stack wrapper as our neon ring
+   --------------------------------------------------------- */
 
-footer a {
+/* Footer background & text already set via _config.yml,
+   but we reinforce a bit here just in case */
+.beautiful-jekyll-footer {
+  background-color: #020811;
+  padding-top: 1.75rem;
+  padding-bottom: 1.75rem;
+}
+
+/* Layout for the icons */
+.footer-links {
+  margin-bottom: 0.75rem;
+}
+
+/* Space icons out a bit */
+.footer-links .list-inline-item {
+  margin: 0 0.4rem;
+}
+
+/* Base style for the stacked icon wrapper */
+.footer-links .fa-stack {
+  position: relative;
+  width: 2.5em;
+  height: 2.5em;
+  line-height: 2.5em;
+  border-radius: 50%;
+  background-color: #0B1520 !important;           /* dark disc so it’s visible on footer */
+  border: 1px solid rgba(29,164,255,0.7) !important;
+  box-shadow:
+    0 0 6px rgba(0,0,0,0.9),
+    0 0 12px rgba(29,164,255,0.35);
+  transition:
+    background-color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    transform 0.18s ease-out;
+}
+
+/* Hide the Font Awesome inner circle glyph – we don’t need it */
+.footer-links .fa-stack-2x.fa-circle {
+  color: transparent !important;
+}
+
+/* Actual brand glyph (GitHub/Twitter/LinkedIn) */
+.footer-links .fa-stack-1x.fa-inverse {
+  color: #E6EEF8 !important;
+  text-shadow: 0 0 4px rgba(0,0,0,0.65);
+}
+
+/* Neutral (non-hover) state: subtle neon pulse */
+.footer-links .fa-stack {
+  animation: footerPulse 3.2s ease-in-out infinite;
+}
+
+/* Hover: go full electric blue + slight lift */
+.footer-links a:hover .fa-stack {
+  background-color: #1DA4FF !important;
+  box-shadow:
+    0 0 14px rgba(29,164,255,0.9),
+    0 0 28px rgba(29,164,255,0.65);
+  transform: translateY(-1px);
+}
+
+/* On hover, flip icon to dark so it reads on blue */
+.footer-links a:hover .fa-stack-1x.fa-inverse {
+  color: #020811 !important;
+}
+
+/* Pulse animation for the ring */
+@keyframes footerPulse {
+  0% {
+    box-shadow:
+      0 0 6px rgba(0,0,0,0.9),
+      0 0 12px rgba(29,164,255,0.25);
+    border-color: rgba(29,164,255,0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(0,0,0,0.9),
+      0 0 18px rgba(29,164,255,0.6);
+    border-color: rgba(29,164,255,0.95);
+  }
+  100% {
+    box-shadow:
+      0 0 6px rgba(0,0,0,0.9),
+      0 0 12px rgba(29,164,255,0.25);
+    border-color: rgba(29,164,255,0.6);
+  }
+}
+
+/* Footer text & links */
+.beautiful-jekyll-footer .copyright,
+.beautiful-jekyll-footer .theme-by {
+  color: #9BA8B8 !important;
+}
+
+.beautiful-jekyll-footer a {
   color: #1DA4FF !important;
 }
 
-footer a:hover {
+.beautiful-jekyll-footer a:hover {
   color: #38C0FF !important;
 }
 
-/* -----------------------------------------------------------
-   FOOTER SOCIAL ICONS — HARD OVERRIDE
-   Ignore FA's bubble, draw our own on the <a>.
-   ----------------------------------------------------------- */
+/* --- MISC UTILITIES --------------------------------------- */
 
-/* 1) Hide the "background" icon inside the stack entirely */
-.footer-links .fa-stack-2x {
-  display: none !important;
+/* Make sure intro header doesn’t eat vertical space */
+.intro-header {
+  margin-bottom: 1.5rem;
 }
 
-/* 2) Turn the <a> itself into a circular bubble */
-.footer-links .list-inline-item a {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 2.4rem !important;
-  height: 2.4rem !important;
-  border-radius: 50% !important;
-  background-color: #2A2A2A !important;   /* dark grey bubble */
-  text-decoration: none !important;
-  padding: 0 !important;
-  margin: 0 0.15rem !important;
-  box-shadow: none !important;
-}
-
-/* 3) Style the actual icon glyph */
-.footer-links .list-inline-item a .fa-stack-1x,
-.footer-links .list-inline-item a .fa-stack-1x.fa-inverse,
-.footer-links .list-inline-item a i.fab,
-.footer-links .list-inline-item a i.fas {
-  color: #FFFFFF !important;             /* bright white icon */
-  opacity: 1 !important;
-  font-size: 1.2rem !important;
-}
-
-/* 4) Hover state: blue bubble, white icon */
-.footer-links .list-inline-item a:hover {
-  background-color: #1DA4FF !important;  /* DevSecOpsDad blue */
-}
-
-.footer-links .list-inline-item a:hover .fa-stack-1x,
-.footer-links .list-inline-item a:hover .fa-stack-1x.fa-inverse,
-.footer-links .list-inline-item a:hover i.fab,
-.footer-links .list-inline-item a:hover i.fas {
-  color: #FFFFFF !important;
-  opacity: 1 !important;
-}
-
-/* 5) Slight hover scale for feedback */
-.footer-links .list-inline-item a {
-  transition: transform 0.15s ease, background-color 0.15s ease;
-}
-
-.footer-links .list-inline-item a:hover {
-  transform: scale(1.05);
-}
-
-/* 6) Make sure the sr-only spans don't affect layout */
-.footer-links .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  border: 0;
+/* A little breathing room under the main content before footer */
+[role="main"] {
+  padding-bottom: 2.5rem;
 }
