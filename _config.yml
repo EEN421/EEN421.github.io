@@ -11,6 +11,7 @@
 
 # Name of website
 title: hanley.cloud | DevSecOpsDad.com
+subtitle: "Microsoft XDR, KQL, Real-World Security Engineering, & Random Nerd Stuff"
 
 # Your name to show in the footer
 author: Ian D. Hanley
@@ -133,17 +134,37 @@ keywords: "Microsoft,Sentinel,Defender,Azure,Cloud,Cyber,Security,DevSecOps,KQL,
 
 # Personalize the colours in your website. Colour values can be any valid CSS colour
 
-navbar-col: "#EAEAEA"
-navbar-text-col: "#404040"
-navbar-border-col: "#DDDDDD"
-page-col: "#FFFFFF"
-text-col: "#404040"
-link-col: "#008AFF"
-hover-col: "#0085A1"
-footer-col: "#EAEAEA"
-footer-text-col: "#777777"
-footer-link-col: "#404040"
-footer-hover-col: "#0085A1"
+# --- DevSecOpsDad color scheme ---
+navbar-col:        "#04111E"   # dark navy like the logo background
+navbar-text-col:   "#E6EEF8"   # light text
+navbar-children-col: "#04111E"
+
+page-col:          "#020811"   # main page background
+text-col:          "#D7E2F0"   # body text (works on dark bg if your Beautiful Jekyll version supports text-col)
+
+link-col:          "#1DA4FF"   # electric blue (bolt)
+hover-col:         "#38C0FF"   # lighter blue hover
+
+footer-col:        "#020811"
+footer-text-col:   "#9BA8B8"
+footer-link-col:   "#E6EEF8"
+navbar-border-col: "#0A4C8D"   # subtle border in mid-blue
+
+##########################################
+# --- Original Beautiful Jekyll Theme --- 
+##########################################
+#navbar-col: "#EAEAEA"
+#navbar-text-col: "#404040"
+#navbar-border-col: "#DDDDDD"
+#page-col: "#FFFFFF"
+#text-col: "#404040"
+#link-col: "#008AFF"
+#hover-col: "#0085A1"
+#footer-col: "#EAEAEA"
+#footer-text-col: "#777777"
+#footer-link-col: "#404040"
+#footer-hover-col: "#0085A1"
+#########################################
 
 # Alternatively, the navbar, footer, and page background can be set to an image
 # instead of colour
