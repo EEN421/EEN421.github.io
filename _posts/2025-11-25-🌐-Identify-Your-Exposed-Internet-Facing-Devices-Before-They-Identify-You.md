@@ -3,7 +3,7 @@
 
 If you’ve spent any amount of time in Microsoft Defender, you’ve definitely seen the `IsInternetFacing` field in `DeviceInfo` and thought: _“Cool… Microsoft already tells me what’s Internet-facing. Easy win!”_ — But is it _really??_ 🤔
 
-You'll want to know for the following **_really good_** reasons:
+⚡You'll want to know for the following **_really good_** reasons...👇
 
 
 ### 🔐 NIST Cybersecurity Framework (CSF)
@@ -97,17 +97,16 @@ Internet-facing endpoints are the _**first thing**_ your CMMC assessor will ask 
 <br/><br/>
 
 # 🌐 How to *Actually* Identify Internet-Facing Devices with KQL
-### (*Because sometimes “IsInternetFacing = true” just lies to you.*)
+### (*Because sometimes “IsInternetFacing = true” just lies to you 🙈*)
 
-And then—after about seven seconds of experience in the real world—you learned the truth:
+And then—after about seven seconds of experience in the real world—you learn the truth:
 * Some devices **are Internet-exposed but not flagged**
 * Some devices **were briefly exposed**, but the flag didn’t update
 * Some devices **make outbound connections that *look* inbound**
 * Cloud networks, hybrid appliances, VPN concentrators, and IoT junk…
   …**absolutely do not care** about that boolean flag
 
-So today, we’re leveling up.
-We’re diving into a **multi-signal, evidence-driven** KQL detection like an **attack surface samurai** cutting straight to the point: **“Which of my machines is exposed to the public Internet?”** And we’re answering it using telemetry—not hope.
+⬆️ So today, we’re leveling up. We’re diving into a **multi-signal, evidence-driven** KQL detection like an **attack surface samurai** cutting straight to the point: **“Which of my machines is exposed to the public Internet?”** And we’re answering it _using **telemetry**—not hope_.
 
 <br/> <br/>
 
@@ -125,7 +124,7 @@ But Internet exposure isn’t a simple binary state—it's a pattern of behavior
 * Does it listen on remote-access ports where outsiders connect?
 * Does Defender *think* it's internet-facing?
 
-This blog post covers a **KQL query that unifies all of these signals** into one answer.
+This blog post covers a **KQL query that unifies all of these signals** into one answer. Let's break it down... 👇
 
 <br/><br/><br/><br/>
 
