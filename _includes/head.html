@@ -169,4 +169,128 @@
     {% endfor %}
   {% endif %}
 
+ <!-- BEGIN DevSecOpsDad hard overrides: pager + footer icons -->
+  <style>
+    /* ======================================================
+       Pagination: "Older Posts" / "Newer Posts"
+       HTML:
+       <ul class="pagination main-pager">
+         <li class="page-item next">
+           <a class="page-link" href="...">Older Posts →</a>
+         </li>
+       </ul>
+       ====================================================== */
+
+    .pagination.main-pager {
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .pagination.main-pager .page-item .page-link {
+      background-color: #04111E !important;   /* dark pill */
+      color: #E6EEF8 !important;              /* bright text */
+      border-radius: 999px;                   /* pill shape */
+      border: 1px solid #1DA4FF !important;   /* DevSecOpsDad blue */
+      padding: 0.6rem 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 0 12px rgba(0,0,0,0.6);
+      transition:
+        background-color 0.18s ease-out,
+        color 0.18s ease-out,
+        box-shadow 0.18s ease-out,
+        transform 0.15s ease-out;
+    }
+
+    .pagination.main-pager .page-item .page-link:hover,
+    .pagination.main-pager .page-item .page-link:focus {
+      background-color: #1DA4FF !important;
+      color: #020811 !important;
+      box-shadow:
+        0 0 16px rgba(29,164,255,0.85),
+        0 0 4px rgba(0,0,0,0.9);
+      transform: translateY(-1px);
+    }
+
+    .pagination.main-pager .page-item.disabled .page-link {
+      background-color: #141824 !important;
+      border-color: #444C5A !important;
+      color: #6F7B8D !important;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    /* ======================================================
+       Footer social icons
+       HTML:
+       <ul class="list-inline text-center footer-links">
+         <li class="list-inline-item">
+           <a href="...">
+             <span class="fa-stack fa-lg">
+               <i class="fas fa-circle fa-stack-2x"></i>
+               <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+             </span>
+           </a>
+         </li>
+       </ul>
+       ====================================================== */
+
+    .beautiful-jekyll-footer .footer-links {
+      margin-bottom: 0.75rem;
+    }
+
+    .beautiful-jekyll-footer .footer-links .list-inline-item {
+      margin: 0 0.35rem;
+    }
+
+    /* Make the span itself the bubble */
+    .beautiful-jekyll-footer .footer-links .fa-stack.fa-lg {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.6rem;
+      height: 2.6rem;
+      border-radius: 50%;
+      background-color: #04111E !important;        /* dark disc */
+      border: 1px solid rgba(29,164,255,0.8) !important;
+      box-shadow:
+        0 0 6px rgba(0,0,0,0.9),
+        0 0 10px rgba(29,164,255,0.35);
+      transition:
+        background-color 0.18s ease-out,
+        box-shadow 0.18s ease-out,
+        transform 0.15s ease-out;
+    }
+
+    /* Hide the FA circle glyph so its color doesn’t matter */
+    .beautiful-jekyll-footer .footer-links .fa-stack.fa-lg .fas.fa-circle.fa-stack-2x {
+      display: none !important;
+    }
+
+    /* The actual GitHub/Twitter/LinkedIn icons */
+    .beautiful-jekyll-footer .footer-links .fa-stack.fa-lg .fa-stack-1x,
+    .beautiful-jekyll-footer .footer-links .fa-stack.fa-lg .fa-stack-1x.fa-inverse {
+      color: #E6EEF8 !important;       /* bright white icon */
+      font-size: 1.3rem;
+      opacity: 1 !important;
+      text-shadow: 0 0 4px rgba(0,0,0,0.7);
+    }
+
+    /* Hover: blue bubble, dark icon */
+    .beautiful-jekyll-footer .footer-links a:hover .fa-stack.fa-lg {
+      background-color: #1DA4FF !important;
+      box-shadow:
+        0 0 14px rgba(29,164,255,0.9),
+        0 0 24px rgba(29,164,255,0.6);
+      transform: translateY(-1px);
+    }
+
+    .beautiful-jekyll-footer .footer-links a:hover .fa-stack.fa-lg .fa-stack-1x,
+    .beautiful-jekyll-footer .footer-links a:hover .fa-stack.fa-lg .fa-stack-1x.fa-inverse {
+      color: #020811 !important;
+    }
+  </style>
+  
 </head>
