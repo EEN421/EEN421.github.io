@@ -775,10 +775,5 @@ If this kind of automation gets your gears turning, check out my book:
 <br/>
 <br/>
 
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
 
-
-<a href="https://hanleycloudsolutions.com">
-    <img src="/assets/img/footer.png">
-</a>
-
-![www.hanley.cloud](/assets/img/IoT%20Hub%202/footer.png)
