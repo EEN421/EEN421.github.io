@@ -434,12 +434,12 @@ Then we filter to devices with more than 5 inbound connections; this is great fo
 
 <br/>
 
->😎 **Pro-Tip** 👉 Some devices can literally have public IPs **assigned directly** to a network interface, such as:
->- Web servers
->- Firewalls
->- VPN appliances
->- Load balancers
->- Cloud VMs with public NICs
+😎 **Pro-Tip** 👉 Some devices can literally have public IPs **assigned directly** to a network interface, such as:
+- Web servers
+- Firewalls
+- VPN appliances
+- Load balancers
+- Cloud VMs with public NICs
 
 <br/>
 
