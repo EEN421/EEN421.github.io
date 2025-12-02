@@ -290,19 +290,23 @@
     }
 
     /* ======================================================
-       Keep "DevSecOpsDad" on one line in the page title
-       (your index.html uses <h1 class="page-title"><a>DevSecOpsDad</a></h1>)
+       Keep "DevSecOpsDad" on one line in the big header title
+       (Beautiful Jekyll uses .page-heading h1 on the home layout)
        ====================================================== */
+
+    .page-heading h1,
+    .page-heading h1 a,
+    h1.page-title,
     h1.page-title a {
       white-space: nowrap !important;
       display: inline-block;
     }
 
-    /* Slightly scale the title down on very small screens
-       so it fits comfortably on one line */
+    /* Scale that big title down on very small screens so it fits */
     @media (max-width: 480px) {
+      .page-heading h1,
       h1.page-title {
-        font-size: 2.4rem !important;
+        font-size: 2.2rem !important;
         line-height: 1.1;
       }
     }
