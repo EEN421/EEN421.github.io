@@ -203,7 +203,7 @@ foreach ($gpo in $GPOs) {
     }
 }
 ```
-☝️ This is a standard foreach loop that goes through one iteration per GPO. The ```try { ... }``` and ```catch { ... }``` statements ensure that if one GPO export fails, the script logs a warning and continues with the others instead of dying halfway through (This type of error handling is also sometimes referred to as **throw/catch**).
+☝️ This is a standard foreach loop that goes through one iteration per GPO. The ```try { ... }``` and ```catch { ... }``` statements ensure that if one GPO export fails, the script logs a warning and continues with the others instead of dying halfway through (This type of error handling is also sometimes referred to as **throw/catch** or **Error Trapping**).
 
 <br/>
 <br/>
