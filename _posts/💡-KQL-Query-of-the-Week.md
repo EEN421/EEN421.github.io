@@ -1,6 +1,15 @@
-# KQL Query of the Week #1
+# 👋 Welcome to KQL Query of the Week
+Welcome to a new series on DevSecOpsDad.com where each week I break down a practical, real-world KQL query you can drop straight into Microsoft Sentinel or Defender to level-up your SecOps workflow. No fluff — just fast, actionable insights that help you understand your environment, reduce noise, tune costs, and strengthen detection logic.
 
-### **Visualize and Price Your Billable Ingest for the Last 90 Days**
+We’re kicking things off with a foundational query every security team should know:
+“Show me my billable ingest patterns over the last 90 days — and tell me what it’s costing me.”
+
+If you’ve ever opened Cost Analysis and thought, “Okay…but what actually caused this spike?”
+This week’s query is your new best friend.
+
+Let’s dive in.
+
+### **Visualize and Price Your Billable Ingest Trends**
 
 If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re basically swiping your corporate credit card with the lights off.
 
@@ -17,11 +26,11 @@ We’re going to look at two versions of the same query:
 
 ```kql
 // Query 1
-Usage                                                                               // <--Query the Usage table
-| where TimeGenerated > ago(90d)                                                    // <--Query the last 90 days
-| where IsBillable == true                                                          // <--Only include 'billable' data
+Usage                                    // <--Query the Usage table
+| where TimeGenerated > ago(90d)         // <--Query the last 90 days
+| where IsBillable == true               // <--Only include 'billable' data
 | summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution    // <--Chop it up into GB / Day
-| render columnchart                                                                // <--Graph the results
+| render columnchart                     // <--Graph the results
 ```
 
 ### Line-by-line breakdown
@@ -61,6 +70,8 @@ This line does a lot of work:
 
   * `bin(StartTime, 1d)` – Buckets by **day** (based on `StartTime`).
   * `Solution` – Breaks the totals down per **solution** (e.g., `Security`, `SecurityInsights`, `Microsoft Sentinel`, etc.).
+
+<br/>
 
 So you end up with:
 
@@ -102,11 +113,11 @@ Let’s look at the upgraded version:
 ```kql
 // Query 2
 // The below query will return the total billable GB and incurred cost per day. 
-Usage                                                                               // <--Query the Usage table
-| where TimeGenerated > ago(90d)                                                    // <--Query the last 90 days
-| where IsBillable == true                                                          // <--Only include 'billable' data
+Usage                                  // <--Query the Usage table
+| where TimeGenerated > ago(90d)       // <--Query the last 90 days
+| where IsBillable == true             // <--Only include 'billable' data
 | summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by bin(StartTime, 1d)    // <--Chop it up into GB / Day
-| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2))                         // <--Round to 2 decimal places, calculate the cost, and prepend '$'
+| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2))   // <--Round to 2 decimal places, calculate the cost, and prepend '$'
 ```
 
 ### What’s new vs Query 1?
@@ -156,6 +167,8 @@ This is where we turn GB into dollars:
 * `round(..., 2)` – Round the result to 2 decimal places (normal currency formatting).
 * `strcat('$', ...)` – Prepend a `$` so it reads like `"$512.78"` instead of just `512.78`.
 
+<br/>
+
 End result:
 
 | StartTime  | TotalVolumeGB | cost    |
@@ -198,6 +211,6 @@ This will give you a nice **“Cost per day”** chart.
   * “What did we spend this month?” conversations
   * Feeding into reports, dashboards, or cost management workflows
 
-In a typical DevSecOps flow, I’d run **Query 2 first** to see the total cost curve, then pivot to **Query 1** (or variants of it) to figure out **who** the biggest offenders are.
+
 
 
