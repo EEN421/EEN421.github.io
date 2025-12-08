@@ -280,6 +280,8 @@ And because the names sound similar, the confusion never totally went away — w
   * “Which solution is killing me?” analysis
   * Great starting point for hunting noisy connectors or tables
 
+<br/>
+
 * **Query 2 – Daily Total + Cost**
 
   * Budgeting / forecasting
