@@ -154,7 +154,7 @@ This is your **daily billable volume** in GB.
 
 This is where we turn GB into dollars:
 
-* `TotalVolumeGB * 4.30` – We assume a price of **$4.30 per GB**.
+* `TotalVolumeGB * 4.30` – We assume a price of **$4.30 per GB** (this is the cost per GB on the pay-as-you-go commitment tier for the Eastern US region, you can find your cost per GB on [Microsoft's offical pricing page for Sentinel](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)).
 
   * You should replace `4.30` with your actual Sentinel / workspace ingestion rate.
 * `round(..., 2)` – Round the result to 2 decimal places (normal currency formatting).
@@ -296,6 +296,7 @@ If this kind of automation gets your gears turning, check out my book:
 # 🔗 References (good to keep handy)
 
 - [🔎Billable Ingest Volume Trend.kql](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
+- [💰Microsoft's Official Sentinel Pricing](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)
 - [😼Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 - [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
 
