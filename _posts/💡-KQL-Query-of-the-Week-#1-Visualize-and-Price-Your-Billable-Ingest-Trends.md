@@ -8,6 +8,10 @@ We’re going to look at two versions of the same query:
 
 <br/><br/>
 
+![](/assets/img/KQL%20of%20the%20Week/1/Cyberpunk%20SOC%20Data%20Analysis.png)
+
+<br/><br/><br/><br/>
+
 # Query 1 – Billable GB per Day, by Solution (Column Chart)
 
 ```kql
@@ -112,6 +116,12 @@ Usage                                                                           
 | extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2))                          // <--Round to 2 decimal places, calculate the cost, and prepend '$'
 ```
 
+<br/><br/>
+
+![](/assets/img/KQL%20of%20the%20Week/1/KQL%20of%20the%20Week%20#1-1.png)
+
+<br/><br/><br/><br/>
+
 ## What’s new vs Query 1?
 
 * We dropped `Solution` from the `summarize`
@@ -208,8 +218,11 @@ This will give you a nice **“Cost per day”** chart.
   * “What did we spend this month?” conversations
   * Feeding into reports, dashboards, or cost management workflows
 
-
 <br/><br/>
+
+![](/assets/img/KQL%20of%20the%20Week/1/NinjaQuery.png)
+
+<br/><br/><br/><br/>
 
 # 🧠 Quick Note: Gibibytes vs Gigabytes
 
