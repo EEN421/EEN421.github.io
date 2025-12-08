@@ -289,6 +289,11 @@ And because the names sound similar, the confusion never totally went away — w
   * Feeding into reports, dashboards, or cost management workflows
 
 <br/>
+
+Run this query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities.
+Don’t wait until Azure billing surprises you — measure it before it measures you.
+
+<br/>
 <br/>
 <br/>
 <br/>
