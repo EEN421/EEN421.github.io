@@ -118,7 +118,7 @@ Usage                                                                           
 
 <br/><br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/KQL%20of%20the%20Week%20#1-1.png)
+![](/assets/img/KQL%20of%20the%20Week/1/KQL%20of%20the%20Week%201-1.png)
 
 <br/><br/><br/><br/>
 
