@@ -35,7 +35,7 @@ reduce audit overhead, accelerate security clarity, and eliminate manual recon w
 
 <br/>
 
-### 👉 [Grab your copy here](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
+### 👉 Grab your copy here: [https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1)
 
 <br/>
 <br/>
@@ -120,7 +120,7 @@ foreach ($gpo in $GPOs) {
 <br/>
 <br/>
 
-### ⚡ Available on my GitHub [HERE](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)... Now let’s unpack it... 👇
+### ⚡ Available on my GitHub [HERE](https://github.com/EEN421/Powershell-Stuff/blob/Main/Tools/GPO_Audit.ps1)... Now let’s unpack it... 👇
 
 
 <br/>
