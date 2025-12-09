@@ -1,5 +1,5 @@
 # **Visualize and Price Your Billable Ingest Trends**
-If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL is all about shining a flashlight on your **billable data ingestion** in Microsoft Sentinel / Log Analytics over the last 90 days—first visually, then in cold hard cash.
+If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL-of-the-week is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel / Log Analytics over the last 90 days—first visually, then in cold hard cash.
 
 We’re going to look at two versions of the same query:
 
@@ -29,8 +29,7 @@ Usage                                                                           
 ## Line-by-line breakdown:
 
 ### 1.) **`Usage`**
-This is the built-in **Usage** table in Log Analytics.
-It tracks what you’re ingesting, how much, and which solution is responsible (Sentinel, Defender plans, etc.). Think of it as your **Ingest Ledger**.
+This built-in table in Log Analytics acts as your **ingest ledger**, tracking how much data you ingest and which solution (Security, LogManagement, etc.) is responsible.
 
 <br/>
 
@@ -41,9 +40,11 @@ We’re scoping to the **last 90 days** of data. Great window for:
 * Trend analysis (did that new connector you added spike costs?)
 * Before/after reviews (e.g., “we tuned noisy logs here — did it work?”)
 
-You can tweak `90d` to anything you want: `30d`, `7d`, `365d`, etc.
+You can tweak `90d` to anything you want: `30d`, `7d`, `365d`, etc. Even 1h for an hour or 2m for two minutes.
 
 > **Pro-Tip:** _use 30d for Monthy reports; switch to 90 days at the end of the quarter to pivot to a quarterly report 😎_
+
+> _Use 5m to check if something you did immediately affected ingest cost and confirm whether you broke something 😅_
 
 <br/>
 
