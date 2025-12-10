@@ -5,6 +5,7 @@ We’re going to look at two versions of the same query:
 
 1. **Query 1** – “Show me billable GB per day, by solution, as a chart.”
 2. **Query 2** – “Roll it up per day, in GB and dollars.”
+3. **Query 3** – “Dress it up and make it look good with `round()` and `strcat()`.”
 
 <br/><br/>
 
@@ -20,12 +21,12 @@ We’re going to look at two versions of the same query:
 Usage                                                                               // <--Query the Usage table
 | where TimeGenerated > ago(90d)                                                    // <--Query the last 90 days
 | where IsBillable == true                                                          // <--Only include 'billable' data
-| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution    // <--Chop it up into GB / Day
-| render columnchart                                                                // <--Graph the results
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(TimeGenerated, 1d), Solution    // <--Chop it up into GB / Day
+| render timechart                                                                // <--Graph the results
 ```
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/column.png)
+![](/assets/img/KQL%20of%20the%20Week/1/Timechart.png)
 
 <br/><br/>
 
@@ -56,27 +57,22 @@ This is where the magic (and savings) happen. We only care about records that **
 
 <br/>
 
-### 4.) **`| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution`**
+### 4.) **`| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(TimeGenerated, 1d), Solution`**
 
 This line does a lot of work:
 
 * `sum(Quantity)` – Each record has a `Quantity` field representing the size of data ingested (in MB).
 * `/ 1000` – Convert MB to **approximate** GB (1000 MB ≈ 1 GB). This is a “marketing GB” vs “binary GB” thing; we’ll tighten this up in Query 2 and discuss how we got here later on.
 * `TotalVolumeGB = ...` – We give that result a friendly column name.
-* `by bin(StartTime, 1d), Solution` – We group our data:
-  * `bin(StartTime, 1d)` – Buckets by **day** (based on `StartTime`).
+* `by bin(TimeGenerated, 1d), Solution` – We group our data by:
+  * `bin(TimeGenerated, 1d)` – Buckets by **day** (based on `TimeGenerated`).
   * `Solution` – Breaks the totals down per **solution** (e.g., `Security`, `SecurityInsights`, `Microsoft Sentinel`, etc.).
 
 <br/>
 
 So you end up with:
 
-| StartTime (day) | Solution         | TotalVolumeGB |
-| --------------- | ---------------- | ------------- |
-| 2025-09-01      | SecurityInsights | 120.5         |
-| 2025-09-01      | AzureDiagnostics | 15.3          |
-| 2025-09-02      | SecurityInsights | 98.7          |
-| ...             | ...              | ...           |
+![](/assets/img/KQL%20of%20the%20Week/1/noChart.png)
 
 <br/><br/>
 
@@ -96,9 +92,14 @@ This is the “Executive Slide” line. It gives you an instant sense of:
 * Whether your ingest is stable, trending up, or spiking all over the place.
 * Where to focus tuning and data hygiene efforts.
 
+
 <br/>
 
-This version is **perfect for eyeballing trends** and for screenshots in decks, QBRs, and “hey, what happened here?” emails.
+![](/assets/img/KQL%20of%20the%20Week/1/column.png)
+
+<br/>
+
+This is **perfect for eyeballing trends** and for screenshots in decks, QBRs, and “hey, what happened here?” emails.
 
 <br/><br/>
 
@@ -116,13 +117,14 @@ Let’s look at the upgraded version:
 Usage                                                                                // <--Query the Usage table
 | where TimeGenerated > ago(90d)                                                     // <--Query the last 90 days
 | where IsBillable == true                                                           // <--Only include 'billable' data
-| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by bin(StartTime, 1d)     // <--Chop it up into GB / Day
-| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2))                          // <--Round to 2 decimal places, calculate the cost, and prepend '$'
+| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by TimeGenerated=bin(TimeGenerated, 1d)    // <--Group data into 1-day buckets and convert total ingested quantity into GB
+| extend CostUSD = round(TotalVolumeGB * 4.30, 2)                                   // <--Calculate daily cost by multiplying GB/day by your region’s $/GB rate and rounding to 2 decimals
+
 ```
 
 <br/><br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/KQL%20of%20the%20Week%201-1.png)
+![](/assets/img/KQL%20of%20the%20Week/1/CostPerDayGraph.png)
 
 <br/><br/><br/><br/>
 
@@ -142,7 +144,7 @@ Let’s break it down...
 
 <br/><br/>
 
-### 1.) `summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by bin(StartTime, 1d)`
+### 1.) `summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by bin(TimeGenerated, 1d)`
 
 We’re still using `Usage`, 90 days, and `IsBillable == true` — same idea as Query 1.
 
@@ -152,9 +154,9 @@ But now:
 * `/ 1024` – This time we’re using **binary GB** (1024 MB = 1 GiB), which is more technically precise.
 * `round(..., 2)` – We round to **2 decimal places** so you don’t end up with insane precision like `123.4567890123`.
 
-And we group only by `bin(StartTime, 1d)` (no more `Solution`), so we get one row per day:
+And we group only by `bin(TimeGenerated, 1d)` (no more `Solution`), so we get one row per day:
 
-| StartTime  | TotalVolumeGB |
+| TimeGenerated  | TotalVolumeGB |
 | ---------- | ------------- |
 | 2025-09-01 | 135.42        |
 | 2025-09-02 | 118.03        |
@@ -178,7 +180,7 @@ This is where we turn GB into dollars:
 
 End result:
 
-| StartTime  | TotalVolumeGB | cost    |
+| TimeGenerated  | TotalVolumeGB | cost    |
 | ---------- | ------------- | ------- |
 | 2025-09-01 | 135.42        | $582.31 |
 | 2025-09-02 | 118.03        | $507.53 |
@@ -294,8 +296,6 @@ And because the names sound similar, the confusion never totally went away — w
 <br/>
 
 # Bonus Discussion: StartTime vs TimeGenerated
-You may have noticed that, admittedly, in a couple of the screenshots in this article, I've used `StartTime` instead of `TimeGenerated`. This was a mistake on my end. So to own it, here's a bonus discussion on the differences and why you should use `TimeGenerated` when it comes to cost charts. 
-
 
 ### `TimeGenerated`
 
