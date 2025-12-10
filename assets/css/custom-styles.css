@@ -134,8 +134,9 @@ code .cs {
 }
 
 .devsecopsdad-hero-logo {
-  width: 140px;
-  max-width: 40vw;
+  width: 100%;
+  max-width: 280px;   
+  height: auto;
   margin-bottom: 1.25rem;
 }
 
@@ -419,4 +420,5 @@ code.highlighter-rouge {
 .highlight a {
   color: inherit;
 }
+
 
