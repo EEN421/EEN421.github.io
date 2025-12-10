@@ -23,8 +23,11 @@ Usage                                                                           
 | summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(StartTime, 1d), Solution    // <--Chop it up into GB / Day
 | render columnchart                                                                // <--Graph the results
 ```
-
 <br/>
+
+![](/assets/img/KQL%20of%20the%20Week/1/column.png)
+
+<br/><br/>
 
 ## Line-by-line breakdown:
 
@@ -213,15 +216,29 @@ This will give you a nice **“Cost per day”** chart.
 
 <br/>
 
-* **Query 2 – Daily Total + Cost**
+![](/assets/img/KQL%20of%20the%20Week/1/Pie.png)
+
+
+<br/><br/>
+
+* **Query 2 & 3 – Daily Total + Cost**
 
   * Budgeting / forecasting
   * “What did we spend this month?” conversations
   * Feeding into reports, dashboards, or cost management workflows
 
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png) <br/>
+![](/assets/img/KQL%20of%20the%20Week/1/CostPerDayGraph.png)
+
+<br/>
+
 <br/><br/>
 
 ![](/assets/img/KQL%20of%20the%20Week/1/NinjaQuery.png)
+
+Run these query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities. Don’t wait until Azure billing surprises you — measure it before it measures you.
 
 <br/><br/><br/><br/>
 
@@ -271,28 +288,59 @@ Today, both exist because both are useful:
 
 And because the names sound similar, the confusion never totally went away — which is why it’s worth calling out in a KQL series where cost math actually matters.
 
-<br/><br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-## When to Use Each Version
+# Bonus Discussion: StartTime vs TimeGenerated
+You may have noticed that, admittedly, in a couple of the screenshots in this article, I've used `StartTime` instead of `TimeGenerated`. This was a mistake on my end. So to own it, here's a bonus discussion on the differences and why you should use `TimeGenerated` when it comes to cost charts. 
 
-* **Query 1 – Visual, by Solution**
 
-  * Quick QBR visuals
-  * “Which solution is killing me?” analysis
-  * Great starting point for hunting noisy connectors or tables
+### `TimeGenerated`
+
+- This is the actual timestamp when the Usage record was logged.
+- Every row in Log Analytics has this column.
+- In the Usage table, it represents when the usage event was recorded.
 
 <br/>
 
-* **Query 2 – Daily Total + Cost**
+### `StartTime`
 
-  * Budgeting / forecasting
-  * “What did we spend this month?” conversations
-  * Feeding into reports, dashboards, or cost management workflows
+- This column exists specifically in the Usage table.
+- It represents the start of the billing interval for that usage event.
+- It often aligns with internal computation windows used by Microsoft for calculating ingest cost, retention, or other metered operations.
+
+In other words:
+
+`TimeGenerated` = When the record was written
+`StartTime` = When the billable usage window began
 
 <br/>
+<br/>
 
-Run this query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities.
-Don’t wait until Azure billing surprises you — measure it before it measures you.
+### 🤓 Which one should you use for daily cost charts?
+The Usage table’s `StartTime` is _**not guaranteed** to align perfectly with the calendar day boundary._
+
+It may reflect:
+- the start of a metering window
+- ingestion processing boundaries
+- intermediate aggregation cycles inside the Microsoft billing engine
+
+That means:
+- Days may start at strange hours (e.g., 01:00 UTC or 17:00 UTC)
+- Some bins may appear empty or shifted
+- Visuals may look offset or inconsistent
+
+If you want the cleanest cost-per-day trend:
+
+Use **TimeGenerated** with **bin(1d)**, like this: `StartTime = bin(TimeGenerated, 1d)`
+
+This gives you:
+
+- Exactly one bucket per calendar day
+- Continuous, predictable daily bins
+- No risk of odd Usage-table billing boundaries messing with grouping
 
 <br/>
 <br/>
