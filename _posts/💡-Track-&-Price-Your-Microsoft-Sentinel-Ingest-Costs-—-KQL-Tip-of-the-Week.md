@@ -145,16 +145,11 @@ This lets you translate raw ingest volume into actual dollars, in-line with your
 
 The front half of the query stays familiar: same **Usage table**, same **90-day window**, same **IsBillable == true**.
 
-But now the behavior changes: <br/>
-`| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by TimeGenerated=bin(TimeGenerated, 1d)`
+But now the behavior changes a little: <br/>
 - `sum(Quantity)` – We still total all billable MB.
 - `/ 1024` – Converts MB → GiB with binary precision.
 - `round(..., 2)` – Ensures readable values (e.g., 135.42, not 135.41893721).
-- And instead of grouping by Solution, we group only by the date (`bin(TimeGenerated, 1d)`), producing one record per calendar day:
-
-![](/assets/img/KQL%20of%20the%20Week/1/noChart3.png)
-
-This gives you a clean daily total billable volume.
+- And instead of grouping by Solution, we group only by the date (`bin(TimeGenerated, 1d)`), producing one record per calendar day. **This gives you a clean daily total billable volume.**
 
 <br/><br/>
 
@@ -176,11 +171,9 @@ You now have a simple, finance-friendly daily ledger of your Sentinel costs — 
 - QBR deck visuals
 - Cost justification (filter noisy logs, reduce retention, move data to cheaper tiers)
 
-And if you want the classic visualization, just tack this on the end: `| render columnchart`
+![](/assets/img/KQL%20of%20the%20Week/1/noChart3.png)
 
-<br/><br/>
-
-![](/assets/img/KQL%20of%20the%20Week/1/NinjaQuery.png)
+> 📊 And if you want the classic visualization, just tack this on the end: `| render columnchart`
 
 <br/><br/><br/><br/>
 
@@ -216,7 +209,11 @@ So: `12.54` becomes: `12.54GB / Day`
 
 <br/><br/>
 
-### Why?
+![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png)
+
+<br/><br/>
+
+# Why?
 
 Because you're shifting the output from analysis-ready to human-ready. Once the numbers are formatted, they're much easier to interpret in:
 
@@ -231,7 +228,7 @@ In other words, you're preparing the data for presentation, not additional math 
 
 <br/><br/>
 
-> ### ⚠ But here’s the nuance...
+> ### ⚠️ But here’s the nuance...
 > After this line, cost is no longer numeric.
 > You can no longer:
 > - sum cost
@@ -240,9 +237,8 @@ In other words, you're preparing the data for presentation, not additional math 
 > - convert GB → MB
 > - re-round values
 > - bucket by numeric thresholds
-> - feed into a chart that expects a number
->
-> This column becomes display-only 👀
+> - feed into a chart that expects a number <br/><br/>
+>👉 This column effectively becomes display-only 👀
 
 <br/><br/>
 
