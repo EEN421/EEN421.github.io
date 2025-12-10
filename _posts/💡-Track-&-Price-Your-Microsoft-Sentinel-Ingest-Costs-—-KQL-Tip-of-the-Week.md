@@ -5,7 +5,6 @@ We’re going to look at two versions of the same query:
 
 1. **Query 1** – “Show me billable GB per day, by solution, as a chart.”
 2. **Query 2** – “Roll it up per day, in GB and dollars.”
-3. **Query 3** – “Dress it up and make it look good with `round()` and `strcat()`.”
 
 <br/><br/>
 
@@ -16,13 +15,11 @@ We’re going to look at two versions of the same query:
 # Query 1 – Billable GB per Day, by Solution (Column Chart)
 
 ```kql
-// Query 1 - This is great for checking out your billable ingest patterns over the past quarter for QBRs etc. 
-
-Usage                                                                               // <--Query the Usage table
-| where TimeGenerated > ago(90d)                                                    // <--Query the last 90 days
-| where IsBillable == true                                                          // <--Only include 'billable' data
-| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(TimeGenerated, 1d), Solution    // <--Chop it up into GB / Day
-| render timechart                                                                // <--Graph the results
+Usage
+| where TimeGenerated > ago(90d)
+| where IsBillable == true
+| summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(TimeGenerated, 1d), Solution
+| render timechart
 ```
 <br/>
 
@@ -109,142 +106,170 @@ Once you find a spike, the next question is always:
 
 > “Okay, but how much is that **in dollars**?” 💸
 
-Let’s look at the upgraded version:
+Let’s look at the upgraded query:
 
 ```kql
-// Query 2 - The below query will return the total billable GB and incurred cost per day. 
-
-Usage                                                                                // <--Query the Usage table
-| where TimeGenerated > ago(90d)                                                     // <--Query the last 90 days
-| where IsBillable == true                                                           // <--Only include 'billable' data
-| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by TimeGenerated=bin(TimeGenerated, 1d)    // <--Group data into 1-day buckets and convert total ingested quantity into GB
-| extend CostUSD = round(TotalVolumeGB * 4.30, 2)                                   // <--Calculate daily cost by multiplying GB/day by your region’s $/GB rate and rounding to 2 decimals
+Usage
+| where TimeGenerated > ago(90d)
+| where IsBillable == true
+| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by TimeGenerated=bin(TimeGenerated, 1d)
+| extend CostUSD = round(TotalVolumeGB * 4.30, 2)
 
 ```
 
-<br/><br/>
+<br/>
 
 ![](/assets/img/KQL%20of%20the%20Week/1/CostPerDayGraph.png)
 
 <br/><br/><br/><br/>
 
-## What’s new vs Query 1?
+# What’s New Compared to Query 1?
 
-* We dropped `Solution` from the `summarize`
-   * Now we’re aggregating **total daily ingest** across all solutions.
-   * This gives us a nice, simple **“cost per day”** rollup.
+Query 1 broke down billable ingest per Solution, which is perfect for “what’s noisy?” analysis.
+Query 2 shifts gears: it gives you total ingest per day, rolled up across the entire workspace, plus a dollar cost for each day.
 
-* We switched from `/ 1000` to `/ 1024` and added `round(...)`
+Here’s what actually changed:
+- Solution was removed from the summarize
+- Instead of getting a bar per Solution per day, we now get one total per day.
+- This makes the output ideal for cost trending, budgeting, and forecasting.
+- Switched from / 1000 to / 1024, and added round()
+- Using 1024 MB = 1 GiB is more accurate for log volume math.
+- round(..., 2) keeps the numbers tidy and currency-friendly.
+- Added a cost column
 
-* We added a `cost` column that multiplies GB by a price per GB and formats it nicely.
+This lets you translate raw ingest volume into actual dollars, in-line with your workspace’s per-GB price. Let’s break down exactly what Query 2 is doing.
 
 <br/>
-
-Let’s break it down...
-
-<br/><br/>
 
 ### 1.) `summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by bin(TimeGenerated, 1d)`
 
-We’re still using `Usage`, 90 days, and `IsBillable == true` — same idea as Query 1.
+The front half of the query stays familiar: same **Usage table**, same **90-day window**, same **IsBillable == true**.
 
-But now:
+But now the behavior changes: <br/>
+`| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by TimeGenerated=bin(TimeGenerated, 1d)`
+- `sum(Quantity)` – We still total all billable MB.
+- `/ 1024` – Converts MB → GiB with binary precision.
+- `round(..., 2)` – Ensures readable values (e.g., 135.42, not 135.41893721).
+- And instead of grouping by Solution, we group only by the date (`bin(TimeGenerated, 1d)`), producing one record per calendar day:
 
-* `sum(Quantity)` – Still summing MB.
-* `/ 1024` – This time we’re using **binary GB** (1024 MB = 1 GiB), which is more technically precise.
-* `round(..., 2)` – We round to **2 decimal places** so you don’t end up with insane precision like `123.4567890123`.
+![](/assets/img/KQL%20of%20the%20Week/1/noChart3.png)
 
-And we group only by `bin(TimeGenerated, 1d)` (no more `Solution`), so we get one row per day:
-
-| TimeGenerated  | TotalVolumeGB |
-| ---------- | ------------- |
-| 2025-09-01 | 135.42        |
-| 2025-09-02 | 118.03        |
-| ...        | ...           |
-
-This is your **daily billable volume** in GB.
+This gives you a clean daily total billable volume.
 
 <br/><br/>
 
-### 2.) `| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2))`
+### 2.) | extend CostUSD = round(TotalVolumeGB * 4.30, 2)
 
-This is where we turn GB into dollars:
+Now we turn those GB into real money:
 
-* `TotalVolumeGB * 4.30` – We assume a price of **$4.30 per GB** (this is the cost per GB on the pay-as-you-go commitment tier for the Eastern US region, you can find your cost per GB on [Microsoft's offical pricing page for Sentinel](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)).
+- `TotalVolumeGB * 4.30` – Multiplies by the per-GB price (e.g., $4.30/GB for East US on the Pay-As-You-Go commitment tier).
+  - 💲Swap 4.30 with your workspace’s actual price from [Microsoft’s Sentinel pricing page](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064).
 
-  * You should replace `4.30` with your actual Sentinel / workspace ingestion rate.
-* `round(..., 2)` – Round the result to 2 decimal places (normal currency formatting).
-* `strcat('$', ...)` – Prepend a `$` so it reads like `"$512.78"` instead of just `512.78`.
-
-<br/><br/>
-
-End result:
-
-| TimeGenerated  | TotalVolumeGB | cost    |
-| ---------- | ------------- | ------- |
-| 2025-09-01 | 135.42        | $582.31 |
-| 2025-09-02 | 118.03        | $507.53 |
-| ...        | ...           | ...     |
-
-<br/><br/>
-
-You now have a **simple, daily cost breakdown** that you can:
-
-* Export to CSV / Excel for finance 📊
-* Drop into a QBR deck 📈
-* Use to justify:
-
-  * Turning off noisy logs
-  * Changing retention
-  * Moving certain sources to cheaper storage
-
-If you want, you can still add back `render columnchart` at the end:
-
-```kql
-| render columnchart
-```
-
-This will give you a nice **“Cost per day”** chart.
-
-<br/><br/>
-
-## When to Use Each Version
-
-* **Query 1 – Visual, by Solution**
-
-  * Quick QBR visuals
-  * “Which solution is killing me?” analysis
-  * Great starting point for hunting noisy connectors or tables
+- `round(..., 2)` – Standard currency rounding to the second decimal place. Replace 2 with 3 to include three decimal places in your results, etc.
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/Pie.png)
+You now have a simple, finance-friendly daily ledger of your Sentinel costs — perfect for:
 
+- CSV/Excel exports
+- Monthly reporting
+- QBR deck visuals
+- Cost justification (filter noisy logs, reduce retention, move data to cheaper tiers)
 
-<br/><br/>
-
-* **Query 2 & 3 – Daily Total + Cost**
-
-  * Budgeting / forecasting
-  * “What did we spend this month?” conversations
-  * Feeding into reports, dashboards, or cost management workflows
-
-<br/>
-
-![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png) <br/>
-![](/assets/img/KQL%20of%20the%20Week/1/CostPerDayGraph.png)
-
-<br/>
+And if you want the classic visualization, just tack this on the end: `| render columnchart`
 
 <br/><br/>
 
 ![](/assets/img/KQL%20of%20the%20Week/1/NinjaQuery.png)
 
+<br/><br/><br/><br/>
+
+# Dress it up with `STRCAT()!` 
+`strcat()` in KQL concatenates multiple values into a single string. In this case, we’re taking a number, a currency symbol, and a suffix, and merging them into one formatted display value, transforming numeric columns into string-formatted display values. That’s key for converting data that had mathematical meaning into purely presentation-friendly text.. Let's break it down...
+
+<br/><br/>
+
+### 1. Formatting Daily Cost:
+`| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
+
+What this line does:
+- Takes TotalVolumeGB (a number)
+- Multiplies it by your per-GB cost rate (4.30)
+- Rounds the result to 2 decimals
+- Converts the numeric cost into a string
+- Prepends a $
+- Appends " / Day"
+
+So: `52.80` becomes `$52.80 / Day`
+
+<br/><br/>
+
+### 2. Converting TotalVolumeGB to a Display-Ready String
+`| extend TotalVolumeGB = strcat(TotalVolumeGB, 'GB / Day')`
+
+What this line does
+- Takes your numeric TotalVolumeGB
+- Appends the string 'GB / Day'
+- Converts the entire result into a string
+
+So: `12.54` becomes: `12.54GB / Day`
+
+<br/><br/>
+
+### Why?
+
+Because you're shifting the output from analysis-ready to human-ready. Once the numbers are formatted, they're much easier to interpret in:
+
+- Workbooks & dashboards
+- Exports and email reports
+- SOC/Jupyter visuals
+- Blog posts 👋😁
+- Client-facing deliverables
+
+In other words, you're preparing the data for presentation, not additional math — a common pattern whenever the final output needs to be clean, readable, and report-ready.
+
+
+<br/><br/>
+
+> ### ⚠ But here’s the nuance...
+> After this line, cost is no longer numeric.
+> You can no longer:
+> - sum cost
+> - average cost
+> - chart cost as a numeric measure
+> - convert GB → MB
+> - re-round values
+> - bucket by numeric thresholds
+> - feed into a chart that expects a number
+>
+> This column becomes display-only 👀
+
+<br/><br/>
+
+### 🧠 Deeper Discussion: Why Format at the End?
+
+This pattern is excellent as long as you’re done calculating because _once a column becomes a **string** → it stops being useful for **math**_. If you ever need raw values again, formatting early could shoot you in the foot. 
+
+💡**Best practice tip:** If you need raw numeric values and formatted output: <br/>
+`| extend TotalVolumeGB_Formatted = strcat(TotalVolumeGB, 'GB / Day')` <br/>
+`| extend cost_Formatted = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
+
+This keeps:
+- TotalVolumeGB as float
+- cost as float
+- formatted versions as strings
+- things looking slick 😎
+
+![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png)
+
+
+<br/><br/>
+
 Run these query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities. Don’t wait until Azure billing surprises you — measure it before it measures you.
 
 <br/><br/><br/><br/>
 
-# 🧠 Quick Note: Gibibytes vs Gigabytes
+# 📝 Quick Note: Gibibytes vs Gigabytes
 
 You’ll sometimes see data measured in gigabytes (GB) and other times in gibibytes (GiB) — and while they sound similar, they’re not the same.
 
@@ -296,25 +321,26 @@ And because the names sound similar, the confusion never totally went away — w
 <br/>
 
 # Bonus Discussion: StartTime vs TimeGenerated
+Some of my sharper readers may have noticed that a few screenshots used `StartTime` instead of `TimeGenerated`. That one’s on me. Just like my GB vs GiB rant, I occasionally commit crimes against precision — so here’s a clear breakdown of what these two fields actually represent, and why it matters for cost analysis. 
 
-### `TimeGenerated`
-
+`TimeGenerated`
 - This is the actual timestamp when the Usage record was logged.
 - Every row in Log Analytics has this column.
 - In the Usage table, it represents when the usage event was recorded.
 
 <br/>
 
-### `StartTime`
-
+`StartTime`
 - This column exists specifically in the Usage table.
 - It represents the start of the billing interval for that usage event.
 - It often aligns with internal computation windows used by Microsoft for calculating ingest cost, retention, or other metered operations.
 
+<br/>
+
 In other words:
 
-`TimeGenerated` = When the record was written
-`StartTime` = When the billable usage window began
+`TimeGenerated` = When the record was written. <br/>
+`StartTime` = When the billable usage window began.
 
 <br/>
 <br/>
@@ -324,15 +350,15 @@ The Usage table’s `StartTime` is _**not guaranteed** to align perfectly with t
 
 It may reflect:
 - the start of a metering window
-- ingestion processing boundaries
-- intermediate aggregation cycles inside the Microsoft billing engine
+- ingestion pipeline processing
+- hourly or sub-daily aggregation cycles inside the Microsoft billing engine
 
 That means:
 - Days may start at strange hours (e.g., 01:00 UTC or 17:00 UTC)
 - Some bins may appear empty or shifted
 - Visuals may look offset or inconsistent
 
-If you want the cleanest cost-per-day trend:
+🎯 For clean, calendar-based daily trends
 
 Use **TimeGenerated** with **bin(1d)**, like this: `StartTime = bin(TimeGenerated, 1d)`
 
@@ -344,16 +370,15 @@ This gives you:
 
 <br/>
 <br/>
-<br/>
-<br/>
 
-# 📚 Want to Go Deeper?
+# 📚 Thanks for Reading! 
+I hope this was as much fun reading as it was writing! 
 
 If this kind of automation gets your gears turning, check out my book:
 🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
  — published by Orange Education, available on Kindle and print. 👉 Get your copy here: [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
 
-⚡ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft Graph automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
+⚡ It dives into Defender XDR, Sentinel, Entra ID, and Microsoft automations just like this one — with real-world MSSP use cases and ready-to-run KQL + PowerShell examples.
 
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
