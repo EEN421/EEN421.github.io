@@ -421,4 +421,33 @@ code.highlighter-rouge {
   color: inherit;
 }
 
+/* --- TABLES: high-contrast on dark page ------------------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: #f7f9fa;   /* light card-style background */
+  color: #2f3a44;              /* dark text for contrast */
+}
+
+table th,
+table td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d0d6e0;
+}
+
+/* Header row: slightly darker band */
+table thead th {
+  background-color: #e3e8f0;
+  font-weight: 600;
+  color: #2f3a44;
+}
+
+/* Zebra-strip rows for readability */
+table tbody tr:nth-child(even) {
+  background-color: #eef3fb;
+}
+
+
 
