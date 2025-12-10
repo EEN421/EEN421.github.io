@@ -571,7 +571,7 @@ Now that you’ve mapped the entire Azure network with a single script, the next
 In case you missed it, I already broke down a powerful PowerShell + Graph API tool that uncovers all the End-of-Life devices, outdated OS builds, and unsupported software haunting your tenant.
 It’s wrapped in a fun Halloween theme, but don’t let the spooky aesthetic fool you — this tool is pure security value.
 
-### 👉 Check it out here: [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)}
+### 👉 Check it out here: [👻 The Ghosts Hiding In Every Network: End Of Life Devices And Software ☠️](https://www.hanley.cloud/2025-11-03-The-Ghosts-Hiding-in-Every-Network-End-of-Life-Devices-and-Software/)
 
 Together, this Network Inventory script + the EoL “Ghost Hunter” script give you a powerful one-two punch for:
 
