@@ -334,3 +334,89 @@ blockquote {
 .beautiful-jekyll-footer .footer-links .list-inline-item {
   margin: 0 0.35rem;
 }
+
+/* ===== DevSecOpsDad GitHub Dark–style syntax colours ===== */
+
+/* Base code block background + default text */
+.highlight,
+.highlight pre,
+pre.highlight,
+code.highlighter-rouge {
+  background-color: #0d1117;   /* GitHub Dark background */
+  color: #c9d1d9;              /* default code text */
+}
+
+/* Comments */
+.highlight .c,
+.highlight .cm,
+.highlight .c1,
+.highlight .cs {
+  color: #8b949e;              /* soft grey, high contrast on dark */
+  font-style: italic;
+}
+
+/* Keywords (let, where, summarize, etc.) */
+.highlight .k,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kt {
+  color: #1da4ff;              /* DevSecOpsDad electric blue */
+}
+
+/* Functions, identifiers, attributes, variables */
+.highlight .nf,
+.highlight .na,
+.highlight .nc,
+.highlight .nn,
+.highlight .nx,
+.highlight .nv,
+.highlight .no {
+  color: #00a7a0;              /* Gentle Teal */
+}
+
+/* Strings + regex */
+.highlight .s,
+.highlight .s1,
+.highlight .s2,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .sr,
+.highlight .ss {
+  color: #ff6b5c;              /* Warm Coral */
+}
+
+/* Numbers */
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .il {
+  color: #f5b25c;              /* Golden Sand */
+}
+
+/* Operators & punctuation */
+.highlight .o,
+.highlight .ow,
+.highlight .p {
+  color: #c9d1d9;
+}
+
+/* Errors / important tokens */
+.highlight .err {
+  color: #f97373;              /* bright red-pink for visibility */
+  background-color: transparent;
+}
+
+/* Links inside code (rare, but keep from going bright blue) */
+.highlight a {
+  color: inherit;
+}
+
