@@ -1,5 +1,5 @@
 # Introduction & Use Case:
-**Identifying Internet-Facing Devices Matters to Every Framework You Care About.** Before we even dive into tooling, let’s anchor the importance of this work in the actual security and compliance frameworks that govern nearly every mature organization. Pretty much every major framework assumes you know which assets are exposed to the public internet — because this shapes your entire risk profile.
+**Identifying Internet-Facing Devices Matter to Every Framework You Care About.** Before we even dive into tooling, let’s anchor the importance of this work in the actual security and compliance frameworks that govern nearly every mature organization. Pretty much every major framework assumes you know which assets are exposed to the public internet — because this shapes your entire risk profile.
 
 If you’ve spent any amount of time in Microsoft Defender, you’ve definitely seen the `IsInternetFacing` field in `DeviceInfo` and thought: _“Cool… Microsoft already tells me what’s Internet-facing. Easy win!”_ — But is it _really??_ 🤔
 
