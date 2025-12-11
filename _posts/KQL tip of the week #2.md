@@ -1,9 +1,4 @@
-Here we go—KQL of the Week #2 🎉
-I’ll write this so you can mostly copy-paste into your post and tweak paths/wording as needed.
-
----
-
-# 💡 KQL Query of the Week #2 — Find Your Noisiest Log Sources (With Cost)
+# KQL Query of the Week #2 — 🔊 Find Your Noisiest Log Sources (With Cost 🤑) 
 
 Last week in **KQL Query of the Week #1**, we zoomed out and looked at **billable ingest trends over time**—how many GiB per day you’re ingesting, and roughly how much that’s costing you in Microsoft Sentinel.
 
