@@ -1,10 +1,15 @@
 # **Visualize and Price Your Billable Ingest Trends**
 If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL-of-the-week is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel Log Analytics over the last 90 days—first visually, then in cold hard cash. 💰
 
-We’re going to look at two versions of the same query:
+Today, we’re going to look at **three useful iterations of the same query**:
 
-1. **Query 1** – “Show me billable GB per day, by solution, as a chart.”
-2. **Query 2** – “Roll it up per day, in GB and dollars.”
+- **Iteration 1** – “Show me billable GB per day, by solution, as a chart.”
+- **Iteration 2** – “Roll it up per day, in GB and dollars.”
+- **Iteration 3** – “Dress it up with STRCAT( )”
+
+<br/><br/>
+
+### [⚡Check out all 3 query iterations on my GitHub](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql).
 
 <br/><br/>
 
@@ -95,7 +100,7 @@ This is the “Executive Slide” line. It gives you an instant sense of:
 
 <br/>
 
-Don't forget about pie charts too, for quickly identifying the heaviest drivers for ingest cost at a glance...
+Don't forget about **pie charts** too, for quickly identifying the heaviest drivers for ingest cost at a glance...
 
 ![](/assets/img/KQL%20of%20the%20Week/1/Pie.png)
 
@@ -107,9 +112,9 @@ This is **perfect for eyeballing trends** and for screenshots in decks, QBRs, an
 
 # Query 2 – Same Data, But Now With Actual Cost 🤑
 
-Once you find a spike, the next question is always:
+### [⚡Check out all 3 query iterations on my GitHub](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql).
 
-> “Okay, but how much is that **in dollars**?” 💸
+Once you find a spike, the next question is always: _“Okay, but how much is that **in dollars**?”_ 💸
 
 Let’s look at the upgraded query:
 
@@ -117,7 +122,7 @@ Let’s look at the upgraded query:
 Usage
 | where TimeGenerated > ago(90d)
 | where IsBillable == true
-| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by TimeGenerated=bin(TimeGenerated, 1d)
+| summarize TotalVolumeGB = round(sum(Quantity) / 1024, 2) by bin(TimeGenerated, 1d)
 | extend CostUSD = round(TotalVolumeGB * 4.30, 2)
 
 ```
@@ -158,7 +163,7 @@ But now the behavior changes a little: <br/>
 
 <br/><br/>
 
-### 2.) | extend CostUSD = round(TotalVolumeGB * 4.30, 2)
+### 2.) `| extend CostUSD = round(TotalVolumeGB * 4.30, 2)`
 
 Now we turn those GB into real money:
 
@@ -166,6 +171,9 @@ Now we turn those GB into real money:
   - 💲Swap 4.30 with your workspace’s actual price from [Microsoft’s Sentinel pricing page](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064).
 
 - `round(..., 2)` – Standard currency rounding to the second decimal place. Replace 2 with 3 to include three decimal places in your results, etc.
+
+
+![](/assets/img/KQL%20of%20the%20Week/1/noChart3.png)
 
 <br/>
 
@@ -176,16 +184,14 @@ You now have a simple, finance-friendly daily ledger of your Sentinel costs — 
 - QBR deck visuals
 - Cost justification (filter noisy logs, reduce retention, move data to cheaper tiers)
 
-![](/assets/img/KQL%20of%20the%20Week/1/noChart3.png)
-
-> 📊 And if you want the classic visualization, just tack this on the end: `| render columnchart`
+ 📊 And if you want the classic visualization, just tack this on the end: `| render columnchart`
 
 <br/><br/><br/><br/>
 
-# Dress it up with `STRCAT()!` 
+# Dress it up with `STRCAT()!` 😎
 `strcat()` in KQL concatenates multiple values into a single string. In this case, we’re taking a number, a currency symbol, and a suffix, and merging them into one formatted display value, transforming numeric columns into string-formatted display values. That’s key for converting data that had mathematical meaning into purely presentation-friendly text.. Let's break it down...
 
-<br/><br/>
+<br/> 
 
 ### 1. Formatting Daily Cost:
 `| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
@@ -212,13 +218,13 @@ What this line does
 
 So: `12.54` becomes: `12.54GB / Day`
 
-<br/><br/>
+<br/>
 
 ![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png)
 
 <br/><br/>
 
-# Why?
+# 🤔 Why?
 
 Because you're shifting the output from analysis-ready to human-ready. Once the numbers are formatted, they're much easier to interpret in:
 
@@ -230,12 +236,12 @@ Because you're shifting the output from analysis-ready to human-ready. Once the 
 
 In other words, you're preparing the data for presentation, not additional math — a common pattern whenever the final output needs to be clean, readable, and report-ready.
 
+<br/>
 
-<br/><br/>
+# ⚠️ Pitfall to Watch Out for
 
-> ### ⚠️ But here’s the nuance...
-> After this line, cost is no longer numeric.
-> You can no longer:
+> Here’s the nuance when using **strcat()**...
+> After this line, cost is no longer numeric... Meaning You can no longer:
 > - sum cost
 > - average cost
 > - chart cost as a numeric measure
@@ -247,13 +253,13 @@ In other words, you're preparing the data for presentation, not additional math 
 
 <br/><br/>
 
-### 🧠 Deeper Discussion: Why Format at the End?
+# 🧠 Deeper Discussion: Why Format at the End?
 
 This pattern is excellent as long as you’re done calculating because _once a column becomes a **string** → it stops being useful for **math**_. If you ever need raw values again, formatting early could shoot you in the foot. 
 
-💡**Best practice tip:** If you need raw numeric values and formatted output: <br/>
-`| extend TotalVolumeGB_Formatted = strcat(TotalVolumeGB, 'GB / Day')` <br/>
-`| extend cost_Formatted = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
+> 💡**Best practice tip:** If you need raw numeric values and formatted output: <br/>
+> `| extend TotalVolumeGB_Formatted = strcat(TotalVolumeGB, 'GB / Day')` <br/>
+> `| extend cost_Formatted = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
 
 This keeps:
 - TotalVolumeGB as float
@@ -264,9 +270,9 @@ This keeps:
 ![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png)
 
 
-<br/><br/>
+<br/>
 
-Run these query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities. Don’t wait until Azure billing surprises you — measure it before it measures you.
+🛠️ Run these query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities. Don’t wait until Azure billing surprises you — measure it before it measures you.
 
 <br/><br/><br/><br/>
 
@@ -284,7 +290,7 @@ In other words, **1 GiB is about 7% larger than 1 GB.** So depending on whether 
 
 <br/>
 
-## 💽 How We Ended Up With Gigabytes Instead of Gibibytes
+# 💽 How We Ended Up With Gigabytes Instead of Gibibytes
 For decades, the tech industry used the word gigabyte (GB) to describe both decimal and binary measurements — even though they’re not the same. This wasn’t intentional deception; it was simply convenient shorthand during the early personal computing era.
 
 <br/>
@@ -375,6 +381,11 @@ This gives you:
 <br/>
 <br/>
 
+![](/assets/img/KQL%20of%20the%20Week/1/NinjaQuery.png)
+
+<br/>
+<br/>
+
 # 📚 Thanks for Reading! 
 I hope this was as much fun reading as it was writing! 
 
@@ -393,7 +404,7 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
-- [🔎Billable Ingest Volume Trend.kql](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
+- [🔎Billable Ingest Query List](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
 - [💰Microsoft's Official Sentinel Pricing](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)
 - [😼Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 - [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
