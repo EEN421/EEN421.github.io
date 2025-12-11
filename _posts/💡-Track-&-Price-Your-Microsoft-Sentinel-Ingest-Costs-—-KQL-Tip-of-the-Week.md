@@ -54,14 +54,14 @@ We’re scoping to the **last 90 days** of data. Great window for:
 
 You can tweak `90d` to anything you want: `30d`, `7d`, `365d`, etc. Even 1h for an hour or 2m for two minutes.
 
-> **Pro-Tip:** _use 30d for Monthy reports; switch to 90 days at the end of the quarter to pivot to a quarterly report 😎_
-
-> _Use 5m to check if something you did immediately affected ingest cost and confirm whether you broke something 😅_
+> 💡 **Pro-Tip:** <br/>
+>- _Use 30d for Monthy reports; switch to 90 days at the end of the quarter to pivot to a quarterly report 😎_ <br/>
+>- _Use 5m to check if something you did affected ingest cost and immediately confirm whether you broke something 😅_
 
 <br/>
 
 ### 3.) **`| where IsBillable == true`**
-This is where the magic (and savings) happen. We only care about records that **count toward your bill**. Some logs might be free or included (e.g., certain platform logs). `IsBillable == true` filters out the noise, leaving only data that actually costs you money.
+This is where the magic happens. We only care about records that **count toward your bill**. Some logs might be free or included (e.g., certain platform logs). `IsBillable == true` filters out the noise, leaving only data that actually costs you money.
 
 <br/>
 
@@ -145,15 +145,15 @@ Query 1 broke down billable ingest per Solution, which is perfect for “what’
 Query 2 shifts gears: it gives you total ingest per day, rolled up across the entire workspace, plus a dollar cost for each day.
 
 Here’s what actually changed:
-- Solution was removed from the summarize
-- Instead of getting a bar per Solution per day, we now get one total per day.
-- This makes the output ideal for cost trending, budgeting, and forecasting.
-- Switched from / 1000 to / 1024, and added round()
-- Using 1024 MB = 1 GiB is more accurate for log volume math.
-- round(..., 2) keeps the numbers tidy and currency-friendly.
-- Added a cost column
+- **Solution** was removed from **summarize**.
+- Instead of getting a bar per **Solution per day**, we now get one **total per day**.
+- This makes the output ideal for _cost trending, budgeting, and forecasting._
+- Switched from `/ 1000` to `/ 1024`, and added `round()`.
+- Using **1024 MB = 1 GiB** is more accurate for log volume math; _**Gigabyte** vs. **Gibibyte** accuracy is discussed later_
+- `round(..., 2)` keeps the numbers tidy and currency-friendly.
+- Added a **cost** column
 
-This lets you translate raw ingest volume into actual dollars, in-line with your workspace’s per-GB price. Let’s break down exactly what Query 2 is doing.
+This allows you to translate raw ingest volume into actual dollars, in-line with your workspace’s per-GB price. Let’s break down how this works in more detail, line-by-line...
 
 <br/>
 
@@ -203,12 +203,12 @@ You now have a simple, finance-friendly daily ledger of your Sentinel costs — 
 `| extend cost = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
 
 What this line does:
-- Takes TotalVolumeGB (a number)
+- Takes **TotalVolumeGB** (a number)
 - Multiplies it by your per-GB cost rate (4.30)
-- Rounds the result to 2 decimals
-- Converts the numeric cost into a string
-- Prepends a $
-- Appends " / Day"
+- Rounds the result to 2 decimal places
+- Converts the **numeric** cost into a **string**
+- Prepends a **$**
+- Appends **" / Day"**
 
 So: `52.80` becomes `$52.80 / Day`
 
@@ -218,9 +218,9 @@ So: `52.80` becomes `$52.80 / Day`
 `| extend TotalVolumeGB = strcat(TotalVolumeGB, 'GB / Day')`
 
 What this line does
-- Takes your numeric TotalVolumeGB
-- Appends the string 'GB / Day'
-- Converts the entire result into a string
+- Takes your numeric T**otalVolumeGB**
+- Appends the string **'GB / Day'**
+- Converts the entire result into a **string**
 
 So: `12.54` becomes: `12.54GB / Day`
 
@@ -230,9 +230,9 @@ So: `12.54` becomes: `12.54GB / Day`
 
 <br/><br/>
 
-# 🤔 Why?
+### 3. 🤔 Why?
 
-Because you're shifting the output from analysis-ready to human-ready. Once the numbers are formatted, they're much easier to interpret in:
+Because you're shifting the output _from **analysis-ready** to human-ready**_. Once the numbers are formatted, they're much easier to interpret in:
 
 - Workbooks & dashboards
 - Exports and email reports
@@ -240,11 +240,11 @@ Because you're shifting the output from analysis-ready to human-ready. Once the 
 - Blog posts 👋😁
 - Client-facing deliverables
 
-In other words, you're preparing the data for presentation, not additional math — a common pattern whenever the final output needs to be clean, readable, and report-ready.
+In other words, _you're preparing the data for presentation, not additional math_ — a common pattern whenever the final output needs to be **clean, readable,** and **report-ready.**
 
 <br/>
 
-# ⚠️ Pitfall to Watch Out for
+### 4. ⚠️ Pitfall to Watch Out for
 
 > Here’s the nuance when using **strcat()**...
 > After this line, cost is no longer numeric... Meaning You can no longer:
@@ -263,9 +263,9 @@ In other words, you're preparing the data for presentation, not additional math 
 
 This pattern is excellent as long as you’re done calculating because _once a column becomes a **string** → it stops being useful for **math**_. If you ever need raw values again, formatting early could shoot you in the foot. 
 
-> 💡**Best practice tip:** If you need raw numeric values and formatted output: <br/>
-> `| extend TotalVolumeGB_Formatted = strcat(TotalVolumeGB, 'GB / Day')` <br/>
-> `| extend cost_Formatted = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`
+> 💡**Best practice tip:** If you need raw numeric values and formatted output, created new, separate, "formatted" columns with something like this: <br/><br/>
+>- `| extend TotalVolumeGB_Formatted = strcat(TotalVolumeGB, 'GB / Day')` <br/><br/>
+>- `| extend cost_Formatted = strcat('$', round(TotalVolumeGB * 4.30, 2), ' / Day')`<br/><br/>
 
 This keeps:
 - TotalVolumeGB as float
@@ -278,7 +278,7 @@ This keeps:
 
 <br/>
 
-🛠️ Run these query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities. Don’t wait until Azure billing surprises you — measure it before it measures you.
+🛠️ Run these query now and compare the last 30, 60, and 90 days. If you see unexpected spikes, you’ve already found optimization opportunities. _Don’t wait until Azure billing surprises you — **measure it before it measures you.**_
 
 <br/><br/><br/><br/>
 
@@ -296,7 +296,7 @@ In other words, **1 GiB is about 7% larger than 1 GB.** So depending on whether 
 
 <br/>
 
-# 💽 How We Ended Up With Gigabytes Instead of Gibibytes
+### 💽 How We Ended Up With Gigabytes Instead of Gibibytes
 For decades, the tech industry used the word gigabyte (GB) to describe both decimal and binary measurements — even though they’re not the same. This wasn’t intentional deception; it was simply convenient shorthand during the early personal computing era.
 
 <br/>
@@ -327,6 +327,12 @@ Today, both exist because both are useful:
 - GiB → memory, file systems, compute workloads, low-level metrics
 
 And because the names sound similar, the confusion never totally went away — which is why it’s worth calling out in a KQL series where cost math actually matters.
+
+### ↔️ Quick Comparison
+| Unit	| Bytes               |	Notes                                                                 |
+|-------|---------------------|-----------------------------------------------------------------------|
+| 1 GB	| 1,000,000,000 bytes |	Decimal (SI) — what vendors use                                       |
+| 1 GiB	| 1,073,741,824 bytes	| Binary (IEC) — what Log Analytics / Microsoft usage uses internally   |
 
 <br/>
 <br/>
@@ -364,19 +370,23 @@ In other words:
 ### 🤓 Which one should you use for daily cost charts?
 The Usage table’s `StartTime` is _**not guaranteed** to align perfectly with the calendar day boundary._
 
+<br/>
+
 It may reflect:
 - the start of a metering window
 - ingestion pipeline processing
 - hourly or sub-daily aggregation cycles inside the Microsoft billing engine
+
+<br/>
 
 That means:
 - Days may start at strange hours (e.g., 01:00 UTC or 17:00 UTC)
 - Some bins may appear empty or shifted
 - Visuals may look offset or inconsistent
 
-🎯 For clean, calendar-based daily trends
+🎯 For clean, **calendar-based** daily trends, use **TimeGenerated** with **bin(1d)**, like this: `StartTime = bin(TimeGenerated, 1d)`
 
-Use **TimeGenerated** with **bin(1d)**, like this: `StartTime = bin(TimeGenerated, 1d)`
+<br/>
 
 This gives you:
 
