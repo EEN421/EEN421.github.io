@@ -1,4 +1,10 @@
-# **Visualize and Price Your Billable Ingest Trends**
+# **KQL Query of the Week is officially live — and this is Week #1!**
+Every week, I’ll bring you a practical, reusable KQL snippet straight from the trenches of real-world Microsoft Sentinel work. Think of it as your weekly “KQL vitamin”: small dose, big impact.
+And today we’re kicking things off with the one question every SecOps team eventually asks: “Where is all my ingest money going?” 💸
+
+<br/><br/>
+
+# Visualize and Price Your Billable Ingest Trends
 If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL-of-the-week is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel Log Analytics over the last 90 days—first visually, then in cold hard cash. 💰
 
 Today, we’re going to look at **three useful iterations of the same query**:
@@ -114,7 +120,7 @@ This is **perfect for eyeballing trends** and for screenshots in decks, QBRs, an
 
 ### [⚡Check out all 3 query iterations on my GitHub](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql).
 
-Once you find a spike, the next question is always: _“Okay, but how much is that **in dollars**?”_ 💸
+Once you find a spike, the next question is always: _“Okay, but how much is that **in dollars**?”_ 💵
 
 Let’s look at the upgraded query:
 
