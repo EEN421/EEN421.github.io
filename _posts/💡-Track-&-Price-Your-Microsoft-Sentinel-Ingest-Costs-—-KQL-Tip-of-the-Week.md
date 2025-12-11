@@ -7,11 +7,11 @@ Today, we’re going to look at **three useful iterations of the same query**:
 - **Iteration 2** – “Roll it up per day, in GB and dollars.”
 - **Iteration 3** – “Dress it up with STRCAT( )”
 
-<br/><br/>
+<br/>
 
 ### [⚡Check out all 3 query iterations on my GitHub](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql).
 
-<br/><br/>
+<br/>
 
 ![](/assets/img/KQL%20of%20the%20Week/1/Cyberpunk%20SOC%20Data%20Analysis.png)
 
