@@ -343,7 +343,7 @@ And because the names sound similar, the confusion never totally went away — w
 <br/>
 
 # ⏰ Bonus Discussion: StartTime vs TimeGenerated
-Some of my sharper readers may have noticed that a few screenshots used `StartTime` instead of `TimeGenerated`. That one’s on me. Just like my GB vs GiB rant, I occasionally commit crimes against precision — so here’s a clear breakdown of what these two fields actually represent, and why it matters for cost analysis. 
+Some of my sharper readers may have noticed that a few screenshots used `StartTime` instead of `TimeGenerated`. That one’s on me (#DevSecOops 😅); Just like my GB vs GiB rant, I occasionally commit crimes against precision — so here’s a clear breakdown of what these two fields actually represent, and why it matters for cost analysis. 
 
 `TimeGenerated`
 - This is the actual timestamp when the Usage record was logged.
