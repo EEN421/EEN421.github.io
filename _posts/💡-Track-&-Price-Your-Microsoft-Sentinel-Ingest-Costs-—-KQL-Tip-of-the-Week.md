@@ -1,5 +1,5 @@
 # **Visualize and Price Your Billable Ingest Trends**
-If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL-of-the-week is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel / Log Analytics over the last 90 days—first visually, then in cold hard cash.
+If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL-of-the-week is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel Log Analytics over the last 90 days—first visually, then in cold hard cash. 💰
 
 We’re going to look at two versions of the same query:
 
@@ -89,14 +89,19 @@ This is the “Executive Slide” line. It gives you an instant sense of:
 * Whether your ingest is stable, trending up, or spiking all over the place.
 * Where to focus tuning and data hygiene efforts.
 
-
 <br/>
 
 ![](/assets/img/KQL%20of%20the%20Week/1/column.png)
 
 <br/>
 
-This is **perfect for eyeballing trends** and for screenshots in decks, QBRs, and “hey, what happened here?” emails.
+Don't forget about pie charts too, for quickly identifying the heaviest drivers for ingest cost at a glance...
+
+![](/assets/img/KQL%20of%20the%20Week/1/Pie.png)
+
+<br/>
+
+This is **perfect for eyeballing trends** and for screenshots in decks, QBRs, and “hey, what happened here?” emails. 
 
 <br/><br/>
 
@@ -313,10 +318,13 @@ And because the names sound similar, the confusion never totally went away — w
 
 <br/>
 <br/>
+
+![](/assets/img/KQL%20of%20the%20Week/1/KQL%20of%20the%20Week%201-1.png)
+
 <br/>
 <br/>
 
-# Bonus Discussion: StartTime vs TimeGenerated
+# ⏰ Bonus Discussion: StartTime vs TimeGenerated
 Some of my sharper readers may have noticed that a few screenshots used `StartTime` instead of `TimeGenerated`. That one’s on me. Just like my GB vs GiB rant, I occasionally commit crimes against precision — so here’s a clear breakdown of what these two fields actually represent, and why it matters for cost analysis. 
 
 `TimeGenerated`
