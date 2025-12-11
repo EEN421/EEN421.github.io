@@ -13,156 +13,149 @@ Instead of looking at cost, we shift focus to raw event frequency—a metric tha
 
 This gives you a clean, fast workflow for spotting noisy Event IDs, isolating misconfigured or anomalous accounts, and tightening both your detection logic and cost posture. With that, let’s jump into this week’s analysis...
 
+<br/><br/>
 
-
-# 👉 This week’s pair of KQL queries helps you spot the loudest Event ID in your environment — and then drill down into which accounts are responsible for firing it most often.
+# 🔊 This week’s KQL helps you spot the loudest Event ID in your environment — and then drill down into which accounts are responsible for firing it most often.
 
 These queries are perfect for your weekly cost-noise correlation checks, operational hygiene reviews, or threat hunting warmups.
 
 💾 Full queries are in the public repo:
-
-Which EventID fires the most in a month?
-
-Which Accounts are throwing this EventID?
+- Which EventID fires the most in a month?
+- Which Accounts are throwing this EventID?
 
 🔍 Why This Matters
 
 In most orgs, a handful of Event IDs generate most of the volume in SecurityEvent — and those high-frequency IDs can:
+- Inflate your ingest costs
+- Obscure real signals from the noise
+- Make detection rules less efficient
+- Hide suspicious behavior behind mountains of normal activity
 
-Inflate your ingest costs
+So step one is simple: **Find the Event ID that fires most often — then look at who’s actually triggering it...** And that’s exactly what this week’s queries do.
 
-Obscure real signals from the noise
+<br/><br/>
 
-Make detection rules less efficient
-
-Hide suspicious behavior behind mountains of normal activity
-
-So step one is simple:
-
-Find the Event ID that fires most often — then look at who’s actually triggering it.
-
-That’s exactly what this week’s queries do.
-
-📈 Query #1 — Which Event ID Fires the Most in the Last Month?
+# 📈 Query #1 — Which Event ID Fires the Most in the Last Month?
 
 This query counts all SecurityEvent occurrences in the last 30 days and ranks Event IDs by frequency. No filters, no cost calculations — just the raw noise metric.
 
-// Which EventID fires the most in a month?
+```kql
 SecurityEvent
 | where TimeGenerated > ago(30d)
 | summarize count() by EventID
 | render columnchart
+```
 
+👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
-Source: GitHub query text 
-GitHub
+<br/><br/>
 
-🧠 What You’re Looking For
+### 🔎 What You’re Looking For
 
 When you run this query:
-
-You’ll get a chart of Event IDs ranked by how often they happened in the last 30 days.
-
-The biggest bars are your “noisiest” events.
-
-Typical suspects often include event-log-heavy IDs like 4624, 4625, 5156, etc., depending on your environment.
+- You’ll get a chart of Event IDs ranked by how often they happened in the last 30 days.
+- The biggest bars are your “noisiest” events.
+- Typical suspects often include event-log-heavy IDs like 4624, 4625, 5156, etc., depending on your environment.
 
 This gives you a quick look at what’s dominating your security log volume.
 
-💡 Tip: If you’ve already been tracking ingest costs with last week’s queries, overlay this with Table + Cost ranking and you can start connecting “noise” with “dollars.”
+>💡 Tip: If you’ve already been tracking ingest costs with last week’s queries, overlay this with Table + Cost ranking and you can start connecting “noise” with “dollars.”
 
-👤 Query #2 — Which Accounts Are Throwing This Event ID?
+<br/><br/>
 
-So you found the loudest Event ID. Now let’s see who’s generating it.
+# 👤 Query #2 — Which Accounts Are Throwing This Event ID?
 
-This second query takes a specific Event ID (in this example 4662) and counts how many times each account triggered it.
+So you found the loudest Event ID. Now let’s see who’s generating it. This second query takes a specific Event ID (in this example 4662) and counts how many times each account triggered it.
 
+```kql
 // Which Accounts are throwing this EventID?
 SecurityEvent
 | where EventID == "4662"
 | summarize count() by Account
 | render columnchart
+```
 
+👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
-Source: GitHub query text 
-GitHub
+<br/><br/>
 
-🔍 How to Use It
+# 🛠️ How to Use It
 
-Replace "4662" with the noisy Event ID you found in Query #1.
-
-Run the query.
-
-You’ll get a visualization of which accounts are responsible for the most of that event.
+Replace `4662` with the noisy Event ID you found in Query #1, then run the query. You’ll get a visualization of which accounts are responsible for the most of that event.
 
 This is incredibly useful to:
+- Spot compromised or misconfigured accounts
+- Find noisy service accounts
+- Detect unusual authentication or access patterns
 
-Spot compromised or misconfigured accounts
-
-Find noisy service accounts
-
-Detect unusual authentication or access patterns
+<br/>
 
 For example:
-
-Account	Count
-svc-backup	12,350
-jdoe@contoso.com
-	8,710
-workstation01$	6,204
-...	...
+| Account		   | Count		|
+|------------------|------------|
+| svc-backup	   | 12,350 	|
+| jdoe@contoso.com | 8,710		|
+| workstation01$   | 6,204		|
+| ...			   | ...		|
 
 If one account is way above the rest, that could be:
+- A high-traffic service account you expected
+- A misconfigured script
+- A potential security issue worth investigating
 
-A high-traffic service account you expected
+<br/><br/>
 
-A misconfigured script
-
-A potential security issue worth investigating
-
-🧩 Putting It Together: A Simple Weekly Workflow
-
+# 🧩 Putting It Together: A Simple Weekly Workflow
 Here’s a pattern you can run every week to keep tabs on log noise and potential issues:
+- **Run Query #1** — See which Event ID fired the most in the last month.
+	- Pick the Top Culprit — This is your “Event of Interest.”
 
-Run Query #1 — See which Event ID fired the most in the last month.
+<br/>
 
-Pick the Top Culprit — This is your “Event of Interest.”
+- **Run Query #2** — Feed that Event ID into the accounts query.
+	- Investigate Outliers — Accounts with unusually high counts might need attention.
 
-Run Query #2 — Feed that Event ID into the accounts query.
-
-Investigate Outliers — Accounts with unusually high counts might need attention.
+<br/>
 
 This is a lightweight but powerful way to go from macro noise patterns to micro actionables in minutes.
 
-🥅 Bonus Tips
-📌 Filter by Logon Type
+<br/><br/>
 
+# 🔦 Bonus Tips
+📌 Filter by Logon Type <br/>
 If you’re focusing on authentication noise, you can enhance Query #1 with filters on logon type or status (success vs failure).
 
-📌 Combine With Cost Analytics
+<br/>
 
-Remember the queries from Weeks #1 and #2?
-Overlaying Event ID noise with ingest cost helps you:
+📌 Combine With Cost Analytics <br/>
+Remember the queries from Weeks #1 and #2? Overlaying Event ID noise with ingest cost helps you:
+- Spot expensive noise that you can reduce
+- Prioritize tuning where it saves real $$
 
-Spot expensive noise that you can reduce
+<br/>
 
-Prioritize tuning where it saves real $$
-
-📌 Alerting
-
+📌 Alerting <br/>
 If a specific Event ID spikes above its baseline frequency, you can attach a metric alert in Sentinel and get notified.
 
-🛠 Wrap-Up
+<br/><br/>
 
-Two simple queries.
-One powerful insight loop:
+# 🎁 Wrap-Up
+Two simple queries. One powerful insight loop:
+- Find the loudest Event ID
+- See which accounts are driving it
+- Adjust collection, alerting, or investigation focus accordingly
 
-Find the loudest Event ID
+<br/>
 
-See which accounts are driving it
+⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **KQL Query of the Week** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
-Adjust collection, alerting, or investigation focus accordingly
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
-And as always—if you want to keep digging deeper into real-world Sentinel analytics, let me know and I’ll help you build that next automation or optimization!
+<br/>
 
-Stay curious, stay efficient, and keep those logs both loud and useful. 📊🔍💪
+### 👉 Stay curious, stay efficient, and keep those logs both loud and useful. 📊🔍💪
+
+<br/><br/>
+
+# 🔗 Helpful Links & Resources

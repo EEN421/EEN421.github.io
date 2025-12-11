@@ -33,7 +33,7 @@ I’ve published the full queries here:
 👉 You can find them all in my public KQL repo:
 `https://github.com/EEN421/KQL-Queries` (look for the **“Top 10 … with Cost (Enhanced)”** files).
 
----
+<br/><br/>
 
 ## Quick Primer: `_IsBillable` and `_BilledSize`
 
@@ -48,9 +48,9 @@ These are your **per-row cost knobs**. Instead of just counting events, you can 
 
 That’s the heart of this week’s queries.
 
----
+<br/><br/>
 
-## Query 1 – Top 10 Log Sources by Cost (All Tables)
+# Query 1 – Top 10 Log Sources by Cost (All Tables)
 
 First, let’s answer the high-level question:
 
@@ -115,9 +115,9 @@ This immediately tells you:
 
 Once you know which **table** is noisy, the next step is to dig **inside** that table.
 
----
+<br/><br/>
 
-## Query 2 – Top 10 `CommonSecurityLog` Severity Levels by Cost
+# Query 2 – Top 10 `CommonSecurityLog` Severity Levels by Cost
 
 In many environments, **CEF-based logs** (firewalls, proxies, VPNs) are some of the **biggest cost drivers**. Those land in `CommonSecurityLog`. ([Microsoft Learn][4])
 
@@ -143,6 +143,8 @@ CommonSecurityLog
 | top 10 by CostUSD desc
 | order by CostUSD desc
 ```
+
+<br/><br/>
 
 ### How this works
 
@@ -172,6 +174,8 @@ CommonSecurityLog
   * `DeviceProduct` – specific product line
   * `LogSeverity` – CEF severity (e.g., *Informational*, *Low*, *Medium*, *High*, *Critical*)
 
+<br/>
+
 This gives you a neat table like:
 
 | DeviceVendor | DeviceProduct | LogSeverity   | TotalGiB | CostUSD |
@@ -180,6 +184,8 @@ This gives you a neat table like:
 | Palo Alto    | PAN-OS        | Low           | 145.12   | 623.02  |
 | Fortinet     | FortiGate     | Informational | 89.33    | 383.12  |
 | …            | …             | …             | …        | …       |
+
+<br/>
 
 From there you can ask:
 
@@ -190,7 +196,7 @@ From there you can ask:
 This is where **real savings** happen:
 You’re not randomly turning off logs—you’re specifically **targeting the lowest-value, highest-cost severities**.
 
----
+<br/><br/>
 
 ## Query 3 – Top 10 `SecurityEvent` Event IDs by Cost
 
@@ -239,9 +245,9 @@ When you combine this with **detections you actually care about**, you can be ru
 > “These 3 Event IDs matter for our threat models.
 > The other 12 are tax.”
 
----
+<br/><br/>
 
-## Putting It All Together: A Simple Cost-Hunting Workflow
+# Putting It All Together: A Simple Cost-Hunting Workflow
 
 Here’s how I use these three queries in the real world:
 
@@ -249,19 +255,27 @@ Here’s how I use these three queries in the real world:
 
    * Spot **trends** and **spikes** in overall billable ingest.
 
+   <br/>
+
 2. **Run Query 1 (Top 10 log sources by cost):**
 
    * Identify which **tables** are the heaviest hitters.
+
+   <br/>
 
 3. **For `CommonSecurityLog`:**
 
    * Run Query 2 to see **which vendor/product + severity combos** are burning the most.
    * Tune firewalls / proxies / DCRs accordingly.
 
+   <br/>
+
 4. **For `SecurityEvent`:**
 
    * Run Query 3 to see **which Event IDs** are the biggest cost drivers.
    * Review which ones actually matter to your detections and compliance requirements.
+
+   <br/>
 
 5. **Turn insights into actions:**
 
@@ -269,15 +283,17 @@ Here’s how I use these three queries in the real world:
    * Move low-value logs to **Basic/Auxiliary tiers** or an **external data lake**
    * Adjust retention on particularly noisy tables
 
+   <br/>
+
 Run this loop once a month (or per QBR), and you’ll steadily chip away at:
 
 * **Unnecessary ingest**
 * **Unnecessary spend**
 * While keeping the **signal** you actually need for detection and forensics.
 
----
+<br/><br/>
 
-## Caveats and Nuances to Keep in Mind
+# ⚠️ Caveats and Nuances to Keep in Mind
 
 A few important notes before you start deploying chainsaws to your logs:
 
@@ -285,9 +301,13 @@ A few important notes before you start deploying chainsaws to your logs:
 
   * Always plug in your **actual Sentinel price per GB** from the pricing page, not the 4.30 example I’m using here. ([Microsoft Learn][2])
 
+     <br/>
+
 * **_BilledSize and _IsBillable are the source of truth.**
 
   * They account for compression and internal sizing—so they’ll differ from raw event sizes. ([Microsoft Learn][1])
+
+     <br/>
 
 * **Don’t cut before checking detections.**
 
@@ -297,6 +317,8 @@ A few important notes before you start deploying chainsaws to your logs:
     * Could future **threat hunts** need it?
     * Are there any **regulatory** or **forensic** reasons to keep it?
 
+   <br/>
+
 * **Trend first, then optimize.**
 
   * That’s why Week #1 was all about **trends** and Week #2 is about **top talkers**.
@@ -305,9 +327,9 @@ A few important notes before you start deploying chainsaws to your logs:
     * “Here’s how our ingest/cost is trending.”
     * “Here are the specific log sources and patterns we adjusted to control it.”
 
----
+<br/><br/>
 
-## Next Steps / Call to Action
+# ⏩ Next Steps
 
 Here’s your homework for this week:
 
@@ -326,17 +348,24 @@ Here’s your homework for this week:
 
 Run this exercise across a few months and you’ll not only **cut costs**, you’ll also build a defensible narrative for leadership:
 
-> “We didn’t just reduce logging—we removed low-value noise while preserving (and sometimes improving) security signal.”
+> 👉 “We didn’t just reduce logging—we removed low-value noise while preserving (and sometimes improving) security signal.” 😎
 
----
+⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **KQL Query of the Week** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
-If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **KQL Query of the Week** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
-Now go make those noisy logs **pay rent**. 😼🗡️📊
+<br/>
 
-[1]: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns?utm_source=chatgpt.com "Standard columns in Azure Monitor log records"
-[2]: https://learn.microsoft.com/en-us/azure/sentinel/billing?utm_source=chatgpt.com "Plan costs and understand pricing and billing"
-[3]: https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage?utm_source=chatgpt.com "Analyze usage in Log Analytics workspace"
-[4]: https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/commonsecuritylog?utm_source=chatgpt.com "Azure Monitor Logs reference - CommonSecurityLog"
-[5]: https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/securityevent?utm_source=chatgpt.com "Azure Monitor Logs reference - SecurityEvent"
-[6]: https://learn.microsoft.com/en-us/azure/sentinel/billing-reduce-costs?utm_source=chatgpt.com "Reduce costs for Microsoft Sentinel"
+### 👉 Now go make those noisy logs **pay rent**. 😼🗡️📊
+
+<br/><br/>
+
+# 🔗 Helpful Links & Resources
+
+- [Standard columns in Azure Monitor log records](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns)
+- [Plan costs and understand pricing and billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
+[Analyze usage in Log Analytics workspace](https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage)
+- [Azure Monitor Logs reference - CommonSecurityLog](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/commonsecuritylog)
+- [Azure Monitor Logs reference - SecurityEvent](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/securityevent)
+- [Reduce costs for Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/billing-reduce-costs)
