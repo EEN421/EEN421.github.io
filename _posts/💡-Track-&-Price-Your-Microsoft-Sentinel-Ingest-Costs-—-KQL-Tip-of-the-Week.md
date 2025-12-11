@@ -387,7 +387,7 @@ This gives you:
 <br/>
 
 # 📚 Thanks for Reading! 
-I hope this was as much fun reading as it was writing! 
+Thanks for nerding out with me on some of the fun (and sometimes annoying) nuances of KQL—because when you can see your ingest trends and price them, you’re no longer flying blind: you’re flying informed. Stay tuned for more **“KQL-of-the-Week”** hacks to give you **visibility, clarity,** and a _few less surprise spikes on your bill._ 🤑
 
 If this kind of automation gets your gears turning, check out my book:
 🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
@@ -404,8 +404,8 @@ If this kind of automation gets your gears turning, check out my book:
 
 # 🔗 References (good to keep handy)
 
-- [🔎Billable Ingest Query List](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
-- [💰Microsoft's Official Sentinel Pricing](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)
+- [⚡Check out all 3 query iterations on my GitHub](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql)
+- [💰Microsoft's Official Sentinel Pricing Page](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)
 - [😼Origin of Defender NinjaCat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025) 
 - [📘Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ)
 
