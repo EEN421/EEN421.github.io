@@ -1,8 +1,8 @@
-# **KQL Toolbox is officially live — and this is Week #1!**
+# **KQL Toolbox is officially live!**
 As part of this **KQL Toolbox** series, I bring you practical, reusable KQL snippets straight from the trenches of real-world Microsoft Sentinel work. Think of it as your regular “KQL vitamin”: small dose, big impact.
 And today we’re kicking things off with the one question every SecOps team eventually asks: “Where is all my ingest money going?” 💸
 
-<br/><br/>
+<br/>
 
 # Visualize and Price Your Billable Ingest Trends
 If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s **KQL Toolbox** article is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel Log Analytics over the last 90 days—first visually, then in cold hard cash. 💰
@@ -19,7 +19,7 @@ Today, we’re going to look at **three useful iterations of the same query**:
 
 <br/>
 
-![](/assets/img/KQL Toolbox/1/Cyberpunk SOC Data Analysis.png)
+![](/assets/img/KQL%20Toolbox/1/Cyberpunk%20SOC%20Data%20Analysis.png)
 
 <br/><br/><br/><br/>
 
@@ -34,7 +34,7 @@ Usage
 ```
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/Timechart.png)
+![](/assets/img/KQL%20Toolbox/1/Timechart.png)
 
 <br/><br/>
 
@@ -80,7 +80,7 @@ This line does a lot of work:
 
 So you end up with:
 
-![](/assets/img/KQL%20of%20the%20Week/1/noChart.png)
+![](/assets/img/KQL%20Toolbox/1/noChart.png)
 
 <br/><br/>
 
@@ -102,13 +102,13 @@ This is the “Executive Slide” line. It gives you an instant sense of:
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/column.png)
+![](/assets/img/KQL%20Toolbox/1/column.png)
 
 <br/>
 
 Don't forget about **pie charts** too, for quickly identifying the heaviest drivers for ingest cost at a glance...
 
-![](/assets/img/KQL%20of%20the%20Week/1/Pie.png)
+![](/assets/img/KQL%20Toolbox/1/Pie.png)
 
 <br/>
 
@@ -135,7 +135,7 @@ Usage
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/CostPerDayGraph.png)
+![](/assets/img/KQL%20Toolbox/1/CostPerDayGraph.png)
 
 <br/><br/><br/><br/>
 
@@ -179,7 +179,7 @@ Now we turn those GB into real money:
 - `round(..., 2)` – Standard currency rounding to the second decimal place. Replace 2 with 3 to include three decimal places in your results, etc.
 
 
-![](/assets/img/KQL%20of%20the%20Week/1/noChart3.png)
+![](/assets/img/KQL%20Toolbox/1/noChart3.png)
 
 <br/>
 
@@ -226,7 +226,7 @@ So: `12.54` becomes: `12.54GB / Day`
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png)
+![](/assets/img/KQL%20Toolbox/1/noChart2.png)
 
 <br/><br/>
 
@@ -273,7 +273,7 @@ This keeps:
 - formatted versions as strings
 - things looking slick 😎
 
-![](/assets/img/KQL%20of%20the%20Week/1/noChart2.png)
+![](/assets/img/KQL%20Toolbox/1/noChart2.png)
 
 
 <br/>
@@ -337,7 +337,7 @@ And because the names sound similar, the confusion never totally went away — w
 <br/>
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/KQL%20of%20the%20Week%201-1.png)
+![](/assets/img/KQL%20Toolbox/1/KQL%20of%20the%20Week%201-1.png)
 
 <br/>
 <br/>
@@ -397,7 +397,7 @@ This gives you:
 <br/>
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/NinjaQuery.png)
+![](/assets/img/KQL%20Toolbox/1/NinjaQuery.png)
 
 <br/>
 <br/>

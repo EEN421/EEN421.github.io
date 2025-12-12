@@ -1,5 +1,5 @@
-# 💡 KQL Query of the Week #3 — Which Event ID Noises Up Your Logs (and Who’s Causing It)?
-**Welcome back to the KQL Query of the Week series!** In last week’s entry (KQL Tip of the Week #2), we zoomed in on log source cost drivers—using `_IsBillable` and `_BilledSize` to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
+# 💡 KQL Toolbox #3 — Which Event ID Noises Up Your Logs (and Who’s Causing It)?
+**Welcome back to the DevSecOpsDad KQL Toolbox series!** In the last entry (KQL Toolbox #2), we zoomed in on log source cost drivers—using `_IsBillable` and `_BilledSize` to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
 ### This week, we’re building directly on that foundation...
 Because once you know which **log sources** and which **Event IDs** are the _most expensive_, the very next question becomes:
@@ -15,11 +15,11 @@ This gives you a clean, fast workflow for spotting noisy Event IDs, isolating mi
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/3/DevSecSignal.png)
+![](/assets/img/KQL%20Toolbox/3/DevSecSignal.png)
 
 <br/><br/>
 
-# 🔊 This week’s KQL helps you spot the loudest Event ID in your environment — and then drill down into which accounts are responsible for firing it most often.
+# 🔊 Today's KQL helps you spot the loudest Event ID in your environment — and then drill down into which accounts are responsible for firing it most often.
 
 These queries are perfect for your weekly cost-noise correlation checks, operational hygiene reviews, or threat hunting warmups.
 
@@ -37,7 +37,7 @@ In most orgs, a handful of Event IDs generate most of the volume in SecurityEven
 - Make detection rules less efficient
 - Hide suspicious behavior behind mountains of normal activity
 
-So step one is simple: **Find the Event ID that fires most often — then look at who’s actually triggering it...** And that’s exactly what this week’s queries do.
+So step one is simple: **Find the Event ID that fires most often — then look at who’s actually triggering it...** And that’s exactly what today’s queries do.
 
 <br/><br/>
 
@@ -52,9 +52,9 @@ SecurityEvent
 | render columnchart
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/3/3kql1.png)
+![](/assets/img/KQL%20Toolbox/3/3kql1.png)
 
-👉 [**KQL Tip of the Week #2 — Which EventID fires the most in a month?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
+👉 [**KQL Toolbox #3 — Which EventID fires the most in a month?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
 
 <br/><br/>
 
@@ -83,15 +83,15 @@ SecurityEvent
 | render columnchart
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/3/3kql2.png)
+![](/assets/img/KQL%20Toolbox/3/3kql2.png)
 
-👉 [**KQL Tip of the Week #2 — Which Accounts are Throwing this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
+👉 [**KQL Toolbox #3 — Which Accounts are Throwing this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 
 <br/><br/>
 
 # 🛠️ How to Use It
 
-Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query. You’ll get a visualization of which accounts are responsible for the most of that event.
+Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query (in our example we'll use  `4663`). You’ll get a visualization of which accounts are responsible for the most of that event.
 
 This is incredibly useful to:
 - Spot compromised or misconfigured accounts
@@ -134,7 +134,7 @@ This is a lightweight but powerful way to go from macro noise patterns to micro 
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/3/NinjaCatAnalyst3.png)
+![](/assets/img/KQL%20Toolbox/3/NinjaCatAnalyst3.png)
 
 <br/><br/>
 
@@ -145,7 +145,7 @@ If you’re focusing on authentication noise, you can enhance Query #1 with filt
 <br/>
 
 ⚡ Combine With Cost Analytics <br/>
-Remember the queries from Weeks #1 and #2? Overlaying Event ID noise with ingest cost helps you:
+Remember the queries from **KQL Toolbox #1 and #2**? Overlaying Event ID noise with ingest cost helps you:
 - Spot expensive noise that you can reduce
 - Prioritize tuning where it saves real $$
 
@@ -156,7 +156,7 @@ If a specific Event ID spikes above its baseline frequency, you can attach a met
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/3/Query3.png)
+![](/assets/img/KQL%20Toolbox/3/Query3.png)
 
 
 <br/><br/>

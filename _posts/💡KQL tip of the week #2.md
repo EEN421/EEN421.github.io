@@ -1,16 +1,16 @@
-# KQL Query of the Week #2 — 🔊 Find Your Noisiest Log Sources (With Cost 🤑) 
+# KQL Toolbox #2 — 🔊 Find Your Noisiest Log Sources (With Cost 🤑) 
 
-Last week in **KQL Query of the Week #1**, we zoomed out and looked at **billable ingest trends over time**—how many GiB per day you’re ingesting, and roughly how much that’s costing you in Microsoft Sentinel.
+Last week in **KQL Toolbox**, we zoomed out and looked at **billable ingest trends over time**—how many GiB per day you’re ingesting, and roughly how much that’s costing you in Microsoft Sentinel.
 
-This week, we’re zooming **in**.
+This time, we’re zooming **in**.
 
 Because once you can say *“We’re ingesting 150 GiB/day and spending ~$645/day”*, the very next question from your boss, your CFO, or your own anxiety is:
 
 > **“Okay… *which* log sources are burning that money?”**
 
-![](/assets/img/KQL%20of%20the%20Week/2/KQL%20Tip%20of%20the%20Week.png)
 
-That’s what this week’s query set is all about:
+
+That’s what today’s query set is all about:
 **Top 10 log sources by cost**, and then **drilling into two usual suspects**:
 
 * `CommonSecurityLog` (firewalls, proxies, etc.)
@@ -28,11 +28,14 @@ All three use the same idea:
 
 <br/>
 
+![](/assets/img/KQL%20Toolbox/2/NinjaCatAnalyst.png)
+
 I’ve published the full queries here on GitHub:
 
 * [**🔗 Top 10 Log Sources with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
 * [**🔗 Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql_)
 * [**🔗 Top 10 Security Events with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
+
 
 <br/><br/>
 
@@ -51,7 +54,7 @@ That’s the heart of this week’s queries.
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/2/NinjaCatAnalyst.png)
+
 
 
 <br/><br/>
@@ -77,7 +80,7 @@ Usage
 | order by CostUSD desc
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/2/kql1-1.png)
+![](/assets/img/KQL%20Toolbox/2/kql1-1.png)
 
 <br/><br/>
 
@@ -127,7 +130,7 @@ Once you know which **table** is noisy, the next step is to dig **inside** that 
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/2/ByteRiver.png)
+![](/assets/img/KQL%20Toolbox/2/ByteRiver.png)
 
 <br/><br/>
 
@@ -158,7 +161,7 @@ CommonSecurityLog
 | order by CostUSD desc
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/2/kql2-1.png)
+![](/assets/img/KQL%20Toolbox/2/kql2-1.png)
 
 <br/><br/>
 
@@ -214,7 +217,7 @@ You’re not randomly turning off logs—you’re specifically **targeting the l
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/2/CatDad.png)
+![](/assets/img/KQL%20Toolbox/2/CatDad.png)
 
 <br/><br/>
 
@@ -242,7 +245,7 @@ SecurityEvent
 | order by CostUSD desc
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/2/kql3-1.png)
+![](/assets/img/KQL%20Toolbox/2/kql3-1.png)
 
 <br/><br/>
 
@@ -301,7 +304,7 @@ Usage
 | take 10
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/2/kql1-2.png)
+![](/assets/img/KQL%20Toolbox/2/kql1-2.png)
 
 This is purely presentation/triage. It buckets spend into ranges for quick scanning, but it looks cool!
 
@@ -332,7 +335,7 @@ CommonSecurityLog
 | top 10 by TotalEvents desc
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/2/kql2-2.png)
+![](/assets/img/KQL%20Toolbox/2/kql2-2.png)
 
 <br/><br/>
 
@@ -362,7 +365,7 @@ SecurityEvent
 | limit 10
 ```
 
-![](/assets/img/KQL%20of%20the%20Week/2/kql3-2.png)
+![](/assets/img/KQL%20Toolbox/2/kql3-2.png)
 
 <br/><br/>
 
@@ -412,7 +415,7 @@ Run this loop once a month (or per QBR), and you’ll steadily chip away at:
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/2/NinjaBar.png)
+![](/assets/img/KQL%20Toolbox/2/NinjaBar.png)
 
 <br/><br/>
 
@@ -444,7 +447,7 @@ A few important notes before you start deploying chainsaws to your logs:
 
 * **Trend first, then optimize.**
 
-  * That’s why Week #1 was all about **trends** and Week #2 is about **top talkers**.
+  * That’s why last week was all about **trends,** so today is about **top talkers**.
   * Use both to tell a complete story:
 
     * “Here’s how our ingest/cost is trending.”
