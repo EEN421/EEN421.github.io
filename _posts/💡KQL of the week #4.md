@@ -1,32 +1,30 @@
-📊 DevSecOpsDad: Finding the Data Sources with the Biggest Delta in Log Volume
+# 📊 KQL Toolbox #4: Finding the Data Sources with the Biggest Delta in Log Volume
 
 If you’re working with Azure Monitor Logs / Log Analytics or Microsoft Sentinel, one of the biggest operational headaches is tracking down why your log volume / billable data is changing. Whether it’s a cloud migration, a new app rollout, a misconfigured agent … or just normal growth — understanding what’s driving increases or drops in ingested logs is critical for budgeting, troubleshooting, and SOC hygiene.
 
 Today we’re going to unpack one of my favorite preventive analytics KQL queries: “Data Sources with Biggest Delta in Log Volume.” I’ll walk through what it’s doing, how it works, and the use cases it helps you solve.
 
-🧠 What This Query Is Solving
+# 🧠 What This Query Is Solving
 
 The core problem here is simple:
 
-👉 What data sources (log tables) have changed the most in terms of billable ingestion volume between two periods?
+### 👉 What data sources (log tables) have changed the most in terms of billable ingestion volume between two periods?
 
 You care about this because:
 
-📈 Log ingestion = direct cost in Azure Monitor / Sentinel (billable ingestion volume affects your bill). 
+### 📈 Log ingestion = direct cost in Azure Monitor / Sentinel (billable ingestion volume affects your bill). 
 Microsoft Learn
 +1
 
-🚨 Sudden increases can indicate misconfigurations, runaway telemetry, or silent internal change.
+### 🚨 Sudden increases can indicate misconfigurations, runaway telemetry, or silent internal change.
 
-🔎 Drops in volume usually point to missing telemetry (broken agents, misconfigured pipelines, stopped services) — which can blind your SOC. 
+### 🔎 Drops in volume usually point to missing telemetry (broken agents, misconfigured pipelines, stopped services) — which can blind your SOC. 
 Microsoft Sentinel 101
 
 This KQL query is a drill-down that compares two time windows — the prior 30 days vs. the most recent 30 days — and shows you which data sources saw the biggest changes in billable GB.
 
-🧩 Anatomy of the Query
-
-Here’s the raw query you shared:
-
+# 🧩 Anatomy of the Query
+```kql
 let PriorPeriod = toscalar(
     Usage
     | where TimeGenerated > ago(60d) and TimeGenerated <= ago(30d)
@@ -63,86 +61,82 @@ PriorData
     ['Change $'] = strcat('$', round(ChangeGB * {CostPerGB}, 2))
 | where ['Current 30 Days (GB)'] > 0 or ['Previous 30 Days (GB)'] > 0
 | top 10 by abs(['Change (GB)']) desc
-
+```
 
 Let’s decode that step by step.
 
-🧱 Step 1 — Define Time Windows
+### 🧱 Step 1 — Define Time Windows
+```kql
 let PriorPeriod = ...
 let CurrentPeriod = ...
-
+```
 
 This part sets up two windows:
-
-Prior period: The 30–60 days ago span
-
-Current period: The most recent 30 days
+- Prior period: The 30–60 days ago span
+- Current period: The most recent 30 days
 
 It pulls the earliest and latest timestamps for billable entries in each window so that the subsequent data slices are clean and consistent.
 
 This is important in Azure Monitor usage because the Usage table reflects hourly or periodic summaries, not raw events. 
 Microsoft Learn
 
-🪄 Step 2 — Summarize Billable Volume
+### 🪄 Step 2 — Summarize Billable Volume
+```kql
 let PriorData = ...
 let CurrentData = ...
-
+```
 
 Here we split the consumption data:
 
 Filter to billable records (IsBillable == true) — this ensures we only count the ingestion that affects billing. 
-Microsoft Learn
 
-Aggregate (summarize) to total GB per log type (DataType)
+- Aggregate (summarize) to total GB per log type (DataType)
 
-Convert from MBytes to GB (sum(Quantity) / 1024)
+- Convert from MBytes to GB (sum(Quantity) / 1024)
 
 Now we have two tables:
 
-DataType	PriorGB
+- `DataType`	`PriorGB`
 
 and
 
-DataType	CurrentGB
-🔗 Step 3 — Compare the Two
+- `DataType`	`CurrentGB`
+
+### 🔗 Step 3 — Compare the Two
+```kql
 PriorData
 | join kind=fullouter CurrentData on DataType
-
+```
 
 This is the heart of the delta — we join both tables to ensure all data sources show up, even if they only exist in one period.
 
 Then we calculate:
+- Absolute GB change (ChangeGB)
+- Percentage change (Change %)
+- Estimated cost impact (Change $) based on a {CostPerGB} placeholder (you’d supply this)
 
-Absolute GB change (ChangeGB)
-
-Percentage change (Change %)
-
-Estimated cost impact (Change $) based on a {CostPerGB} placeholder (you’d supply this)
-
-📊 Step 4 — Filter and Rank
-| where ... | top 10 by abs(['Change (GB)']) desc
-
+### 📊 Step 4 — Filter and Rank
+```kql
+| where ...
+| top 10 by abs(['Change (GB)']) desc
+```
 
 Finally we keep only sources with usage, and take the top 10 by absolute GB change — giving you the biggest movers regardless of direction.
 
-🔍 Why This Matters
+# 🔍 Why This Matters
 
 This query solves real-world operational questions:
 
-🧪 1. Detect Sudden Spikes
+### 🧪 1. Detect Sudden Spikes
 
 If one data source starts spiking (e.g., DNS logs, Syslog, SecurityEvents), this will bring it to the top. A sudden spike can:
-
-Blow your budget
-
-Signal misconfiguration
-
-Trigger alerts early
+- Blow your budget
+- Signal misconfiguration
+- Trigger alerts early
 
 Teams often set up alerts based on these deltas to catch anomalies before the invoice arrives. 
-Reddit
 
-❗ 2. Detect Unexpected Drops
+### ❗ 2. Detect Unexpected Drops
 
 A drop isn’t always good. Missing logs often means:
 
@@ -157,42 +151,33 @@ Data source misconfiguration
 You lose visibility before you lose money — and that’s worse. 
 Microsoft Sentinel 101
 
-💰 3. Understand Cost Drivers
+### 💰 3. Understand Cost Drivers
 
 When you’re budgeting for Azure Monitor or Sentinel, most of your bill comes from log ingestion. This query lets you:
-
-Attribute ingestion per source
-
-Show projected costs due to volume changes
-
-Justify retention or filtering decisions
+- Attribute ingestion per source
+- Show projected costs due to volume changes
+- Justify retention or filtering decisions
 
 Because billing is based on ingested volume, understanding what is driving volume is essential for FinOps. 
-Microsoft Learn
 
-📅 4. Trend Reporting
+### 📅 4. Trend Reporting
 
 Companies often run this weekly or monthly:
-
-Trend dashboards
-
-QBR reviews
-
-Drill-downs for executive reporting
+- Trend dashboards
+- QBR reviews
+- Drill-downs for executive reporting
 
 This fits perfectly into quantitative operational reviews.
 
-🛠️ How to Operationalize It
+# 🛠️ How to Operationalize It
 
-💡 Enhancements you can add:
+### 💡 Enhancements you can add:
 
-Dashboard: plot each DataType over time
+- Dashboard: plot each DataType over time
+- Alerts: fire if any source grows > X% vs prior period
+- Automation: trigger tickets when unexpected drops occur
 
-Alerts: fire if any source grows > X% vs prior period
-
-Automation: trigger tickets when unexpected drops occur
-
-🧠 Final Thoughts
+# 🧠 Final Thoughts
 
 This query is a simple yet powerful FinOps + SOC diagnostic tool. It gives you:
 
