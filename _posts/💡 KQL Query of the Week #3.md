@@ -83,6 +83,8 @@ SecurityEvent
 | render columnchart
 ```
 
+![](/assets/img/KQL%20of%20the%20Week/3/3kql2.png)
+
 👉 [**KQL Tip of the Week #2 — Which Accounts are Throwing this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 
 <br/><br/>
@@ -99,12 +101,15 @@ This is incredibly useful to:
 <br/>
 
 For example:
-| Account		   | Count		|
-|------------------|------------|
-| svc-backup	   | 12,350 	|
-| jdoe@contoso.com | 8,710		|
-| workstation01$   | 6,204		|
-| ...			   | ...		|
+| Account		   			| Count		|
+|---------------------------|------------|
+| domain\DevSecOpsDad	    | 12,350 	|
+| domain\PhishingPharoah$	| 8,710		|
+| domain\SecuritySultan   	| 6,204		|
+| ...			   			| ...		|
+| ...			   			| ...		|
+
+<br/>
 
 If one account is way above the rest, that could be:
 - A high-traffic service account you expected
@@ -129,7 +134,7 @@ This is a lightweight but powerful way to go from macro noise patterns to micro 
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/3/Query3.png)
+![](/assets/img/KQL%20of%20the%20Week/3/NinjaCatAnalyst3.png)
 
 <br/><br/>
 
@@ -151,7 +156,8 @@ If a specific Event ID spikes above its baseline frequency, you can attach a met
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/3/NinjaCatAnalyst3.png)
+![](/assets/img/KQL%20of%20the%20Week/3/Query3.png)
+
 
 <br/><br/>
 
@@ -163,19 +169,24 @@ Two simple queries. One powerful insight loop:
 
 <br/>
 
+### 👉 Stay curious, stay efficient, and keep those logs both loud and useful. 📊🔍💪
+
+<br/><br/>
+
+# 📚 Want to Go Deeper?
+
 ⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **KQL Query of the Week** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
 ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
 
-<br/>
 
-### 👉 Stay curious, stay efficient, and keep those logs both loud and useful. 📊🔍💪
 
 <br/><br/>
 
 # 🔗 Helpful Links & Resources
-
+- [⚡Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql_)
+- [⚡Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 
 
 
