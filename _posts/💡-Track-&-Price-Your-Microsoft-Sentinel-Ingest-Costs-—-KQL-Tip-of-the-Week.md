@@ -1,11 +1,11 @@
-# **KQL Query of the Week is officially live — and this is Week #1!**
-Every week, I’ll bring you a practical, reusable KQL snippet straight from the trenches of real-world Microsoft Sentinel work. Think of it as your weekly “KQL vitamin”: small dose, big impact.
+# **KQL Toolbox is officially live — and this is Week #1!**
+As part of this **KQL Toolbox** series, I bring you practical, reusable KQL snippets straight from the trenches of real-world Microsoft Sentinel work. Think of it as your regular “KQL vitamin”: small dose, big impact.
 And today we’re kicking things off with the one question every SecOps team eventually asks: “Where is all my ingest money going?” 💸
 
 <br/><br/>
 
 # Visualize and Price Your Billable Ingest Trends
-If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s KQL-of-the-week is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel Log Analytics over the last 90 days—first visually, then in cold hard cash. 💰
+If you’re running a SIEM or XDR platform and *not* looking at your ingest patterns regularly… you’re essentially flying blind on one of the biggest drivers of your security bill. This week’s **KQL Toolbox** article is all about shining the spotlight on your **billable data ingestion** in Microsoft Sentinel Log Analytics over the last 90 days—first visually, then in cold hard cash. 💰
 
 Today, we’re going to look at **three useful iterations of the same query**:
 
@@ -19,7 +19,7 @@ Today, we’re going to look at **three useful iterations of the same query**:
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/1/Cyberpunk%20SOC%20Data%20Analysis.png)
+![](/assets/img/KQL Toolbox/1/Cyberpunk SOC Data Analysis.png)
 
 <br/><br/><br/><br/>
 
@@ -403,7 +403,7 @@ This gives you:
 <br/>
 
 # 📚 Thanks for Reading! 
-Thanks for nerding out with me on some of the fun (and sometimes annoying) nuances of KQL—because when you can see your ingest trends and price them, you’re no longer flying blind: you’re flying informed. Stay tuned for more **“KQL-of-the-Week”** hacks to give you **visibility, clarity,** and a _few less surprise spikes on your bill._ 🤑
+Thanks for nerding out with me on some of the fun (and sometimes annoying) nuances of KQL—because when you can see your ingest trends and price them, you’re no longer flying blind: you’re flying informed. Stay tuned for more **“KQL Toolbox** hacks to give you **visibility, clarity,** and a _few less surprise spikes on your bill._ 🤑
 
 If this kind of automation gets your gears turning, check out my book:
 🎯 Ultimate Microsoft XDR for Full Spectrum Cyber Defense
