@@ -8,6 +8,8 @@ Because once you can say *“We’re ingesting 150 GiB/day and spending ~$645/da
 
 > **“Okay… *which* log sources are burning that money?”**
 
+![](/assets/img/KQL%20of%20the%20Week/2/KQL%20Tip%20of%20the%20Week.png)
+
 That’s what this week’s query set is all about:
 **Top 10 log sources by cost**, and then **drilling into two usual suspects**:
 
@@ -47,6 +49,10 @@ These are your **per-row cost knobs**. Instead of just counting events, you can 
 > “Which **events** and **patterns** are responsible for the largest share of my ingestion bill?”
 
 That’s the heart of this week’s queries.
+
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/2/ByteRiver.png)
 
 <br/><br/>
 
@@ -114,6 +120,10 @@ This immediately tells you:
 * Are there any surprises—like `Syslog`, `AuditLogs`, or some obscure connector suddenly popping at the top?
 
 Once you know which **table** is noisy, the next step is to dig **inside** that table.
+
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/2/NinjaCatAnalyst.png)
 
 <br/><br/>
 
@@ -195,6 +205,10 @@ From there you can ask:
 
 This is where **real savings** happen:
 You’re not randomly turning off logs—you’re specifically **targeting the lowest-value, highest-cost severities**.
+
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/2/CatDad.png)
 
 <br/><br/>
 
