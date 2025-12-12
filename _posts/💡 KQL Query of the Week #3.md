@@ -24,10 +24,12 @@ This gives you a clean, fast workflow for spotting noisy Event IDs, isolating mi
 These queries are perfect for your weekly cost-noise correlation checks, operational hygiene reviews, or threat hunting warmups.
 
 💾 Full queries are in the public repo:
-- Which EventID fires the most in a month?
-- Which Accounts are throwing this EventID?
+- [🔗 Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql_)
+- [🔗 Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 
-🔍 Why This Matters
+<br/> 
+
+### 🔍 Why This Matters
 
 In most orgs, a handful of Event IDs generate most of the volume in SecurityEvent — and those high-frequency IDs can:
 - Inflate your ingest costs
@@ -50,7 +52,9 @@ SecurityEvent
 | render columnchart
 ```
 
-👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
+![](/assets/img/KQL%20of%20the%20Week/3/3kql1.png)
+
+👉 [**KQL Tip of the Week #2 — Which EventID fires the most in a month?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
 
 <br/><br/>
 
@@ -69,27 +73,23 @@ This gives you a quick look at what’s dominating your security log volume.
 
 # 👤 Query #2 — Which Accounts Are Throwing This Event ID?
 
-So you found the loudest Event ID. Now let’s see who’s generating it. This second query takes a specific Event ID (in this example 4662) and counts how many times each account triggered it.
+So you found the loudest Event ID. Now let’s see who’s generating it. This second query takes a specific Event ID (in this example **4663**) and counts how many times each account triggered it.
 
 ```kql
 // Which Accounts are throwing this EventID?
 SecurityEvent
-| where EventID == "4662"
+| where EventID == "4663"
 | summarize count() by Account
 | render columnchart
 ```
 
-👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
-
-<br/>
-
-![](/assets/img/KQL%20of%20the%20Week/3/Query3.png)
+👉 [**KQL Tip of the Week #2 — Which Accounts are Throwing this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 
 <br/><br/>
 
 # 🛠️ How to Use It
 
-Replace `4662` with the noisy Event ID you found in Query #1, then run the query. You’ll get a visualization of which accounts are responsible for the most of that event.
+Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query. You’ll get a visualization of which accounts are responsible for the most of that event.
 
 This is incredibly useful to:
 - Spot compromised or misconfigured accounts
@@ -126,6 +126,10 @@ Here’s a pattern you can run every week to keep tabs on log noise and potentia
 <br/>
 
 This is a lightweight but powerful way to go from macro noise patterns to micro actionables in minutes.
+
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/3/Query3.png)
 
 <br/><br/>
 
