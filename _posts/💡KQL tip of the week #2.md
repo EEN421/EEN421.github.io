@@ -422,13 +422,13 @@ A few important notes before you start deploying chainsaws to your logs:
 
 * **Cost math is workspace- and region-specific.**
 
-  * Always plug in your **actual Sentinel price per GB** from the pricing page, not the 4.30 example I’m using here. ([Microsoft Learn][2])
+  * Always plug in your **actual Sentinel price per GB** from the [official Microsoft pricing page](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064), and not the example I’m using here.
 
      <br/>
 
 * **_BilledSize and _IsBillable are the source of truth.**
 
-  * They account for compression and internal sizing—so they’ll differ from raw event sizes. ([Microsoft Learn][1])
+  * They account for compression and internal sizing—so they’ll differ from raw event sizes; [Log standard columns – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/log-standard-columns).
 
      <br/>
 
@@ -493,10 +493,15 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 - [Top 10 Security Events with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
 - [Standard columns in Azure Monitor log records](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns)
 - [Plan costs and understand pricing and billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
-[Analyze usage in Log Analytics workspace](https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage)
+- [Analyze usage in Log Analytics workspace](https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage)
 - [Azure Monitor Logs reference - CommonSecurityLog](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/commonsecuritylog)
 - [Azure Monitor Logs reference - SecurityEvent](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/securityevent)
 - [Reduce costs for Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/billing-reduce-costs)
+- [Log standard columns – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/log-standard-columns)
+- [Analyze usage in Azure Monitor Logs – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/analyze-usage)
+- [StorageBlobLogs table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/storagebloblogs)
+- [DeviceInfo table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/deviceinfo)
+
 
 <br/>
 
