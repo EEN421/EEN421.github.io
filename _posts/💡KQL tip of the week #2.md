@@ -33,7 +33,7 @@ All three use the same idea:
 I’ve published the full queries here on GitHub:
 
 * [**🔗 Top 10 Log Sources with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
-* [**🔗 Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql_)
+* [**🔗 Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
 * [**🔗 Top 10 Security Events with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
 
 
