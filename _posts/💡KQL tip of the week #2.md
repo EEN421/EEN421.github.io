@@ -305,6 +305,10 @@ Run this loop once a month (or per QBR), and you’ll steadily chip away at:
 * **Unnecessary spend**
 * While keeping the **signal** you actually need for detection and forensics.
 
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/2/NinjaBar.png)
+
 <br/><br/>
 
 # ⚠️ Caveats and Nuances to Keep in Mind
@@ -383,3 +387,7 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 - [Azure Monitor Logs reference - CommonSecurityLog](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/commonsecuritylog)
 - [Azure Monitor Logs reference - SecurityEvent](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/securityevent)
 - [Reduce costs for Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/billing-reduce-costs)
+
+<br/>
+
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)

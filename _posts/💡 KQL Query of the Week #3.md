@@ -1,17 +1,21 @@
 # 💡 KQL Query of the Week #3 — Which Event ID Noises Up Your Logs (and Who’s Causing It)?
-Welcome back to the KQL Query of the Week series! In last week’s entry (KQL Tip of the Week #2), we zoomed in on log source cost drivers—using _IsBillable and _BilledSize to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
+**Welcome back to the KQL Query of the Week series!** In last week’s entry (KQL Tip of the Week #2), we zoomed in on log source cost drivers—using `_IsBillable` and `_BilledSize` to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
-### This week, we’re building directly on that foundation
-Because once you know which log sources and which Event IDs are the most expensive, the very next question becomes:
+### This week, we’re building directly on that foundation...
+Because once you know which **log sources** and which **Event IDs** are the _most expensive_, the very next question becomes:
 > “Okay… but which Event ID fires the most often, and which accounts are responsible for generating it?”
 
-This is where today’s paired queries shine. 🌞
+This is where today’s KQL shines 🌞
 
 Instead of looking at cost, we shift focus to raw event frequency—a metric that drives both noise and cost. With two short KQL queries, you’ll identify:
 - Which Event ID fires most in your environment over the last 30 days, and
 - Which accounts are generating that Event ID the most
 
 This gives you a clean, fast workflow for spotting noisy Event IDs, isolating misconfigured or anomalous accounts, and tightening both your detection logic and cost posture. With that, let’s jump into this week’s analysis...
+
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/3/DevSecSignal.png)
 
 <br/><br/>
 
@@ -77,6 +81,10 @@ SecurityEvent
 
 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/3/Query3.png)
+
 <br/><br/>
 
 # 🛠️ How to Use It
@@ -121,21 +129,25 @@ This is a lightweight but powerful way to go from macro noise patterns to micro 
 
 <br/><br/>
 
-# 🔦 Bonus Tips
-📌 Filter by Logon Type <br/>
+# 💡 Bonus Tips
+🔦 Filter by Logon Type <br/>
 If you’re focusing on authentication noise, you can enhance Query #1 with filters on logon type or status (success vs failure).
 
 <br/>
 
-📌 Combine With Cost Analytics <br/>
+⚡ Combine With Cost Analytics <br/>
 Remember the queries from Weeks #1 and #2? Overlaying Event ID noise with ingest cost helps you:
 - Spot expensive noise that you can reduce
 - Prioritize tuning where it saves real $$
 
 <br/>
 
-📌 Alerting <br/>
+🚨 Alerting <br/>
 If a specific Event ID spikes above its baseline frequency, you can attach a metric alert in Sentinel and get notified.
+
+<br/>
+
+![](/assets/img/KQL%20of%20the%20Week/3/NinjaCatAnalyst3.png)
 
 <br/><br/>
 
@@ -159,3 +171,10 @@ Two simple queries. One powerful insight loop:
 <br/><br/>
 
 # 🔗 Helpful Links & Resources
+
+
+
+
+<br/>
+
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
