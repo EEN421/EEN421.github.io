@@ -26,14 +26,13 @@ All three use the same idea:
 
 > **Sum the billable bytes → convert to GiB → multiply by your per-GB price → rank by cost.**
 
-I’ve published the full queries here:
+<br/>
 
-* **Top 10 Log Sources with Cost (Enhanced)**
-* **Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)**
-* **Top 10 Security Events with Cost (Enhanced)**
+I’ve published the full queries here on GitHub:
 
-👉 You can find them all in my public KQL repo:
-`https://github.com/EEN421/KQL-Queries` (look for the **“Top 10 … with Cost (Enhanced)”** files).
+* [**🔗 Top 10 Log Sources with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
+* [**🔗 Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql_)
+* [**🔗 Top 10 Security Events with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
 
 <br/><br/>
 
@@ -66,7 +65,7 @@ First, let’s answer the high-level question:
 // KQL of the Week #2 - Query 1
 // Top 10 log sources (tables) by total cost
 
-let PricePerGB = 4.30;   // <-- Replace with your region's actual Sentinel price per GB
+let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
 
 Usage
 | where TimeGenerated > ago(30d)
@@ -76,6 +75,10 @@ Usage
 | top 10 by CostUSD desc
 | order by CostUSD desc
 ```
+
+![](/assets/img/KQL%20of%20the%20Week/2/kql1-1.png)
+
+<br/><br/>
 
 ### What this does, line-by-line
 
@@ -142,7 +145,7 @@ This query uses `_IsBillable` and `_BilledSize` **directly on the table** to sho
 // KQL of the Week #2 - Query 2
 // Top 10 CommonSecurityLog severity levels by cost
 
-let PricePerGB = 4.30;   // <-- Match this to the same rate you used in Query 1
+let PricePerGB = 5.16;   // <-- Match this to the same rate you used in Query 1
 
 CommonSecurityLog
 | where TimeGenerated > ago(30d)
@@ -153,6 +156,8 @@ CommonSecurityLog
 | top 10 by CostUSD desc
 | order by CostUSD desc
 ```
+
+![](/assets/img/KQL%20of%20the%20Week/2/kql2-1.png)
 
 <br/><br/>
 
@@ -224,7 +229,7 @@ We’ll use `_IsBillable` and `_BilledSize` again to find which **Event IDs** ar
 // KQL of the Week #2 - Query 3
 // Top 10 SecurityEvent Event IDs by cost
 
-let PricePerGB = 4.30;   // <-- Same price knob as before
+let PricePerGB = 5.16;   // <-- Same price knob as before
 
 SecurityEvent
 | where TimeGenerated > ago(30d)
@@ -235,6 +240,10 @@ SecurityEvent
 | top 10 by CostUSD desc
 | order by CostUSD desc
 ```
+
+![](/assets/img/KQL%20of%20the%20Week/2/kql3-1.png)
+
+<br/><br/>
 
 ### Why this is powerful
 
@@ -256,8 +265,103 @@ This helps you decide:
 
 When you combine this with **detections you actually care about**, you can be ruthless:
 
-> “These 3 Event IDs matter for our threat models.
-> The other 12 are tax.”
+> “These 3 Event IDs matter for our threat models. The other 12 are tax.”
+
+<br/><br/>
+
+# 👀 Visual Upgrade! 
+_Did you know you can use **Emojies** in your **KQL!?**_
+
+Let's add some severity colour-coding to make our query results **pop!**
+
+### Query 1 - Revamped! 
+```
+Usage
+| where TimeGenerated > ago(30d)
+| where IsBillable == true
+| summarize GiB= round(sum(Quantity) / 1024, 2) by DataType
+| extend Cost=round(GiB * 5.16, 2)
+| sort by Cost desc
+| extend CostLevel = case(
+                         Cost >= 1000,
+                         '🤑🤑🤑🤑🤑',  // Most Expensive
+                         Cost >= 750,
+                         '💰💰💰💰',
+                         Cost >= 500,
+                         '💰💰💰',
+                         Cost >= 250,
+                         '💰💰',
+                         Cost >= 100,
+                         '💰',          // Least Expensive
+                         '💸'                         // Fallback
+                     )
+| extend Cost=strcat('$', Cost, ' ', CostLevel)
+| project DataType, GiB, Cost
+| take 10
+```
+
+![](/assets/img/KQL%20of%20the%20Week/2/kql1-2.png)
+
+This is purely presentation/triage. It buckets spend into ranges for quick scanning, but it looks cool!
+
+> 💡 Pro Tip: The order of **case()** matters: <br/>
+> 👉 _it checks top-to-bottom and stops at the first match (so the >= 1000 check must come before >= 100, etc.)._
+
+<br/><br/>
+
+### Query 2 - Revamped! 
+```
+CommonSecurityLog
+| where TimeGenerated > ago(90d)
+| where isnotempty(Reason) and Reason != "N/A"
+| summarize TotalEvents = count(), 
+            TotalBytes = sum(_BilledSize) 
+            by Reason, LogSeverity
+| extend TotalGB = round(TotalBytes / (1024.0 * 1024.0 * 1024.0), 4)
+| extend RawCost = round(TotalGB * 5.16, 2)
+| extend CostLevel = case(
+                         RawCost >= 1000, '🤑🤑🤑🤑🤑',
+                         RawCost >= 750, '💰💰💰💰',
+                         RawCost >= 500, '💰💰💰',
+                         RawCost >= 250, '💰💰',
+                         RawCost >= 100, '💰',
+                         '💸')
+| extend IngestCost = strcat('$', tostring(RawCost), ' ', CostLevel)
+| project Reason, LogSeverity, TotalEvents, TotalGB, IngestCost
+| top 10 by TotalEvents desc
+```
+
+![](/assets/img/KQL%20of%20the%20Week/2/kql2-2.png)
+
+<br/><br/>
+
+### Query 3 - Revamped! 
+```
+SecurityEvent
+| where TimeGenerated > ago(30d)
+| where _IsBillable == True
+| summarize EventCount=count(), GiB=round(sum(_BilledSize / 1024 / 1024 / 1024), 2) by EventID
+| extend TotalCost = round(GiB * 5.16, 2)
+| sort by GiB desc
+| extend CostLevel = case(
+                         TotalCost >= 1000,
+                         '🤑🤑🤑🤑🤑',  // Most Expensive
+                         TotalCost >= 750,
+                         '💰💰💰💰',
+                         TotalCost >= 500,
+                         '💰💰💰',
+                         TotalCost >= 250,
+                         '💰💰',
+                         TotalCost >= 100,
+                         '💰',          // Least Expensive
+                         '💸'                             // Fallback
+                     )
+| extend TotalCost=strcat('$', TotalCost, ' ', CostLevel)
+| project EventID, GiB, TotalCost
+| limit 10
+```
+
+![](/assets/img/KQL%20of%20the%20Week/2/kql3-2.png)
 
 <br/><br/>
 
@@ -279,14 +383,14 @@ Here’s how I use these three queries in the real world:
 
 3. **For `CommonSecurityLog`:**
 
-   * Run Query 2 to see **which vendor/product + severity combos** are burning the most.
+   * Run **Query 2** to see **which vendor/product + severity combos** are burning the most.
    * Tune firewalls / proxies / DCRs accordingly.
 
    <br/>
 
 4. **For `SecurityEvent`:**
 
-   * Run Query 3 to see **which Event IDs** are the biggest cost drivers.
+   * Run **Query 3** to see **which Event IDs** are your _biggest cost drivers._
    * Review which ones actually matter to your detections and compliance requirements.
 
    <br/>
@@ -368,6 +472,9 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 
 > 👉 “We didn’t just reduce logging—we removed low-value noise while preserving (and sometimes improving) security signal.” 😎
 
+<br/><br/>
+
+# 📚 Want to Go Deeper?
 ⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **KQL Query of the Week** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
@@ -375,7 +482,7 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 
 <br/>
 
-### 👉 Now go make those noisy logs **pay rent**. 😼🗡️📊
+### 👉 Now go make those noisy logs **pay rent**. 😼🗡️💰
 
 <br/><br/>
 
