@@ -492,7 +492,7 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 
 # 🔗 Helpful Links & Resources
 - [Top 10 Log Sources with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
-- [Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql_)
+- [Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
 - [Top 10 Security Events with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
 - [Standard columns in Azure Monitor log records](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns)
 - [Plan costs and understand pricing and billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
