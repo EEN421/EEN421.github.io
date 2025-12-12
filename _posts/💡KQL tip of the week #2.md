@@ -51,7 +51,8 @@ That’s the heart of this week’s queries.
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/2/ByteRiver.png)
+![](/assets/img/KQL%20of%20the%20Week/2/NinjaCatAnalyst.png)
+
 
 <br/><br/>
 
@@ -126,7 +127,7 @@ Once you know which **table** is noisy, the next step is to dig **inside** that 
 
 <br/>
 
-![](/assets/img/KQL%20of%20the%20Week/2/NinjaCatAnalyst.png)
+![](/assets/img/KQL%20of%20the%20Week/2/ByteRiver.png)
 
 <br/><br/>
 
