@@ -60,6 +60,20 @@ SecurityEvent                       // <--Define the table to query
 
 <br/><br/>
 
+### 🔧 Line-by-Line Breakdown
+
+- `where EventID == 4663` --> Focuses the analysis on one known noisy event.
+
+- `summarize count() by Account` --> Shows which identities are responsible for generating the most events.
+
+- `sort by count_ desc` --> Surfaces the heaviest contributors immediately.
+
+- `take 10` --> Keeps the output actionable and readable.
+
+- `render columnchart` --> Highlights disproportionate contributors visually.
+
+<br/><br/>
+
 ### 🔎 What You’re Looking For
 
 When you run this query:
@@ -71,11 +85,23 @@ This gives you a quick look at what’s dominating your security log volume.
 
 >💡 Tip: If you’ve already been tracking ingest costs with last week’s queries, overlay this with Table + Cost ranking and you can start connecting “noise” with “dollars.”
 
+# 📊 What the Results Tell You
+
+This output answers one critical question: “What Event IDs dominate my SecurityEvent volume?”
+
+Common examples you’ll often see:
+- 4624 – Successful logons
+- 4625 – Failed logons
+- 4663 – Object access attempts
+- 5156 – Windows Filtering Platform traffic
+
+_**High frequency** alone doesn’t mean **“bad”** — but it **does** tell you where to **look next**._
+
 <br/><br/>
 
 # 👤 Query #2 — Which Accounts Are Throwing This Event ID?
 
-So you found the loudest Event ID. Now let’s see who’s generating it. This second query takes a specific Event ID (in this example **4663**) and counts how many times each account triggered it.
+So you found the loudest Event ID... The next step is attribution; let’s see who’s generating it. This second query takes a specific Event ID (in this example **4663**) and counts how many times each account triggered it.
 
 ```kql
 // Which Accounts are throwing this EventID?
@@ -91,20 +117,41 @@ SecurityEvent                     // <--Define the table to query
 
 <br/><br/>
 
+### 🔧 Line-by-Line Breakdown
+
+- `where EventID == 4663` --> Focuses the analysis on one known noisy event.
+
+- `summarize count() by Account` --> Shows which identities are responsible for generating the most events.
+
+- `sort by count_ desc` --> Surfaces the heaviest contributors immediately.
+
+- `take 10` --> Keeps the output actionable and readable.
+
+- `render columnchart` --> Highlights disproportionate contributors visually.
+
+<br/><br/>
+
 # 🛠️ How to Use It
 
 Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query (in our example we'll use  `4663`). You’ll get a visualization of which accounts are responsible for the most of that event.
 
-This is incredibly useful to:
-- Spot compromised or misconfigured accounts
-- Find noisy service accounts
-- Detect unusual authentication or access patterns
+This query helps answer:
+- Is this noise caused by a service account?
+- Is a single user or system behaving abnormally?
+- Is an application hammering file or registry access?
+- Does this align with expected business behavior?
+
+From here, you can:
+- Tune auditing policies
+- Exclude unnecessary events
+- Refine detections
+- Investigate suspicious behavior
 
 <br/>
 
 For example:
 | Account		   			| Count		|
-|---------------------------|------------|
+|---------------------------|-----------|
 | domain\DevSecOpsDad	    | 12,350 	|
 | domain\PhishingPharoah$	| 8,710		|
 | domain\SecuritySultan   	| 6,204		|
@@ -120,9 +167,9 @@ If one account is way above the rest, that could be:
 
 <br/><br/>
 
-# 🖥️ Query #3 — Which Accounts Are Throwing This Event ID?
+# 🖥️ Query #3 — Bonus: Which Devices Are Driving the Noise?
 
-This query answers a simple but powerful question: “Which computers are generating the most of Event ID 4663?” <br/>
+Sometimes the problem isn’t who — it’s where. This query answers a simple but powerful question: “Which computers are generating the most of Event ID 4663?” <br/>
 > 4663 = An attempt was made to access an object — commonly used for file/folder auditing noise-hunting and investigation.)
 
 ```kql
@@ -135,9 +182,11 @@ SecurityEvent                     // <--Define the table to query
 
 ![](/assets//img/KQL%20Toolbox/3/3Query3_nochart.png)
 
+👉 [**KQL Toolbox #3 — Which Devices are Spamming this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
+
 <br/><br/> 
 
-### What each line is doing (in plain English)
+### 🔧 Line-by-Line Breakdown
 
 - `SecurityEvent` --> This is the Windows Security Event Log table (from Windows event forwarding, AMA, MMA, etc.). If you’re ingesting classic Windows Security logs into Sentinel, this is usually where they land.
 
@@ -155,7 +204,16 @@ SecurityEvent                     // <--Define the table to query
 
 <br/><br/>
 
-### ✅ What this query is good for
+This is especially useful for:
+- Legacy servers
+- Misconfigured endpoints
+- File servers or domain controllers
+- Systems with runaway logging
+
+
+<br/><br/>
+
+# ✅ What these queries are good for
 
 - Noise hunting: Find the one (or few) endpoints generating the bulk of a specific Windows audit event.
 - Cost triage: If you already know a certain Event ID is expensive/noisy, this shows where to focus first (often a handful of servers).
@@ -169,19 +227,23 @@ SecurityEvent                     // <--Define the table to query
 <br/><br/>
 
 # 🧩 Putting It Together: A Simple Weekly Workflow
-Here’s a pattern you can run every week to keep tabs on log noise and potential issues:
-- **Run Query #1** — See which Event ID fired the most in the last month.
-	- Pick the Top Culprit — This is your “Event of Interest.”
+Here’s how this query fits into a repeatable SOC hygiene loop:
 
-<br/>
+- 1.) Identify expensive tables --> (Toolbox #1)
 
-- **Run Query #2** — Feed that Event ID into the accounts query.
-	- Investigate Outliers — Accounts with unusually high counts might need attention.
+- 2.) Identify noisiest log sources --> (Toolbox #2)
 
-<br/>
+- 3.) Identify top Event IDs --> (This article)
 
-- **Run Query #3** — Feed that Event ID into the devices query.
-	- Investigate Outliers — Devices with unusually high counts might need attention.
+- 4.) Attribute noise to users and systems
+
+- 5.) Decide action
+	- Tune logging
+	- Suppress detections
+	- Investigate behavior
+	- Reduce ingest cost
+
+- 6.) Re-run monthly to validate improvements
 
 <br/>
 
@@ -213,14 +275,180 @@ If a specific Event ID spikes above its baseline frequency, you can attach a met
 
 ![](/assets/img/KQL%20Toolbox/3/Query3.png)
 
+<br/><br/>
+
+# ⚠️ Best Practices & Gotchas
+
+- **High frequency ≠ malicious** --> _Always validate against expected behavior._
+
+- **Avoid over-filtering** --> _Don’t blindly suppress Event IDs without understanding downstream detections._
+
+- **Filter early for performance** --> _Time filters should always appear early in your query._
+
+- **Baseline before alerting** --> _Establish “normal” before creating thresholds._
 
 <br/><br/>
 
-# 🎁 Wrap-Up
+# 🚨 Alerting on Event ID Noise Using Baselines
+
+Once you’ve identified your noisiest Event IDs, the real power move is to stop reacting and start detecting change. Instead of alerting on raw volume (which creates noise), we alert on deviation from baseline.
+
+The goal:
+“Alert me when an Event ID suddenly gets louder than normal.”
+
+### 🧠 Baseline Strategy (High Level)
+
+We’ll use:
+
+- A historical baseline window (e.g., last 30 days)
+- A recent comparison window (e.g., last 24 hours)
+- A multiplier threshold (e.g., 2× normal)
+
+This avoids static thresholds and adapts automatically to each environment.
+
+### 🔍 Step 1: Build a Baseline for Event ID Frequency
+
+This query calculates the average daily count for each Event ID over the last 30 days.
+
+```kql
+let BaselineWindow = 30d;
+SecurityEvent
+| where TimeGenerated > ago(BaselineWindow)
+| summarize DailyCount = count() by EventID, Day = bin(TimeGenerated, 1d)
+| summarize AvgDailyCount = avg(DailyCount) by EventID
+```
+What this gives you
+
+- A rolling normal activity baseline
+- One row per Event ID
+- No assumptions about “good” or “bad” events
+
+### 🔎 Step 2: Measure Recent Activity
+
+Now we calculate recent volume (last 24 hours).
+
+```kql
+let RecentWindow = 1d;
+SecurityEvent
+| where TimeGenerated > ago(RecentWindow)
+| summarize RecentCount = count() by EventID
+```
+
+### 🔗 Step 3: Compare Recent Activity vs Baseline
+
+This is where the magic happens.
+
+```kql
+let BaselineWindow = 90d;
+let RecentWindow = 30d;
+let ThresholdMultiplier = 2.0;
+let Baseline =
+    SecurityEvent
+    | where TimeGenerated > ago(BaselineWindow)
+    | summarize DailyCount = count() by EventID, Day = bin(TimeGenerated, 1d)
+    | summarize AvgDailyCount = round(avg(DailyCount),2) by EventID;
+let Recent =
+    SecurityEvent
+    | where TimeGenerated > ago(RecentWindow)
+    | summarize RecentCount = count() by EventID;
+Baseline
+| join kind=inner Recent on EventID
+| extend DeviationRatio = round(RecentCount / AvgDailyCount, 2)
+| where DeviationRatio >= ThresholdMultiplier
+| project EventID, AvgDailyCount, RecentCount, DeviationRatio
+| take 10
+| sort by DeviationRatio desc
+```
+
+![](/assets/img/KQL%20Toolbox/3/3Weird.png)
+
+👉 [**KQL Toolbox #3 — Which EventID's are Suddently Acting Weird?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
+
+<br/><br/>
+
+### 📊 How to Interpret the Results
+
+| Column			| Meaning				  |
+| ----------------- | ----------------------- |
+|EventID			| The event that changed  |
+|AvgDailyCount   	| Normal daily behavior   |
+|RecentCount		| What happened recently  |
+|DeviationRatio		| How much louder it got  |
+
+<br/>
+
+Example:
+- AvgDailyCount = 5,000
+- RecentCount = 15,000
+- DeviationRatio = 3.0
+
+👉 This Event ID is 3× louder than normal → investigate.
+
+<br/><br/>
+
+# 🚨 Turning This into a Sentinel Alert
+
+### Recommended Alert Configuration
+
+**Analytics Rule Type**
+- 📌 Scheduled query rule
+
+**Query Schedule**
+- Run every: 1 hour
+- Lookup data from: Last 1 hour
+	- (Baseline window is already embedded in the query)
+
+**Alert Threshold**
+- Trigger if results > 0
+
+**Entity Mapping**
+- Map EventID → Custom entity (or string)
+- Severity Guidance
+- DeviationRatio >= 5 → High
+- DeviationRatio >= 3 → Medium
+- DeviationRatio >= 2 → Low
+
+### 🛠️ Pro Tips:
+- ✅ Exclude Known “Always Noisy” Event IDs: `| where EventID !in ("4624", "4625")`
+- ✅ Scope to a Single Event ID (Targeted Alert) — Perfect for things like 4663 or 4688: `| where EventID == "4663"`
+- ✅ Attribute Noise Automatically (`Account` / `Device`)
+	- Add this at the end of the above query:
+
+```kql
+| join (
+    SecurityEvent
+    | where TimeGenerated > ago(RecentWindow)
+    | summarize count() by EventID, Account, Computer
+) on EventID
+```
+
+👉 Now your alert says: **“Event ID 4663 spiked 3.8× — driven by SERVICE-SQL on FILESRV01”** for example.
+
+![](/assets/img/KQL%20Toolbox/3/3Weird2.png)
+
+<br/><br/>
+
+### ⚠️Stuff to watch out for!
+- ❌ Alerting on raw counts
+- ❌ No baseline window
+- ❌ Ignoring expected maintenance windows
+- ❌ Treating all Event IDs equally
+
+_**This approach avoids all four.**_
+
+Static thresholds create noise. Baselines create signal. Once you alert on change, not volume, your SOC matures instantly.
+
+<br/><br/>
+
+# 🎁 Wrap-Up & Final Thoughts
 Two simple queries. One powerful insight loop:
 - Find the loudest Event ID
 - See which accounts or devices are driving it
 - Adjust collection, alerting, or investigation focus accordingly
+
+> _**Cost visibility** tells you where your **money goes.** Noise analysis tells you where your **attention should go**._
+
+When you combine both, you build a **leaner, clearer, more effective SOC.**
 
 <br/>
 
