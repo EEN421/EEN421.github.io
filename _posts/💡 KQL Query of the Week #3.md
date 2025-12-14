@@ -47,10 +47,11 @@ So step one is simple: **Find the Event ID that fires most often — then look a
 This query counts all SecurityEvent occurrences in the last 30 days and ranks Event IDs by frequency. No filters, no cost calculations — just the raw noise metric.
 
 ```kql
-SecurityEvent
-| where TimeGenerated > ago(30d)
-| summarize count() by EventID
-| render columnchart
+SecurityEvent                       // <--Define the table to query
+| where TimeGenerated > ago(30d)    // <--Query the last 30 days
+| summarize count() by EventID      // <--Return number of hits per EventID
+| take 10                           // <--Take the top 10
+| render columnchart                // <--Helps visualize which EventIDs are the heavy hitters
 ```
 
 ![](/assets/img/KQL%20Toolbox/3/3kql1.png)
