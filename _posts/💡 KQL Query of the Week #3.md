@@ -24,13 +24,17 @@ This gives you a clean, fast workflow for spotting noisy Event IDs, isolating mi
 
 These queries are perfect for your weekly cost-noise correlation checks, operational hygiene reviews, or threat hunting warmups.
 
-💾 Full queries are in the public repo:
+💾 Full queries are in my public repo:
 - [🔗 Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
 - [🔗 Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 Which Devices are Throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
 
 <br/> 
 
 ### 🔍 Why This Matters
+
+Frequent aggregation and ranking of event volumes help you spot noise that obscures real threats. Comprehensive logging and centralized analysis — combined with targeted filtering like this — improves both cost efficiency and detection quality.
 
 In most orgs, a handful of Event IDs generate most of the volume in SecurityEvent — and those high-frequency IDs can:
 - Inflate your ingest costs
@@ -56,7 +60,7 @@ SecurityEvent                       // <--Define the table to query
 
 ![](/assets/img/KQL%20Toolbox/3/3kql1.png)
 
-👉 [**KQL Toolbox #3 — Which EventID fires the most in a month?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
+[**🔗 KQL Toolbox #3 — Which EventID fires the most in a month?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
 
 <br/><br/>
 
@@ -85,7 +89,9 @@ This gives you a quick look at what’s dominating your security log volume.
 
 >💡 Tip: If you’ve already been tracking ingest costs with last week’s queries, overlay this with Table + Cost ranking and you can start connecting “noise” with “dollars.”
 
-# 📊 What the Results Tell You
+<br/><br/>
+
+### 📊 What the Results Tell You
 
 This output answers one critical question: “What Event IDs dominate my SecurityEvent volume?”
 
@@ -113,7 +119,7 @@ SecurityEvent                     // <--Define the table to query
 
 ![](/assets/img/KQL%20Toolbox/3/3kql2.png)
 
-👉 [**KQL Toolbox #3 — Which Accounts are Throwing this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
+[**🔗 KQL Toolbox #3 — Which Accounts are Throwing this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 
 <br/><br/>
 
@@ -131,7 +137,7 @@ SecurityEvent                     // <--Define the table to query
 
 <br/><br/>
 
-# 🛠️ How to Use It
+### 🛠️ How to Use It
 
 Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query (in our example we'll use  `4663`). You’ll get a visualization of which accounts are responsible for the most of that event.
 
@@ -182,7 +188,7 @@ SecurityEvent                     // <--Define the table to query
 
 ![](/assets//img/KQL%20Toolbox/3/3Query3_nochart.png)
 
-👉 [**KQL Toolbox #3 — Which Devices are Spamming this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
+[**🔗  KQL Toolbox #3 — Which Devices are Spamming this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
 
 <br/><br/> 
 
@@ -202,14 +208,7 @@ SecurityEvent                     // <--Define the table to query
 
 ![](/assets/img/KQL%20Toolbox/3/3Query3_chart.png)
 
-<br/><br/>
-
-This is especially useful for:
-- Legacy servers
-- Misconfigured endpoints
-- File servers or domain controllers
-- Systems with runaway logging
-
+[**🔗  KQL Toolbox #3 — Which Devices are Spamming this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
 
 <br/><br/>
 
@@ -229,21 +228,21 @@ This is especially useful for:
 # 🧩 Putting It Together: A Simple Weekly Workflow
 Here’s how this query fits into a repeatable SOC hygiene loop:
 
-- 1.) Identify expensive tables --> (Toolbox #1)
+- **1.)** Identify expensive tables --> (Toolbox #1)
 
-- 2.) Identify noisiest log sources --> (Toolbox #2)
+- **2.)** Identify noisiest log sources --> (Toolbox #2)
 
-- 3.) Identify top Event IDs --> (This article)
+- **3.)** Identify top Event IDs --> (This article)
 
-- 4.) Attribute noise to users and systems
+- **4.)** Attribute noise to users and systems
 
-- 5.) Decide action
+- **5.)** Decide action
 	- Tune logging
 	- Suppress detections
 	- Investigate behavior
 	- Reduce ingest cost
 
-- 6.) Re-run monthly to validate improvements
+- **6.)** Re-run monthly to validate improvements
 
 <br/>
 
@@ -269,7 +268,7 @@ Remember the queries from **KQL Toolbox #1 and #2**? Overlaying Event ID noise w
 <br/>
 
 🚨 Alerting <br/>
-If a specific Event ID spikes above its baseline frequency, you can attach a metric alert in Sentinel and get notified.
+If a specific Event ID spikes above its baseline frequency, you can attach a metric alert in Sentinel and get notified. We'll dive into how to do this further down. 
 
 
 <br/><br/>
@@ -284,9 +283,6 @@ If a specific Event ID spikes above its baseline frequency, you can attach a met
 
 - **Baseline before alerting** --> _Establish “normal” before creating thresholds._
 
-<br/>
-
-![](/assets/img/KQL%20Toolbox/3/Query3.png)
 
 <br/><br/>
 
@@ -337,7 +333,7 @@ SecurityEvent
 
 ### 🔗 Step 3: Compare Recent Activity vs Baseline
 
-This is where the magic happens.
+This is where the magic happens. Let's establish a 90-day “normal” baseline for each Event ID, compare it to the last 30 days, and flag Event IDs whose recent volume is ≥ 2× their typical daily activity.
 
 ```kql
 let BaselineWindow = 90d;
@@ -363,7 +359,56 @@ Baseline
 
 ![](/assets/img/KQL%20Toolbox/3/3Weird.png)
 
-👉 [**KQL Toolbox #3 — Which EventID's are Suddently Acting Weird?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
+[**🔗 KQL Toolbox #3 — Which EventID's are Suddently Acting Weird?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
+
+<br/><br/>
+
+### 🔧 Line-by-line breakdown
+
+`let BaselineWindow = 90d;` -->  Defines how far back to look when calculating “normal” behavior. Here, your baseline is the last 90 days.
+
+`let RecentWindow = 30d;` --> Defines the “recent” comparison window. Here, the query compares against the last 30 days of activity.
+
+`let ThresholdMultiplier = 2.0;` --> Sets the “spike” threshold. Any Event ID whose recent activity is 2× or greater than its baseline average gets flagged.
+
+`let Baseline = SecurityEvent` --> Creates a reusable dataset named Baseline starting from the SecurityEvent table (Windows Security logs ingested into Sentinel / Log Analytics).
+
+`| where TimeGenerated > ago(BaselineWindow)` --> Limits baseline data to only the last 90 days (based on BaselineWindow).
+
+`| summarize DailyCount = count() by EventID, Day = bin(TimeGenerated, 1d)` --> Counts how many times each EventID appears per day, by:
+- grouping on EventID
+- grouping on a daily time bucket (bin(TimeGenerated, 1d))
+- storing the result as DailyCount
+
+`| summarize AvgDailyCount = round(avg(DailyCount),2) by EventID;` --> Takes those daily counts and calculates the average events per day for each Event ID across the 90-day baseline. `round(..., 2)` keeps the baseline average readable.
+
+`let Recent = SecurityEvent` --> Creates a second reusable dataset named Recent, again using the SecurityEvent table.
+
+`| where TimeGenerated > ago(RecentWindow)` --> Limits this dataset to only the last 30 days.
+
+`| summarize RecentCount = count() by EventID;` --> Counts total occurrences of each EventID within the recent window and stores it as RecentCount.
+
+`Baseline`
+`| join kind=inner Recent on EventID` --> Joins the baseline results to the recent results using EventID as the key:
+
+- `kind=inner` --> means only Event IDs present in both datasets will be returned.
+
+- `| extend DeviationRatio = round(RecentCount / AvgDailyCount, 2)` --> creates a new calculated field showing how far the recent count deviates from baseline average.
+
+A value of:
+- 1.0 ≈ normal
+- 2.0 = about 2× baseline
+- 5.0 = about 5× baseline
+
+> (Note: this is comparing “30-day total” to “average per day,” so the ratio is a practical “loudness score,” not a strict per-day-to-per-day comparison.)
+
+`| where DeviationRatio >= ThresholdMultiplier` --> Filters to only those Event IDs whose deviation ratio meets/exceeds your threshold (default 2×).
+
+`| project EventID, AvgDailyCount, RecentCount, DeviationRatio` --> Selects the exact columns you want in the output (clean, readable results).
+
+`| take 10` --> Limits the output to 10 rows (often used to keep dashboards fast / results short).
+
+`| sort by DeviationRatio desc` --> Sorts the final results so the biggest spikes appear at the top.
 
 <br/><br/>
 
@@ -427,6 +472,8 @@ Example:
 
 ![](/assets/img/KQL%20Toolbox/3/3Weird2.png)
 
+ [**🔗 KQL Toolbox #3 — Which EventID's are Suddently Acting Weird?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
+
 <br/><br/>
 
 ### ⚠️Stuff to watch out for!
@@ -438,6 +485,10 @@ Example:
 _**This approach avoids all four.**_
 
 Static thresholds create noise. Baselines create signal. Once you alert on change, not volume, your SOC matures instantly.
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/3/Query3.png)
 
 <br/><br/>
 
