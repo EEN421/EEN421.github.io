@@ -271,9 +271,6 @@ Remember the queries from **KQL Toolbox #1 and #2**? Overlaying Event ID noise w
 🚨 Alerting <br/>
 If a specific Event ID spikes above its baseline frequency, you can attach a metric alert in Sentinel and get notified.
 
-<br/>
-
-![](/assets/img/KQL%20Toolbox/3/Query3.png)
 
 <br/><br/>
 
@@ -286,6 +283,10 @@ If a specific Event ID spikes above its baseline frequency, you can attach a met
 - **Filter early for performance** --> _Time filters should always appear early in your query._
 
 - **Baseline before alerting** --> _Establish “normal” before creating thresholds._
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/3/Query3.png)
 
 <br/><br/>
 
