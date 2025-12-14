@@ -8,8 +8,9 @@ Because once you know which **log sources** and which **Event IDs** are the _mos
 This is where today’s KQL shines 🌞
 
 Instead of looking at cost, we shift focus to raw event frequency—a metric that drives both noise and cost. With two short KQL queries, you’ll identify:
-- Which Event ID fires most in your environment over the last 30 days, and
-- Which accounts are generating that Event ID the most
+- Which Event ID fires most in your environment over the last 30 days?
+- Which accounts are generating that Event ID the most?
+- Which devices are these Event ID's coming from?
 
 This gives you a clean, fast workflow for spotting noisy Event IDs, isolating misconfigured or anomalous accounts, and tightening both your detection logic and cost posture. With that, let’s jump into this week’s analysis...
 
@@ -77,10 +78,10 @@ So you found the loudest Event ID. Now let’s see who’s generating it. This s
 
 ```kql
 // Which Accounts are throwing this EventID?
-SecurityEvent
-| where EventID == "4663"
-| summarize count() by Account
-| render columnchart
+SecurityEvent                     // <--Define the table to query
+| where EventID == "4663"         // <--Declare which EventID you're looking for
+| summarize count() by Account    // <--Show how many times that EventID was thrown per account
+| render columnchart              // <--Optional, but helps quickly visualize potential outliers
 ```
 
 ![](/assets/img/KQL%20Toolbox/3/3kql2.png)
@@ -115,6 +116,17 @@ If one account is way above the rest, that could be:
 - A high-traffic service account you expected
 - A misconfigured script
 - A potential security issue worth investigating
+
+<br/><br/>
+
+# 🖥️ Query #3 — Which Accounts Are Throwing This Event ID?
+
+```kql
+SecurityEvent                     // <--Define the table to query
+| where EventID == "4663"         // <--Declare which EventID you're looking for
+| summarize count() by Computer   // <--Show how many times that EventID was thrown per device
+| render columnchart              // <--Optional, but helps quickly visualize potential outliers
+```
 
 <br/><br/>
 
