@@ -1,5 +1,5 @@
 # **KQL Toolbox is officially live!**
-As part of this **KQL Toolbox** series, I bring you practical, reusable KQL snippets straight from the trenches of real-world Microsoft Sentinel work. Think of it as your regular “KQL vitamin”: small dose, big impact.
+As part of this new **KQL Toolbox** series, I bring you practical, reusable KQL snippets straight from the trenches of real-world Microsoft Sentinel work. Think of it as your regular “KQL vitamin:” small dose, big impact.
 And today we’re kicking things off with the one question every SecOps team eventually asks: “Where is all my ingest money going?” 💸
 
 <br/>
@@ -32,6 +32,7 @@ Usage
 | summarize TotalVolumeGB = sum(Quantity) / 1000 by bin(TimeGenerated, 1d), Solution
 | render timechart
 ```
+
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/1/Timechart.png)
@@ -222,7 +223,7 @@ What this line does
 - Appends the string **'GB / Day'**
 - Converts the entire result into a **string**
 
-So: `12.54` becomes: `12.54GB / Day`
+So: `12.54` becomes `12.54GB / Day`
 
 <br/>
 
@@ -232,7 +233,7 @@ So: `12.54` becomes: `12.54GB / Day`
 
 ### 3. 🤔 Why?
 
-Because you're shifting the output _from **analysis-ready** to human-ready**_. Once the numbers are formatted, they're much easier to interpret in:
+Because you're shifting the output _from **analysis-ready** to **human-ready**_. Once the numbers are formatted, they're much easier to interpret in:
 
 - Workbooks & dashboards
 - Exports and email reports
@@ -269,7 +270,7 @@ This pattern is excellent as long as you’re done calculating because _once a c
 
 This keeps:
 - TotalVolumeGB as float
-- cost as float
+- Cost as float
 - formatted versions as strings
 - things looking slick 😎
 
@@ -329,6 +330,7 @@ Today, both exist because both are useful:
 And because the names sound similar, the confusion never totally went away — which is why it’s worth calling out in a KQL series where cost math actually matters.
 
 ### ↔️ Quick Comparison
+
 | Unit	| Bytes               |	Notes                                                                 |
 |-------|---------------------|-----------------------------------------------------------------------|
 | 1 GB	| 1,000,000,000 bytes |	Decimal (SI) — what vendors use                                       |
