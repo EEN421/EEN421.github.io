@@ -27,7 +27,7 @@ This allows you to _stop guessing, stop doom-scrolling charts, and **immediately
 
 If you’re working in Azure Monitor Logs / Log Analytics or Microsoft Sentinel, tracking down why billable volume is changing is one of the most common (and most expensive) operational headaches. Whether it’s a cloud migration, a new app rollout, a misconfigured agent, or just normal growth — understanding what’s driving the delta is critical for budgeting, troubleshooting, and overall SOC hygiene.
 
-Today we’re going to unpack one of my favorite preventive analytics queries: _“Data Sources with Biggest Delta in Log Volume.”_
+Today we’re going to unpack one of my favorite preventive analytics queries: _“Data Sources with Biggest Delta in Log Volume.”_ 💸
 
 ### _Let's break it down, put it to work, then crank it up a notch — **because this is DevSecOpsDad**. 😎_
 
@@ -302,7 +302,7 @@ This query is essentially a “delta radar”:
 
 <br/><br/>
 
-# “Okay… But How Much Did those GB's just Cost?”
+# “Okay… But How Much Did those GB's just Cost?” 💰
 
 Now that we’ve walked through a query that shows you which log sources have shifted the most in volume over the past 30-day window versus the 30 days before that (giving you eyes on where the activity moved), it’s time to bring financial context into the picture. Volume deltas alone are great for troubleshooting and operational insight, but when you’re preparing dashboards, reports, or QBR slides, your stakeholders care about dollars as much as gigabytes.
 
@@ -565,7 +565,7 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 
 <br/><br/>
 
-# Final Thoughts:
+# 📋 Final Thoughts:
 
 By now, you should have a repeatable way to answer one of the most important operational questions in Microsoft Sentinel: _“What changed — and does it matter?”_
 
@@ -596,7 +596,7 @@ Now that you can quickly identify which log sources changed the most — and wha
 
 <br/>
 
-### Add this to your reporting cadence
+### ✔️ Add this to your reporting cadence
 Run this query as part of:
 - Monthly cost reviews
 - Quarterly Business Reviews (QBRs)
@@ -605,7 +605,7 @@ Run this query as part of:
 
 <br/>
 
-Adjust the knobs
+### 🎛️ Adjust the knobs
 - Don’t forget to tailor the query to your environment:
 - Change the window sizes (7/30, 30/60, 90/90)
 - Update the Sentinel price per GB for your region
@@ -638,7 +638,7 @@ This is the kind of query that pays dividends over time. The more consistently y
 
 <br/>
 
-# Other Fun Stuff...
+# ⚡Other Fun Stuff...
 - [🧰 Powershell Toolbox Part 1 Of 4: Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
 - [🧰 Powershell Toolbox Part 2 Of 4: Azure Rbac Privileged Roles Audit](https://www.hanley.cloud/2025-11-19-PowerShell-Toolbox-Part-2-of-4-Azure-RBAC-Privileged-Roles-Audit/)
 - [🧰 Powershell Toolbox Part 3 Of 4: Gpo Html Export Script — Snapshot Every Group Policy Object In One Pass](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
