@@ -115,6 +115,10 @@ PriorData
 
 ```
 
+<br/>
+
+![](/assets/img/KQL%20Toolbox/4/4query1.png)
+
 <br/><br/>
 
 ## 🔍 Line-by-line breakdown
@@ -387,6 +391,10 @@ PriorData
 
 <br/>
 
+![](/assets/img/KQL%20Toolbox/4/4query2.png)
+
+<br/><br/>
+
 ## 🔍 Line-by-line breakdown
 
 ### 1️⃣ Configuration / Tunables
@@ -539,3 +547,87 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 - Why it matters --> _both directions are signals:_
   - Spike: new noise, misconfig, or growth
   - Drop: tuning success… or broken ingestion
+
+<br/>
+
+> This looks slick as a part of a cost optimization workbook...
+> ![](/assets/img/KQL%20Toolbox/4/4workbook.png)
+
+<br/><br/>
+
+# Final Thoughts:
+
+By now, you should have a repeatable way to answer one of the most important operational questions in Microsoft Sentinel: _“What changed — and does it matter?”_
+
+With a simple delta-based approach, you can move beyond staring at raw ingest numbers and start focusing on meaningful shifts — the ones that explain cost spikes, uncover misconfigurations, and surface the right places to dig deeper. Whether you’re troubleshooting an unexpected bill increase, validating the impact of tuning changes, or preparing for a QBR, this kind of analysis gives you clarity fast.
+
+As always, this query isn’t meant to live in isolation. It works best when paired with the earlier entries in the KQL Toolbox — using volume and cost deltas to triage, then drilling down into specific tables, Event IDs, accounts, or devices to understand the root cause.
+
+>👉 In the next KQL Toolbox entry, we’ll keep building on this foundation — turning insight into action and continuing to sharpen how we measure, explain, and control our telemetry. Until then, keep questioning the numbers… and follow the delta.
+
+<br/><br/>
+
+# 🧭 Next Steps:
+
+Now that you can quickly identify which log sources changed the most — and what that change likely cost, here are a few practical ways to put this query to work:
+
+- Drill down on the offenders
+    - Take the top data source(s) from this output and pivot back into your earlier toolbox queries:
+- Use KQL Toolbox #2 to break the table down further by volume and cost.
+- Use KQL Toolbox #3 to identify noisy Event IDs, accounts, or devices driving the spike.
+- Validate recent changes
+    - Compare spikes or drops against:
+- Recent data connector deployments
+- Audit policy or logging changes
+- Agent upgrades, migrations, or troubleshooting sessions
+    - Big deltas almost always correlate with something that changed.
+- Baseline before you tune
+    - Before filtering, transforming, or suppressing data, capture a “before” snapshot using this query. Run it again after changes to validate that tuning actually reduced volume — and didn’t just move it somewhere else.
+
+<br/>
+
+### Add this to your reporting cadence
+Run this query as part of:
+- Monthly cost reviews
+- Quarterly Business Reviews (QBRs)
+- Post-incident or post-change retrospectives
+- Delta analysis makes cost conversations objective and defensible.
+
+<br/>
+
+Adjust the knobs
+- Don’t forget to tailor the query to your environment:
+- Change the window sizes (7/30, 30/60, 90/90)
+- Update the Sentinel price per GB for your region
+- Increase or decrease the top N results based on scale
+
+This is the kind of query that pays dividends over time. The more consistently you run it, the faster you’ll spot abnormal behavior — and the easier it becomes to explain why your Sentinel costs and ingest patterns are changing.
+
+<br/><br/>
+
+# 📚 Want to Go Deeper?
+
+⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **DevSecOpsDad KQL Toolbox** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+
+![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+
+<br/><br/>
+
+# 🔗 Helpful Links & Resources
+- [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
+- [🔗 KQL Query: Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
+- [🔗 KQL Query: Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 KQL Query: Which Devices are Throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 KQL Query: Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
+- [⚡ Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection?utm_source=chatgpt.com)
+
+<br/>
+
+# Other Fun Stuff...
+- [🧰 Powershell Toolbox Part 1 Of 4: Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
+- [🧰 Powershell Toolbox Part 2 Of 4: Azure Rbac Privileged Roles Audit](https://www.hanley.cloud/2025-11-19-PowerShell-Toolbox-Part-2-of-4-Azure-RBAC-Privileged-Roles-Audit/)
+- [🧰 Powershell Toolbox Part 3 Of 4: Gpo Html Export Script — Snapshot Every Group Policy Object In One Pass](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
+- [🧰 Powershell Toolbox Part 4 Of 4: Audit Your Scripts With Invoke Scriptanalyzer](https://www.hanley.cloud/2025-11-24-PowerShell-Toolbox-Part-4-of-4-Audit-Your-Scripts-with-Invoke-ScriptAnalyzer/)
+
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
