@@ -7,7 +7,7 @@ Because once you know which **log sources** and which **Event IDs** are the _mos
 
 This is where today’s KQL shines 🌞
 
-Instead of looking at cost, we shift focus to raw event frequency—a metric that drives both noise and cost. With two short KQL queries, you’ll identify:
+Instead of looking at cost, we shift focus to raw event frequency—a metric that drives both noise and cost. With a few short KQL queries, you’ll identify:
 - Which Event ID fires most in your environment over the last 30 days?
 - Which accounts are generating that Event ID the most?
 - Which devices are these Event ID's coming from?
