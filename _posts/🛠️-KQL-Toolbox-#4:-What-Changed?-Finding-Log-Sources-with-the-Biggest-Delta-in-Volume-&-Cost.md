@@ -31,7 +31,7 @@ Today we’re going to unpack one of my favorite preventive analytics queries: _
 
 ### _Let's break it down, put it to work, then crank it up a notch — **because this is DevSecOpsDad**. 😎_
 
-![](/assets/img/KQL%20Toolbox/4/DeltaCat.png)
+![](/assets/img/KQL%20Toolbox/4/BaselineCat.png)
 
 <br/><br/>
 
@@ -559,9 +559,7 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 > This looks slick as a part of a cost optimization workbook...
 > ![](/assets/img/KQL%20Toolbox/4/4workbook.png)
 
-<br/>
-
-![](/assets/img/KQL%20Toolbox/4/BaselineCat.png)
+![](/assets/img/KQL%20Toolbox/4/DeltaCat.png)
 
 <br/><br/>
 
@@ -616,6 +614,64 @@ This is the kind of query that pays dividends over time. The more consistently y
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/4/StableBaseCat.png)
+
+<br/><br/>
+
+# Bonus Discussion: 🔄 Query Evolution: Handling “New” Log Sources in Percent Change Calculations
+
+You may notice a subtle but important difference between Query #1 and Query #2 in how percent change (Change %) is calculated for new log sources. _This wasn’t accidental — it’s an intentional evolution of the query._
+
+### 🧮 Query #1 Behavior (Baseline Version)
+
+In Query #1, new log sources (those that had zero volume in the previous window) are handled like this:
+A percent change cannot be mathematically calculated when the previous value is 0
+
+Rather than allowing a divide-by-zero or returning misleading infinity values, the query explicitly assigns `Change % = 100.0`
+
+This forces new sources to:
+- Stand out visually
+- Bubble to the top of delta-based reports
+- Be treated as “something new appeared” rather than “math failed”
+
+Why this works well early on:
+- It keeps dashboards and tables easy to read
+- It prevents confusing results like ∞, NaN, or query failures
+- It reinforces the operational signal:
+    - 👉 “This source didn’t exist before — now it does.”
+
+**Trade-off:**
+- The value is symbolic, not mathematically precise
+- 100% does not represent a true percent increase — only that the source is new
+
+<br/>
+
+### 🧠 Query #2 Behavior (v2 Improvement)
+
+In Query #2, this logic is refined: _When a log source has no baseline volume, Change % is set to null._
+
+This explicitly communicates:
+- “Percent change is not applicable here”
+- “This source is new — not ‘up X%’”
+
+Why this is an improvement:
+- It preserves mathematical correctness
+- It avoids overstating growth with an artificial percentage
+- It allows dashboards, exports, and stakeholders to:
+- Sort cleanly on actual percent changes
+- Filter or highlight new sources separately
+- Avoid misinterpreting the number as real growth
+
+<br/>
+
+### 🧪 Why This Matters in the Real World
+
+| Scenario                            | Query #1                    | Query #2                      |
+|-------------------------------------|-----------------------------|-------------------------------|
+| New connector deployed	          | Clearly visible             | Clearly visible               |
+| Math accuracy                       | Approximate                 | Exact                         |
+| Dashboard sorting                   |	Simple                      | Precise                       |
+| Executive reporting                 |	“Something new appeared”	| “New source – no baseline”    |
+| Automation friendliness             |	Medium	                    | High                          |
 
 <br/><br/>
 
