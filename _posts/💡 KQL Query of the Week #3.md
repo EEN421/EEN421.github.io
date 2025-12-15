@@ -189,7 +189,7 @@ This selects the SecurityEvent table, which contains Windows Security Log data c
 
 `Event ID` `4663` specifically relates to object access attempts (e.g., **files, folders, registry keys**), making it a common source of high-volume noise in environments with broad auditing enabled.
 
-<br/><br/>
+<br/>
 
 ### 2️⃣ `| where EventID == 4663`
 
@@ -201,7 +201,7 @@ By isolating a single EventID:
 
 >⚔️ This line assumes you’ve already identified 4663 as a high-volume or high-interest event worth investigating further.
 
-<br/><br/>
+<br/>
 
 ### 3️⃣ summarize count() by Account
 
@@ -213,7 +213,7 @@ The result highlights:
 
 >🔍 In many cases, you’ll see a small number of accounts responsible for the majority of the volume.
 
-<br/><br/>
+<br/>
 
 ### 4️⃣ render columnchart
 
@@ -224,7 +224,7 @@ This renders the summarized results as a column chart, making high-volume accoun
 
 >🔧 This visualization is especially useful when presenting findings or deciding where to focus remediation or tuning efforts.
 
-<br/><br/>
+<br/>
 
 ### 🤔 How to Use It
 
@@ -255,7 +255,7 @@ If one account is way above the rest, that could be:
 - A misconfigured script
 - A potential security issue worth investigating
 
-<br/><br/>
+<br/>
 
 # 🖥️ Query #3 — Bonus: Which Devices Are Driving the Noise?
 
