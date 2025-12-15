@@ -615,12 +615,20 @@ When you combine both, you build a **leaner, clearer, more effective SOC.**
 <br/><br/>
 
 # 🔗 Helpful Links & Resources
+- [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
 - [🔗 KQL Query: Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
 - [🔗 KQL Query: Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 - [🔗 KQL Query: Which Devices are Throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
 - [🔗 KQL Query: Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
-- [🔗 Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection?utm_source=chatgpt.com)
+- [⚡ Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection?utm_source=chatgpt.com)
 
+<br/>
+
+# Other Fun Stuff...
+- [🧰 Powershell Toolbox Part 1 Of 4: Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
+- [🧰 Powershell Toolbox Part 2 Of 4: Azure Rbac Privileged Roles Audit](https://www.hanley.cloud/2025-11-19-PowerShell-Toolbox-Part-2-of-4-Azure-RBAC-Privileged-Roles-Audit/)
+- [🧰 Powershell Toolbox Part 3 Of 4: Gpo Html Export Script — Snapshot Every Group Policy Object In One Pass](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
+- [🧰 Powershell Toolbox Part 4 Of 4: Audit Your Scripts With Invoke Scriptanalyzer](https://www.hanley.cloud/2025-11-24-PowerShell-Toolbox-Part-4-of-4-Audit-Your-Scripts-with-Invoke-ScriptAnalyzer/)
 
 <br/>
 

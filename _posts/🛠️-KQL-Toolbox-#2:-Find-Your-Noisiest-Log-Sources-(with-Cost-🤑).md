@@ -491,6 +491,7 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 <br/><br/>
 
 # 🔗 Helpful Links & Resources
+- [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
 - [Top 10 Log Sources with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
 - [Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
 - [Top 10 Security Events with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
@@ -505,6 +506,13 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 - [StorageBlobLogs table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/storagebloblogs)
 - [DeviceInfo table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/deviceinfo)
 
+<br/>
+
+# Other Fun Stuff...
+- [🧰 Powershell Toolbox Part 1 Of 4: Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
+- [🧰 Powershell Toolbox Part 2 Of 4: Azure Rbac Privileged Roles Audit](https://www.hanley.cloud/2025-11-19-PowerShell-Toolbox-Part-2-of-4-Azure-RBAC-Privileged-Roles-Audit/)
+- [🧰 Powershell Toolbox Part 3 Of 4: Gpo Html Export Script — Snapshot Every Group Policy Object In One Pass](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
+- [🧰 Powershell Toolbox Part 4 Of 4: Audit Your Scripts With Invoke Scriptanalyzer](https://www.hanley.cloud/2025-11-24-PowerShell-Toolbox-Part-4-of-4-Audit-Your-Scripts-with-Invoke-ScriptAnalyzer/)
 
 <br/>
 
