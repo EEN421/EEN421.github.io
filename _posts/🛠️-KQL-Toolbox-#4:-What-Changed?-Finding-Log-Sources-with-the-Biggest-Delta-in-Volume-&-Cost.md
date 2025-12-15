@@ -2,9 +2,9 @@
 
 ## Welcome back to KQL Toolbox 👋
 
-In KQL Toolbox #1, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
-In #2, we identified which data sources were driving that cost.
-And in #3, we drilled all the way down to specific Event IDs, accounts, and devices generating noise.
+In **KQL Toolbox #1**, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
+In **KQL Toolbox #2**, we identified which data sources were driving that cost.
+And in ** KQL Toolbox #3**, we drilled all the way down to specific Event IDs, accounts, and devices generating noise.
 
 So at this point? You can already answer:
 - What’s expensive
