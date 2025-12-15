@@ -1,5 +1,31 @@
-# 📊 KQL Toolbox #4: Finding the Data Sources with the Biggest Delta in Log Volume
+# 🛠️ KQL Toolbox #4: Finding the Data Sources with the Biggest Delta in Log Volume
+In KQL Toolbox #1, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
 
+In #2, we identified which data sources were driving that cost.
+
+And in #3, we drilled all the way down to specific Event IDs, accounts, and devices generating noise.
+
+At this point, you can answer what’s expensive, what’s noisy, and who’s responsible.
+
+But there’s one critical question every SOC analyst, engineer, and cost owner eventually asks:
+
+“What changed?”
+
+Because in the real world, cost spikes, alert storms, and performance issues rarely come from what’s always been there — they come from sudden shifts:
+
+A misconfigured data connector
+
+A new audit policy rolled out too broadly
+
+A broken agent stuck in a logging loop
+
+Or a “temporary” change that quietly became permanent
+
+That’s where this week’s KQL comes in.
+
+Instead of ranking data sources by total volume or cost, KQL Toolbox #4 focuses on delta — identifying which log sources have experienced the largest change in volume compared to their historical baseline.
+
+This lets you stop guessing, stop scrolling through charts, and immediately zero in on what deserves investigation first.
 If you’re working with Azure Monitor Logs / Log Analytics or Microsoft Sentinel, one of the biggest operational headaches is tracking down why your log volume / billable data is changing. Whether it’s a cloud migration, a new app rollout, a misconfigured agent … or just normal growth — understanding what’s driving increases or drops in ingested logs is critical for budgeting, troubleshooting, and SOC hygiene.
 
 Today we’re going to unpack one of my favorite preventive analytics KQL queries: “Data Sources with Biggest Delta in Log Volume.” I’ll walk through what it’s doing, how it works, and the use cases it helps you solve.
