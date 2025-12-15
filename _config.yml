@@ -321,6 +321,9 @@ exclude:
   - README.md
   - screenshot.png
   - docs/
+  - vendor
+  - vendor/bundle
+  - .bundle
 
 plugins:
   - jekyll-paginate
