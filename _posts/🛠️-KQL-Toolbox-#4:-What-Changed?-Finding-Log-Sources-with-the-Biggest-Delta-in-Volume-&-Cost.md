@@ -675,7 +675,7 @@ Why this is an improvement:
 
 <br/>
 
->💡 Note: In the above queries, we converted `Quantity` by `/1024` — effectively GiB (based on 1024). That’s more accurate for how systems actually use data (base 2), but Microsoft billing uses decimal GB (1000) for pricing [https://learn.microsoft.com/en-us/azure/sentinel/billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
+> # 💡 Note: In the above queries, we converted `Quantity` by `/1024` — effectively GiB (based on 1024). That’s more accurate for how systems actually use data (base 2), but Microsoft billing uses decimal GB (1000) for pricing. _Refer to Gigabytes vs. Gibibytes section in [Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) and adjust accordingly... [https://learn.microsoft.com/en-us/azure/sentinel/billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)_
 
 <br/><br/>
 
@@ -694,8 +694,9 @@ Why this is an improvement:
 - [🔗 KQL Query: Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
 - [🔗 KQL Query: Which Devices are Throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
 - [🔗 KQL Query: Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
-- [⚡ Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection?utm_source=chatgpt.com)
+- [⚡ Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection)
 - [💲 Official Sentinel Pricing Page](https://learn.microsoft.com/en-us/azure/sentinel/billing?utm_source=chatgpt.com&tabs=simplified%2Ccommitment-tiers)
+- [💰 Microsoft Billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
 
 <br/>
 
