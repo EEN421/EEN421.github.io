@@ -1,4 +1,4 @@
-# KQL Toolbox #4: Finding the Data Sources with the Biggest Delta (Change) in Ingest Volume.
+# KQL Toolbox #4: What Changed? Finding Log Sources with the Biggest Delta in Volume & Cost
 
 ## Welcome back to KQL Toolbox 👋
 
