@@ -1,215 +1,279 @@
-# 🛠️ KQL Toolbox #4: Finding the Data Sources with the Biggest Delta in Log Volume
-In KQL Toolbox #1, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
+Alright — here’s a **true line-by-line breakdown** of your query, in “DevSecOpsDad toolbox” style (what it does + why it matters + gotchas).
 
-In #2, we identified which data sources were driving that cost.
+---
 
-And in #3, we drilled all the way down to specific Event IDs, accounts, and devices generating noise.
+## 🧠 What this query is trying to answer
 
-At this point, you can answer what’s expensive, what’s noisy, and who’s responsible.
+> **“Which data sources changed the most in billable log volume when comparing the last 30 days vs the 30 days before that?”**
 
-But there’s one critical question every SOC analyst, engineer, and cost owner eventually asks:
+It does this by:
 
-“What changed?”
+* defining **two time windows**
+* summarizing **billable Usage** by `DataType`
+* doing a **full outer join** so new/discontinued sources still show up
+* calculating **absolute delta (GB)** and **percent delta (%)**
+* returning the **top 5 biggest absolute swings**
 
-Because in the real world, cost spikes, alert storms, and performance issues rarely come from what’s always been there — they come from sudden shifts:
+---
 
-A misconfigured data connector
+## 🔍 Line-by-line breakdown
 
-A new audit policy rolled out too broadly
+### Comment header
 
-A broken agent stuck in a logging loop
-
-Or a “temporary” change that quietly became permanent
-
-That’s where this week’s KQL comes in.
-
-Instead of ranking data sources by total volume or cost, KQL Toolbox #4 focuses on delta — identifying which log sources have experienced the largest change in volume compared to their historical baseline.
-
-This lets you stop guessing, stop scrolling through charts, and immediately zero in on what deserves investigation first.
-If you’re working with Azure Monitor Logs / Log Analytics or Microsoft Sentinel, one of the biggest operational headaches is tracking down why your log volume / billable data is changing. Whether it’s a cloud migration, a new app rollout, a misconfigured agent … or just normal growth — understanding what’s driving increases or drops in ingested logs is critical for budgeting, troubleshooting, and SOC hygiene.
-
-Today we’re going to unpack one of my favorite preventive analytics KQL queries: “Data Sources with Biggest Delta in Log Volume.” I’ll walk through what it’s doing, how it works, and the use cases it helps you solve.
-
-# 🧠 What This Query Is Solving
-
-The core problem here is simple:
-
-### 👉 What data sources (log tables) have changed the most in terms of billable ingestion volume between two periods?
-
-You care about this because:
-
-### 📈 Log ingestion = direct cost in Azure Monitor / Sentinel (billable ingestion volume affects your bill). 
-Microsoft Learn
-+1
-
-### 🚨 Sudden increases can indicate misconfigurations, runaway telemetry, or silent internal change.
-
-### 🔎 Drops in volume usually point to missing telemetry (broken agents, misconfigured pipelines, stopped services) — which can blind your SOC. 
-Microsoft Sentinel 101
-
-This KQL query is a drill-down that compares two time windows — the prior 30 days vs. the most recent 30 days — and shows you which data sources saw the biggest changes in billable GB.
-
-# 🧩 Anatomy of the Query
 ```kql
-let PriorPeriod = toscalar(
-    Usage
-    | where TimeGenerated > ago(60d) and TimeGenerated <= ago(30d)
+//This query:
+//-->Finds the exact time ranges for comparison periods (previous 30 days vs current 30 days)
+//-->Calculates total GB for each data source in both periods
+//-->Joins the results to show the comparison
+//-->Calculates both absolute and percentage changes
+//-->Shows top 5 sources with biggest absolute changes
+//-->Handles cases where sources might be new or discontinued
+```
+
+This is your “intent block.” Love it. It tells the reader what to expect before they see any KQL.
+
+---
+
+## 1) Find the prior period start time
+
+```kql
+let PriorPeriod = toscalar(Usage
+    | where TimeGenerated > ago(60d) and TimeGenerated <= ago(30d) // Data from 30 to 60 days ago
     | where IsBillable == true
-    | summarize min(TimeGenerated)
-);
-let CurrentPeriod = toscalar(
-    Usage
-    | where TimeGenerated > ago(30d)
+    | summarize min(TimeGenerated)); // Get the earliest record in that period
+```
+
+### What this does
+
+* Looks at the **Usage** table (Sentinel billing/usage telemetry).
+* Filters to the window: **60d ago → 30d ago** (the *previous* 30-day period).
+* Keeps **only billable rows** (`IsBillable == true`).
+* Finds the **earliest** `TimeGenerated` in that window.
+* Wraps it in `toscalar(...)` so the result becomes a **single datetime value** stored in `PriorPeriod`.
+
+### Why it matters
+
+You’re trying to anchor the “prior 30 days” window using real data boundaries.
+
+### Gotcha
+
+This is *not* “the prior period start time” in a calendar sense — it’s **the earliest event found** in that window. If ingestion was paused or sparse, the “start” could slide forward.
+
+---
+
+## 2) Find the current period end time (but… you don’t actually use it)
+
+```kql
+let CurrentPeriod = toscalar(Usage
+    | where TimeGenerated > ago(30d) // Data from the last 30 days
     | where IsBillable == true
-    | summarize max(TimeGenerated)
-);
+    | summarize max(TimeGenerated)); // Get the latest record in the current period
+```
+
+### What this does
+
+* Filters to **last 30 days**
+* Gets the **latest** `TimeGenerated` found
+* Stores it in `CurrentPeriod`
+
+### Gotcha (important)
+
+You **never reference `CurrentPeriod` later**, so this line currently:
+
+* adds clarity (intent)
+* but **does not affect results**
+
+If you want “exact time ranges,” you’d use `CurrentPeriod` in your filters (we can improve that later).
+
+---
+
+## 3) Summarize prior-period GB by data source
+
+```kql
 let PriorData = Usage
-    | where TimeGenerated between (PriorPeriod .. ago(30d))
+    | where TimeGenerated between (PriorPeriod .. ago(30d)) // Filter for data in the prior period
     | where IsBillable == true
-    | summarize PriorGB = round(todouble(sum(Quantity))/1024, 2) by DataType;
+    | summarize PriorGB = round(todouble(sum(Quantity))/1024, 2) by DataType; // Calculate GB by data type in the prior period
+```
+
+### What this does
+
+* Queries **Usage**
+* Filters to `TimeGenerated between (PriorPeriod .. ago(30d))`
+
+That is:
+
+* **start:** `PriorPeriod` (earliest record found in that prior window)
+* **end:** `ago(30d)` (exactly 30 days ago from “now”)
+
+Then it:
+
+* keeps only billable
+* groups by `DataType` (this is the “data source/table” name in Usage)
+* sums `Quantity` for each `DataType`
+* converts to GB-ish by dividing by `1024`
+* rounds to 2 decimals
+
+### Why the `todouble()`?
+
+KQL sometimes keeps `sum(Quantity)` as a numeric type that can behave oddly in math or formatting. `todouble()` ensures consistent numeric output before division and rounding.
+
+### Gotcha
+
+**What unit is `Quantity`?** In the Usage table, `Quantity` is generally in **MB** for data ingestion usage records, so dividing by `1024` is converting **MB → GB (GiB-ish)**. That’s commonly how folks do it, but it’s worth being explicit in your blog copy.
+
+---
+
+## 4) Summarize current-period GB by data source
+
+```kql
 let CurrentData = Usage
-    | where TimeGenerated > ago(30d)
+    | where TimeGenerated > ago(30d) // Filter for data in the current period
     | where IsBillable == true
-    | summarize CurrentGB = round(todouble(sum(Quantity))/1024, 2) by DataType;
-PriorData
-| join kind=fullouter CurrentData on DataType
-| extend 
-    DataType = coalesce(DataType, DataType1),
-    PriorGB = coalesce(PriorGB, 0.0),
-    CurrentGB = coalesce(CurrentGB, 0.0),
-    ChangeGB = coalesce(CurrentGB - PriorGB, 0.0)
-| project 
-    ['Data Source'] = DataType,
-    ['Previous 30 Days (GB)'] = PriorGB,
-    ['Current 30 Days (GB)'] = CurrentGB,
-    ['Change (GB)'] = round(CurrentGB - PriorGB, 2),
-    ['Change %'] = iif(PriorGB > 0, round(((CurrentGB - PriorGB) / PriorGB) * 100, 1), 100.0),
-    ['Change $'] = strcat('$', round(ChangeGB * {CostPerGB}, 2))
-| where ['Current 30 Days (GB)'] > 0 or ['Previous 30 Days (GB)'] > 0
-| top 10 by abs(['Change (GB)']) desc
+    | summarize CurrentGB = round(todouble(sum(Quantity))/1024, 2) by DataType; // Calculate GB by data type in the current period
 ```
 
-Let’s decode that step by step.
+### What this does
 
-### 🧱 Step 1 — Define Time Windows
-```kql
-let PriorPeriod = ...
-let CurrentPeriod = ...
-```
+Same as `PriorData`, but for the **last 30 days**.
 
-This part sets up two windows:
-- Prior period: The 30–60 days ago span
-- Current period: The most recent 30 days
+### Gotcha
 
-It pulls the earliest and latest timestamps for billable entries in each window so that the subsequent data slices are clean and consistent.
+This uses `TimeGenerated > ago(30d)` which is open-ended to “now” (not to `CurrentPeriod`). In most cases, that’s fine, but it means your “end boundary” is “query execution time,” not “latest record time.”
 
-This is important in Azure Monitor usage because the Usage table reflects hourly or periodic summaries, not raw events. 
-Microsoft Learn
+---
 
-### 🪄 Step 2 — Summarize Billable Volume
-```kql
-let PriorData = ...
-let CurrentData = ...
-```
+## 5) Join prior + current together (including new/discontinued sources)
 
-Here we split the consumption data:
-
-Filter to billable records (IsBillable == true) — this ensures we only count the ingestion that affects billing. 
-
-- Aggregate (summarize) to total GB per log type (DataType)
-
-- Convert from MBytes to GB (sum(Quantity) / 1024)
-
-Now we have two tables:
-
-- `DataType`	`PriorGB`
-
-and
-
-- `DataType`	`CurrentGB`
-
-### 🔗 Step 3 — Compare the Two
 ```kql
 PriorData
-| join kind=fullouter CurrentData on DataType
+| join kind=fullouter CurrentData on DataType // Join data from prior and current periods by data type
 ```
 
-This is the heart of the delta — we join both tables to ensure all data sources show up, even if they only exist in one period.
+### What this does
 
-Then we calculate:
-- Absolute GB change (ChangeGB)
-- Percentage change (Change %)
-- Estimated cost impact (Change $) based on a {CostPerGB} placeholder (you’d supply this)
+A `fullouter` join includes:
 
-### 📊 Step 4 — Filter and Rank
+* sources only in **PriorData** (discontinued / went quiet)
+* sources only in **CurrentData** (new / newly billable)
+* sources in **both** (normal)
+
+This is exactly what you want for “delta hunting.”
+
+### Gotcha
+
+When one side is missing, fields come back null, and you’ll see *two* DataType columns:
+
+* `DataType` (left)
+* `DataType1` (right)
+
+That’s why you handle coalesce next.
+
+---
+
+## 6) Normalize nulls and merge the DataType columns
+
 ```kql
-| where ...
-| top 10 by abs(['Change (GB)']) desc
+| extend DataType = coalesce(DataType, DataType1), // Handle null values from join
+        PriorGB = coalesce(PriorGB, 0.0),
+        CurrentGB = coalesce(CurrentGB, 0.0)
 ```
 
-Finally we keep only sources with usage, and take the top 10 by absolute GB change — giving you the biggest movers regardless of direction.
+### What this does
 
-# 🔍 Why This Matters
+* `coalesce(DataType, DataType1)` picks the first non-null value.
 
-This query solves real-world operational questions:
+  * If the source only exists in CurrentData, `DataType` (left) is null → it uses `DataType1`
+* `coalesce(PriorGB, 0.0)` turns null into 0 (meaning “no data that period”)
+* same for CurrentGB
 
-### 🧪 1. Detect Sudden Spikes
+This is the key step that makes new/discontinued sources behave logically in math.
 
-If one data source starts spiking (e.g., DNS logs, Syslog, SecurityEvents), this will bring it to the top. A sudden spike can:
-- Blow your budget
-- Signal misconfiguration
-- Trigger alerts early
+---
 
-Teams often set up alerts based on these deltas to catch anomalies before the invoice arrives. 
+## 7) Shape output columns + calculate deltas
 
-### ❗ 2. Detect Unexpected Drops
+```kql
+| project ['Data Source'] = DataType, // Create columns for data source and GB changes
+         ['Previous 30 Days (GB)'] = PriorGB, 
+         ['Current 30 Days (GB)'] = CurrentGB, 
+         ['Change (GB)'] = round(CurrentGB - PriorGB, 2), // Calculate the change in GB
+         ['Change %'] = iif(PriorGB > 0, round(((CurrentGB - PriorGB) / PriorGB) * 100, 1), 100.0) // Calculate percentage change
+```
 
-A drop isn’t always good. Missing logs often means:
+### What this does
 
-Agents stopped sending
+* Renames columns to human-friendly labels (great for blog screenshots / workbooks)
+* Computes:
 
-Retention changes
+  * **Change (GB)** = current minus prior
+  * **Change %**:
 
-Obsolete connectors
+    * if PriorGB > 0 → normal percent change math
+    * else (prior was 0) → hardcodes `100.0`
 
-Data source misconfiguration
+### Gotcha (this is a subtle one)
 
-You lose visibility before you lose money — and that’s worse. 
-Microsoft Sentinel 101
+That `else 100.0` is a *choice*, not “math truth.”
 
-### 💰 3. Understand Cost Drivers
+If PriorGB = 0 and CurrentGB > 0:
 
-When you’re budgeting for Azure Monitor or Sentinel, most of your bill comes from log ingestion. This query lets you:
-- Attribute ingestion per source
-- Show projected costs due to volume changes
-- Justify retention or filtering decisions
+* percent change is technically “infinite / undefined”
+* you’re treating it as **100%**, which reads like “doubled,” but actually means “went from zero to something.”
 
-Because billing is based on ingested volume, understanding what is driving volume is essential for FinOps. 
+That’s not wrong for dashboards (it avoids NaN/inf), but you may want to label it in the post as:
 
-### 📅 4. Trend Reporting
+> “When a source is brand new, percent change is shown as 100% by convention.”
 
-Companies often run this weekly or monthly:
-- Trend dashboards
-- QBR reviews
-- Drill-downs for executive reporting
+(We can improve this later with a clearer “NEW” label or null.)
 
-This fits perfectly into quantitative operational reviews.
+---
 
-# 🛠️ How to Operationalize It
+## 8) Remove completely empty rows
 
-### 💡 Enhancements you can add:
+```kql
+| where ['Current 30 Days (GB)'] > 0 or ['Previous 30 Days (GB)'] > 0 // Only include records with non-zero data
+```
 
-- Dashboard: plot each DataType over time
-- Alerts: fire if any source grows > X% vs prior period
-- Automation: trigger tickets when unexpected drops occur
+### What this does
 
-# 🧠 Final Thoughts
+After the join + coalesce, you could theoretically end up with rows that are 0/0 (rare, but possible depending on joins and data quirks). This ensures you only keep meaningful sources.
 
-This query is a simple yet powerful FinOps + SOC diagnostic tool. It gives you:
+---
 
-✔ A clear comparison of before vs after
-✔ Cost context
-✔ Anomaly detection opportunities
-✔ A basis for automation and alerting
+## 9) Show the biggest movers
 
-If you’re managing a growing Azure footprint, you’ll want this in your reporting toolkit.
+```kql
+| top 5 by abs(['Change (GB)']) desc // Get top 5 data sources by absolute volume change
+```
+
+### What this does
+
+* Uses `abs(ChangeGB)` so it catches:
+
+  * big increases **and** big decreases
+* Returns the **top 5** most significant swings
+
+### Why that’s good
+
+For “what changed?” hunting, you want both:
+
+* sudden spike (new noise)
+* sudden drop (something broke, or tuning worked)
+
+---
+
+## ✅ Summary: what a reader should understand after this breakdown
+
+This query is essentially a “delta radar”:
+
+* **prior 30 days vs current 30 days**
+* per data source (`DataType`)
+* shows biggest swings first
+* includes new/discontinued sources via `fullouter`
+
+---
+
+If you want, next we can tighten just **one thing** before moving to the cost version:
+
+* Make the time windows truly “exact” and symmetric (so we aren’t mixing `PriorPeriod`, `ago(30d)`, and an unused `CurrentPeriod`).
