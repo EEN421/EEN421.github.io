@@ -31,6 +31,8 @@ Today we’re going to unpack one of my favorite preventive analytics queries: _
 
 ### _Let's break it down, put it to work, then crank it up a notch — **because this is DevSecOpsDad**. 😎_
 
+![](/assets/img/KQL%20Toolbox/4/DeltaCat.png)
+
 <br/><br/>
 
 ## 🧠 What this query is trying to answer
@@ -294,6 +296,10 @@ This query is essentially a “delta radar”:
 * shows biggest swings first
 * includes new/discontinued sources via `fullouter`
 
+<br/>
+
+![](/assets/img/KQL%20Toolbox/4/VRCat.png)
+
 <br/><br/>
 
 # “Okay… But How Much Did those GB's just Cost?”
@@ -553,6 +559,10 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 > This looks slick as a part of a cost optimization workbook...
 > ![](/assets/img/KQL%20Toolbox/4/4workbook.png)
 
+<br/>
+
+![](/assets/img/KQL%20Toolbox/4/BaselineCat.png)
+
 <br/><br/>
 
 # Final Thoughts:
@@ -602,6 +612,10 @@ Adjust the knobs
 - Increase or decrease the top N results based on scale
 
 This is the kind of query that pays dividends over time. The more consistently you run it, the faster you’ll spot abnormal behavior — and the easier it becomes to explain why your Sentinel costs and ingest patterns are changing.
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/4/StableBaseCat.png)
 
 <br/><br/>
 
