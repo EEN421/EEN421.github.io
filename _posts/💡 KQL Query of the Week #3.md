@@ -1,7 +1,7 @@
 # 💡 KQL Toolbox #3 — Which Event ID Noises Up Your Logs (and Who’s Causing It)?
 **Welcome back to the DevSecOpsDad KQL Toolbox series!** In the last entry (KQL Toolbox #2), we zoomed in on log source cost drivers—using `_IsBillable` and `_BilledSize` to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
-### This week, we’re building directly on that foundation...
+## This week, we’re building directly on that foundation...
 Because once you know which **log sources** and which **Event IDs** are the _most expensive_, the very next question becomes:
 > “Okay… but which Event ID fires the most often, and which accounts are responsible for generating it?”
 
@@ -32,7 +32,7 @@ These queries are perfect for your weekly cost-noise correlation checks, operati
 
 <br/> 
 
-### 🔍 Why This Matters
+## 🔍 Why This Matters
 
 Frequent aggregation and ranking of event volumes help you spot noise that obscures real threats. Comprehensive logging and centralized analysis — combined with targeted filtering like this — improves both cost efficiency and detection quality.
 
@@ -64,21 +64,69 @@ SecurityEvent                       // <--Define the table to query
 
 <br/><br/>
 
-### 🔧 Line-by-Line Breakdown
+## 🔧 Line-by-Line Breakdown
 
-- `where EventID == 4663` --> Focuses the analysis on one known noisy event.
+### 1️⃣ `SecurityEvent`
 
-- `summarize count() by Account` --> Shows which identities are responsible for generating the most events.
+This selects the SecurityEvent table, which contains Windows Security Log events collected from domain controllers, member servers, and workstations. These events include authentication activity, object access, process creation, policy changes, and more — making this table a common source of high-volume ingest in Microsoft Sentinel.
 
-- `sort by count_ desc` --> Surfaces the heaviest contributors immediately.
+<br/>
 
-- `take 10` --> Keeps the output actionable and readable.
+### 2️⃣ `| where TimeGenerated > ago(30d)`
 
-- `render columnchart` --> Highlights disproportionate contributors visually.
+This filters the dataset to only events generated in the last 30 days.
+- Keeps the query performant
+- Focuses analysis on recent and relevant behavior
+- Makes results suitable for monthly reporting, tuning reviews, or QBR discussions
+
+>💡 You can easily adjust this window (e.g., `7d`, `14d`, `90d`) depending on how much history you want to analyze.
+
+<br/>
+
+### 3️⃣ `| summarize count() by EventID`
+
+This is the heart of the query.
+- Groups all events by EventID
+- Counts how many times each EventID appears in the time window
+- Produces a frequency table showing which EventIDs are most common
+
+> 👉 At this stage, the query transforms raw logs into actionable signal, revealing which event types dominate your environment.
+
+<br/>
+
+### 4️⃣ `| sort by count_ desc`
+
+This sorts the summarized results from highest to lowest count. Without this step, you’d be looking at an arbitrary order — but with it, the loudest EventIDs float to the top, making it immediately clear where your log volume is coming from.
+
+> ⚠️ This is critical before using `take` in the next step. 👇
+
+<br/>
+
+### 5️⃣ `| take 10`
+
+This limits the output to the **top 10 EventIDs by volume**, focusing on just the top offenders keeps the output:
+- Readable
+- Actionable
+- Ideal for dashboards and quick reviews
+
+>💡 In most environments, these 10 EventIDs account for a disproportionate share of SecurityEvent ingest.
+
+<br/>
+
+### 6️⃣ render columnchart
+
+This renders the result as a column chart, making patterns instantly visible...
+
+- Each column represents an EventID
+- Column height reflects how frequently it occurs
+- Outliers and “runaway” events stand out immediately
+
+>💡 This visualization is especially useful when presenting findings to stakeholders or deciding where to focus tuning and filtering efforts.
+
 
 <br/><br/>
 
-### 🔎 What You’re Looking For
+## 🔎 What You’re Looking For
 
 When you run this query:
 - You’ll get a chart of Event IDs ranked by how often they happened in the last 30 days.
@@ -87,11 +135,11 @@ When you run this query:
 
 This gives you a quick look at what’s dominating your security log volume.
 
->💡 Tip: If you’ve already been tracking ingest costs with last week’s queries, overlay this with Table + Cost ranking and you can start connecting “noise” with “dollars.”
+>⚡ Pro-Tip: If you’ve already been tracking ingest costs with last week’s queries, overlay this with Table + Cost ranking and you can start connecting “noise” with “dollars.”
 
-<br/><br/>
+<br/>
 
-### 📊 What the Results Tell You
+### 📊 What the Results Will Contain
 
 This output answers one critical question: “What Event IDs dominate my SecurityEvent volume?”
 
@@ -101,7 +149,17 @@ Common examples you’ll often see:
 - 4663 – Object access attempts
 - 5156 – Windows Filtering Platform traffic
 
-_**High frequency** alone doesn’t mean **“bad”** — but it **does** tell you where to **look next**._
+>💡 _**High frequency** alone doesn’t mean **“bad”** — but it does tell you where to **look next**._
+
+<br/><br/>
+
+## 🎯 How to Use the Results
+
+Once you identify your top EventIDs, you can:
+- Investigate why they’re so noisy
+- Decide whether they’re security-relevant or just operational
+- Tune collection policies, analytics rules, or DCRs
+- Reduce Sentinel ingest cost without losing meaningful detections
 
 <br/><br/>
 
@@ -123,35 +181,61 @@ SecurityEvent                     // <--Define the table to query
 
 <br/><br/>
 
-### 🔧 Line-by-Line Breakdown
+## 🔧 Line-by-Line Breakdown
 
-- `where EventID == 4663` --> Focuses the analysis on one known noisy event.
+### 1️⃣ SecurityEvent
 
-- `summarize count() by Account` --> Shows which identities are responsible for generating the most events.
+This selects the SecurityEvent table, which contains Windows Security Log data collected from systems such as domain controllers, file servers, and workstations.
 
-- `sort by count_ desc` --> Surfaces the heaviest contributors immediately.
-
-- `take 10` --> Keeps the output actionable and readable.
-
-- `render columnchart` --> Highlights disproportionate contributors visually.
+`Event ID` `4663` specifically relates to object access attempts (e.g., **files, folders, registry keys**), making it a common source of high-volume noise in environments with broad auditing enabled.
 
 <br/><br/>
 
-### 🛠️ How to Use It
+### 2️⃣ `| where EventID == 4663`
+
+This filters the dataset to only Event ID 4663. <br/>
+By isolating a single EventID:
+- You remove unrelated noise
+- Narrow the investigation scope
+- Make it easier to attribute behavior to specific actors
+
+>⚔️ This line assumes you’ve already identified 4663 as a high-volume or high-interest event worth investigating further.
+
+<br/><br/>
+
+### 3️⃣ summarize count() by Account
+
+This groups all 4663 events by Account and counts how many times each account triggered the event. <br/>
+The result highlights:
+- Users accessing large numbers of objects
+- Service accounts performing bulk operations
+- Potential misconfigurations or runaway processes
+
+>🔍 In many cases, you’ll see a small number of accounts responsible for the majority of the volume.
+
+<br/><br/>
+
+### 4️⃣ render columnchart
+
+This renders the summarized results as a column chart, making high-volume accounts immediately visible, like...
+- Each column represents an account
+- Taller columns indicate heavier activity
+- Outliers stand out at a glance
+
+>🔧 This visualization is especially useful when presenting findings or deciding where to focus remediation or tuning efforts.
+
+<br/><br/>
+
+### 🤔 How to Use It
 
 Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query (in our example we'll use  `4663`). You’ll get a visualization of which accounts are responsible for the most of that event.
 
-This query helps answer:
-- Is this noise caused by a service account?
-- Is a single user or system behaving abnormally?
-- Is an application hammering file or registry access?
-- Does this align with expected business behavior?
-
-From here, you can:
-- Tune auditing policies
-- Exclude unnecessary events
-- Refine detections
-- Investigate suspicious behavior
+Once you identify the top accounts generating Event ID 4663, you can:
+- Determine whether the activity is expected or excessive
+- Identify service accounts that may need narrower permissions
+- Tune auditing policies to reduce unnecessary noise
+- Exclude known-benign accounts from alerting logic
+- Quantify potential Sentinel ingest cost impact
 
 <br/>
 
@@ -214,25 +298,38 @@ SecurityEvent                     // <--Define the table to query
 
 # ✅ What these queries are good for
 
-- Noise hunting: Find the one (or few) endpoints generating the bulk of a specific Windows audit event.
-- Cost triage: If you already know a certain Event ID is expensive/noisy, this shows where to focus first (often a handful of servers).
-- Misconfiguration detection: A workstation or server spamming 4663 can point to:
-- overly-broad auditing on a hot file share
-- an application account touching tons of objects
-- a GPO audit policy applied too broadly
+Taken together, the four queries in KQL Toolbox #3 form a progressive noise-hunting workflow — moving from “what’s loud?” to “who and what is causing it?”.
 
->💡Investigation pivot: Once you find the loudest device, you can drill into which accounts, which files, and what access types are generating the volume.
+They’re particularly effective for: <br/><br/>
+**Noise hunting at scale**
+- Quickly identify which Event IDs, endpoints, and accounts are responsible for the majority of Windows Security Event volume — without manually digging through raw logs.
+
+<br/>
+
+**Sentinel cost triage** <br/>
+- Once a noisy or expensive Event ID is identified, these queries help you pinpoint exactly where the volume is coming from, which is often just a handful of servers, services, or users driving disproportionate ingest cost.
+
+**Misconfiguration detection**
+- Consistent high-volume events (especially Event ID 4663) frequently reveal:
+    - Overly broad auditing on hot file shares
+    - Service or application accounts touching massive numbers of objects
+    - GPO audit policies applied too widely across the environment
+
+**Safe tuning and scoping decisions**
+- By breaking noise down by `Event ID` → `device` → `account`, you gain the confidence needed to tune auditing, analytics rules, or data collection — _without blindly suppressing potentially valuable security signal._
+
+>💡Investigation pivot: These queries are intentionally designed to chain together. Once you identify the loudest Event ID, you can pivot to the noisiest device, then to the accounts generating the activity — and finally down to the files, paths, or access types responsible for the volume.
 
 <br/><br/>
 
 # 🧩 Putting It Together: A Simple Weekly Workflow
 Here’s how this query fits into a repeatable SOC hygiene loop:
 
-- **1.)** Identify expensive tables --> (Toolbox #1)
+- **1.)** Identify expensive tables --> KQL Toolbox #1
 
-- **2.)** Identify noisiest log sources --> (Toolbox #2)
+- **2.)** Identify noisiest log sources --> KQL Toolbox #2
 
-- **3.)** Identify top Event IDs --> (This article)
+- **3.)** Identify top Event IDs --> This article / KQL Toolbox #3
 
 - **4.)** Attribute noise to users and systems
 
@@ -254,34 +351,17 @@ Here’s how this query fits into a repeatable SOC hygiene loop:
 
 <br/><br/>
 
-# 💡 Bonus Tips
-🔦 Filter by Logon Type <br/>
-If you’re focusing on authentication noise, you can enhance Query #1 with filters on logon type or status (success vs failure).
+# 💡 Bonus Tips & Guardrails (Quick Hits)
+
+A few advanced considerations to keep in mind as you work through the queries above: 
+- **Target the right noise** --> Authentication-related Event IDs can often be refined further using logon type or success/failure filters.
+- **Pair noise with cost** --> When you correlate noisy Event IDs with ingest cost (from KQL Toolbox #1 and #2), it becomes much easier to prioritize tuning that actually reduces spend.
+- **Alert _thoughtfully**_ --> Spikes above a normal baseline can be alert-worthy — but only after you understand what “normal” looks like in your environment.
+- **Context matters** --> High event volume alone doesn’t imply malicious activity. Always validate against expected behavior before tuning or suppressing data.
 
 <br/>
 
-⚡ Combine With Cost Analytics <br/>
-Remember the queries from **KQL Toolbox #1 and #2**? Overlaying Event ID noise with ingest cost helps you:
-- Spot expensive noise that you can reduce
-- Prioritize tuning where it saves real $$
-
-<br/>
-
-🚨 Alerting <br/>
-If a specific Event ID spikes above its baseline frequency, you can attach a metric alert in Sentinel and get notified. We'll dive into how to do this further down. 
-
-
-<br/><br/>
-
-# ⚠️ Best Practices & Gotchas
-
-- **High frequency ≠ malicious** --> _Always validate against expected behavior._
-
-- **Avoid over-filtering** --> _Don’t blindly suppress Event IDs without understanding downstream detections._
-
-- **Filter early for performance** --> _Time filters should always appear early in your query._
-
-- **Baseline before alerting** --> _Establish “normal” before creating thresholds._
+>💡 The next section expands on these tips with concrete examples, best practices, and common pitfalls to avoid when tuning or alerting on Event ID noise. 👇
 
 
 <br/><br/>
