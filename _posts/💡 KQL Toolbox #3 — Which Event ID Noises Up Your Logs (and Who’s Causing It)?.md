@@ -54,8 +54,9 @@ This query counts all SecurityEvent occurrences in the last 30 days and ranks Ev
 SecurityEvent                       // <--Define the table to query
 | where TimeGenerated > ago(30d)    // <--Query the last 30 days
 | summarize count() by EventID      // <--Return number of hits per EventID
+| sort by count_ desc               // <--Bring heavy hitters to the top
 | take 10                           // <--Take the top 10
-| render columnchart                // <--Helps visualize which EventIDs are the heavy hitters
+| render columnchart                // <--Helps visualize which EventIDs are outliers
 ```
 
 ![](/assets/img/KQL%20Toolbox/3/3kql1.png)
@@ -172,6 +173,7 @@ So you found the loudest Event ID... The next step is attribution; let’s see w
 SecurityEvent                     // <--Define the table to query
 | where EventID == 4663         // <--Declare which EventID you're looking for
 | summarize count() by Account    // <--Show how many times that EventID was thrown per account
+| sort by count_ desc             // <-- Sort by heaviest hitters first
 | render columnchart              // <--Optional, but helps quickly visualize potential outliers
 ```
 
@@ -257,7 +259,7 @@ If one account is way above the rest, that could be:
 
 <br/>
 
-# 🖥️ Query #3 — Bonus: Which Devices Are Driving the Noise?
+# 🖥️ Query #3 — Which Devices Are Driving the Noise?
 
 Sometimes the problem isn’t who — it’s where. This query answers a simple but powerful question: “Which computers are generating the most of Event ID 4663?” <br/>
 > 4663 = An attempt was made to access an object — commonly used for file/folder auditing noise-hunting and investigation.)
@@ -600,8 +602,13 @@ When you combine both, you build a **leaner, clearer, more effective SOC.**
 <br/><br/>
 
 # 🔗 Helpful Links & Resources
-- [⚡Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
-- [⚡Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 KQL Query: Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
+- [🔗 KQL Query: Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 KQL Query: Which Devices are Throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
+- [🔗 KQL Query: Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
+- [🔗 Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection?utm_source=chatgpt.com)
+
+
 
 
 
