@@ -7,10 +7,11 @@ Because once you know which **log sources** and which **Event IDs** are the _mos
 
 This is where today’s KQL shines 🌞
 
-Instead of looking at cost, we shift focus to raw event frequency—a metric that drives both noise and cost. With a few short KQL queries, you’ll identify:
+Instead of looking at cost, we shift focus to raw event frequency—a metric that drives both noise and cost. With a small set of chained KQL queries, _you’ll move from identifying noisy Event IDs to pinpointing the exact users and devices responsible — and finally alert only when behavior changes_. Let's identify:
 - Which Event ID fires most in your environment over the last 30 days?
 - Which accounts are generating that Event ID the most?
 - Which devices are these Event ID's coming from?
+- Compare recent activity against a baseline.
 
 This gives you a clean, fast workflow for spotting noisy Event IDs, isolating misconfigured or anomalous accounts, and tightening both your detection logic and cost posture. With that, let’s jump into this week’s analysis...
 
