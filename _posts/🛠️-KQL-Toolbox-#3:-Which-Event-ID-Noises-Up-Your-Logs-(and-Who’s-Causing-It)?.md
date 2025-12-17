@@ -657,8 +657,8 @@ Output is one row per EventID with `BaselineAvgDaily`
 | Column			| Meaning				  |
 | ----------------- | ----------------------- |
 |EventID			| The event that changed  |
-|AvgDailyCount   	| Normal daily behavior   |
-|RecentCount		| What happened recently  |
+|BaselineAvgDaily  	| Normal daily behavior   |
+|RecentAvgDaily		| What happened recently  |
 |DeviationRatio		| How much louder it got  |
 
 <br/>
