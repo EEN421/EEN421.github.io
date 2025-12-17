@@ -163,6 +163,24 @@ Once you identify your top EventIDs, you can:
 - Tune collection policies, analytics rules, or DCRs
 - Reduce Sentinel ingest cost without losing meaningful detections
 
+<br/>
+
+### Steps to Operationalize
+- Run this query weekly or monthly as part of SOC hygiene or cost-review cycles.
+- Pin the results to a Sentinel Workbook to track top Event IDs over time.
+- Use the output as a pivot point — the top Event ID becomes the input for Queries #2 and #3.
+- Combine with cost data from KQL Toolbox #1/#2 to prioritize high-frequency + high-cost Event IDs first.
+
+**Outcome:** You establish a ranked view of log noise concentration, which is a prerequisite for safe tuning and alert optimization.
+
+<br/>
+
+## Framework Mapping
+
+- **NIST CSF – DE.CM-1** --> Continuous monitoring of events to understand normal activity patterns.
+- **NIST CSF – ID.AM-2** --> Supports understanding how systems generate telemetry.
+- **CIS Control 8.2** --> Ensure logs are reviewed to identify abnormal volumes or patterns.
+
 <br/><br/>
 
 # 👤 Query #2 — Which Accounts Are Throwing This Event ID?
@@ -229,7 +247,7 @@ This renders the summarized results as a column chart, making high-volume accoun
 
 <br/>
 
-### 🤔 How to Use It
+## 🤔 How to Use It
 
 Replace `4662` with the noisy Event ID you found in **Query #1**, then run the query (in our example we'll use  `4663`). You’ll get a visualization of which accounts are responsible for the most of that event.
 
@@ -258,7 +276,56 @@ If one account is way above the rest, that could be:
 - A misconfigured script
 - A potential security issue worth investigating
 
+## Steps to Operationalize
+- Feed the top Event ID from Query #1 into this query.
+
 <br/>
+
+- Run during:
+    - Weekly SOC review
+    - Detection tuning sessions
+    - Post-incident or post-cost-spike analysis
+
+<br/>
+
+- To identify:
+    - Service accounts
+    - Scheduled jobs
+    - Over-privileged users
+    - Tag high-volume accounts as expected, needs tuning, or investigate.
+
+<br/>
+
+**Operational Outcome:** You move from what is noisy → who is responsible, enabling targeted remediation instead of blanket suppression.
+
+<br/>
+
+## Example Alerting
+
+This query becomes powerful when embedded into enrichment, not standalone alerts.
+
+Good patterns:
+- Use it as a join in alerting queries to auto-attribute noise.
+
+<br/>
+
+Feed results into:
+- Incident comments
+- Automation rules
+- Cost-reduction playbooks
+
+<br/>
+
+Avoid:
+- Alerting directly on “top talker accounts” without context.
+
+## Framework Mapping
+
+- **NIST CSF – DE.AE-3** --> Event data is correlated from multiple sources to understand context.
+- **NIST CSF – PR.AC-4** --> Supports least-privilege validation by identifying overactive accounts.
+- **CIS Control 6.6** --> Centralized analysis of audit logs with attribution.
+
+<br/><br/>
 
 # 🖥️ Query #3 — Which Devices Are Driving the Noise?
 
@@ -279,7 +346,7 @@ SecurityEvent                     // <--Define the table to query
 
 <br/><br/> 
 
-### 🔧 Line-by-Line Breakdown
+## 🔧 Line-by-Line Breakdown
 
 - `SecurityEvent` --> This is the Windows Security Event Log table (from Windows event forwarding, AMA, MMA, etc.). If you’re ingesting classic Windows Security logs into Sentinel, this is usually where they land.
 
@@ -296,6 +363,58 @@ SecurityEvent                     // <--Define the table to query
 - `| render columnchart` --> Turns the results into a quick visual bar chart so the outliers jump out immediately.
 
 ![](/assets/img/KQL%20Toolbox/3/3Query3_chart.png)
+
+<br/><br/>
+
+## Steps to Operationalize
+
+Use alongside Query #2 to confirm whether noise is:
+- Account-centric
+- Device-centric
+- Application-centric
+
+<br/>
+
+Flag devices that:
+- Generate disproportionate event volume
+- Appear repeatedly across reviews
+
+<br/>
+
+Feed findings into:
+- GPO / audit policy tuning
+- Device-level exclusions
+- Engineering remediation queues
+
+<br/>
+
+**Operational Outcome:** You isolate noisy hosts (file servers, jump boxes, misconfigured systems) without degrading visibility elsewhere.
+
+<br/><br/>
+
+## Example Alerting
+
+Like Query #2, this works best as supporting context, not a primary trigger.
+
+Good uses:
+- Add device attribution to baseline-based alerts.
+
+<br/>
+
+Auto-populate incidents with:
+- Computer name
+- Event ID
+- Account involved
+
+<br/><br/>
+
+## Framework Mapping
+
+- **NIST CSF – DE.CM-7** --> Continuous monitoring to detect anomalous system behavior.
+- **NIST CSF – PR.IP-1** --> Informs secure configuration baselines.
+- **CIS Control 1.1 / 1.2** --> Asset inventory visibility supports interpretation of log data.
+
+<br/><br/>
 
 [**🔗  KQL Toolbox #3 — Which Devices are Spamming this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
 
@@ -452,7 +571,7 @@ Baseline
 
 <br/><br/>
 
-### 🔧 Line-by-line breakdown
+## 🔧 Line-by-line breakdown
 
 `let BaselineWindow = 90d;` -->  Defines how far back to look when calculating “normal” behavior. Here, your baseline is the last 90 days.
 
@@ -501,7 +620,7 @@ A value of:
 
 <br/><br/>
 
-### 📊 How to Interpret the Results
+## 📊 How to Interpret the Results
 
 | Column			| Meaning				  |
 | ----------------- | ----------------------- |
@@ -521,33 +640,50 @@ Example:
 
 <br/><br/>
 
-# 🚨 Turning This into a Sentinel Alert
+## Steps to Operationalize
 
-### Recommended Alert Configuration
+Deploy as a Scheduled Analytics Rule in Sentinel.
 
-**Analytics Rule Type**
-- 📌 Scheduled query rule
-
-<br/>
-
-**Query Schedule**
-- Run every: 1 hour
-- Lookup data from: Last 1 hour
-	- (Baseline window is already embedded in the query)
+Recommended cadence:
+- Run every 1 hour
+- Alert when results > 0
 
 <br/>
 
-**Alert Threshold**
-- Trigger if results > 0
+Tune:
+- `BaselineWindow`
+- `RecentWindow`
+- `ThresholdMultiplier`
 
-<br/>
+Maintain a short allowlist of always-noisy Event IDs.
 
-**Entity Mapping**
-- Map EventID → Custom entity (or string)
-- Severity Guidance
-- DeviationRatio >= 5 → High
-- DeviationRatio >= 3 → Medium
-- DeviationRatio >= 2 → Low
+**Operational Outcome:** You stop alerting on volume and start alerting on change, which dramatically improves SOC signal-to-noise ratio.
+
+<br/><br/>
+
+## Example Alerting Configuration
+
+- Rule Type: Scheduled Query
+- Trigger Condition: Results > 0
+- Severity Mapping:
+    - DeviationRatio ≥ 5 → High
+    - DeviationRatio ≥ 3 → Medium
+    - DeviationRatio ≥ 2 → Low
+- Entity Mapping:
+    - EventID → Custom entity
+    - Account / Computer → Enrichment (via join)
+
+> This enables alerts like: _“Event ID 4663 increased 3.8× baseline — driven by SERVICE-SQL on FILESRV01”_
+
+<br/><br/>
+
+## Framework Mapping
+
+- **NIST CSF – DE.CM-2** --> Detects anomalies and deviations from expected behavior.
+- **NIST CSF – DE.AE-1** --> Baselines of network and system operations are established.
+- **NIST CSF – DE.AE-5** --> Incident alert thresholds are informed by context.
+- **CIS Control 6.5** --> Use of automated alerting based on log analysis.
+- **IS Control 8.5** --> Detection rules tuned to reduce false positives.
 
 <br/><br/>
 
