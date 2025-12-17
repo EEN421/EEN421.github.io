@@ -287,6 +287,7 @@ Why it matters --> _Both are operational signals:_
 
 <br/><br/>
 
+
 ## ✅ Summary: what a reader should understand after this breakdown
 
 This query is essentially a “delta radar”:
@@ -296,7 +297,33 @@ This query is essentially a “delta radar”:
 * shows biggest swings first
 * includes new/discontinued sources via `fullouter`
 
-<br/>
+<br/><br/>
+
+## Steps to Operationalize
+
+- Run this query weekly (ops hygiene) and monthly (cost governance / QBR prep).
+- Pin results to a workbook tile called “Top DataType Movers (GB)”.
+- Establish an action loop:
+    - Identify the top mover(s)
+    - Pivot into that table (KQL Toolbox #2)
+    - Drill down to Event IDs / accounts / devices if applicable (KQL Toolbox #3)
+    - Document the cause + remediation in a lightweight change log
+
+> **Best practice:** keep a “known expected deltas” list (month-end patching, migrations, major rollouts) so analysts don’t re-investigate planned change.
+
+<br/><br/>
+
+## Framework Mapping
+
+- **NIST CSF DE.CM-1 / DE.CM-7** — Continuous monitoring detects abnormal changes in telemetry patterns.
+
+- **NIST CSF DE.AE-1** — Supports baselining (“what normal looks like”) to detect deviation.
+
+- **NIST CSF ID.RA-1** — Helps identify and prioritize sources of operational risk (misconfig / ingestion gaps).
+
+- **CIS Control 8.2 / 8.5** — Audit log review + tuning to reduce noise and improve detection effectiveness.
+
+<br/><br/>
 
 ![](/assets/img/KQL%20Toolbox/4/VRCat.png)
 
@@ -493,6 +520,8 @@ Why it matters --> _this ensures you still see:_
 
 ### 5️⃣ Output shaping: GB, %, and $ (project)
 
+<br/>
+
 **GB** 👇
 ```kql
 | project
@@ -559,6 +588,43 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 > This looks slick as a part of a cost optimization workbook...
 > ![](/assets/img/KQL%20Toolbox/4/4workbook.png)
 
+<br/> 
+
+## Steps to Operationalize
+- Run monthly as part of a Cost/Value review (and pre-QBR).
+
+<br/>
+
+- Store results in a workbook section titled “Delta Impact ($)”.
+
+<br/>
+
+- Operationalize stakeholder comms:
+    - Security / SOC gets the “what changed and why” story
+    - Finance / leadership gets “what changed and what it cost” story
+
+<br/>
+
+- Use the output to drive targeted actions:
+    - tune connector settings
+    - transformation rules (where supported)
+    - move low-value telemetry to cheaper tiers / alternative storage patterns
+    - retention adjustments (carefully)
+
+<br/>
+
+## Framework Mapping
+
+- **NIST CSF ID.GV-1 / ID.GV-3** — Governance + risk management decisions informed by measurable telemetry impact.
+
+- **NIST CSF PR.IP-1** — Supports configuration management processes (logging configs are “config”).
+
+- **NIST CSF DE.CM-7** — Monitoring includes cost-relevant telemetry changes impacting detection operations.
+
+- **CIS Control 17.3 (Service Provider / Cloud Mgmt) + CIS 8** — Managing cloud telemetry and audit logs as operational controls (especially in Sentinel/Log Analytics).
+
+<br/>
+
 ![](/assets/img/KQL%20Toolbox/4/DeltaCat.png)
 
 <br/><br/>
@@ -603,11 +669,49 @@ Run this query as part of:
 
 <br/>
 
-### 🎛️ Adjust the knobs
+#### Example Alerting
+
+This is a strong candidate for cost guardrails.
+
+**Pattern A** — “Cost delta exceeded”
+
+- Trigger when abs(ChangeGB * CostPerGB) > $Threshold
+- Example: alert when estimated delta > $250 / $500 / $1000
+
+<br/> 
+
+**Pattern B** — “New source cost impact”
+
+- Trigger when PriorGB == 0 and CurrentGB > X and Change$ exceeds threshold
+    - This catches the classic “new connector went wild” scenario fast.
+
+**Rule schedule guidance:**
+- Daily or weekly is fine (30-day windows don’t need hourly).
+- Trigger if results > 0.
+
+#### Operational Guardrails You Can Add (Highly Recommended)
+- Maintain a short allowlist of expected deltas (patch windows, migrations).
+- Require a “before/after” snapshot:
+- run Query #1/#2 before tuning
+- run again after tuning
+- document “delta result” in the ticket/change record
+
+#### Example Alerting Enhancements
+
+- Add a suppression window during known maintenance (or tag “expected delta” sources).
+- Alert only when:
+    - delta exceeds threshold AND
+    - source is not on expected-change list
+
+<br/>
+
+#### Adjust the knobs
 - Don’t forget to tailor the query to your environment:
 - Change the window sizes (7/30, 30/60, 90/90)
 - Update the Sentinel price per GB for your region
 - Increase or decrease the top N results based on scale
+
+<br/>
 
 This is the kind of query that pays dividends over time. The more consistently you run it, the faster you’ll spot abnormal behavior — and the easier it becomes to explain why your Sentinel costs and ingest patterns are changing.
 
@@ -675,7 +779,7 @@ Why this is an improvement:
 
 <br/>
 
-> # 💡 Note: In the above queries, we converted `Quantity` by `/1024` — effectively GiB (based on 1024). That’s more accurate for how systems actually use data (base 2), but Microsoft billing uses decimal GB (1000) for pricing. _Refer to Gigabytes vs. Gibibytes section in [Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) and adjust accordingly... [https://learn.microsoft.com/en-us/azure/sentinel/billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)_
+> #### 💡 Note: In the above queries, we converted `Quantity` by `/1024` — effectively GiB (based on 1024). That’s more accurate for how systems actually use data (base 2), but Microsoft billing uses decimal GB (1000) for pricing. _Refer to Gigabytes vs. Gibibytes section in [Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) and adjust accordingly... [https://learn.microsoft.com/en-us/azure/sentinel/billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)_
 
 <br/><br/>
 
