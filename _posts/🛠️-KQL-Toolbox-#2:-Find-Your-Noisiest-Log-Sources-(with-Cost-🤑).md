@@ -458,10 +458,6 @@ Run this loop once a month (or per QBR), and you’ll steadily chip away at:
 * **Unnecessary spend**
 * While keeping the **signal** you actually need for detection and forensics.
 
-<br/>
-
-![](/assets/img/KQL%20Toolbox/2/NinjaBar.png)
-
 <br/><br/>
 
 # Operationalizing these & Mapping to NIST/CIS Outcomes
@@ -517,6 +513,11 @@ Here’s a pattern you can embed into your daily/weekly SOC processes:
 ☑ Threshold Alerts for anomalous cost spikes <br/>
 ☑ DCR/Retention Plans tied to cost & value analysis <br/>
 ☑ Monthly Review Process with documented tuning decisions <br/>
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/2/NinjaBar.png)
+
 
 <br/><br/>
 
