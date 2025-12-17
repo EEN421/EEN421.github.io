@@ -128,6 +128,21 @@ This immediately tells you:
 
 Once you know which **table** is noisy, the next step is to dig **inside** that table.
 
+### Steps to Operationalize
+- Schedule this query to run weekly via a Sentinel scheduled analytics rule or runbook.
+- Visualize on a dashboard showing cost contribution by log source.
+- Monthly review in SOC/QBR meetings to identify cost outliers.
+
+### Example Alerting
+- Threshold alert when any log source exceeds a configured GiB/day or cost/day threshold, triggering an investigation into noisy sources.
+
+### Framework Mapping
+- **NIST CSF DE.CM-7** – Monitors and analyzes continuous events for potential malicious activity or misconfigurations; here it adds a cost lens to visibility.
+
+- **NIST CSF ID.RA-1** – Helps classify the sources of logs (assets/systems) and determine their impact.
+
+- **CIS Control 6 (Maintenance, Monitoring, and Analysis of Audit Logs)** – Ensures audit logs are collected and analyzed for usability and cost effectiveness.
+
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/2/ByteRiver.png)
@@ -215,6 +230,21 @@ From there you can ask:
 This is where **real savings** happen:
 You’re not randomly turning off logs—you’re specifically **targeting the lowest-value, highest-cost severities**.
 
+### Steps to Operationalize
+- Embed in a workbook segmented by vendor/product and severity.
+- Pair with DCR/Log Filters: Identify low-value severity buckets (e.g., informational or low) that can be filtered or redirected to Basic tier or external storage.
+- Integrate with Change Controls: When tuning log sources, include cost impact in the change request narrative.
+
+### Example Alerting
+- Alert when a new vendor or severity group suddenly rises above expected cost baselines.
+
+### Framework Mapping
+- **NIST CSF DE.CM-8** – Use automated tools to support detection processes; here it adds depth to severity interpretation.
+
+- **NIST CSF PR.IP-1** – Baselines for configuration and cost awareness.
+
+- **CIS Control 6.1 & 6.2** – Ensure audit logs and network device logs are collected and analyzed (including cost efficiency).
+
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/2/CatDad.png)
@@ -270,6 +300,21 @@ This helps you decide:
 When you combine this with **detections you actually care about**, you can be ruthless:
 
 > “These 3 Event IDs matter for our threat models. The other 12 are tax.”
+
+<br/>
+
+### Steps to Operationalize
+- Include in monthly cost review alongside threat detection priorities.
+- Map high-cost Event IDs to detection rules to ensure you aren’t dropping signals needed for security detections if tuning filters.
+- Run histograms/heatmaps to visualize shifts over time in noisy WindowsIDs.
+
+### Example Alerting
+- Alert when a specific Event ID’s cost contribution increases above established percent of total.
+
+### Framework Mapping
+- NIST CSF DE.DP-4 (Event detection) – Identifies anomalous activities via event patterns; here with cost relevance.
+- NIST CSF PR.IP-3 – Secure configurations informed by usage and impact.
+- CIS Control 8 (Audit Log Management) – Ensures audit event logs are used effectively for both security and cost governance.
 
 <br/><br/>
 
@@ -416,6 +461,62 @@ Run this loop once a month (or per QBR), and you’ll steadily chip away at:
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/2/NinjaBar.png)
+
+<br/><br/>
+
+# Operationalizing these & Mapping to NIST/CIS Outcomes
+
+The three core queries in this post help you pinpoint which log sources (tables, severities, or event IDs) are driving the majority of your Microsoft Sentinel ingestion costs. To make these queries truly operational — that is, actionable, repeatable, and tied to security outcomes — you should embed them into recurring monitoring workflows, alerts, dashboards, and governance processes. Below is a breakdown of how to do that in context of NIST CSF and CIS Controls.
+
+### Operational Playbook Patterns
+
+Here’s a pattern you can embed into your daily/weekly SOC processes:
+
+#### 1) Scheduled Monitoring & Alerts
+  - Run the Top 10 Tables by Cost query every Monday.
+  - Generate alerts if any log source cost increases by x% vs prior week.
+  - Outcome: Continuous detection of ingest anomalies and cost spikes.
+
+<br/>
+
+#### 2) Dashboards with Context
+  - Build a Cost + Value Dashboard that shows:
+    - Total cost by log source
+    - Percentage of total
+    - Severity breakdown (for CEF logs)
+    - EventID relevance
+  - Outcome: Centralized monitoring that supports both security and governance decisions.
+
+<br/>
+
+#### 3) Governance Review Loop
+- Monthly review of top cost drivers.
+- Pair with detection and compliance policies to decide:
+  - If the log source is essential
+  - If filtering / transformations are required
+  - If retention tiers need adjustment
+- Outcome: Improve log signal-to-noise ratio and align with organizational risk appetite.
+
+<br/>
+
+### Mapping to Compliance and Security Outcomes
+
+| Query / Activity                    | NIST CSF Outcome                	| CIS Control Outcome                |
+| ----------------------------------- | --------------------------------- | ---------------------------------- |
+| Top 10 log source cost (Query 1)    |	DE.CM-7 (Continuous monitoring)        |	6.1-6.2 Audit log analysis   |
+| Severity cost breakdown (Query 2)   |	DE.CM-8 (Automated detection tools)    |	6.2, 8 Log management        |
+| EventID cost ranking (Query 3)      |	DE.DP-4 (Event detection and analysis) |	8 Focused audit log analysis |
+| Alert thresholds                    |	DE.AE-5 (Response to events)           |	6.6 Alert triage             |
+
+<br/>
+
+### Quick Implementation Checklist
+
+☑ Automate these queries as Sentinel scheduled analytics rules <br/>
+☑ Dashboards visualizing cost drivers and trends <br/>
+☑ Threshold Alerts for anomalous cost spikes <br/>
+☑ DCR/Retention Plans tied to cost & value analysis <br/>
+☑ Monthly Review Process with documented tuning decisions <br/>
 
 <br/><br/>
 
