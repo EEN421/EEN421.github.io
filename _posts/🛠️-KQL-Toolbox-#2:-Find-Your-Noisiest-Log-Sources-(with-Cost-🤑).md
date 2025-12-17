@@ -506,6 +506,10 @@ Here’s a pattern you can embed into your daily/weekly SOC processes:
 
 <br/>
 
+> 💡 These mappings justify why cost governance is part of detection engineering, not a finance-only exercise.
+
+<br/>
+
 ### Quick Implementation Checklist
 
 ☑ Automate these queries as Sentinel scheduled analytics rules <br/>
