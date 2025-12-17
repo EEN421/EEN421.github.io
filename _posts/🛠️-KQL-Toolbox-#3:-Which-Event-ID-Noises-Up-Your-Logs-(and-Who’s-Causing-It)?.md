@@ -545,27 +545,28 @@ This is where the magic happens. Let's establish a 90-day “normal” baseline 
 
 ```kql
 let BaselineWindow = 90d;
-let RecentWindow = 30d;
+let RecentWindow = 7d;
 let ThresholdMultiplier = 2.0;
 let Baseline =
-    SecurityEvent
-    | where TimeGenerated > ago(BaselineWindow)
-    | summarize DailyCount = count() by EventID, Day = bin(TimeGenerated, 1d)
-    | summarize AvgDailyCount = round(avg(DailyCount),2) by EventID;
+SecurityEvent
+| where TimeGenerated > ago(BaselineWindow)
+| summarize DailyCount=count() by EventID, Day=bin(TimeGenerated, 1d)
+| summarize BaselineAvgDaily=round(avg(DailyCount),2) by EventID;
 let Recent =
-    SecurityEvent
-    | where TimeGenerated > ago(RecentWindow)
-    | summarize RecentCount = count() by EventID;
+SecurityEvent
+| where TimeGenerated > ago(RecentWindow)
+| summarize RecentDailyCount=count() by EventID, Day=bin(TimeGenerated, 1d)
+| summarize RecentAvgDaily=round(avg(RecentDailyCount),2) by EventID;
 Baseline
 | join kind=inner Recent on EventID
-| extend DeviationRatio = round(RecentCount / AvgDailyCount, 2)
+| extend DeviationRatio=round(RecentAvgDaily / BaselineAvgDaily, 2)
 | where DeviationRatio >= ThresholdMultiplier
-| project EventID, AvgDailyCount, RecentCount, DeviationRatio
-| take 10
+| project EventID, BaselineAvgDaily, RecentAvgDaily, DeviationRatio
 | sort by DeviationRatio desc
+| take 10
 ```
 
-![](/assets/img/KQL%20Toolbox/3/3Weird.png)
+![](/assets/img/KQL%20Toolbox/3/3query3nochart2.png)
 
 [**🔗 KQL Toolbox #3 — Which EventID's are Suddently Acting Weird?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
 
@@ -573,50 +574,81 @@ Baseline
 
 ## 🔧 Line-by-line breakdown
 
-`let BaselineWindow = 90d;` -->  Defines how far back to look when calculating “normal” behavior. Here, your baseline is the last 90 days.
+`let BaselineWindow = 90d;` → Defines how far back to look when calculating “normal” behavior. Here, normal = the last 90 days of SecurityEvent activity.
 
-`let RecentWindow = 30d;` --> Defines the “recent” comparison window. Here, the query compares against the last 30 days of activity.
+`let RecentWindow = 7d;` → Defines the “recent” comparison window. Here, recent = the last 7 days (a short window that’s good for catching week-over-week changes).
 
-`let ThresholdMultiplier = 2.0;` --> Sets the “spike” threshold. Any Event ID whose recent activity is 2× or greater than its baseline average gets flagged.
+`let ThresholdMultiplier = 2.0;` → Sets your spike threshold. Any Event ID whose recent average daily volume is 2× or higher than its baseline average daily volume gets flagged.
 
-`let Baseline = SecurityEvent` --> Creates a reusable dataset named Baseline starting from the SecurityEvent table (Windows Security logs ingested into Sentinel / Log Analytics).
+<br/>
 
-`| where TimeGenerated > ago(BaselineWindow)` --> Limits baseline data to only the last 90 days (based on BaselineWindow).
+### Baseline dataset
 
-`| summarize DailyCount = count() by EventID, Day = bin(TimeGenerated, 1d)` --> Counts how many times each EventID appears per day, by:
-- grouping on EventID
-- grouping on a daily time bucket (bin(TimeGenerated, 1d))
-- storing the result as DailyCount
+`let Baseline =` → Starts a reusable dataset named Baseline that will represent “what normal looks like.”
 
-`| summarize AvgDailyCount = round(avg(DailyCount),2) by EventID;` --> Takes those daily counts and calculates the average events per day for each Event ID across the 90-day baseline. `round(..., 2)` keeps the baseline average readable.
+`SecurityEvent` → Uses the Windows Security Event Log table (your high-volume classic).
 
-`let Recent = SecurityEvent` --> Creates a second reusable dataset named Recent, again using the SecurityEvent table.
+`| where TimeGenerated > ago(BaselineWindow)` → Limits baseline analysis to only events from the last 90 days.
 
-`| where TimeGenerated > ago(RecentWindow)` --> Limits this dataset to only the last 30 days.
+`| summarize DailyCount=count() by EventID, Day=bin(TimeGenerated, 1d)` → Builds a daily time series per Event ID:
+- `bin(TimeGenerated, 1d)` buckets events into 1-day slices
+- `count()` counts how many times each EventID appears each day
+- `Output` is one row per (EventID, Day) with DailyCount
 
-`| summarize RecentCount = count() by EventID;` --> Counts total occurrences of each EventID within the recent window and stores it as RecentCount.
+`| summarize BaselineAvgDaily=round(avg(DailyCount),2) by EventID;` → Collapses that daily time series down into a single baseline number per Event ID:
 
-`Baseline`
-`| join kind=inner Recent on EventID` --> Joins the baseline results to the recent results using EventID as the key:
+`avg(DailyCount)` = the average events per day over the 90-day window
 
-- `kind=inner` --> means only Event IDs present in both datasets will be returned.
+`round(..., 2)` keeps it readable
 
-- `| extend DeviationRatio = round(RecentCount / AvgDailyCount, 2)` --> creates a new calculated field showing how far the recent count deviates from baseline average.
+Output is one row per EventID with `BaselineAvgDaily`
 
-A value of:
+<br/>
+
+### Recent dataset
+
+`let Recent =` → Creates a second reusable dataset named Recent that represents “what’s happening lately.”
+
+`SecurityEvent` → Uses the same source table for a clean apples-to-apples comparison.
+
+`| where TimeGenerated > ago(RecentWindow)` → Limits recent analysis to the last 7 days.
+
+`| summarize RecentDailyCount=count() by EventID, Day=bin(TimeGenerated, 1d)` → Builds a daily time series for the recent period (same daily bucketing approach as the baseline).
+
+`| summarize RecentAvgDaily=round(avg(RecentDailyCount),2) by EventID;` → Produces a single recent number per Event ID:
+- `RecentAvgDaily` = the average events per day across the last 7 days
+- Again: one row per EventID
+
+<br/>
+
+### Compare baseline vs recent
+
+### Baseline
+`| join kind=inner Recent on EventID` → Joins the baseline and recent summaries on EventID so you can compare them side-by-side.
+
+`kind=inner` means you only get Event IDs that exist in both datasets (baseline + recent)
+
+`| extend DeviationRatio=round(RecentAvgDaily / BaselineAvgDaily, 2)` → Calculates the key metric:
+
+`DeviationRatio` = how many times louder recent activity is compared to baseline
+
+<br/>
+
+### Interpretation:
+
 - 1.0 ≈ normal
-- 2.0 = about 2× baseline
-- 5.0 = about 5× baseline
+- 2.0 = ~2× louder than baseline
+- 5.0 = ~5× louder than baseline
 
-> (Note: this is comparing “30-day total” to “average per day,” so the ratio is a practical “loudness score,” not a strict per-day-to-per-day comparison.)
+<br/>
 
-`| where DeviationRatio >= ThresholdMultiplier` --> Filters to only those Event IDs whose deviation ratio meets/exceeds your threshold (default 2×).
+`| where DeviationRatio >= ThresholdMultiplier` → Filters to only Event IDs whose activity increased beyond your chosen threshold (default 2×).
 
-`| project EventID, AvgDailyCount, RecentCount, DeviationRatio` --> Selects the exact columns you want in the output (clean, readable results).
+`| project EventID, BaselineAvgDaily, RecentAvgDaily, DeviationRatio` → Outputs only the columns you care about in the final result (clean + dashboard-friendly).
 
-`| take 10` --> Limits the output to 10 rows (often used to keep dashboards fast / results short).
+`| sort by DeviationRatio desc` → Sorts so the biggest spikes appear first.
 
-`| sort by DeviationRatio desc` --> Sorts the final results so the biggest spikes appear at the top.
+`| take 10` → Keeps output tight: top 10 most extreme deviations (great for alert payloads and SOC triage views).
 
 <br/><br/>
 
