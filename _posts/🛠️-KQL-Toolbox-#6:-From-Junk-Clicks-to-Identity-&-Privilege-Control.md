@@ -1,18 +1,26 @@
-🔍 KQL Toolbox #6 — From Junk Clicks to Identity & Privilege Control
+# 🔍 **KQL Toolbox #6 — From Junk Clicks to Identity & Privilege Control**
 
-Last week in KQL Toolbox #5, we hunted phishing and malware like pros — sender domains, payloads, campaigns, and patterns.
+Last week in **KQL Toolbox #5**, we went full threat-hunter mode — tracking phishing and malware campaigns across domains, senders, and payload patterns.
 
-But here’s the truth:
+But here’s the uncomfortable truth:
 
-Even the best detections don’t matter if users still click… and identity controls aren’t watching what happens next.
+✅ **Detection is only half the battle.**  
+The other half is what happens *after* the message lands — when a human clicks, credentials get tested, sessions get established, and privileged access lights up.
 
-So this week, we pivot from threat hunting to risk outcomes:
+So in this installment, we pivot from **threat hunting → real-world risk outcomes**, using KQL as our flashlight:
 
-- Who’s clicking junk mail links? (human-risk telemetry)
-- Who deleted an AD user? (identity tampering)
-- Who’s activating privileged roles via PIM? (privilege oversight)
+- **Who’s clicking junk mail links?** (human-risk telemetry)
+- **Who deleted an AD user?** (identity tampering & destructive activity)
+- **Who’s activating privileged roles via PIM?** (privilege oversight & audit proof)
+- **Who’s logging into domain controllers via RDP?** (hands-on-keyboard evidence)
 
-Let’s break each query down line-by-line and show how to operationalize them like a real SOC.
+Each section includes:
+✅ a **line-by-line breakdown**  
+✅ a **regulatory mapping** (NIST / CMMC / CIS)  
+✅ and **steps to operationalize** like a production SOC.
+
+Let’s go build signals that actually hold up in investigations *and* audits. 🥷🐱
+
 
 <br/><br/>
 
@@ -588,6 +596,29 @@ Instant visualization.
 - Reduce direct RDP pathways
 - Require stronger controls around interactive admin behavior
 
+<br/><br/>
+
+# 🧠 Final Thoughts — Why These Signals Matter
+
+KQL Toolbox #5 was all about **finding threats**.
+
+KQL Toolbox #6 is about **proving impact** — and building guardrails where attackers actually win:
+- the moment a user **clicks**
+- the moment an adversary attempts **interactive access**
+- the moment identity gets **tampered with**
+- and the moment privilege gets **activated**
+
+If you only take one thing from this post, take this:
+
+> **Your best detections don’t live in dashboards — they live in workflows.**
+
+So don’t just run these queries once.  
+Turn them into baselines, alerts, workbooks, and review cadences your team can execute every day.
+
+And if you’re wondering where we go next in KQL Toolbox #7… 👀  
+We’ll keep building on this same storyline: **identity + access + real attacker paths** — with more pivot-ready queries you can use to move from “signal” → “story” → “response.”
+
+Now go forth and make your logs behave. 🥷🐱🔥
 
 <br/><br/>
 
