@@ -31,7 +31,7 @@ If you’re working in Azure Monitor Logs / Log Analytics or Microsoft Sentinel,
 
 Today we’re going to unpack one of my favorite preventive analytics queries: _“Data Sources with Biggest Delta in Log Volume.”_ 💸
 
-### _Let's break it down, put it to work, then crank it up a notch — **because this is DevSecOpsDad**. 😎_
+### _Let's break it down, put it to work, then crank it up a notch — **'cause this is DevSecOpsDad**. 😎_
 
 ![](/assets/img/KQL%20Toolbox/4/BaselineCat.png)
 
@@ -44,7 +44,7 @@ Today we’re going to unpack one of my favorite preventive analytics queries: _
 It does this by:
 
 * defining **two time windows**
-* summarizing **billable Usage** by `DataType`
+* summarizing **billable Usage** by **DataType**
 * doing a **full outer join** so new/discontinued sources still show up
 * calculating **absolute delta (GB)** and **percent delta (%)**
 * returning the **top 5 biggest absolute swings**

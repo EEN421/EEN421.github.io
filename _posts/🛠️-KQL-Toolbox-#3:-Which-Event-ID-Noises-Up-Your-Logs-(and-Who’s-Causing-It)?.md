@@ -145,7 +145,7 @@ This gives you a quick look at what’s dominating your security log volume.
 
 <br/>
 
-### 📊 What the Results Will Contain
+## 📊 What the Results Will Contain
 
 This output answers one critical question: “What Event IDs dominate my SecurityEvent volume?”
 
@@ -169,7 +169,7 @@ Once you identify your top EventIDs, you can:
 
 <br/>
 
-### Steps to Operationalize
+## ⚔️ Steps to Operationalize
 - Run this query weekly or monthly as part of SOC hygiene or cost-review cycles.
 - Pin the results to a Sentinel Workbook to track top Event IDs over time.
 - Use the output as a pivot point — the top Event ID becomes the input for Queries #2 and #3.
@@ -179,7 +179,7 @@ Once you identify your top EventIDs, you can:
 
 <br/>
 
-## Framework Mapping
+## 🛡️ Framework Mapping
 
 - **NIST CSF – DE.CM-1** --> Continuous monitoring of events to understand normal activity patterns.
 - **NIST CSF – ID.AM-2** --> Supports understanding how systems generate telemetry.
@@ -280,7 +280,7 @@ If one account is way above the rest, that could be:
 - A misconfigured script
 - A potential security issue worth investigating
 
-## Steps to Operationalize
+## ⚔️ Steps to Operationalize
 - Feed the top Event ID from Query #1 into this query.
 
 <br/>
@@ -304,7 +304,7 @@ If one account is way above the rest, that could be:
 
 <br/>
 
-## Example Alerting
+## 🚨 Example Alerting
 
 This query becomes powerful when embedded into enrichment, not standalone alerts.
 
@@ -323,7 +323,7 @@ Feed results into:
 Avoid:
 - Alerting directly on “top talker accounts” without context.
 
-## Framework Mapping
+## 🛡️ Framework Mapping
 
 - **NIST CSF – DE.AE-3** --> Event data is correlated from multiple sources to understand context.
 - **NIST CSF – PR.AC-4** --> Supports least-privilege validation by identifying overactive accounts.
@@ -370,7 +370,7 @@ SecurityEvent                     // <--Define the table to query
 
 <br/><br/>
 
-## Steps to Operationalize
+## ⚔️ Steps to Operationalize
 
 Use alongside Query #2 to confirm whether noise is:
 - Account-centric
@@ -396,7 +396,7 @@ Feed findings into:
 
 <br/><br/>
 
-## Example Alerting
+## 🚨 Example Alerting
 
 Like Query #2, this works best as supporting context, not a primary trigger.
 
@@ -412,7 +412,7 @@ Auto-populate incidents with:
 
 <br/><br/>
 
-## Framework Mapping
+## 🛡️ Framework Mapping
 
 - **NIST CSF – DE.CM-7** --> Continuous monitoring to detect anomalous system behavior.
 - **NIST CSF – PR.IP-1** --> Informs secure configuration baselines.
@@ -709,7 +709,7 @@ Maintain a short allowlist of always-noisy Event IDs.
     - EventID → Custom entity
     - Account / Computer → Enrichment (via join)
 
-> This enables alerts like: _“Event ID 4663 increased 3.8× baseline — driven by SERVICE-SQL on FILESRV01”_
+> 💡 This enables alerts like: _“Event ID 4663 increased 3.8× baseline — driven by SERVICE-SQL on FILESRV01”_
 
 <br/><br/>
 
@@ -751,9 +751,9 @@ Maintain a short allowlist of always-noisy Event IDs.
 - ❌ Ignoring expected maintenance windows
 - ❌ Treating all Event IDs equally
 
-_**This approach avoids all four.**_
+_**💪 This approach avoids all four.**_
 
-Static thresholds create noise. Baselines create signal. Once you alert on change, not volume, your SOC matures instantly.
+👉 Static thresholds create noise. Baselines create signal. Once you alert on change, not volume, your SOC matures instantly.
 
 <br/>
 
