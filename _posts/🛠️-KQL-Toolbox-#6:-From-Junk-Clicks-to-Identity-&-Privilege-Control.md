@@ -1,4 +1,4 @@
-# 🛠️ **KQL Toolbox #6 — From Junk Clicks to Identity & Privilege Control**
+# 🛠️ **KQL Toolbox #6: From Junk Clicks to Identity & Privilege Control**
 
 Last week in **KQL Toolbox #5**, we went full threat-hunter mode — tracking phishing and malware campaigns across domains, senders, and payload patterns.
 
