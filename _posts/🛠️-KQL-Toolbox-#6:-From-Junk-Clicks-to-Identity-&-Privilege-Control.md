@@ -161,6 +161,7 @@ Queries Windows Security Event Logs forwarded to Sentinel / Log Analytics.
 
 This is where classic AD audit logging lives (account changes, group membership, logons, etc.).
 
+<br/>
 
 ### `| where TimeGenerated > ago (90d)`
 
@@ -170,6 +171,8 @@ Keeps costs/performance reasonable and focuses on relevant incidents.
 
 ✅ Pro tip: for alerting, you’ll tighten this to 1h/24h. For audits, 30–180 days is common.
 
+<br/>
+
 ### `| where EventID == "4726"`
 
 Filters to Event ID 4726: “A user account was deleted.”
@@ -177,11 +180,15 @@ Filters to Event ID 4726: “A user account was deleted.”
 ✅ Why this matters: Deleting users is identity destruction.
 If attackers can’t keep persistence, sometimes they burn the house down on their way out.
 
+<br/>
+
 ### `| extend Actor_ = Account`
 
 Creates a new column Actor_ from the Account field (the actor who performed the deletion).
 
 ✅ Why this matters: explicit naming helps readability and makes it easier to join with other actor-based queries later.
+
+<br/>
 
 ### `| project-reorder TimeGenerated, Activity, Actor_, TargetAccount, Computer`
 
