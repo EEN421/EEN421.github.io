@@ -26,7 +26,9 @@ UrlClickEvents
 | where NetworkMessageId in(JunkedEmails)
 ```
 
-[Who's Clicking on Junk Mail? Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Clicking%20on%20Junk%20Mail%3F.kql)
+### [🔗 Who's Clicking on Junk Mail? Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Clicking%20on%20Junk%20Mail%3F.kql)
+
+<br/>
 
 ## Line-by-line breakdown (what each piece is doing)
 
@@ -86,7 +88,7 @@ That’s a human-risk signal and a great leading indicator for phishing exposure
 
 <br/>
 
-## Regulatory & Framework Mapping
+## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
 - AT-2 Awareness Training (target training based on actual risky actions)
@@ -109,7 +111,7 @@ That’s a human-risk signal and a great leading indicator for phishing exposure
 
 <br/>
 
-## Steps to Operationalize
+## ⚔️ Steps to Operationalize
 
 - Enrich it (add who/URL/time columns) and build a “Top Clickers” view.
 - Set thresholds: e.g., 2+ junk clicks in 7 days = investigation / targeted training.
@@ -132,7 +134,7 @@ SecurityEvent
 | project-reorder TimeGenerated, Activity, Actor_, TargetAccount, Computer
 ```
 
-### [Who Deleted an AD User? KQL Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who_Deleted_an_AD_User%3F.kql)
+### [🔗 Who Deleted an AD User? KQL Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who_Deleted_an_AD_User%3F.kql)
 
 <br/>
 
@@ -186,7 +188,7 @@ This supports:
 - compromise investigation
 - audit evidence
 
-## Regulatory & Framework Mapping
+## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
 - AC-2 Account management
@@ -208,7 +210,7 @@ This supports:
 
 <br/>
 
-## Steps to Operationalize:
+## ⚔️ Steps to Operationalize
 **Escalate immediately if:**
 - the deleted user was privileged
 - deletion occurred outside approved change window
@@ -238,7 +240,7 @@ AuditLogs
 | project Actor, Role, ActivationTime, IP
 ```
 
-[Who's Activating PIM Roles? KQL Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Activating%20Roles%20via%20PIM%3F.kql)
+### [🔗 Who's Activating PIM Roles? KQL Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Activating%20Roles%20via%20PIM%3F.kql)
 
 <br/>
 
@@ -318,7 +320,7 @@ Who is elevating privileges via PIM, what role they activated, and where they ca
 
 This is your strongest “least privilege is real” evidence.
 
-## Regulatory & Framework Mapping
+## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
 - AC-2 Account management (privileged assignment activity)
@@ -340,8 +342,7 @@ This is your strongest “least privilege is real” evidence.
 
 <br/>
 
-## Steps to Operationalize
-
+## ⚔️ Steps to Operationalize
 - Daily PIM activation digest to SOC + IAM.
 - Baseline: normal roles, normal people, normal hours, normal IP ranges.
 - Alert on anomalies:
@@ -362,9 +363,9 @@ If the last section was about identity lifecycle tampering (deletions), the next
 
 This query focuses on RDP session activity (logon/logoff/reconnect/disconnect) specifically in your domain controller security logs—giving you a fast way to confirm whether interactive admin access is happening, and who’s involved.
 
+## RDP Query A — Session activity timeline (quick triage view)
+
 ```kql
-Query A — RDP session activity timeline (quick triage view)
-The Query
 SecurityEvent
 | where TimeGenerated > ago(30d)
 | where EventID in (4624, 4634, 4778, 4779)
@@ -381,11 +382,13 @@ SecurityEvent
 | order by TimeGenerated desc
 ```
 
-[Who's Logging In and When?.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
+### [🔗 Who's Logging In and When?.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
+
+<br/>
 
 ## Line-by-line breakdown
 
-Pulls Windows Security logs (your “source of truth” for authentication + session events).
+Pulls Windows Security logs (your “source of truth” for authentication + session events)...
 
 ### `| where TimeGenerated > ago(30d)`
 
@@ -437,8 +440,6 @@ If it’s a 4634/4778/4779 event → keep it, because those represent RDP sessio
 
 ✅ Result: you avoid non-RDP 4624 logons while preserving the RDP lifecycle events.
 
-⚠️ Note: this assumes LogonType is available as a parsed field in your SecurityEvent schema. If your workspace doesn’t populate LogonType automatically, you’d need the XML parsing version you had earlier.
-
 <br/>
 
 ### `| project ...`
@@ -472,7 +473,7 @@ This is excellent for:
 
 <br/>
 
-## Regulatory & Framework Mapping (for both RDP queries)
+## 🛡️ Regulatory & Framework Mapping (for both RDP queries)
 **NIST 800-53**
 - AU-2 / AU-6: access/session events are auditable and must be reviewed
 - AC-2 / AC-6: supports account management and least privilege oversight
@@ -494,7 +495,7 @@ This is excellent for:
 
 <br/>
 
-## Steps to Operationalize (Query A)
+## ⚔️ Steps to Operationalize (RDP Query Version A)
 
 - Use it as triage
 - Run it during investigations to answer: “Who RDP’d into DCs recently?”
@@ -512,15 +513,15 @@ This is excellent for:
 - Transition: From “timeline” to “outlier radar” 📈
 - Query A gives you the forensic timeline — great for answering “what happened and when?”.
 
-But when you’re doing daily SecOps, you often need a faster question first:
+<br/><br/>
 
 # “Who’s the outlier?”
 
 That’s why we pivot to the next query: it compresses 30 days of RDP logons into a timechart so abnormal spikes jump off the screen.
 
+## RDP Query B — Logon volume timechart (outlier detector)
+
 ```kql
-Query B — RDP logon volume timechart (outlier detector)
-The Query
 SecurityEvent
 | where TimeGenerated > ago(30d)
 | where EventID == 4624  // Focus on successful logons only
@@ -535,7 +536,7 @@ SecurityEvent
 | render timechart 
 ```
 
-[Who's Logging In and When?.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
+### [🔗 Who's Logging In and When?.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
 
 <br/>
 
@@ -571,13 +572,13 @@ Instant visualization.
 
 <br/>
 
-## Steps to Operationalize (Query B)
+## ⚔️ Steps to Operationalize (RDP Query Version B)
 
 - Use this as the daily “RDP health chart”
 - Add it to a workbook and check it as part of shift turnover.
 - Baseline and detect spikes
-- After 2–4 weeks, you’ll know what “normal” looks like.
-- Anything above baseline becomes a review trigger.
+    - After 2–4 weeks, you’ll know what “normal” looks like.
+    - Anything above baseline becomes a review trigger.
 - Create a follow-up drilldown workflow
 - Click spike day/user → run Query A filtered to that user/day to get the session story.
 - Alert on volume thresholds
@@ -604,7 +605,7 @@ Instant visualization.
 - [🔗 Who's Clicking on Junk Mail?](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Clicking%20on%20Junk%20Mail%3F.kql)
 - [🔗 Who Deleted an AD User?](https://github.com/EEN421/KQL-Queries/blob/Main/Who_Deleted_an_AD_User%3F.kql)
 - [🔗 Who's Activating PIM Roles?](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Activating%20Roles%20via%20PIM%3F.kql)
-- [🔗 Who's Logging In and When?](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
+- [🔗 Who's Logging In and When? RDP Queries A & B](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
 
 <br/>
 
