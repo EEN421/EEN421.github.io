@@ -6,9 +6,8 @@
 
 Last week in **KQL Toolbox #5**, we went full threat-hunter mode — tracking phishing and malware campaigns across domains, senders, and payload patterns.
 
-But here’s the uncomfortable truth:
+But here’s the uncomfortable truth: **Detection is only half the battle.**  
 
-🔍 **Detection is only half the battle.**  
 The other half is what happens *after* the message lands — when a human clicks, credentials get tested, sessions get established, and privileged access lights up.
 
 So in this installment, we pivot from **threat hunting → real-world risk outcomes**, using KQL as our flashlight:
@@ -664,9 +663,6 @@ If you only take one thing from this post, take this:
 
 So don’t just run these queries once.  
 Turn them into baselines, alerts, workbooks, and review cadences your team can execute every day.
-
-And if you’re wondering where we go next in KQL Toolbox #7… 👀  
-We’ll keep building on this same storyline: **identity + access + real attacker paths** — with more pivot-ready queries you can use to move from _“signal” → “story” → “response.”_
 
 **Now go forth and make your logs behave 🥷🐱🔥**
 

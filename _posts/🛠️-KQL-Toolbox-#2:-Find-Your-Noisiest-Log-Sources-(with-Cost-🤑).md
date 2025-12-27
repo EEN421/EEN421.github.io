@@ -601,7 +601,7 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 <br/><br/>
 
 # 🧠 Closing Thoughts
-At this point, you’re no longer guessing where your Sentinel money is going — you’ve got receipts. You know which tables are loud, which severities are bloated, and which Windows Event IDs are quietly eating your budget every single day. That alone puts you ahead of most SOCs. But there’s still one missing piece: knowing exactly which individual events, users, and systems are generating that noise — and why. In KQL Toolbox #3, we go one level deeper, pivoting from “noisy sources” to specific Event IDs, accounts, and devices that are driving both cost and operational pain. That’s where cost tuning stops being defensive and starts becoming surgical. ⚔️
+At this point, you’re no longer guessing where your Sentinel money is going — you’ve got receipts. You know which tables are loud, which severities are bloated, and which Windows Event IDs are quietly eating your budget every single day. That alone puts you ahead of most SOCs. But there’s still one missing piece: knowing exactly which individual events, users, and systems are generating that noise — and why. ⚔️
 
 <br/><br/>
 
