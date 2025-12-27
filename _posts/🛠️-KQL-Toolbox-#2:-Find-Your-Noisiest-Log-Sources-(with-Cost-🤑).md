@@ -1,4 +1,4 @@
-# KQL Toolbox #2 — 🔊 Find Your Noisiest Log Sources (With Cost 🤑) 
+# KQL Toolbox #2: 🔊 Find Your Noisiest Log Sources (With Cost 🤑) 
 
 Last week in **KQL Toolbox**, we zoomed out and looked at **billable ingest trends over time**—how many GiB per day you’re ingesting, and roughly how much that’s costing you in Microsoft Sentinel.
 
