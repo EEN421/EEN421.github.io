@@ -1309,7 +1309,19 @@ Enjoy monitoring your plants! 🌱
 
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
-![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📘 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
 
 <br/>
 <br/>
