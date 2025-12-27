@@ -1,5 +1,7 @@
 # KQL Toolbox #4: What Changed? Finding Log Sources with the Biggest Delta in Volume & Cost
 
+![](/assets/img/KQL%20Toolbox/4/Toolbox4.png)
+
 ## Welcome back to KQL Toolbox 👋
 
 In **KQL Toolbox #1**, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
