@@ -203,6 +203,8 @@ This supports:
 - compromise investigation
 - audit evidence
 
+<br/>
+
 ## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
@@ -336,6 +338,8 @@ What it tells you
 Who is elevating privileges via PIM, what role they activated, and where they came from.
 
 This is your strongest “least privilege is real” evidence.
+
+<br/>
 
 ## 🛡️ Regulatory & Framework Mapping
 
