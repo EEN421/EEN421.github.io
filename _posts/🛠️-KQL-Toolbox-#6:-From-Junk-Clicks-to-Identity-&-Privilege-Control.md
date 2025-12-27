@@ -14,7 +14,7 @@ So in this installment, we pivot from **threat hunting → real-world risk outco
 - **Who’s activating privileged roles via PIM?** (privilege oversight & audit proof)
 - **Who’s logging into domain controllers via RDP?** (hands-on-keyboard evidence)
 
-Each section includes:
+Each section includes: <br/>
 ✅ a **line-by-line breakdown**  
 ✅ a **regulatory mapping** (NIST / CMMC / CIS)  
 ✅ and **steps to operationalize** like a production SOC.
