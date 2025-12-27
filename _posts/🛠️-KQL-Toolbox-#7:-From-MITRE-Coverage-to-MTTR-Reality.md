@@ -23,14 +23,14 @@ SecurityAlert
 
 <br/>
 
-## Why this is useful to a SOC
+## 🤔 Why this is useful to a SOC
 - **Quick “threat posture snapshot”:** Are you mostly dealing with Initial Access + Execution, or is Lateral Movement + Persistence dominating?
 - **Detection engineering priority:** If a tactic is constantly showing up, it’s either (a) reality, (b) a detection bias, or (c) noise you need to tune.
 - **Executive translation:** MITRE tactics are one of the fastest ways to communicate “what’s happening” without drowning in product-specific alerts.
 
 <br/>
 
-## Line-by-line breakdown
+## 🕵️ Line-by-line breakdown
 
 ### `SecurityAlert`
 Pulls alert records (Sentinel incidents/alerts depending on connector + normalization) where many products populate MITRE fields.
@@ -64,7 +64,7 @@ Great for dashboards and “what are we fighting?” visuals.
 <br/>
 
 
-## Tuning upgrades (high-impact)
+## 🎚️ Tuning upgrades (high-impact)
 
 ### 1.) Normalize whitespace + casing (prevents “Persistence” vs “ Persistence” splitting counts)
 ```kql
@@ -91,7 +91,7 @@ Great for dashboards and “what are we fighting?” visuals.
 
 # Query 2 — Most common MITRE techniques observed (Top 10)
 
-## Why this is useful to a SOC
+## 🤔 Why this is useful to a SOC
 - Tactics tell you the phase of the attack. Techniques tell you the exact behavior (and often the exact telemetry you should be collecting).
 - This query helps you:
 - Measure real-world technique frequency (what’s actually firing)
@@ -109,7 +109,7 @@ SecurityAlert
 | project ["MITRE Technique"] = technique, Count
 ```
 
-## Line-by-line breakdown
+## 🕵️ Line-by-line breakdown
 
 Same pattern as tactics, but at the technique level: `where isnotempty(Techniques)`
 Useful as a coverage signal: if this returns very few results, you’re either missing mappings or your alert sources aren’t enriching.
@@ -153,7 +153,7 @@ Techniques are most valuable when you can immediately ask: which hosts, which us
 
 <br/>
 
-## Operationalization playbook
+## ⚔️ Operationalization playbook
 Technique “Top 10” becomes your playbook roadmap: ensure top techniques have:
 - enrichment (entity mapping),
 - triage checklist,
@@ -166,7 +166,7 @@ Purple-team alignment: pick one technique and run an emulation test; validate al
 
 # Query 3 — Median Time to Resolve (MTTR) by severity (Closed incidents)
 
-## Why this is useful to a SOC
+## 🤔 Why this is useful to a SOC
 
 - This is the pivot from visibility to operational outcomes; Median time-to-resolve is more honest than average (a few “forever incidents” won’t skew it as hard).
   - By severity shows whether your process matches your priorities.
@@ -186,7 +186,7 @@ SecurityIncident
 <br/>
 
 
-## Line-by-line breakdown
+## 🕵️ Line-by-line breakdown
 
 ### `SecurityIncident`
 Uses incidents (the “case management” object). Good — this reflects actual SOC workflow, not raw alert spam.
@@ -213,7 +213,7 @@ Careful: ordering here depends on how severity values sort in your workspace (st
 
 <br/>
 
-## Tuning upgrades (make MTTR actionable)
+## 🎚️ Tuning upgrades (make MTTR actionable)
 ### 1.) Use an explicit severity sort
 ```kql
 | extend SevRank = case(Severity =~ "High", 1, Severity =~ "Medium", 2, Severity =~ "Low", 3, 99)
@@ -243,7 +243,7 @@ This is where MTTR turns into a KPI:
 
 <br/>
 
-## Operationalization playbook
+## ⚔️ Operationalization playbook
 - Set targets (example): High < 240 min, Medium < 1440 min, Low < 4320 min — pick what matches your staffing reality.
 - Force multiplier: tie MTTR improvements directly to:
   - automation (Logic Apps / SOAR),
@@ -256,8 +256,7 @@ Use it in retros: every month, review top technique + slowest MTTR severity and 
 <br/>
 <br/>
 
-
-# Putting it together: “MITRE → MTTR” SOC storyline
+# 🧩 Putting it together: “MITRE → MTTR” SOC storyline
 - Tactics tell you the phase of enemy behavior you’re seeing most
 - Techniques tell you the specific behaviors to harden detections/playbooks for
 - Median TTR (MTTR) tells you whether the SOC can consistently close the loop fast enough
@@ -267,7 +266,7 @@ That’s a clean maturity arc: coverage → precision → performance.
 <br/>
 <br/>
 
-# Framework mapping (high-level but practical)
+# 🛡️ Framework mapping (high-level but practical)
 
 ## NIST CSF 2.0
 - DE.CM (Detect: Continuous Monitoring): tactics/techniques observed are direct signals of what detection content is producing and what behaviors are present.
@@ -276,15 +275,18 @@ That’s a clean maturity arc: coverage → precision → performance.
 
 <br/>
 
-CIS Controls v8
+## CIS Controls v8
 - Control 8 (Audit Log Management) & Control 13 (Network Monitoring and Defense): MITRE mapping is only as good as your logging + detection coverage.
 - Control 17 (Incident Response Management): MTTR is a direct measure of IR operational effectiveness.
 
 <br/>
 
-CMMC / NIST 800-171 (conceptual alignment)
+## CMMC / NIST 800-171 (conceptual alignment)
 - Incident handling and response performance expectations map naturally to measuring and improving time-to-resolve, especially when you can show severity-based prioritization.
 
+<br/><br/>
+
+# 🧠 Closing Thoughts
 You can now say more than “we have detections;” You can say what adversary behavior is showing up most, what techniques deserve the next wave of tuning, and whether your SOC is actually getting faster at closing the loop. **That’s the difference between a dashboard and a defense program.**
 
 <br/><br/>
