@@ -39,11 +39,17 @@ UrlClickEvents
 | where NetworkMessageId in(JunkedEmails)
 ```
 
+<br/>
+
+![](/assets/img/KQL%20Toolbox/6/kql6-junk1.png)
+
+<br/>
+
 ### [🔗 Who's Clicking on Junk Mail? Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Clicking%20on%20Junk%20Mail%3F.kql)
 
 <br/>
 
-## Line-by-line breakdown (what each piece is doing)
+## 🕵️ Line-by-line breakdown (what each piece is doing)
 
 ### `let JunkedEmails = EmailEvents`
 
@@ -146,14 +152,20 @@ SecurityEvent
 | where TimeGenerated > ago (90d)
 | where EventID == "4726"
 | extend Actor_ = Account
-| project-reorder TimeGenerated, Activity, Actor_, TargetAccount, Computer
+| project-reorder TimeGenerated, Activity, Actor_, TargetUserName, Computer
 ```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/6/KQL6-Deleted1.png)
+
+<br/>
 
 ### [🔗 Who Deleted an AD User? KQL Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who_Deleted_an_AD_User%3F.kql)
 
 <br/>
 
-## Line-by-line breakdown
+## 🕵️ Line-by-line breakdown
 
 ### `SecurityEvent`
 
@@ -190,7 +202,7 @@ Creates a new column Actor_ from the Account field (the actor who performed the 
 
 <br/>
 
-### `| project-reorder TimeGenerated, Activity, Actor_, TargetAccount, Computer`
+### `| project-reorder TimeGenerated, Activity, Actor_, TargetUserName, Computer`
 
 Keeps only the most important columns and reorders them for analyst-friendly output.
 
@@ -198,7 +210,7 @@ Keeps only the most important columns and reorders them for analyst-friendly out
 - When it happened
 - What happened (Activity)
 - Who did it (Actor_)
-- Who got deleted (TargetAccount)
+- Who got deleted (TargetUserName)
 - Where it happened (Computer)
 
 What it tells you
@@ -265,6 +277,12 @@ AuditLogs
 | extend ActivationTime = TimeGenerated
 | project Actor, Role, ActivationTime, IP
 ```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/6/kql6-PIM1.png)
+
+<br/>
 
 ### [🔗 Who's Activating PIM Roles? KQL Query Available Here](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Activating%20Roles%20via%20PIM%3F.kql)
 
@@ -411,6 +429,12 @@ SecurityEvent
     User = coalesce(TargetUserName, Account)
 | order by TimeGenerated desc
 ```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/6/kql6-RDP1.png)
+
+<br/>
 
 ### [🔗 Who's Logging In and When?.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
 
@@ -561,6 +585,12 @@ SecurityEvent
 | order by Day desc, LoginCount desc
 | render timechart 
 ```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/6/kql6-RDP2.png)
+
+<br/>
 
 ### [🔗 Who's Logging In and When?.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
 
