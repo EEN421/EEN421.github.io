@@ -20,21 +20,25 @@ That’s what today’s query set is all about:
 * `CommonSecurityLog` (firewalls, proxies, etc.)
 * `SecurityEvent` (Windows security logs)
 
+<br/>
+
 We’ll walk through **three variations of the same pattern**:
 
 1. **Top 10 Log Sources by Cost (All Tables)**
 2. **Top 10 `CommonSecurityLog` Severity Levels by Cost**
 3. **Top 10 `SecurityEvent` Event IDs by Cost**
 
-All three use the same idea:
+<br/>
 
-> **Sum the billable bytes → convert to GiB → multiply by your per-GB price → rank by cost.**
+All three use the same idea: **_Sum the billable bytes → convert to GiB → multiply by your per-GB price → rank by cost._**
 
 <br/>
 
-![](/assets/img/KQL%20Toolbox/2/NinjaCatAnalyst.png)
+![Edible Bytes: Alert-Fatigue Formula](/assets/img/KQL%20Toolbox/2/NinjaCatAnalyst.png)
 
-I’ve published the full queries here on GitHub:
+<br/><br>
+
+Get the full, copy-pasta ready KQL queries here on GitHub:
 
 * [**🔗 Top 10 Log Sources with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
 * [**🔗 Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)**](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
@@ -45,32 +49,22 @@ I’ve published the full queries here on GitHub:
 
 ## Quick Primer: `_IsBillable` and `_BilledSize`
 
-Every Log Analytics table (including `Usage`, `CommonSecurityLog`, `SecurityEvent`, etc.) comes with two core columns for cost analysis: ([Microsoft Learn][1])
+Every Log Analytics table (including `Usage`, `CommonSecurityLog`, `SecurityEvent`, etc.) comes with two core columns for cost analysis: 
 
 * **`_IsBillable`** – `true` if this record actually counts toward your bill.
 * **`_BilledSize`** – size of the record in **bytes** that you’re billed for.
 
-These are your **per-row cost knobs**. Instead of just counting events, you can say:
-
-> “Which **events** and **patterns** are responsible for the largest share of my ingestion bill?”
-
-That’s the heart of this week’s queries.
-
-<br/>
-
-
+These are your **per-row cost knobs**. Instead of just counting events, you can say: _“Which **events** and **patterns** are responsible for the largest share of my ingestion bill❓”_
 
 
 <br/><br/>
 
 # Query 1 – Top 10 Log Sources by Cost (All Tables)
 
-First, let’s answer the high-level question:
-
-> “Which **tables** (log sources) are costing us the most over the last 30 days?”
+First, let’s answer the high-level question: _“Which **tables** (log sources) are costing us the most over the last 30 days❔”_
 
 ```kql
-// KQL of the Week #2 - Query 1
+// Query 1
 // Top 10 log sources (tables) by total cost
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
@@ -88,12 +82,12 @@ Usage
 
 <br/><br/>
 
-### What this does, line-by-line
+## What this does, line-by-line...
 
 * **`let PricePerGB = 4.30;`**
 
   * Workspace-specific knob for your **per-GB Sentinel ingest cost**.
-  * Replace `4.30` with your region’s actual value from the official Microsoft Sentinel pricing page. ([Microsoft Learn][2])
+  * Replace `4.30` with your region’s actual value from the [official Microsoft Sentinel pricing page](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064). 
 
 * **`Usage`**
 
@@ -124,6 +118,8 @@ Usage
 
   * Surface just your **top 10 most expensive log sources**.
 
+<br/>
+
 This immediately tells you:
 
 * Are **firewall logs** the main culprit? (`CommonSecurityLog`)
@@ -132,15 +128,21 @@ This immediately tells you:
 
 Once you know which **table** is noisy, the next step is to dig **inside** that table.
 
-### Steps to Operationalize
+<br/>
+
+## ⚔️ Steps to Operationalize:
 - Schedule this query to run weekly via a Sentinel scheduled analytics rule or runbook.
 - Visualize on a dashboard showing cost contribution by log source.
 - Monthly review in SOC/QBR meetings to identify cost outliers.
 
-### Example Alerting
+<br/>
+
+## 🚨 Example Alerting:
 - Threshold alert when any log source exceeds a configured GiB/day or cost/day threshold, triggering an investigation into noisy sources.
 
-### Framework Mapping
+<br/>
+
+## 🛡️ Framework Mapping:
 - **NIST CSF DE.CM-7** – Monitors and analyzes continuous events for potential malicious activity or misconfigurations; here it adds a cost lens to visibility.
 
 - **NIST CSF ID.RA-1** – Helps classify the sources of logs (assets/systems) and determine their impact.
@@ -155,7 +157,7 @@ Once you know which **table** is noisy, the next step is to dig **inside** that 
 
 # Query 2 – Top 10 `CommonSecurityLog` Severity Levels by Cost
 
-In many environments, **CEF-based logs** (firewalls, proxies, VPNs) are some of the **biggest cost drivers**. Those land in `CommonSecurityLog`. ([Microsoft Learn][4])
+In many environments, **CEF-based logs** (firewalls, proxies, VPNs) are some of the **biggest cost drivers**. Those land in `CommonSecurityLog`.
 
 But not all firewall events are equal:
 
@@ -184,11 +186,11 @@ CommonSecurityLog
 
 <br/><br/>
 
-### How this works
+## How this works:
 
 * **`CommonSecurityLog`**
 
-  * The “CEF catch-all” table for supported security appliances—firewalls, proxies, etc.
+  * The “CEF catch-all” table for supported security appliances—firewalls, proxies, etc. 
 
 * **`| where _IsBillable == true`**
 
@@ -196,7 +198,7 @@ CommonSecurityLog
 
 * **`sum(_BilledSize)`**
 
-  * `_BilledSize` is **per-row billed bytes**. Summed, it gives you the **exact ingest volume** for this group. ([Microsoft Learn][1])
+  * `_BilledSize` is **per-row billed bytes**. Summed, it gives you the **exact ingest volume** for this group. 
 
 * **`/ 1024 / 1024 / 1024`**
 
@@ -234,15 +236,21 @@ From there you can ask:
 This is where **real savings** happen:
 You’re not randomly turning off logs—you’re specifically **targeting the lowest-value, highest-cost severities**.
 
-### Steps to Operationalize
+<br/>
+
+## ⚔️ Steps to Operationalize:
 - Embed in a workbook segmented by vendor/product and severity.
 - Pair with DCR/Log Filters: Identify low-value severity buckets (e.g., informational or low) that can be filtered or redirected to Basic tier or external storage.
 - Integrate with Change Controls: When tuning log sources, include cost impact in the change request narrative.
 
-### Example Alerting
+<br/>
+
+### 🚨 Example Alerting:
 - Alert when a new vendor or severity group suddenly rises above expected cost baselines.
 
-### Framework Mapping
+<br/>
+
+## 🛡️ Framework Mapping:
 - **NIST CSF DE.CM-8** – Use automated tools to support detection processes; here it adds depth to severity interpretation.
 
 - **NIST CSF PR.IP-1** – Baselines for configuration and cost awareness.
@@ -255,7 +263,7 @@ You’re not randomly turning off logs—you’re specifically **targeting the l
 
 <br/><br/>
 
-## Query 3 – Top 10 `SecurityEvent` Event IDs by Cost
+# Query 3 – Top 10 `SecurityEvent` Event IDs by Cost
 
 Now let’s turn that same idea on another noisy classic:
 
@@ -283,7 +291,7 @@ SecurityEvent
 
 <br/><br/>
 
-### Why this is powerful
+## Why this is powerful
 
 * **Cost by Event ID**
 
@@ -294,12 +302,12 @@ SecurityEvent
 
 * **`Activity`**
 
-  * Including `Activity` in the grouping gives a **human-readable description** next to the ID (`"An account was successfully logged on"`, etc.). ([Microsoft Learn][5])
+  * Including `Activity` in the grouping gives a **human-readable description** next to the ID (`"An account was successfully logged on"`, etc.).
 
 This helps you decide:
 
 * Which Event IDs are **high-noise, low-value** for your use cases.
-* Where you can potentially **filter or redirect** to a cheaper tier (Basic, Auxiliary, or external storage) instead of the full Analytics tier. ([Microsoft Learn][6])
+* Where you can potentially **filter or redirect** to a cheaper tier (Basic, Auxiliary, or external storage) instead of the full Analytics tier. 
 
 When you combine this with **detections you actually care about**, you can be ruthless:
 
@@ -307,15 +315,19 @@ When you combine this with **detections you actually care about**, you can be ru
 
 <br/>
 
-### Steps to Operationalize
+## ⚔️ Steps to Operationalize:
 - Include in monthly cost review alongside threat detection priorities.
 - Map high-cost Event IDs to detection rules to ensure you aren’t dropping signals needed for security detections if tuning filters.
 - Run histograms/heatmaps to visualize shifts over time in noisy WindowsIDs.
 
-### Example Alerting
+<br/>
+
+## 🚨 Example Alerting:
 - Alert when a specific Event ID’s cost contribution increases above established percent of total.
 
-### Framework Mapping
+<br/>
+
+## 🛡️ Framework Mapping:
 - NIST CSF DE.DP-4 (Event detection) – Identifies anomalous activities via event patterns; here with cost relevance.
 - NIST CSF PR.IP-3 – Secure configurations informed by usage and impact.
 - CIS Control 8 (Audit Log Management) – Ensures audit event logs are used effectively for both security and cost governance.
@@ -588,6 +600,11 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 
 <br/><br/>
 
+# 🧠 Closing Thoughts
+At this point, you’re no longer guessing where your Sentinel money is going — you’ve got receipts. You know which tables are loud, which severities are bloated, and which Windows Event IDs are quietly eating your budget every single day. That alone puts you ahead of most SOCs. But there’s still one missing piece: knowing exactly which individual events, users, and systems are generating that noise — and why. In KQL Toolbox #3, we go one level deeper, pivoting from “noisy sources” to specific Event IDs, accounts, and devices that are driving both cost and operational pain. That’s where cost tuning stops being defensive and starts becoming surgical. ⚔️
+
+<br/><br/>
+
 # 📚 Want to Go Deeper?
 ⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **DevSecOpsDad KQL Toolbox** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
@@ -602,19 +619,19 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 
 # 🔗 Helpful Links & Resources
 - [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
-- [Top 10 Log Sources with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
-- [Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
-- [Top 10 Security Events with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
-- [Standard columns in Azure Monitor log records](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns)
-- [Plan costs and understand pricing and billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
-- [Analyze usage in Log Analytics workspace](https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage)
-- [Azure Monitor Logs reference - CommonSecurityLog](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/commonsecuritylog)
-- [Azure Monitor Logs reference - SecurityEvent](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/securityevent)
-- [Reduce costs for Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/billing-reduce-costs)
-- [Log standard columns – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/log-standard-columns)
-- [Analyze usage in Azure Monitor Logs – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/analyze-usage)
-- [StorageBlobLogs table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/storagebloblogs)
-- [DeviceInfo table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/deviceinfo)
+- [⚡ Top 10 Log Sources with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
+- [⚡ Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
+- [⚡ Top 10 Security Events with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
+- [📚 Standard columns in Azure Monitor log records](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns)
+- [📚 Plan costs and understand pricing and billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
+- [📚 Analyze usage in Log Analytics workspace](https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage)
+- [📚 Azure Monitor Logs reference - CommonSecurityLog](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/commonsecuritylog)
+- [📚 Azure Monitor Logs reference - SecurityEvent](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/securityevent)
+- [📚 Reduce costs for Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/billing-reduce-costs)
+- [📚 Log standard columns – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/log-standard-columns)
+- [📚 Analyze usage in Azure Monitor Logs – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/analyze-usage)
+- [📚 StorageBlobLogs table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/storagebloblogs)
+- [📚 DeviceInfo table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/deviceinfo)
 
 <br/>
 
