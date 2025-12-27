@@ -37,7 +37,7 @@ Today we’re going to unpack one of my favorite preventive analytics queries: _
 
 <br/><br/>
 
-## 🧠 What this query is trying to answer
+## 🕵️ What this query is trying to answer
 
 > **“Which data sources changed the most in billable log volume when comparing the last 30 days vs the 30 days before that?”**
 
@@ -122,6 +122,10 @@ PriorData
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/4/4query1.png)
+
+<br/>
+
+👉 Grab the Copy-Paste ready KQL from my Github library here:  **[🔗 Log_Sources_with_Greatest_Delta.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Log_Sources_with_Greatest_Delta.kql)**
 
 <br/><br/>
 
@@ -290,7 +294,7 @@ Why it matters --> _Both are operational signals:_
 <br/><br/>
 
 
-## ✅ Summary: what a reader should understand after this breakdown
+## ✅ Summary: 
 
 This query is essentially a “delta radar”:
 
@@ -301,7 +305,7 @@ This query is essentially a “delta radar”:
 
 <br/><br/>
 
-## Steps to Operationalize
+## ⚔️ Steps to Operationalize
 
 - Run this query weekly (ops hygiene) and monthly (cost governance / QBR prep).
 - Pin results to a workbook tile called “Top DataType Movers (GB)”.
@@ -311,11 +315,11 @@ This query is essentially a “delta radar”:
     - Drill down to Event IDs / accounts / devices if applicable (KQL Toolbox #3)
     - Document the cause + remediation in a lightweight change log
 
-> **Best practice:** keep a “known expected deltas” list (month-end patching, migrations, major rollouts) so analysts don’t re-investigate planned change.
+> **💡 Best practice:** keep a “known expected deltas” list (month-end patching, migrations, major rollouts) so analysts don’t re-investigate planned change.
 
 <br/><br/>
 
-## Framework Mapping
+## 🛡️ Framework Mapping
 
 - **NIST CSF DE.CM-1 / DE.CM-7** — Continuous monitoring detects abnormal changes in telemetry patterns.
 
@@ -428,7 +432,12 @@ PriorData
 
 ![](/assets/img/KQL%20Toolbox/4/4query2.png)
 
-<br/><br/>
+<br/>
+
+👉 Grab the Copy-Paste ready KQL from my Github library here:  **[🔗 Data Sources with Biggest Delta in Log Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/QBRs/Data%20Sources%20with%20Biggest%20Delta%20in%20Log%20Volume.kql)**
+
+
+<br/>
 
 ## 🔍 Line-by-line breakdown
 
@@ -439,8 +448,6 @@ Why it matters: lets you translate volume change into a $ delta, which is what g
 
 `let CurrentEnd = now();` --> **What it does:** uses the current clock time as the end of your reporting window.
 Why it matters: this makes the query run “as of right now.”
-
->⚠️ DevSecOpsDad Gotcha: `now()` can include partial-day effects if ingestion lags. If you want _“end of most recent data,”_ you’d anchor to `max(TimeGenerated)` like we did earlier.
 
 ```kql
 let CurrentStart = CurrentEnd - 30d;
@@ -592,7 +599,7 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 
 <br/> 
 
-## Steps to Operationalize
+## ⚔️ Steps to Operationalize
 - Run monthly as part of a Cost/Value review (and pre-QBR).
 
 <br/>
@@ -615,7 +622,7 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 
 <br/>
 
-## Framework Mapping
+## 🛡️ Framework Mapping
 
 - **NIST CSF ID.GV-1 / ID.GV-3** — Governance + risk management decisions informed by measurable telemetry impact.
 
@@ -629,21 +636,11 @@ Here, new sources show null (more honest), which signals “this source is NEW.�
 
 ![](/assets/img/KQL%20Toolbox/4/DeltaCat.png)
 
-<br/><br/>
 
-# 📋 Final Thoughts:
-
-By now, you should have a repeatable way to answer one of the most important operational questions in Microsoft Sentinel: _“What changed — and does it matter?”_
-
-With a simple delta-based approach, you can move beyond staring at raw ingest numbers and start focusing on meaningful shifts — the ones that explain cost spikes, uncover misconfigurations, and surface the right places to dig deeper. Whether you’re troubleshooting an unexpected bill increase, validating the impact of tuning changes, or preparing for a QBR, this kind of analysis gives you clarity fast.
-
-As always, this query isn’t meant to live in isolation. It works best when paired with the earlier entries in the KQL Toolbox — using volume and cost deltas to triage, then drilling down into specific tables, Event IDs, accounts, or devices to understand the root cause.
-
->👉 In the next KQL Toolbox entry, we’ll keep building on this foundation — turning insight into action and continuing to sharpen how we measure, explain, and control our telemetry. Until then, keep questioning the numbers… and follow the delta.
 
 <br/><br/>
 
-# 🧭 Next Steps:
+# 📋 Next Steps:
 
 Now that you can quickly identify which log sources changed the most — and what that change likely cost, here are a few practical ways to put this query to work:
 
@@ -662,7 +659,7 @@ Now that you can quickly identify which log sources changed the most — and wha
 
 <br/>
 
-### ✔️ Add this to your reporting cadence
+## ✔️ Add this to your reporting cadence
 Run this query as part of:
 - Monthly cost reviews
 - Quarterly Business Reviews (QBRs)
@@ -671,9 +668,11 @@ Run this query as part of:
 
 <br/>
 
-#### Example Alerting
+### 🚨 Example Alerting:
 
-This is a strong candidate for cost guardrails.
+This is a strong candidate for cost guardrails...
+
+<br/>
 
 **Pattern A** — “Cost delta exceeded”
 
@@ -687,18 +686,24 @@ This is a strong candidate for cost guardrails.
 - Trigger when PriorGB == 0 and CurrentGB > X and Change$ exceeds threshold
     - This catches the classic “new connector went wild” scenario fast.
 
+<br/>
+
 **Rule schedule guidance:**
 - Daily or weekly is fine (30-day windows don’t need hourly).
 - Trigger if results > 0.
 
-#### Operational Guardrails You Can Add (Highly Recommended)
+<br/>
+
+### 🚧 Operational Guardrails You Can Add (Highly Recommended)
 - Maintain a short allowlist of expected deltas (patch windows, migrations).
 - Require a “before/after” snapshot:
 - run Query #1/#2 before tuning
 - run again after tuning
 - document “delta result” in the ticket/change record
 
-#### Example Alerting Enhancements
+<br/>
+
+### 💪 Example Alerting Enhancements
 
 - Add a suppression window during known maintenance (or tag “expected delta” sources).
 - Alert only when:
@@ -707,7 +712,7 @@ This is a strong candidate for cost guardrails.
 
 <br/>
 
-#### Adjust the knobs
+### 🎚️ Adjust the knobs
 - Don’t forget to tailor the query to your environment:
 - Change the window sizes (7/30, 30/60, 90/90)
 - Update the Sentinel price per GB for your region
@@ -751,7 +756,7 @@ Why this works well early on:
 
 <br/>
 
-### 🧠 Query #2 Behavior (v2 Improvement)
+### 🎚️ Query #2 Behavior (v2 Improvement)
 
 In Query #2, this logic is refined: _When a log source has no baseline volume, Change % is set to null._
 
@@ -785,6 +790,16 @@ Why this is an improvement:
 
 <br/><br/>
 
+# 🧠 Final Thoughts:
+
+By now, you should have a repeatable way to answer one of the most important operational questions in Microsoft Sentinel: _“What changed — and does it matter?”_
+
+With a simple delta-based approach, you can move beyond staring at raw ingest numbers and start focusing on meaningful shifts — the ones that explain cost spikes, uncover misconfigurations, and surface the right places to dig deeper. Whether you’re troubleshooting an unexpected bill increase, validating the impact of tuning changes, or preparing for a QBR, this kind of analysis gives you clarity fast.
+
+As always, this query isn’t meant to live in isolation. It works best when paired with the earlier entries in the KQL Toolbox — using volume and cost deltas to triage, then drilling down into specific tables, Event IDs, accounts, or devices to understand the root cause.
+
+<br/><br/>
+
 # 📚 Thanks for Reading!
 
 ⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **DevSecOpsDad KQL Toolbox** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
@@ -810,11 +825,8 @@ Why this is an improvement:
 
 # 🔗 Helpful Links & Resources
 - [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
-- [🔗 KQL Query: Which EventID fires the most in a month?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20EventID%20fires%20the%20most%20in%20a%20month%3F.kql)
-- [🔗 KQL Query: Which Accounts are throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Accounts%20are%20Throwing%20this%20EventID%3F.kql)
-- [🔗 KQL Query: Which Devices are Throwing this EventID?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
-- [🔗 KQL Query: Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
-- [⚡ Logging and Threat Detection - Microsoft Learn](https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-v2-logging-threat-detection)
+- [🔗 Log_Sources_with_Greatest_Delta.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Log_Sources_with_Greatest_Delta.kql)
+- [🔗 Data Sources with Biggest Delta in Log Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/QBRs/Data%20Sources%20with%20Biggest%20Delta%20in%20Log%20Volume.kql)
 - [💲 Official Sentinel Pricing Page](https://learn.microsoft.com/en-us/azure/sentinel/billing?utm_source=chatgpt.com&tabs=simplified%2Ccommitment-tiers)
 - [💰 Microsoft Billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
 
