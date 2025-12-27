@@ -256,7 +256,19 @@ Cannot modify resource with id '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
 If you found this guide to configuring a ChatBot with Azure OpenAI Studio valuable, there’s a lot more where that came from. My new book dives deeper — including full architectures, scripts, and hands-on scenarios.
 A heartfelt thanks to everyone who’s already picked up a copy — if you’ve read it, a quick Amazon rating or review would be amazing 👉 [📘 Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/69vN3Om)
 
-![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📘 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
 <br/>
 <br/>
 
