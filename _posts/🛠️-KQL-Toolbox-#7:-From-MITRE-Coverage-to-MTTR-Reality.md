@@ -35,20 +35,34 @@ SecurityAlert
 ### `SecurityAlert`
 Pulls alert records (Sentinel incidents/alerts depending on connector + normalization) where many products populate MITRE fields.
 
+<br/>
+
 ### `where TimeGenerated > ago(90d)`
 A 90-day window is usually long enough to smooth weekly weirdness and short enough to stay relevant.
+
+<br/>
 
 ### `where isnotempty(Tactics)`
 Ensures you only count alerts that actually have MITRE mapping (also acts like a “coverage check”).
 
+<br/>
+
 ### `mv-expand tactic = split(Tactics, ", ")`
 If the field is stored as a comma-separated list, this expands each tactic into its own row so you can count cleanly.
+
+<br/>
 
 ### `summarize Count = count() by tostring(tactic)`
 Counts occurrences per tactic.
 
+<br/>
+
 ### `top 10… + render piechart`
 Great for dashboards and “what are we fighting?” visuals.
+
+<br/>
+<br/>
+
 
 ## Tuning upgrades (high-impact)
 
@@ -58,8 +72,12 @@ Great for dashboards and “what are we fighting?” visuals.
 | extend tactic = tostring(tolower(tactic))
 ```
 
+<br/>
+
 ### 2.) Slice by severity or product (answer “what’s driving this?”)
 `| summarize Count=count() by tostring(tactic), AlertSeverity, ProductName`
+
+<br/>
 
 ### 3.) Filter out known noisy analytics rules (if one rule dominates your chart)
 `| where AlertName !in ("Rule A", "Rule B")`
@@ -96,19 +114,34 @@ SecurityAlert
 Same pattern as tactics, but at the technique level: `where isnotempty(Techniques)`
 Useful as a coverage signal: if this returns very few results, you’re either missing mappings or your alert sources aren’t enriching.
 
-### `mv-expand … split(Techniques, ", ")` Splits and expands technique list into rows
+<br/>
 
-### `summarize Count` Counts each technique occurrence
+### `mv-expand … split(Techniques, ", ")`
+Splits and expands technique list into rows
 
-### `project` Renames the column for clean dashboards/exports.
+<br/>
+
+### `summarize Count`
+Counts each technique occurrence
+
+<br/>
+
+### `project`
+Renames the column for clean dashboards/exports.
+
+<br/>
 
 ## Tuning upgrades (especially important here)
 
 ### 1.) Trim and standardize technique strings
 `| extend technique = trim(" ", tostring(technique))`
 
+<br/>
+
 ### 2.) Break out Technique IDs vs Names
 If your environment stores T1059 style IDs mixed with names, standardize them (or extract IDs if present) so counts don’t fragment.
+
+<br/>
 
 ### 3) Add a **“who/where”** pivot
 Techniques are most valuable when you can immediately ask: which hosts, which users, which rule?
@@ -150,20 +183,30 @@ SecurityIncident
 ```
 
 <br/>
+<br/>
+
 
 ## Line-by-line breakdown
 
 ### `SecurityIncident`
 Uses incidents (the “case management” object). Good — this reflects actual SOC workflow, not raw alert spam.
 
+<br/>
+
 ### `Status == "Closed"`
 Ensures you’re measuring completed work.
+
+<br/>
 
 ### `datetime_diff('minute', ClosedTime, CreatedTime)`
 Duration from creation to closure (your “time to resolve” definition).
 
+<br/>
+
 ### `percentile(..., 50)`
 Median. Solid choice for ops metrics.
+
+<br/>
 
 ### `order by Severity asc`
 Careful: ordering here depends on how severity values sort in your workspace (string vs numeric). You may want an explicit sort order.
@@ -178,12 +221,18 @@ Careful: ordering here depends on how severity values sort in your workspace (st
 | project-away SevRank
 ```
 
+<br/>
+
 ### 2.) Exclude auto-closed / benign closure reasons (if you have them)
 If your environment auto-closes incidents, MTTR can look “amazing” but meaningless. Filter those out if fields exist in your tenant.
+
+<br/>
 
 ### 3.) Add volume context
 **Median** alone hides “we closed 2 incidents fast.” Add counts:
 `| summarize Incidents=count(), MedianTTR=percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity`
+
+<br/>
 
 ### 4.) Add trend over time (weekly median)
 This is where MTTR turns into a KPI:
@@ -204,12 +253,19 @@ This is where MTTR turns into a KPI:
 
 Use it in retros: every month, review top technique + slowest MTTR severity and decide what to fix.
 
+<br/>
+<br/>
+
+
 # Putting it together: “MITRE → MTTR” SOC storyline
 - Tactics tell you the phase of enemy behavior you’re seeing most
 - Techniques tell you the specific behaviors to harden detections/playbooks for
 - Median TTR (MTTR) tells you whether the SOC can consistently close the loop fast enough
 
 That’s a clean maturity arc: coverage → precision → performance.
+
+<br/>
+<br/>
 
 # Framework mapping (high-level but practical)
 
@@ -230,3 +286,44 @@ CMMC / NIST 800-171 (conceptual alignment)
 - Incident handling and response performance expectations map naturally to measuring and improving time-to-resolve, especially when you can show severity-based prioritization.
 
 You can now say more than “we have detections;” You can say what adversary behavior is showing up most, what techniques deserve the next wave of tuning, and whether your SOC is actually getting faster at closing the loop. **That’s the difference between a dashboard and a defense program.**
+
+<br/><br/>
+
+# 📚 Want to Go Deeper?
+
+⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **DevSecOpsDad KQL Toolbox** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
+&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📘 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
+
+<br/><br/>
+
+# 🔗 Helpful Links & Resources
+
+- [🔗 Who's Clicking on Junk Mail?](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Clicking%20on%20Junk%20Mail%3F.kql)
+- [🔗 Who Deleted an AD User?](https://github.com/EEN421/KQL-Queries/blob/Main/Who_Deleted_an_AD_User%3F.kql)
+- [🔗 Who's Activating PIM Roles?](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Activating%20Roles%20via%20PIM%3F.kql)
+- [🔗 Who's Logging In and When? RDP Queries A & B](https://github.com/EEN421/KQL-Queries/blob/Main/Who's%20Logging%20In%20and%20When%3F.kql)
+
+<br/>
+
+# ⚡Other Fun Stuff...
+- [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
+- [🧰 Powershell Toolbox Part 1 Of 4: Azure Network Audit](https://www.hanley.cloud/2025-11-16-PowerShell-Toolbox-Part-1-of-4-Azure-Network-Audit/)
+- [🧰 Powershell Toolbox Part 2 Of 4: Azure Rbac Privileged Roles Audit](https://www.hanley.cloud/2025-11-19-PowerShell-Toolbox-Part-2-of-4-Azure-RBAC-Privileged-Roles-Audit/)
+- [🧰 Powershell Toolbox Part 3 Of 4: Gpo Html Export Script — Snapshot Every Group Policy Object In One Pass](https://www.hanley.cloud/2025-11-20-PowerShell-Toolbox-Part-3-of-4-GPO-HTML-Export-Script-Snapshot-Every-Group-Policy-Object-in-One-Pass/)
+- [🧰 Powershell Toolbox Part 4 Of 4: Audit Your Scripts With Invoke Scriptanalyzer](https://www.hanley.cloud/2025-11-24-PowerShell-Toolbox-Part-4-of-4-Audit-Your-Scripts-with-Invoke-ScriptAnalyzer/)
+
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
