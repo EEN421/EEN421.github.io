@@ -1,0 +1,232 @@
+# KQL Toolbox #7 — 🎯 MITRE Coverage → ⏱️ MTTR Reality
+
+In KQL Toolbox #6 we tracked human-risk outcomes (junk clicks) and identity/privilege control signals (who changed what, who escalated). This week we zoom out and ask: _Are our detections aligned to real adversary behavior?_
+
+And once something fires… _are we actually getting faster at resolving it?_
+
+This is the bridge from “we have alerts” to “we have measurable operational performance.”
+
+<br/>
+
+# Query 1 — Most common MITRE tactics observed (Top 10 + pie chart)
+
+```kql
+SecurityAlert
+| where TimeGenerated > ago(90d)
+| where isnotempty(Tactics)
+| mv-expand tactic = split(Tactics, ", ")
+| summarize Count = count() by tostring(tactic)
+| sort by Count desc
+| top 10 by Count
+| render piechart
+```
+
+<br/>
+
+## Why this is useful to a SOC
+- **Quick “threat posture snapshot”:** Are you mostly dealing with Initial Access + Execution, or is Lateral Movement + Persistence dominating?
+- **Detection engineering priority:** If a tactic is constantly showing up, it’s either (a) reality, (b) a detection bias, or (c) noise you need to tune.
+- **Executive translation:** MITRE tactics are one of the fastest ways to communicate “what’s happening” without drowning in product-specific alerts.
+
+<br/>
+
+## Line-by-line breakdown
+
+### `SecurityAlert`
+Pulls alert records (Sentinel incidents/alerts depending on connector + normalization) where many products populate MITRE fields.
+
+### `where TimeGenerated > ago(90d)`
+A 90-day window is usually long enough to smooth weekly weirdness and short enough to stay relevant.
+
+### `where isnotempty(Tactics)`
+Ensures you only count alerts that actually have MITRE mapping (also acts like a “coverage check”).
+
+### `mv-expand tactic = split(Tactics, ", ")`
+If the field is stored as a comma-separated list, this expands each tactic into its own row so you can count cleanly.
+
+### `summarize Count = count() by tostring(tactic)`
+Counts occurrences per tactic.
+
+### `top 10… + render piechart`
+Great for dashboards and “what are we fighting?” visuals.
+
+## Tuning upgrades (high-impact)
+
+### 1.) Normalize whitespace + casing (prevents “Persistence” vs “ Persistence” splitting counts)
+```kql
+| extend tactic = trim(" ", tostring(tactic))
+| extend tactic = tostring(tolower(tactic))
+```
+
+### 2.) Slice by severity or product (answer “what’s driving this?”)
+`| summarize Count=count() by tostring(tactic), AlertSeverity, ProductName`
+
+### 3.) Filter out known noisy analytics rules (if one rule dominates your chart)
+`| where AlertName !in ("Rule A", "Rule B")`
+
+## Operationalization playbook
+- Weekly SOC review: “Top tactics” becomes a recurring agenda item.
+- Detection backlog: If Defense Evasion is high, prioritize telemetry gaps + hardening detections there.
+- Hunt pivot: Pick the #1 tactic and run a themed hunting sprint (one week = one tactic).
+
+<br/><br/>
+
+# Query 2 — Most common MITRE techniques observed (Top 10)
+
+## Why this is useful to a SOC
+- Tactics tell you the phase of the attack. Techniques tell you the exact behavior (and often the exact telemetry you should be collecting).
+- This query helps you:
+- Measure real-world technique frequency (what’s actually firing)
+- Spot coverage gaps (if tactics show up but technique mapping is sparse)
+- Prioritize enrichment (technique-heavy detections should have playbooks + automation)
+
+```kql
+SecurityAlert
+| where TimeGenerated > ago(90d)
+| where isnotempty(Techniques)
+| mv-expand technique = split(Techniques, ", ")
+| summarize Count = count() by tostring(technique)
+| sort by Count desc
+| top 10 by Count
+| project ["MITRE Technique"] = technique, Count
+```
+
+## Line-by-line breakdown
+
+Same pattern as tactics, but at the technique level: `where isnotempty(Techniques)`
+Useful as a coverage signal: if this returns very few results, you’re either missing mappings or your alert sources aren’t enriching.
+
+### `mv-expand … split(Techniques, ", ")` Splits and expands technique list into rows
+
+### `summarize Count` Counts each technique occurrence
+
+### `project` Renames the column for clean dashboards/exports.
+
+## Tuning upgrades (especially important here)
+
+### 1.) Trim and standardize technique strings
+`| extend technique = trim(" ", tostring(technique))`
+
+### 2.) Break out Technique IDs vs Names
+If your environment stores T1059 style IDs mixed with names, standardize them (or extract IDs if present) so counts don’t fragment.
+
+### 3) Add a **“who/where”** pivot
+Techniques are most valuable when you can immediately ask: which hosts, which users, which rule?
+
+```kql
+| summarize Count=count() by tostring(technique), AlertName, CompromisedEntity
+| sort by Count desc
+```
+
+<br/>
+
+## Operationalization playbook
+Technique “Top 10” becomes your playbook roadmap: ensure top techniques have:
+- enrichment (entity mapping),
+- triage checklist,
+- automation/containment actions,
+- and detection tuning ownership.
+
+Purple-team alignment: pick one technique and run an emulation test; validate alerts and measure time-to-close.
+
+<br/><br/>
+
+# Query 3 — Median Time to Resolve (MTTR) by severity (Closed incidents)
+
+## Why this is useful to a SOC
+
+- This is the pivot from visibility to operational outcomes; Median time-to-resolve is more honest than average (a few “forever incidents” won’t skew it as hard).
+  - By severity shows whether your process matches your priorities.
+
+It’s the beginning of true SOC performance measurement (and a great way to justify headcount, automation, tuning, and MSSP expectations).
+
+```kql
+SecurityIncident
+| where TimeGenerated > ago(90d)
+| where Status == "Closed"
+| summarize MedianTTR = percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity
+| project Severity, ["Median Time to Resolve (minutes)"] = MedianTTR
+| order by Severity asc
+```
+
+<br/>
+
+## Line-by-line breakdown
+
+### `SecurityIncident`
+Uses incidents (the “case management” object). Good — this reflects actual SOC workflow, not raw alert spam.
+
+### `Status == "Closed"`
+Ensures you’re measuring completed work.
+
+### `datetime_diff('minute', ClosedTime, CreatedTime)`
+Duration from creation to closure (your “time to resolve” definition).
+
+### `percentile(..., 50)`
+Median. Solid choice for ops metrics.
+
+### `order by Severity asc`
+Careful: ordering here depends on how severity values sort in your workspace (string vs numeric). You may want an explicit sort order.
+
+<br/>
+
+## Tuning upgrades (make MTTR actionable)
+### 1.) Use an explicit severity sort
+```kql
+| extend SevRank = case(Severity =~ "High", 1, Severity =~ "Medium", 2, Severity =~ "Low", 3, 99)
+| order by SevRank asc
+| project-away SevRank
+```
+
+### 2.) Exclude auto-closed / benign closure reasons (if you have them)
+If your environment auto-closes incidents, MTTR can look “amazing” but meaningless. Filter those out if fields exist in your tenant.
+
+### 3.) Add volume context
+**Median** alone hides “we closed 2 incidents fast.” Add counts:
+`| summarize Incidents=count(), MedianTTR=percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity`
+
+### 4.) Add trend over time (weekly median)
+This is where MTTR turns into a KPI:
+```kql
+| summarize MedianTTR=percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by bin(TimeGenerated, 7d), Severity
+| order by TimeGenerated asc
+```
+
+<br/>
+
+## Operationalization playbook
+- Set targets (example): High < 240 min, Medium < 1440 min, Low < 4320 min — pick what matches your staffing reality.
+- Force multiplier: tie MTTR improvements directly to:
+  - automation (Logic Apps / SOAR),
+  - enrichment (entity mapping, device/user context),
+  - alert quality tuning (reduce false positives),
+  - and playbook maturity (tiered triage runbooks).
+
+Use it in retros: every month, review top technique + slowest MTTR severity and decide what to fix.
+
+# Putting it together: “MITRE → MTTR” SOC storyline
+- Tactics tell you the phase of enemy behavior you’re seeing most
+- Techniques tell you the specific behaviors to harden detections/playbooks for
+- Median TTR (MTTR) tells you whether the SOC can consistently close the loop fast enough
+
+That’s a clean maturity arc: coverage → precision → performance.
+
+# Framework mapping (high-level but practical)
+
+## NIST CSF 2.0
+- DE.CM (Detect: Continuous Monitoring): tactics/techniques observed are direct signals of what detection content is producing and what behaviors are present.
+- RS.AN / RS.MI (Respond: Analysis / Mitigation): MTTR measures the speed of analysis + containment/mitigation workflows.
+- GV.ME (Govern: Measurement & Oversight): MTTR by severity is a real operational metric for governance/reporting.
+
+<br/>
+
+CIS Controls v8
+- Control 8 (Audit Log Management) & Control 13 (Network Monitoring and Defense): MITRE mapping is only as good as your logging + detection coverage.
+- Control 17 (Incident Response Management): MTTR is a direct measure of IR operational effectiveness.
+
+<br/>
+
+CMMC / NIST 800-171 (conceptual alignment)
+- Incident handling and response performance expectations map naturally to measuring and improving time-to-resolve, especially when you can show severity-based prioritization.
+
+You can now say more than “we have detections;” You can say what adversary behavior is showing up most, what techniques deserve the next wave of tuning, and whether your SOC is actually getting faster at closing the loop. **That’s the difference between a dashboard and a defense program.**
