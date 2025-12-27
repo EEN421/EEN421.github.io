@@ -2,6 +2,8 @@
 As part of this new **KQL Toolbox** series, I bring you practical, reusable KQL snippets straight from the trenches of real-world Microsoft Sentinel work. Think of it as your regular “KQL vitamin:” small dose, big impact.
 And today we’re kicking things off with the one question every SecOps team eventually asks: “Where is all my ingest money going?” 💸
 
+![](/assets/img/KQL%20Toolbox/1/Toolbox1.png)
+
 <br/>
 
 # Visualize and Price Your Billable Ingest Trends
