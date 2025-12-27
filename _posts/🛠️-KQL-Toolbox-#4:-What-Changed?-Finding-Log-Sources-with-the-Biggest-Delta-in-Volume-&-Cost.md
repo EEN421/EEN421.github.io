@@ -781,16 +781,30 @@ Why this is an improvement:
 
 <br/>
 
-> #### 💡 Note: In the above queries, we converted `Quantity` by `/1024` — effectively GiB (based on 1024). That’s more accurate for how systems actually use data (base 2), but Microsoft billing uses decimal GB (1000) for pricing. _Refer to Gigabytes vs. Gibibytes section in [Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) and adjust accordingly... [https://learn.microsoft.com/en-us/azure/sentinel/billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)_
+> #### 💡 Note: In the above queries, we converted `Quantity` by `/1024` — effectively GiB (based on 1024). That’s more accurate for how systems actually use data (base 2), but Microsoft billing uses decimal GB (1000) for pricing. _Refer to Gigabytes vs. Gibibytes section in [Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) and adjust accordingly... [Microsoft Official Sentinel Billing Webiste](https://learn.microsoft.com/en-us/azure/sentinel/billing)_
 
 <br/><br/>
 
-# 📚 Want to Go Deeper?
+# 📚 Thanks for Reading!
 
 ⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **DevSecOpsDad KQL Toolbox** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
 &#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
 
-![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📘 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
+<br/>
+<br/>
 
 <br/><br/>
 
