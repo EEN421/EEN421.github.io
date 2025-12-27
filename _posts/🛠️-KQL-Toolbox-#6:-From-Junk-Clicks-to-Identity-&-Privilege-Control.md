@@ -25,6 +25,7 @@ Each section includes: <br/>
 
 Let’s go build signals that actually hold up in investigations *and* audits. 🥷🐱
 
+![](/assets/img/KQL%20Toolbox/6/KQL6-open.png)
 
 <br/><br/>
 
@@ -134,6 +135,8 @@ That’s a human-risk signal and a great leading indicator for phishing exposure
 - Measure improvement month-over-month (this is how you prove your awareness program works).
 - Escalate when clicks tie to known bad domains or credential-harvest paths.
 
+![](/assets/img/KQL%20Toolbox/6/KQL6-junk.png)
+
 <br/><br/>
 
 # 2️⃣ Who Deleted an AD User?
@@ -236,6 +239,8 @@ This supports:
 **Create an audit report for IAM:** deletions vs ticket approvals.
 
 **Harden:** ensure only tightly controlled accounts can delete users.
+
+![](/assets/img/KQL%20Toolbox/6/KQL6-deleted.png)
 
 <br/><br/>
 
@@ -364,6 +369,8 @@ This is your strongest “least privilege is real” evidence.
     - Correlate justification (ticket/approval) for audit defense.
 
 Use it for access reviews: “Why is this role activated so often?”
+
+![](/assets/img/KQL%20Toolbox/6/KQL6-PIM.png)
 
 <br/><br/>
 
@@ -519,11 +526,7 @@ This is excellent for:
         - Any RDP logon to DCs by non-approved admin accounts
         - Any RDP session outside maintenance windows
 
-### Example Use Case: 
-- Junk-click user → did they later appear here?
-- AD user deletion occurred → was the same actor RDP’d in beforehand?
-- Transition: From “timeline” to “outlier radar” 📈
-- Query A gives you the forensic timeline — great for answering “what happened and when?”.
+![](/assets/img/KQL%20Toolbox/6/KQL6-RDP.png)
 
 <br/><br/>
 
@@ -600,6 +603,8 @@ Instant visualization.
 - Reduce direct RDP pathways
 - Require stronger controls around interactive admin behavior
 
+![](/assets/img/KQL%20Toolbox/6/KQL6-outlier.png)
+
 <br/><br/>
 
 # 🧠 Final Thoughts — Why These Signals Matter
@@ -623,6 +628,8 @@ And if you’re wondering where we go next in KQL Toolbox #7… 👀
 We’ll keep building on this same storyline: **identity + access + real attacker paths** — with more pivot-ready queries you can use to move from “signal” → “story” → “response.”
 
 Now go forth and make your logs behave. 🥷🐱🔥
+
+![](/assets/img/KQL%20Toolbox/6/KQL6-close.png)
 
 <br/><br/>
 

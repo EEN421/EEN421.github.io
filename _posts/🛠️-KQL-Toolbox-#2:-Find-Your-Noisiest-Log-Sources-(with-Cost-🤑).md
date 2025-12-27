@@ -2,6 +2,8 @@
 
 ![](/assets/img/KQL%20Toolbox/2/Toolbox2.png)
 
+## Welcome back to KQL Toolbox 👋
+
 Last week in **KQL Toolbox**, we zoomed out and looked at **billable ingest trends over time**—how many GiB per day you’re ingesting, and roughly how much that’s costing you in Microsoft Sentinel.
 
 This time, we’re zooming **in**.

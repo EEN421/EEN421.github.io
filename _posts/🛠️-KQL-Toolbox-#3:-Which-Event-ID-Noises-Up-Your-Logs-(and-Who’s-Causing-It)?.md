@@ -1,9 +1,11 @@
 # 💡 KQL Toolbox #3: Which Event ID Noises Up Your Logs (and Who’s Causing It)?
-**Welcome back to the DevSecOpsDad KQL Toolbox series!** In the last entry (KQL Toolbox #2), we zoomed in on log source cost drivers—using `_IsBillable` and `_BilledSize` to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: 👉 [KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
 
 ![](/assets/img/KQL%20Toolbox/3/Toolbox3.png)
 
-## This week, we’re building directly on that foundation...
+## Welcome back to KQL Toolbox 👋
+**Welcome back to the DevSecOpsDad KQL Toolbox series!** In the last entry (KQL Toolbox #2), we zoomed in on log source cost drivers—using `_IsBillable` and `_BilledSize` to identify which tables, severities, and Event IDs were burning the most money in Microsoft Sentinel. If you missed that one, you can read it here: [🔗 KQL Tip of the Week #2 — Identify Your Top Talkers by Cost](INSERT HERE)
+
+**👉 This week, we’re building directly on that foundation...**
 Because once you know which **log sources** and which **Event IDs** are the _most expensive_, the very next question becomes:
 > “Okay… but which Event ID fires the most often, and which accounts are responsible for generating it?”
 
