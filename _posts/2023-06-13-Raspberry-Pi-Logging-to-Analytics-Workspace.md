@@ -166,6 +166,27 @@ The syslog table (syslog_cl) is populating too &#128071;
 
 <br/><br/>
 
+# Thanks for Reading!
+ &#128161; Want to go deeper into these techniques, get full end-to-end blueprints, scripts, and best practices? Everything you’ve seen here — and much more — is in my new book. Grab your copy now 👉 [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/0HNQ4qJ).  I hope this was a much fun reading as it was writing! <br/> <br/> - Ian D. 
+Hanley • DevSecOps Dad
+
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📘 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
+<br/>
+<br/>
+
 # Resources:
 - [FluentD Cloud Data Logging (Raspberry Pi)](https://docs.fluentd.org/v/0.12/articles/raspberrypi-cloud-data-logger)
 - [FluentD configuration file syntax](https://docs.fluentd.org/v/0.12/configuration/config-file)
