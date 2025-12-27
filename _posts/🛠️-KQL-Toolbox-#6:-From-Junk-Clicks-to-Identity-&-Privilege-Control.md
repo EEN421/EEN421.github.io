@@ -1,10 +1,10 @@
-# 🔍 **KQL Toolbox #6 — From Junk Clicks to Identity & Privilege Control**
+# 🛠️ **KQL Toolbox #6 — From Junk Clicks to Identity & Privilege Control**
 
 Last week in **KQL Toolbox #5**, we went full threat-hunter mode — tracking phishing and malware campaigns across domains, senders, and payload patterns.
 
 But here’s the uncomfortable truth:
 
-✅ **Detection is only half the battle.**  
+🔍 **Detection is only half the battle.**  
 The other half is what happens *after* the message lands — when a human clicks, credentials get tested, sessions get established, and privileged access lights up.
 
 So in this installment, we pivot from **threat hunting → real-world risk outcomes**, using KQL as our flashlight:
