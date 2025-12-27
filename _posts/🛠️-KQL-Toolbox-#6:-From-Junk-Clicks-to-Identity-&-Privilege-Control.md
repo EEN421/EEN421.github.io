@@ -619,15 +619,15 @@ KQL Toolbox #6 is about **proving impact** — and building guardrails where att
 
 If you only take one thing from this post, take this:
 
-> **Your best detections don’t live in dashboards — they live in workflows.**
+> **⚡Your best detections don’t live in dashboards — they live in workflows.**
 
 So don’t just run these queries once.  
 Turn them into baselines, alerts, workbooks, and review cadences your team can execute every day.
 
 And if you’re wondering where we go next in KQL Toolbox #7… 👀  
-We’ll keep building on this same storyline: **identity + access + real attacker paths** — with more pivot-ready queries you can use to move from “signal” → “story” → “response.”
+We’ll keep building on this same storyline: **identity + access + real attacker paths** — with more pivot-ready queries you can use to move from _“signal” → “story” → “response.”_
 
-Now go forth and make your logs behave. 🥷🐱🔥
+**Now go forth and make your logs behave 🥷🐱🔥**
 
 ![](/assets/img/KQL%20Toolbox/6/KQL6-close.png)
 
