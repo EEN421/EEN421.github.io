@@ -790,13 +790,20 @@ Why this is an improvement:
 
 <br/><br/>
 
-# 🧠 Final Thoughts:
+# 🧠 Final Thoughts
 
-By now, you should have a repeatable way to answer one of the most important operational questions in Microsoft Sentinel: _“What changed — and does it matter?”_
+By now, you’ve built a repeatable way to answer one of the most important operational questions in Microsoft Sentinel: _**What changed — and does it actually matter?**_
 
-With a simple delta-based approach, you can move beyond staring at raw ingest numbers and start focusing on meaningful shifts — the ones that explain cost spikes, uncover misconfigurations, and surface the right places to dig deeper. Whether you’re troubleshooting an unexpected bill increase, validating the impact of tuning changes, or preparing for a QBR, this kind of analysis gives you clarity fast.
+Using a simple delta-based approach, you can stop staring at raw ingest numbers and start zeroing in on **meaningful shifts** — the kind that explain sudden cost spikes, reveal quiet misconfigurations, or point you directly to where deeper investigation is warranted. Whether you’re responding to an unexpected bill, validating the impact of tuning changes, or prepping data for a QBR, _this analysis gives you clarity fast — and confidence_ in your next move.
 
-As always, this query isn’t meant to live in isolation. It works best when paired with the earlier entries in the KQL Toolbox — using volume and cost deltas to triage, then drilling down into specific tables, Event IDs, accounts, or devices to understand the root cause.
+And just like the rest of the KQL Toolbox, this query shines brightest when it’s part of a system.
+Use deltas to triage, then pivot back to tables, Event IDs, users, or devices to _uncover the **root cause** — not just the **symptom**._
+
+Once you’ve answered what changed, the natural next question is even more critical: _Is this change **dangerous? 🚨**_
+
+In **KQL Toolbox #5**, we shift gears from cost and volume to threat hunting — using KQL to track phishing and malware activity, identify repeat offenders, spotlight targeted users, and surface campaigns hiding in your email telemetry. It’s where log optimization meets real-world defense. 🛡️📧
+
+### 👉 Stay curious, stay precise, and keep turning raw data into decisive action. 😼🥷📊
 
 <br/><br/>
 

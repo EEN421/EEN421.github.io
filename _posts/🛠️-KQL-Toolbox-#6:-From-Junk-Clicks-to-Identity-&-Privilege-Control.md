@@ -664,7 +664,7 @@ If you only take one thing from this post, take this:
 So don’t just run these queries once.  
 Turn them into baselines, alerts, workbooks, and review cadences your team can execute every day.
 
-**Now go forth and make your logs behave 🥷🐱🔥**
+### **Now go forth and make your logs behave 🥷🐱🔥**
 
 ![](/assets/img/KQL%20Toolbox/6/KQL6-close.png)
 

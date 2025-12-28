@@ -784,7 +784,8 @@ _“What changed?” 📈⚠️_
 You’ll learn how to spot sudden deltas in log volume and cost, catch misconfigurations early, and surface the exact data sources responsible for unexpected spikes — _before they blow up your budget or your alert queue. 🤑_
 
 <br/>
-👉 Stay curious, stay efficient, and keep your signals intentional, actionable, and under control. 😼🥷🔊
+
+### 👉 Stay curious, stay efficient, and keep your signals intentional, actionable, and under control. 😼🥷🔊
 
 <br/><br/>
 
