@@ -587,8 +587,8 @@ Here’s your homework for this week:
    * “Are these logs **worth** what we’re paying for them?”
 3. For at least one of those tables:
 
-   * If it’s `CommonSecurityLog`, run Query 2.
-   * If it’s `SecurityEvent`, run Query 3.
+   * If it’s `CommonSecurityLog`, **run Query 2.**
+   * If it’s `SecurityEvent`, **run Query 3.**
    * Identify **one concrete optimization** (filter, transformation, tier change, or reduced retention).
 4. Document the change + impact:
 
@@ -634,6 +634,7 @@ At this point, you’re no longer guessing where your Sentinel money is going �
 - [⚡ Top 10 Log Sources with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Log%20Sources%20with%20Cost%20(Enhanced).kql)
 - [⚡ Top 10 CommonSecurityLogs by Severity Level with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20CommonSecurityLogs%20by%20Severity%20Level%20with%20Cost%20(Enhanced).kql)
 - [⚡ Top 10 Security Events with Cost (Enhanced)](https://github.com/EEN421/KQL-Queries/blob/Main/Top%2010%20Security%20Events%20with%20Cost%20(Enhanced).kql)
+- [💲 Official Microsoft Sentinel pricing page](https://www.microsoft.com/en-us/security/pricing/microsoft-sentinel/?msockid=2ae8ebcef0f5615a2c3bfed2f1326064)
 - [📚 Standard columns in Azure Monitor log records](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-standard-columns)
 - [📚 Plan costs and understand pricing and billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
 - [📚 Analyze usage in Log Analytics workspace](https://docs.azure.cn/en-us/azure-monitor/logs/analyze-usage)
