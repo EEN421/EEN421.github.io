@@ -159,7 +159,7 @@ Common examples you’ll often see:
 
 <br/><br/>
 
-## 🎯 How to Use the Results
+## 🤔 How to Use the Results
 
 Once you identify your top EventIDs, you can:
 - Investigate why they’re so noisy
@@ -208,7 +208,7 @@ SecurityEvent                     // <--Define the table to query
 
 ## 🔧 Line-by-Line Breakdown
 
-### 1️⃣ SecurityEvent
+### 1️⃣ `SecurityEvent`
 
 This selects the SecurityEvent table, which contains Windows Security Log data collected from systems such as domain controllers, file servers, and workstations.
 
@@ -228,7 +228,7 @@ By isolating a single EventID:
 
 <br/>
 
-### 3️⃣ summarize count() by Account
+### 3️⃣ `summarize count() by Account`
 
 This groups all 4663 events by Account and counts how many times each account triggered the event. <br/>
 The result highlights:
@@ -240,7 +240,7 @@ The result highlights:
 
 <br/>
 
-### 4️⃣ render columnchart
+### 4️⃣ `render columnchart`
 
 This renders the summarized results as a column chart, making high-volume accounts immediately visible, like...
 - Each column represents an account
@@ -279,6 +279,8 @@ If one account is way above the rest, that could be:
 - A high-traffic service account you expected
 - A misconfigured script
 - A potential security issue worth investigating
+
+<br/>
 
 ## ⚔️ Steps to Operationalize
 - Feed the top Event ID from Query #1 into this query.
@@ -322,6 +324,8 @@ Feed results into:
 
 Avoid:
 - Alerting directly on “top talker accounts” without context.
+
+<br/>
 
 ## 🛡️ Framework Mapping
 
@@ -762,18 +766,25 @@ _**💪 This approach avoids all four.**_
 <br/><br/>
 
 # 🎁 Wrap-Up & Final Thoughts
-Two simple queries. One powerful insight loop:
-- Find the loudest Event ID
-- See which accounts or devices are driving it
-- Adjust collection, alerting, or investigation focus accordingly
+
+Two focused queries. One powerful feedback loop:
+- Identify the loudest Event ID
+- Pinpoint the accounts or devices generating it
+- Tune collection, alerting, or investigations with intent — not guesswork
 
 > _**Cost visibility** tells you where your **money goes. 💸** Noise analysis tells you where your **attention should go 👀**._
 
-When you combine both, you build a **leaner, clearer, more effective SOC.**
+When you bring those together, _you stop reacting to volume and start engineering a **leaner, clearer, more effective SOC** — one that prioritizes signal over chaos._
+
+But here’s the next evolution: _knowing what’s loud is only half the battle._
+
+In **KQL Toolbox #4**, we take the next step and ask the question every SOC eventually faces:
+_“What changed?” 📈⚠️_
+
+You’ll learn how to spot sudden deltas in log volume and cost, catch misconfigurations early, and surface the exact data sources responsible for unexpected spikes — _before they blow up your budget or your alert queue. 🤑_
 
 <br/>
-
-### 👉 Stay curious, stay efficient, and keep those logs both loud and useful. 📊🔍💪
+👉 Stay curious, stay efficient, and keep your signals intentional, actionable, and under control. 😼🥷🔊
 
 <br/><br/>
 
