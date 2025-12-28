@@ -601,7 +601,16 @@ Run this exercise across a few months and you’ll not only **cut costs**, you�
 <br/><br/>
 
 # 🧠 Closing Thoughts
-At this point, you’re no longer guessing where your Sentinel money is going — you’ve got receipts. You know which tables are loud, which severities are bloated, and which Windows Event IDs are quietly eating your budget every single day. That alone puts you ahead of most SOCs. But there’s still one missing piece: knowing exactly which individual events, users, and systems are generating that noise — and why. ⚔️
+At this point, you’re no longer guessing where your Sentinel budget disappears — you’ve got hard evidence. You can see which tables are screaming, which severities are over-collecting, and which data sources are quietly siphoning dollars day after day. That visibility alone puts you ahead of most SOCs still flying blind.
+
+But here’s the reality check: tables don’t create noise — specific events do.
+And events don’t log themselves.
+
+In the next installment of KQL Toolbox, we zoom all the way in — down to the exact Event IDs, accounts, and systems responsible for the bloat. You’ll move from “this table is expensive” to “this event, on this host, by this user, is the problem.” 🔍🔥
+
+That’s where cost optimization turns into control, and logging hygiene becomes an engineering discipline — not a guessing game.
+
+Stay sharp. The receipts are about to get very specific. 😼⚔️
 
 <br/><br/>
 
