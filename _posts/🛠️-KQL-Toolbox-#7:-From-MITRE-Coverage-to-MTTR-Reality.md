@@ -108,7 +108,7 @@ Great for dashboards and “what are we fighting?” visuals.
 
 <br/>
 
-![](/assets/img/KQL%20Toolbox/7/kql7-piechart.png.png)
+![](/assets/img/KQL%20Toolbox/7/kql7-piechart.png)
 
 <br/><br/>
 
@@ -158,7 +158,7 @@ Renames the column for clean dashboards/exports.
 
 <br/>
 
-## Tuning upgrades (especially important here)
+## 🎚️ Tuning upgrades (especially important here)
 
 ### 1.) Trim and standardize technique strings
 `| extend technique = trim(" ", tostring(technique))`
