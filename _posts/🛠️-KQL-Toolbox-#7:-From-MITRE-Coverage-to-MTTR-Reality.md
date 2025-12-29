@@ -1,5 +1,9 @@
 # KQL Toolbox #7 — 🎯 MITRE Coverage → ⏱️ MTTR Reality
 
+![](/assets/img/KQL%20Toolbox/7/KQL7.png)
+
+## Welcome back to KQL Toolbox 👋
+
 In KQL Toolbox #6, we followed attacks past delivery and into their most dangerous phase — human action and identity impact. We tracked what happens when users click, when adversaries attempt interactive access, when directory objects change, and when privilege is activated.
 
 At that point, you’re no longer talking about abstract threats — _you’re watching real attacker behavior unfold inside your environment._
