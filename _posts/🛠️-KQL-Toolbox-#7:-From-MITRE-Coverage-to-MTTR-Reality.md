@@ -549,6 +549,149 @@ That’s the jump from SOC activity to SOC performance.
 <br/>
 <br/>
 
+# 👉 Are we actually keeping up?
+If “Opened” stays above “Closed,” you don’t have a SOC… you have a security debt factory.
+
+What to look for:
+- Healthy: Closed line meets or exceeds Opened most days (or catches up quickly after spikes).
+- Unhealthy: Opened consistently above Closed → backlog growth.
+- False confidence trap: MTTR improves but Opened outpaces Closed (you’re closing easy stuff fast while hard stuff piles up).
+
+## Turn “❌ Slow” into an action list
+
+When the chart shows backlog growth:
+- Pivot by Severity (is the backlog all Medium? Or are Highs stacking?)
+- Pivot by MITRE tactic/technique (which behaviors are generating most incident volume?)
+- Pivot by Product / Source (Defender for Endpoint vs Cloud Apps vs Identity — what’s feeding the beast?)
+
+Fix the cause:
+- Too many duplicates → tune analytics / suppression
+- Too many benigns → tighten entity mapping + thresholds
+- Too many “real” incidents → detection coverage is fine, response automation/playbooks aren’t
+
+```kql
+SecurityIncident
+| summarize OpenedIncidents = countif(Status == "New"), ClosedIncidents = countif(Status == "Closed") by bin(TimeGenerated, 1d)
+| render timechart
+```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-mttrCHART.png)
+
+<br/>
+
+## Line-by-Line Breakdown — Daily Incident Open vs Close Velocity
+
+This query answers a deceptively simple but operationally critical question: _Are we opening incidents faster than we’re closing them?_
+
+Let’s break it down line by line 👇
+
+        SecurityIncident
+
+This is your source table in Microsoft Sentinel.
+
+It contains one row per incident, including:
+- Creation time
+- Current status (New, Active, Closed)
+- Severity
+- Owner
+- MITRE context (when mapped)
+
+Everything that follows is scoped to incident lifecycle telemetry, not raw alerts.
+
+<br/>
+
+        | summarize
+
+This summarize is where the math happens. Instead of inspecting individual incidents, we’re aggregating them to answer a trend question:
+- How many incidents are opening vs closing over time?
+
+<br/>
+
+        OpenedIncidents = countif(Status == "New"),
+
+This creates a calculated column called OpenedIncidents. `countif()` counts rows only when the condition is true. Here, we’re counting incidents whose Status is "New."
+
+💡 Why this matters:
+This represents incoming SOC workload — alerts that escalated into incidents and just landed on your team’s desk.
+
+If this number spikes and stays high… your SOC is under pressure.
+
+<br/>
+
+        ClosedIncidents = countif(Status == "Closed")
+
+This creates a second calculated column: ClosedIncidents; Same idea, different condition... Counts incidents that have reached a terminal state
+
+💡 Why this matters:
+This is your throughput — proof that analysts are resolving, not just triaging.
+
+A healthy SOC closes incidents at or above the rate they open.
+
+<br/>
+
+        by bin(TimeGenerated, 1d)
+
+This is the time-bucketing logic.
+
+`bin(TimeGenerated, 1d)` groups incidents into daily buckets and each row in the result represents one day.
+
+💡 Why this matters:
+SOC performance is about trendlines, not point-in-time snapshots.
+
+Daily granularity is perfect for:
+- Shift analysis
+- Week-over-week improvement
+- Executive dashboards
+
+<br/>
+
+        | render timechart
+
+This turns raw numbers into instant visual truth 📈
+- X-axis: Time (by day)
+- Y-axis: Count of incidents
+
+Two lines:
+- Opened incidents
+- Closed incidents
+
+💡 Why this matters:
+Executives don’t read tables — they read shapes.
+
+This chart immediately shows:
+- Backlog growth
+- Burn-down efficiency
+- Whether MTTR improvements are actually working
+
+<br/>
+
+### 🎯 What This Query Really Tells You
+
+At a glance, this chart answers:
+- Are we keeping up with incident volume?
+- Are process changes reducing backlog?
+- Did a new detection rule overwhelm the SOC?
+- Is MTTR improvement translating into closure velocity?
+- This is where MITRE coverage meets operational reality.
+
+<br/>
+
+### 🔧 Why This Belongs in KQL Toolbox
+
+This query is a bridge metric:
+- From detections → incidents
+- From alerts → outcomes
+- From “we have signals” → “we have control”
+
+It pairs perfectly with:
+- MTTR by severity
+- MITRE tactic frequency
+- Analyst workload distribution
+
+<br/><br/>
+
 # 🧩 Putting it together: “MITRE → MTTR” SOC storyline
 - Tactics tell you the phase of enemy behavior you’re seeing most
 - Techniques tell you the specific behaviors to harden detections/playbooks for
