@@ -406,21 +406,145 @@ What it means: Sorts results by severity label ascending.
 
 ✅ Tip: If your severities aren’t naturally ordered (e.g., “High/Medium/Low/Informational”), you might later add a custom sort key.
 
-<br/><br/>
-
-## ⚡ Operationalization playbook
-- Set targets (example): High < 240 min, Medium < 1440 min, Low < 4320 min — pick what matches your staffing reality.
-- Force multiplier: tie MTTR improvements directly to:
-  - automation (Logic Apps / SOAR),
-  - enrichment (entity mapping, device/user context),
-  - alert quality tuning (reduce false positives),
-  - and playbook maturity (tiered triage runbooks).
-
-Use it in retros: every month, review top technique + slowest MTTR severity and decide what to fix.
-
 <br/>
 
 ![](/assets/img/KQL%20Toolbox/7/kql7-MTTR.png)
+
+<br/><br/>
+
+## ⚡ Operationalization playbook: Turning MTTR from a Metric into Muscle
+
+This query is where metrics stop being vanity charts and start driving real operational change. Here’s how to wire it into your SOC so ❌ Slow doesn’t just sit there judging you.
+
+### 📊 1. Workbook Placement (Make MTTR Impossible to Ignore)
+
+Where this belongs:
+- Microsoft Sentinel → Workbooks
+- Create or extend a workbook called:
+    - “SOC Performance & Detection Reality”
+    - Or “MITRE Coverage → MTTR Reality” (chef’s kiss for execs)
+
+Recommended layout:
+- Top row — KPI tiles
+- Overall MTTR (minutes)
+- % of incidents classified ❌ Slow
+- % change vs previous 30 / 90 days
+- Middle — Severity MTTR table (this query)
+- Severity
+- Median Time to Resolve
+- MTTR Classification (✅ / ⚠️ / ❌)
+- Bottom — Trend chart
+- Median MTTR by severity over time (weekly bins)
+
+> 💡 DevSecOpsDad tip: Color-code the MTTR Classification column. Humans respond faster to color than numbers—just like alerts.
+
+<br/>
+
+## 🚨 2. Alerting Thresholds (When “Slow” Becomes a Signal)
+
+This query is not an alert by itself—but it feeds alerts beautifully.
+
+Suggested alert conditions (starting point):
+
+| Condition	                         | Trigger                                  |
+|------------------------------------|------------------------------------------|
+| ❌ Slow incidents (High/Critical)  | MedianTTR > 180 min                      |
+| ⚠️ Medium trending worse	         | +20% MTTR increase week-over-week        |
+| SOC regression	                 | Overall MTTR increases 2 periods in a row |
+| Burnout indicator                  | Low severity MTTR creeping > 120 min
+
+How to implement:
+- Wrap this query into a Scheduled Analytics Rule
+- Evaluate daily or weekly (weekly is usually saner)
+- Fire alerts to:
+    - SOC Manager channel
+    - Incident response lead
+    - ServiceNow / Jira (if you’re fancy)
+
+#### 🧠 Key mindset shift:
+You’re not alerting on attacks—you’re alerting on operational failure.
+
+<br/>
+
+### 🛠️ 3. Turning ❌ Slow into an Action List (The Part That Actually Matters)
+
+A ❌ Slow classification is not a failure—it’s a diagnostic flag.
+
+When a severity shows ❌ Slow, immediately pivot with these follow-ups:
+
+#### 🔍 A. Is it a detection problem?
+
+Run:
+- MITRE coverage queries
+- Time-to-first-alert analysis
+- Duplicate / noisy incident checks
+
+Common finding:
+- “We detected it… but 90 minutes too late.”
+
+➡️ Action:
+- Improve analytics rules, correlation logic, or data source coverage.
+
+<br/>
+
+#### 🧑‍🤝‍🧑 B. Is it an ownership problem?
+
+Ask:
+- Who was assigned?
+- How long did assignment take?
+- Was escalation manual?
+
+➡️ Action:
+- Auto-assign by severity
+- Enforce SLA timers
+- Add Logic Apps / automation rules
+
+#### 🔁 C. Is it a workflow problem?
+
+Look for:
+- Reopened incidents
+- Excessive comments
+- Long “waiting” gaps
+
+➡️ Action:
+- Create playbooks for top 5 slow scenarios
+- Add decision trees to runbooks
+- Remove approval bottlenecks
+
+<br/>
+
+#### 👥 D. Is it a people problem?
+
+Yes, sometimes it is—and that’s okay.
+
+➡️ Action:
+- Targeted training (not generic)
+- Shadow reviews on slow incidents
+- Rotate analysts off burnout lanes
+
+### 🎯 4. The Real Win: MTTR as a Feedback Loop
+
+When operationalized correctly, this query becomes:
+- A weekly SOC standup slide
+- A monthly maturity metric
+- A before/after proof point for leadership
+- A budget justification engine (tools + headcount)
+
+You’re no longer saying:
+- “We have alerts.”
+
+You’re saying:
+- “We detect what matters, respond faster each quarter, and can prove it.”
+
+That’s the jump from SOC activity to SOC performance.
+
+<br/>
+
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-playbook.png)
+
 
 <br/>
 <br/>
@@ -453,9 +577,6 @@ That’s a clean maturity arc: coverage → precision → performance.
 ## CMMC / NIST 800-171 (conceptual alignment)
 - Incident handling and response performance expectations map naturally to measuring and improving time-to-resolve, especially when you can show severity-based prioritization.
 
-<br/>
-
-![](/assets/img/KQL%20Toolbox/7/kql7-playbook.png)
 
 <br/><br/>
 
