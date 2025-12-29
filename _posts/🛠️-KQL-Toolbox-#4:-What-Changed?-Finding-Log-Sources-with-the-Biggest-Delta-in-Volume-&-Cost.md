@@ -694,7 +694,7 @@ This is a strong candidate for cost guardrails...
 
 <br/>
 
-### 🚧 Operational Guardrails You Can Add (Highly Recommended)
+### 🚧 Operational Guardrails 
 - Maintain a short allowlist of expected deltas (patch windows, migrations).
 - Require a “before/after” snapshot:
 - run Query #1/#2 before tuning
@@ -714,9 +714,9 @@ This is a strong candidate for cost guardrails...
 
 ### 🎚️ Adjust the knobs
 - Don’t forget to tailor the query to your environment:
-- Change the window sizes (7/30, 30/60, 90/90)
-- Update the Sentinel price per GB for your region
-- Increase or decrease the top N results based on scale
+    - Change the window sizes (7/30, 30/60, 90/90)
+    - Update the Sentinel price per GB for your region
+    - Increase or decrease the top N results based on scale
 
 <br/>
 
@@ -768,9 +768,9 @@ Why this is an improvement:
 - It preserves mathematical correctness
 - It avoids overstating growth with an artificial percentage
 - It allows dashboards, exports, and stakeholders to:
-- Sort cleanly on actual percent changes
-- Filter or highlight new sources separately
-- Avoid misinterpreting the number as real growth
+    - Sort cleanly on actual percent changes
+    - Filter or highlight new sources separately
+    - Avoid misinterpreting the number as real growth
 
 <br/>
 

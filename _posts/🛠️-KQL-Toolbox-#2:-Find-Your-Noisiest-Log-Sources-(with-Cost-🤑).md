@@ -64,7 +64,7 @@ These are your **per-row cost knobs**. Instead of just counting events, you can 
 First, let’s answer the high-level question: _“Which **tables** (log sources) are costing us the most over the last 30 days❔”_
 
 ```kql
-// Query 1
+// KQL Toolbox #2 - Query 1
 // Top 10 log sources (tables) by total cost
 
 let PricePerGB = 5.16;   // <-- Replace with your region's actual Sentinel price per GB
@@ -167,7 +167,7 @@ But not all firewall events are equal:
 This query uses `_IsBillable` and `_BilledSize` **directly on the table** to show which **severity levels** (and products) within `CommonSecurityLog` are costing you the most.
 
 ```kql
-// KQL of the Week #2 - Query 2
+// KQL Toolbox #2 - Query 2
 // Top 10 CommonSecurityLog severity levels by cost
 
 let PricePerGB = 5.16;   // <-- Match this to the same rate you used in Query 1
@@ -272,7 +272,7 @@ Now let’s turn that same idea on another noisy classic:
 We’ll use `_IsBillable` and `_BilledSize` again to find which **Event IDs** are contributing the most to cost.
 
 ```kql
-// KQL of the Week #2 - Query 3
+// KQL Toolbox #2 - Query 3
 // Top 10 SecurityEvent Event IDs by cost
 
 let PricePerGB = 5.16;   // <-- Same price knob as before
@@ -328,9 +328,9 @@ When you combine this with **detections you actually care about**, you can be ru
 <br/>
 
 ## 🛡️ Framework Mapping:
-- NIST CSF DE.DP-4 (Event detection) – Identifies anomalous activities via event patterns; here with cost relevance.
-- NIST CSF PR.IP-3 – Secure configurations informed by usage and impact.
-- CIS Control 8 (Audit Log Management) – Ensures audit event logs are used effectively for both security and cost governance.
+- **NIST CSF DE.DP-4 (Event detection)** – Identifies anomalous activities via event patterns; here with cost relevance.
+- **NIST CSF PR.IP-3** – Secure configurations informed by usage and impact.
+- **CIS Control 8 (Audit Log Management)** – Ensures audit event logs are used effectively for both security and cost governance.
 
 <br/><br/>
 

@@ -109,23 +109,23 @@ That’s a human-risk signal and a great leading indicator for phishing exposure
 ## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
-- AT-2 Awareness Training (target training based on actual risky actions)
-- SI-4 System Monitoring (monitor suspicious user interaction)
-- IR-4 Incident Handling (clicks can trigger investigation)
+- **AT-2** Awareness Training (target training based on actual risky actions)
+- **SI-4** System Monitoring (monitor suspicious user interaction)
+- **IR-4** Incident Handling (clicks can trigger investigation)
 
 <br/>
 
 **CMMC 2.0**
-- AT.L2-3.2.1 / AT.L2-3.2.2 (security awareness + role-based training)
-- IR.L2-3.6.1 / IR.L2-3.6.2 (incident handling triggers)
-- AU.L2-3.3.1 (audit evidence)
+- **AT.L2-3.2.1 / AT.L2-3.2.2** (security awareness + role-based training)
+- **IR.L2-3.6.1 / IR.L2-3.6.2** (incident handling triggers)
+- **AU.L2-3.3.1** (audit evidence)
 
 <br/>
 
 **CIS v8**
-- Control 14 Security Awareness
-- Control 9 Email & Browser Protections
-- Control 8 Audit Log Management
+- **Control 14** Security Awareness
+- **Control 9** Email & Browser Protections
+- **Control 8** Audit Log Management
 
 <br/>
 
@@ -212,8 +212,11 @@ Keeps only the most important columns and reorders them for analyst-friendly out
 - Who got deleted (TargetUserName)
 - Where it happened (Computer)
 
-What it tells you
-- Which identities are being deleted, and who is doing it.
+<br/>
+
+What it tells you: _Which identities are being deleted, and who is doing it._
+
+<br/>
 
 This supports:
 - change control validation
@@ -226,21 +229,24 @@ This supports:
 ## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
-- AC-2 Account management
-- AU-2 / AU-3 / AU-6 audit event definition, content, and review
+- **AC-2** Account management
+- **AU-2 / AU-3 / AU-6** audit event definition, content, and review
 
 <br/> 
 
 **CMMC 2.0**
-- AC.L2-3.1.1 / AC.L2-3.1.2 access control enforcement
-- AU.L2-3.3.1 / AU.L2-3.3.3 audit log review
+- **AC.L2-3.1.1 / AC.L2-3.1.2** access control enforcement
+- **AU.L2-3.3.1 / AU.L2-3.3.3** audit log review
 
 <br/>
 
 **CIS v8**
-- Control 5 Account Management
-- Control 8 Audit Log Management
-- Steps to Operationalize
+- **Control 5** Account Management
+- **Control 8** Audit Log Management
+
+<br/>
+
+## ⚔️ Steps to Operationalize
 - Alert in near-real-time (last 1h/24h) for account deletions.
 
 <br/>
@@ -291,9 +297,7 @@ AuditLogs
 
 ### `AuditLogs`
 
-Queries Entra ID (Azure AD) audit logs ingested to Sentinel / Log Analytics.
-
-This is where identity governance actions show up: role changes, app consent, group changes, etc.
+Queries Entra ID (Azure AD) audit logs ingested to Sentinel / Log Analytics. This is where identity governance actions show up: _role changes, app consent, group changes, etc._
 
 <br/>
 
@@ -301,7 +305,7 @@ This is where identity governance actions show up: role changes, app consent, gr
 
 Narrows to role-related events.
 
-✅ Why it matters: keeps your query clean and fast.
+✅ Why it matters: _keeps your query clean and fast._
 
 <br/>
 
@@ -309,37 +313,34 @@ Narrows to role-related events.
 
 Filters specifically to the audit event emitted when a user completes a PIM role activation.
 
-✅ Translation: “Who elevated to admin… right now?”
+✅ Translation: _“Who elevated to admin… **right now?**”_
 
 <br/>
 
 ### `| extend Actor = tostring(parse_json(InitiatedBy).user.displayName)`
 
-Parses the JSON blob inside InitiatedBy.
+- Parses the JSON blob inside InitiatedBy.
+- Extracts the initiating user’s display name.
 
-Extracts the initiating user’s display name.
+✅ Why it matters: _AuditLogs are nested JSON; parsing is how you get clean columns._
 
-✅ Why it matters: AuditLogs are nested JSON; parsing is how you get clean columns.
+<br/>
 
 ### `| extend IP = tostring(parse_json(InitiatedBy).user.ipAddress)`
 
 Pulls the initiator’s IP address.
 
 ✅ Why it matters:
-
-verify corporate vs external IP
-
-detect risky geo/IP anomalies
-
-correlate with suspicious sign-ins
+- verify corporate vs external IP
+- detect risky geo/IP anomalies
+- correlate with suspicious sign-ins
 
 <br/>
 
 ### `| extend Role = tostring(parse_json(TargetResources)[0].displayName)`
 
-Extracts the role that was activated (the “target resource”).
-
-Uses index [0] because TargetResources is an array.
+- Extracts the role that was activated (the “target resource”).
+- Uses index [0] because TargetResources is an array.
 
 ✅ Why it matters: Now you can build a “Top Activated Roles” and baseline your privileged access patterns.
 
@@ -357,33 +358,31 @@ Outputs exactly what an auditor and a SOC analyst both care about.
 
 ✅ “Who, what, when, where.”
 
-What it tells you
+What it tells you: _Who is elevating privileges via PIM, what role they activated, and where they came from._
 
-Who is elevating privileges via PIM, what role they activated, and where they came from.
-
-This is your strongest “least privilege is real” evidence.
+This is your strongest _“least privilege is real”_ evidence.
 
 <br/>
 
 ## 🛡️ Regulatory & Framework Mapping
 
 **NIST 800-53**
-- AC-2 Account management (privileged assignment activity)
-- AC-6 Least privilege (JIT elevation)
-- AU-2 / AU-6 audit and review
+- **AC-2** Account management (privileged assignment activity)
+- **AC-6** Least privilege (JIT elevation)
+- **AU-2 / AU-6** audit and review
 
 <br/>
 
 **CMMC 2.0**
-- AC.L2-3.1.5 least privilege
-- AC.L2-3.1.6 privileged account management
-- AU.L2-3.3.1 / AU.L2-3.3.3 auditing and review
+- **AC.L2-3.1.5** least privilege
+- **AC.L2-3.1.6** privileged account management
+- **AU.L2-3.3.1** / AU.L2-3.3.3 auditing and review
 
 <br/>
 
 **CIS v8**
-- Control 6 Access Control Management
-- Control 5 Account Management
+- **Control 6** Access Control Management
+- **Control 5** Account Management
 
 <br/>
 
@@ -474,10 +473,8 @@ Drops machine accounts.
 ### `| where Account !has "SYSTEM" and Account !endswith "$"`
 
 More noise reduction:
-
-removes SYSTEM activity
-
-removes typical computer-account naming patterns ($)
+- removes SYSTEM activity
+- removes typical computer-account naming patterns ($)
 
 ✅ Makes your results more SOC-useful by default.
 
@@ -498,14 +495,10 @@ If it’s a 4634/4778/4779 event → keep it, because those represent RDP sessio
 ### `| project ...`
 
 Keeps output tight and analyst-friendly:
-
-TimeGenerated — when it happened
-
-DomainController = Computer — rename Computer for clarity in this context
-
-Activity — readable description of the event
-
-User = coalesce(TargetUserName, Account) — selects the best available user field
+- `TimeGenerated` — when it happened
+- `DomainController = Computer` — rename Computer for clarity in this context
+- `Activity` — readable description of the event
+- `User = coalesce(TargetUserName, Account)` — selects the best available user field
 
 ✅ This makes it “drop into a workbook / incident note” clean.
 
@@ -528,23 +521,23 @@ This is excellent for:
 
 ## 🛡️ Regulatory & Framework Mapping (for both RDP queries)
 **NIST 800-53**
-- AU-2 / AU-6: access/session events are auditable and must be reviewed
-- AC-2 / AC-6: supports account management and least privilege oversight
-- SI-4: monitoring for suspicious access patterns
+- **AU-2 / AU-6:** access/session events are auditable and must be reviewed
+- **AC-2 / AC-6:** supports account management and least privilege oversight
+- **SI-4:** monitoring for suspicious access patterns
 
 <br/>
 
 **CMMC 2.0**
-- AC.L2-3.1.1 / AC.L2-3.1.2: control/monitor access to systems
-- AU.L2-3.3.1 / AU.L2-3.3.3: collect/review audit logs of access activity
-- IR.L2-3.6.1 (supporting evidence): session visibility helps incident handling
+- **AC.L2-3.1.1 / AC.L2-3.1.2:** control/monitor access to systems
+- **AU.L2-3.3.1 / AU.L2-3.3.3:** collect/review audit logs of access activity
+- **IR.L2-3.6.1 (supporting evidence):** session visibility helps incident handling
 
 <br/>
 
 **CIS Controls v8**
-- Control 6: Access Control Management
-- Control 8: Audit Log Management
-- Control 13 (supporting): Network Monitoring & Defense (RDP is a high-value vector)
+- **Control 6:** Access Control Management
+- **Control 8:** Audit Log Management
+- **Control 13** (supporting): Network Monitoring & Defense (RDP is a high-value vector)
 
 <br/>
 

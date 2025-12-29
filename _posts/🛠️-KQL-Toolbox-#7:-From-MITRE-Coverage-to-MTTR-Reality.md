@@ -91,13 +91,6 @@ Great for dashboards and “what are we fighting?” visuals.
 
 # Query 2 — Most common MITRE techniques observed (Top 10)
 
-## 🤔 Why this is useful to a SOC
-- Tactics tell you the phase of the attack. Techniques tell you the exact behavior (and often the exact telemetry you should be collecting).
-- This query helps you:
-- Measure real-world technique frequency (what’s actually firing)
-- Spot coverage gaps (if tactics show up but technique mapping is sparse)
-- Prioritize enrichment (technique-heavy detections should have playbooks + automation)
-
 ```kql
 SecurityAlert
 | where TimeGenerated > ago(90d)
@@ -108,6 +101,17 @@ SecurityAlert
 | top 10 by Count
 | project ["MITRE Technique"] = technique, Count
 ```
+
+<br/>
+
+## 🤔 Why this is useful to a SOC
+- Tactics tell you the phase of the attack. Techniques tell you the exact behavior (and often the exact telemetry you should be collecting).
+- This query helps you:
+- Measure real-world technique frequency (what’s actually firing)
+- Spot coverage gaps (if tactics show up but technique mapping is sparse)
+- Prioritize enrichment (technique-heavy detections should have playbooks + automation)
+
+<br/>
 
 ## 🕵️ Line-by-line breakdown
 
@@ -166,13 +170,6 @@ Purple-team alignment: pick one technique and run an emulation test; validate al
 
 # Query 3 — Median Time to Resolve (MTTR) by severity (Closed incidents)
 
-## 🤔 Why this is useful to a SOC
-
-- This is the pivot from visibility to operational outcomes; Median time-to-resolve is more honest than average (a few “forever incidents” won’t skew it as hard).
-  - By severity shows whether your process matches your priorities.
-
-It’s the beginning of true SOC performance measurement (and a great way to justify headcount, automation, tuning, and MSSP expectations).
-
 ```kql
 SecurityIncident
 | where TimeGenerated > ago(90d)
@@ -183,8 +180,15 @@ SecurityIncident
 ```
 
 <br/>
-<br/>
 
+## 🤔 Why this is useful to a SOC
+
+- This is the pivot from visibility to operational outcomes; Median time-to-resolve is more honest than average (a few “forever incidents” won’t skew it as hard).
+  - By severity shows whether your process matches your priorities.
+
+It’s the beginning of true SOC performance measurement (and a great way to justify headcount, automation, tuning, and MSSP expectations).
+
+<br/>
 
 ## 🕵️ Line-by-line breakdown
 
