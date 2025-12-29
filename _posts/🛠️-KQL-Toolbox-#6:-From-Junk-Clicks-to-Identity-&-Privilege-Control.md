@@ -649,22 +649,26 @@ Instant visualization.
 
 # 🧠 Final Thoughts — Why These Signals Matter
 
-KQL Toolbox #5 was all about **finding threats**.
+KQL Toolbox #5 was about _finding threats._
+KQL Toolbox #6 is about _proving impact — and putting guardrails where attackers actually win:_
+- the moment a user clicks
+- the moment an adversary attempts interactive access
+- the moment identity is modified
+- and the moment privilege is activated
 
-KQL Toolbox #6 is about **proving impact** — and building guardrails where attackers actually win:
-- the moment a user **clicks**
-- the moment an adversary attempts **interactive access**
-- the moment identity gets **tampered with**
-- and the moment privilege gets **activated**
+These are the inflection points where incidents stop being theoretical and start becoming real.
 
 If you only take one thing from this post, take this:
 
-> **⚡Your best detections don’t live in dashboards — they live in workflows.**
+> ⚡ Your best detections don’t live in dashboards — they live in workflows.
 
-So don’t just run these queries once.  
-Turn them into baselines, alerts, workbooks, and review cadences your team can execute every day.
+So don’t just run these queries once and move on. _Turn them into baselines, alerts, workbooks, and review cadences your SOC can execute every day — not just during incidents._
 
-### **Now go forth and make your logs behave 🥷🐱🔥**
+Because visibility without action is just noise. And once you’ve connected clicks → identity → privilege, the next question becomes unavoidable: _Are your detections actually reducing response time — or just increasing coverage metrics? ⏱️📉_
+
+In **KQL Toolbox #7**, we step back and get brutally honest about outcomes — moving from MITRE coverage maps to MTTR reality. You’ll learn how to measure whether your detections are helping analysts respond faster, prioritize better, and close incidents sooner — not just check boxes.
+
+### Now go forth and make your logs behave. 🥷🐱🔥
 
 ![](/assets/img/KQL%20Toolbox/6/KQL6-close.png)
 
