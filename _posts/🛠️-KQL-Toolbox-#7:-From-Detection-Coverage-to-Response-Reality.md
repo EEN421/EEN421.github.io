@@ -1,4 +1,4 @@
-# KQL Toolbox #7 — 🎯 MITRE Coverage → ⏱️ MTTR Reality
+# 🛠️ KQL Toolbox #7: From Detection Coverage to Response Reality
 
 ![](/assets/img/KQL%20Toolbox/7/KQL7.png)
 
