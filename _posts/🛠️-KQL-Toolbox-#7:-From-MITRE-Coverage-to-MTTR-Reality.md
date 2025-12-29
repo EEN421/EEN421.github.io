@@ -1,10 +1,27 @@
 # KQL Toolbox #7 — 🎯 MITRE Coverage → ⏱️ MTTR Reality
 
-In KQL Toolbox #6 we tracked human-risk outcomes (junk clicks) and identity/privilege control signals (who changed what, who escalated). This week we zoom out and ask: _Are our detections aligned to real adversary behavior?_
+In KQL Toolbox #6, we followed attacks past delivery and into their most dangerous phase — human action and identity impact. We tracked what happens when users click, when adversaries attempt interactive access, when directory objects change, and when privilege is activated.
 
-And once something fires… _are we actually getting faster at resolving it?_
+At that point, you’re no longer talking about abstract threats — _you’re watching real attacker behavior unfold inside your environment._
 
-This is the bridge from “we have alerts” to “we have measurable operational performance.”
+So now comes the unavoidable next question: _**Are our detections actually aligned to how attackers operate — and are we getting faster at shutting them down?**_
+
+This is where many SOCs stall out... They collect alerts, map techniques, and celebrate coverage — but never stop to ask whether all that visibility is translating into **better response outcomes.**
+
+In this installment of KQL Toolbox, we zoom out just enough to connect the dots:
+- MITRE ATT&CK tells us what adversary behaviors are showing up most often
+- Mean Time to Resolution (MTTR) tells us whether the SOC can consistently respond fast enough when they do
+
+Together, they form the bridge from detection coverage to operational effectiveness.
+
+Because at the end of the day, the goal isn’t to say “we detect a lot of techniques.” The goal is to say _“when these behaviors occur, we resolve them faster — with confidence and consistency.”_
+
+That’s the shift this post is about:
+- from dashboards to discipline,
+- from coverage maps to closed incidents,
+- and from theoretical security to measurable defense.
+
+Let’s get into it. 😼🥷🛡️
 
 <br/>
 
@@ -290,8 +307,20 @@ That’s a clean maturity arc: coverage → precision → performance.
 
 <br/><br/>
 
-# 🧠 Closing Thoughts
-You can now say more than “we have detections;” You can say what adversary behavior is showing up most, what techniques deserve the next wave of tuning, and whether your SOC is actually getting faster at closing the loop. **That’s the difference between a dashboard and a defense program.**
+# 🧠 Final Thoughts — The Bigger Picture
+
+Over the course of this KQL Toolbox series, we didn’t just write queries — we built a repeatable SOC operating model.
+- We started by making telemetry understandable and accountable: _what you ingest, what it costs, what’s noisy, and what changed._
+- Then we shifted from volume to risk, from threats delivered to human behavior, identity impact, and privilege control.
+- And now, we’ve closed the loop by asking the only question that truly matters at scale: _Is all of this making us faster and better at defending the environment?_
+
+By connecting adversary behavior (MITRE) to response outcomes (MTTR), you move beyond dashboards and coverage claims into something far more powerful — measurable operational maturity. You can explain not just what you see, but why it matters, what you prioritize, and how your SOC is improving over time.
+
+> _That’s the difference between running KQL queries and running a defense program._
+
+If there’s one takeaway from the entire KQL Toolbox series, it’s this: _Logs are only potential energy. Discipline, workflows, and measurement are what turn them into results._
+
+Now take these patterns, adapt them to your environment, and keep pushing your SOC up the maturity ladder — one intentional query at a time. 😼🥷🔎
 
 <br/><br/>
 
