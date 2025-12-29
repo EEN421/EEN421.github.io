@@ -208,12 +208,38 @@ Purple-team alignment: pick one technique and run an emulation test; validate al
 # Query 3 — Median Time to Resolve (MTTR) by severity (Closed incidents)
 
 ```kql
-SecurityIncident
-| where TimeGenerated > ago(90d)
-| where Status == "Closed"
-| summarize MedianTTR = percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity
-| project Severity, ["Median Time to Resolve (minutes)"] = MedianTTR
+// Get total MTTR
+let TotalMTTRTable = 
+    SecurityIncident
+    | where TimeGenerated > ago(90d)
+    | where Status == "Closed"
+    | summarize TotalMTTR = round(avg(datetime_diff('minute', ClosedTime, CreatedTime)), 2)
+    | extend Key = 1;  // Adding a key for joining
+// Calculate MTTR per severity
+let SeverityMTTR = 
+    SecurityIncident
+    | where TimeGenerated > ago(90d)
+    | where Status == "Closed"
+    | summarize MedianTTR = percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity
+    | extend Key = 1;  // Adding a key for joining
+// Join both results to calculate percentage
+SeverityMTTR
+| join kind=inner (TotalMTTRTable) on Key
+| extend PercentageOfTotal = strcat(iff(TotalMTTR > 0, round((MedianTTR * 100.0) / TotalMTTR, 2), 0.0), '%')  // Ensure consistent data type
+| extend MTTR_Severity = case(
+                             MedianTTR <= 60,
+                             '✅ Fast', 
+                             MedianTTR <= 180,
+                             '⚠️ Medium', 
+                             '❌ Slow'
+                         )
+| project
+    Severity, 
+    ["Median Time to Resolve (minutes)"] = MedianTTR, 
+    ["% of Total MTTR"] = PercentageOfTotal, 
+    ["MTTR Classification"] = MTTR_Severity
 | order by Severity asc
+
 ```
 
 <br/>
@@ -233,60 +259,154 @@ It’s the beginning of true SOC performance measurement (and a great way to jus
 
 ## 🕵️ Line-by-line breakdown
 
-### `SecurityIncident`
-Uses incidents (the “case management” object). Good — this reflects actual SOC workflow, not raw alert spam.
+### ✅ Block 1: Calculate your overall MTTR benchmark
 
-<br/>
-
-### `Status == "Closed"`
-Ensures you’re measuring completed work.
-
-<br/>
-
-### `datetime_diff('minute', ClosedTime, CreatedTime)`
-Duration from creation to closure (your “time to resolve” definition).
-
-<br/>
-
-### `percentile(..., 50)`
-Median. Solid choice for ops metrics.
-
-<br/>
-
-### `order by Severity asc`
-Careful: ordering here depends on how severity values sort in your workspace (string vs numeric). You may want an explicit sort order.
-
-<br/>
-
-## 🎚️ Tuning upgrades (make MTTR actionable)
-### 1.) Use an explicit severity sort
 ```kql
-| extend SevRank = case(Severity =~ "High", 1, Severity =~ "Medium", 2, Severity =~ "Low", 3, 99)
-| order by SevRank asc
-| project-away SevRank
+// Get total MTTR
+let TotalMTTRTable = 
 ```
 
-<br/>
+What it means: You’re creating a reusable “mini table” (a variable) named TotalMTTRTable that will hold your overall MTTR baseline.
 
-### 2.) Exclude auto-closed / benign closure reasons (if you have them)
-If your environment auto-closes incidents, MTTR can look “amazing” but meaningless. Filter those out if fields exist in your tenant.
-
-<br/>
-
-### 3.) Add volume context
-**Median** alone hides “we closed 2 incidents fast.” Add counts:
-`| summarize Incidents=count(), MedianTTR=percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity`
+    SecurityIncident
 
 <br/>
 
-### 4.) Add trend over time (weekly median)
-This is where MTTR turns into a KPI:
+What it means: Pulls from the SecurityIncident table (Microsoft Sentinel incidents).
+
+    | where TimeGenerated > ago(90d)
+
+<br/>
+
+What it means: Limits analysis to the last 90 days so you’re measuring recent operational behavior, not ancient history.
+
+    | where Status == "Closed"
+
+
+<br/>
+
+What it means: Only closed incidents count for MTTR (because we need a “start + finish”). Open incidents don’t have a real resolve time yet.
+
+    | summarize TotalMTTR = round(avg(datetime_diff('minute', ClosedTime, CreatedTime)), 2)
+
+
+<br/>
+
+What it means:
+- `datetime_diff('minute', ClosedTime, CreatedTime)` = “minutes between created and closed”
+- `avg(...)` = overall average resolution time
+- `round(..., 2)` = keep it neat for reporting
+
+⚠️ Note: This is actually an average TTR baseline (not median). That’s fine—just know averages are more sensitive to outliers (one nasty incident can skew it).
+
+<br/>
+
+    | extend Key = 1;  // Adding a key for joining
+
+- What it means: Adds a constant Key column so you can join this 1-row table to another table later.
+- Why it exists: KQL joins need a shared column—this is the “duct tape key.”
+
+<br/><br/>
+
+### ✅ Block 2: MTTR by severity (your “where it hurts” view)
+
 ```kql
-| summarize MedianTTR=percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by bin(TimeGenerated, 7d), Severity
-| order by TimeGenerated asc
+// Calculate MTTR per severity
+let SeverityMTTR = 
 ```
 
+What it means: Another variable table—this one will store resolve time by severity.
+
 <br/>
+
+    SecurityIncident
+    | where TimeGenerated > ago(90d)
+    | where Status == "Closed"
+
+
+What it means: Same scope rules as your baseline so comparisons are apples-to-apples.
+
+<br/>
+
+    | summarize MedianTTR = percentile(datetime_diff('minute', ClosedTime, CreatedTime), 50) by Severity
+
+What it means:
+- Computes resolve minutes per incident
+- Uses `percentile(..., 50)` = median (the “typical” experience, less impacted by outliers)
+- Groups by Severity so you get one row per severity level
+
+✅ Why median matters: Median tells you what most cases feel like. Average tells you what your worst days feel like.
+
+<br/>
+
+    | extend Key = 1;  // Adding a key for joining
+
+What it means: Same join trick—every severity row gets Key=1.
+
+<br/><br/>
+
+## ✅ Block 3: Join + compute “% of total MTTR” + classify speed
+
+```kql
+// Join both results to calculate percentage
+SeverityMTTR
+| join kind=inner (TotalMTTRTable) on Key
+```
+
+What it means: Adds the TotalMTTR baseline column onto every Severity row.
+Result: Each severity row now knows the “overall MTTR number” too.
+
+<br/>
+
+    | extend PercentageOfTotal = strcat(iff(TotalMTTR > 0, round((MedianTTR * 100.0) / TotalMTTR, 2), 0.0), '%')  // Ensure consistent data type
+
+What it means: Creates a percent value showing how big each severity’s median is relative to total average MTTR.
+- `MedianTTR * 100.0 / TotalMTTR` = percent
+- `iff(TotalMTTR > 0, ..., 0.0)` prevents divide-by-zero
+- `strcat(..., '%')` turns it into a display-friendly string like 82.14%
+
+⚠️ Reality check: This “% of total MTTR” is a relative indicator, not a true “contribution” metric (because you’re comparing median severity time to average overall time). Still useful as a quick “severity vs baseline” lens.
+
+<br/>
+
+```kql
+| extend MTTR_Severity = case(
+                             MedianTTR <= 60,
+                             '✅ Fast', 
+                             MedianTTR <= 180,
+                             '⚠️ Medium', 
+                             '❌ Slow'
+                         )
+```
+
+What it means: Operational classification:
+- ≤ 60 min: ✅ Fast
+- ≤ 180 min: ⚠️ Medium
+- 180 min: ❌ Slow
+
+Why it matters: This turns a metric into a decision signal—something you can throw into a dashboard and immediately spot where process / staffing / automation needs help.
+
+<br/>
+
+```kql
+| project
+    Severity, 
+    ["Median Time to Resolve (minutes)"] = MedianTTR, 
+    ["% of Total MTTR"] = PercentageOfTotal, 
+    ["MTTR Classification"] = MTTR_Severity
+```
+
+What it means: Clean, report-ready output with friendly column names for workbooks / exec screenshots.
+
+<br/>
+
+    | order by Severity asc
+
+What it means: Sorts results by severity label ascending.
+
+✅ Tip: If your severities aren’t naturally ordered (e.g., “High/Medium/Low/Informational”), you might later add a custom sort key.
+
+<br/><br/>
 
 ## ⚡ Operationalization playbook
 - Set targets (example): High < 240 min, Medium < 1440 min, Low < 4320 min — pick what matches your staffing reality.
