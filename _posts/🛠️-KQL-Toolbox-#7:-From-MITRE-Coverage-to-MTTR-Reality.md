@@ -42,6 +42,10 @@ SecurityAlert
 
 <br/>
 
+![](/assets/img/KQL%20Toolbox/7/kql7-piechart2.png)
+
+<br/>
+
 ## 🤔 Why this is useful to a SOC
 - **Quick “threat posture snapshot”:** Are you mostly dealing with Initial Access + Execution, or is Lateral Movement + Persistence dominating?
 - **Detection engineering priority:** If a tactic is constantly showing up, it’s either (a) reality, (b) a detection bias, or (c) noise you need to tune.
@@ -101,7 +105,9 @@ Great for dashboards and “what are we fighting?” visuals.
 ### 3.) Filter out known noisy analytics rules (if one rule dominates your chart)
 `| where AlertName !in ("Rule A", "Rule B")`
 
-## Operationalization playbook
+<br/>
+
+## ⚡ Operationalization playbook
 - Weekly SOC review: “Top tactics” becomes a recurring agenda item.
 - Detection backlog: If Defense Evasion is high, prioritize telemetry gaps + hardening detections there.
 - Hunt pivot: Pick the #1 tactic and run a themed hunting sprint (one week = one tactic).
@@ -124,6 +130,10 @@ SecurityAlert
 | top 10 by Count
 | project ["MITRE Technique"] = technique, Count
 ```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-techniques.png)
 
 <br/>
 
@@ -180,7 +190,7 @@ Techniques are most valuable when you can immediately ask: which hosts, which us
 
 <br/>
 
-## ⚔️ Operationalization playbook
+## ⚡ Operationalization playbook
 Technique “Top 10” becomes your playbook roadmap: ensure top techniques have:
 - enrichment (entity mapping),
 - triage checklist,
@@ -205,6 +215,10 @@ SecurityIncident
 | project Severity, ["Median Time to Resolve (minutes)"] = MedianTTR
 | order by Severity asc
 ```
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/MTTR.png)
 
 <br/>
 
@@ -274,7 +288,7 @@ This is where MTTR turns into a KPI:
 
 <br/>
 
-## ⚔️ Operationalization playbook
+## ⚡ Operationalization playbook
 - Set targets (example): High < 240 min, Medium < 1440 min, Low < 4320 min — pick what matches your staffing reality.
 - Force multiplier: tie MTTR improvements directly to:
   - automation (Logic Apps / SOAR),
@@ -301,7 +315,7 @@ That’s a clean maturity arc: coverage → precision → performance.
 <br/>
 <br/>
 
-# 🛡️ Framework mapping (high-level but practical)
+# 🛡️ Framework mapping
 
 ## NIST CSF 2.0
 - DE.CM (Detect: Continuous Monitoring): tactics/techniques observed are direct signals of what detection content is producing and what behaviors are present.
