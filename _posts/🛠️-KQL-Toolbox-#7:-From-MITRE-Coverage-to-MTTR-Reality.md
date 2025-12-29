@@ -23,6 +23,8 @@ That’s the shift this post is about:
 
 Let’s get into it. 😼🥷🛡️
 
+![](/assets/img/KQL%20Toolbox/7/kql7-opening.png)
+
 <br/>
 
 # Query 1 — Most common MITRE tactics observed (Top 10 + pie chart)
@@ -104,6 +106,10 @@ Great for dashboards and “what are we fighting?” visuals.
 - Detection backlog: If Defense Evasion is high, prioritize telemetry gaps + hardening detections there.
 - Hunt pivot: Pick the #1 tactic and run a themed hunting sprint (one week = one tactic).
 
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-piechart.png.png)
+
 <br/><br/>
 
 # Query 2 — Most common MITRE techniques observed (Top 10)
@@ -182,6 +188,10 @@ Technique “Top 10” becomes your playbook roadmap: ensure top techniques have
 - and detection tuning ownership.
 
 Purple-team alignment: pick one technique and run an emulation test; validate alerts and measure time-to-close.
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-top10MITRE.png)
 
 <br/><br/>
 
@@ -275,6 +285,10 @@ This is where MTTR turns into a KPI:
 Use it in retros: every month, review top technique + slowest MTTR severity and decide what to fix.
 
 <br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-MTTR.png)
+
+<br/>
 <br/>
 
 # 🧩 Putting it together: “MITRE → MTTR” SOC storyline
@@ -305,6 +319,10 @@ That’s a clean maturity arc: coverage → precision → performance.
 ## CMMC / NIST 800-171 (conceptual alignment)
 - Incident handling and response performance expectations map naturally to measuring and improving time-to-resolve, especially when you can show severity-based prioritization.
 
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-playbook.png)
+
 <br/><br/>
 
 # 🧠 Final Thoughts — The Bigger Picture
@@ -321,6 +339,10 @@ By connecting adversary behavior (MITRE) to response outcomes (MTTR), you move b
 If there’s one takeaway from the entire KQL Toolbox series, it’s this: _Logs are only potential energy. Discipline, workflows, and measurement are what turn them into results._
 
 Now take these patterns, adapt them to your environment, and keep pushing your SOC up the maturity ladder — one intentional query at a time. 😼🥷🔎
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/7/kql7-closing.png)
 
 <br/><br/>
 
