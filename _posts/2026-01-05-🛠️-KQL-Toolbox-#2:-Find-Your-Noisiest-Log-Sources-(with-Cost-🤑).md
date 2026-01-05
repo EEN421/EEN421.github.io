@@ -1,7 +1,4 @@
 ## Welcome back to KQL Toolbox 👋
-
-![](/assets/img/KQL%20Toolbox/2/Toolbox2.png)
-
 In the last **KQL Toolbox**, we zoomed out and looked at **billable ingest trends over time**—how many GiB per day you’re ingesting, and roughly how much that’s costing you in Microsoft Sentinel.
 
 This time, we’re zooming **in**.
@@ -10,7 +7,7 @@ Because once you can say *“We’re ingesting 150 GiB/day and spending ~$645/da
 
 > **“Okay… *which* log sources are burning that money?”**
 
-
+![](/assets/img/KQL%20Toolbox/2/Toolbox2.png)
 
 That’s what today’s query set is all about:
 **Top 10 log sources by cost**, and then **drilling into two usual suspects**:
