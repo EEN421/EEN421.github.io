@@ -85,7 +85,7 @@ Usage
 * **`Usage`**
 
   * The **ingest ledger** table—one row per meter usage entry.
-  * This is what we used heavily in Week #1 for trend analysis.
+  * This is what we used heavily in [KQL Toolbox #1](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) for trend analysis.
 
 * **`| where TimeGenerated > ago(30d)`**
 
@@ -427,7 +427,7 @@ SecurityEvent
 
 Here’s how I use these three queries in the real world:
 
-1. **Start with Week #1 query:**
+1. **Start with [KQL Toolbox #1](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/), [query #1](https://github.com/EEN421/KQL-Queries/blob/Main/90%20Day%20Billable%20Ingest%20Volume.kql):**
 
    * Spot **trends** and **spikes** in overall billable ingest.
 
@@ -562,7 +562,7 @@ A few important notes before you start deploying chainsaws to your logs:
 
 * **Trend first, then optimize.**
 
-  * That’s why last week was all about **trends,** so today is about **top talkers**.
+  * That’s why [KQL Toolbox #1](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/) was all about **trends;** so KQL Toolbox 2 can transition into **top talkers**.
   * Use both to tell a complete story:
 
     * “Here’s how our ingest/cost is trending.”
