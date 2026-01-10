@@ -10,13 +10,19 @@ That wasn’t an accident. It was a limitation of the format.
 
 So I turned them into books.
 
-Today, I’m officially announcing the release of two companion volumes:
+### 🧰 PowerShell Toolbox
+[![PowerShell Toolbox Cover](/assets/img/books/powershell-toolbox-cover.jpg)](AMAZON_POWER_SHELL_LINK)
 
-**PowerShell Toolbox**  
-*A practitioner’s guide to building audit-ready, defensible automation*
+*A practitioner’s guide to building audit-ready, defensible automation*  
+[Get your copy on Amazon →](AMAZON_POWER_SHELL_LINK)
 
-**KQL Toolbox**  
-*A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel*
+---
+
+### 🛠️ KQL Toolbox 
+[![KQL Toolbox Cover](/assets/img/books/kql-toolbox-cover.jpg)](AMAZON_KQL_LINK)
+
+*A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel*  
+[Get your copy on Amazon →](AMAZON_KQL_LINK)
 
 Both books are grounded in the same real-world problems explored in the blog posts on this site — but reorganized, expanded, and connected into something the blogs intentionally avoid becoming:
 
@@ -286,3 +292,7 @@ and want to make fewer decisions they’ll have to explain later.
 
 That’s not a pricing distinction.  
 It’s an **architectural one**.
+
+If this way of thinking resonates — both books are available now:
+- **PowerShell Toolbox** — [Get your copy on Amazon](LINK)
+- **KQL Toolbox** — [Get your copy on Amazon](LINK)
