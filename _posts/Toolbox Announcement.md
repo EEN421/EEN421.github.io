@@ -1,54 +1,53 @@
 # 🛠️ KQL Toolbox & 🧰 PowerShell Toolbox Are Live on Amazon
 ## Why these books exist — even if you’ve read every blog post 🤔
 
-After publishing the **PowerShell Toolbox** and **KQL Toolbox** blog series, one thing became obvious:
+After publishing the **PowerShell Toolbox** and **KQL Toolbox** blog series, one thing became obvious: The individual tools were useful —  **but the system they formed was hard to see.** That wasn’t an accident. It was a limitation of the format. So I turned them into books. <br/>
 
-The individual tools were useful —  
-**but the system they formed was hard to see.**
+<div style="
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  margin: 3em 0;
+">
 
-That wasn’t an accident. It was a limitation of the format.
+  <!-- PowerShell Toolbox -->
+  <div style="text-align:center; max-width:260px;">
+    <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="/assets/img/KQL Toolbox/PowerShell-Cover.png"
+        alt="PowerShell Toolbox: A Practitioner's Guide to Building Audit-Ready, Defensible Automation"
+        style="max-width:235px; box-shadow:0 10px 28px rgba(0,0,0,.35); border-radius:8px;"
+      />
+    </a>
+    <p style="margin-top:0.6em; font-size:0.9em; opacity:0.85;">
+      🧰 <strong>PowerShell Toolbox</strong><br/>
+      A Practitioner’s Guide to Building Audit-Ready, Defensible Automation.
+    </p>
+  </div>
 
-So I turned them into books. <br/>
+  <!-- KQL Toolbox -->
+  <div style="text-align:center; max-width:260px;">
+    <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="/assets/img/KQL Toolbox/KQL Toolbox Cover1.png"
+        alt="KQL Toolbox: A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel"
+        style="max-width:235px; box-shadow:0 10px 28px rgba(0,0,0,.35); border-radius:8px;"
+      />
+    </a>
+    <p style="margin-top:0.6em; font-size:0.9em; opacity:0.85;">
+      🛠️ <strong>KQL Toolbox</strong><br/>
+      A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel.
+    </p>
+  </div>
 
-<div style="text-align:center; margin: 2.5em 0;">
-  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
-    <img 
-      src="/assets/img/KQL Toolbox/PowerShell-Cover.png"
-      alt="PowerShell Toolbox: A Practitioner's Guide to Building Audit-Ready, Defensible Automation"
-      style="max-width: 235px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
-    />
-  </a>
-  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
-    🧰 <strong>PowerShell Toolbox</strong><br/>
-    A Practitioner's Guide to Building Audit-Ready, Defensible Automation.
-  </p>
-</div>
-
----
-
-<div style="text-align:center; margin: 2.5em 0;">
-  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
-    <img 
-      src="/assets/img/KQL Toolbox/KQL Toolbox Cover1.png"
-      alt="KQL Toolbox: A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel"
-      style="max-width: 235px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
-    />
-  </a>
-  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
-    🛠️ <strong>KQL Toolbox</strong><br/>
-    A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel.
-  </p>
 </div>
 
 <br/>
 
-Both books are grounded in the same real-world problems explored in the blog posts on this site — but reorganized, expanded, and connected into something the blogs intentionally avoid becoming:
+Both books are grounded in the same real-world problems explored in the blog posts on this site — but reorganized, expanded, and connected into something the blogs intentionally avoid becoming: **A coherent operating model.**
 
-**A coherent operating model.**
-
-If you’ve followed the blog series closely, a fair question is:
-
-*Why publish books at all — and why read them if you’ve already read every article?*
+If you’ve followed the blog series closely, a fair question is: *Why publish books at all — and why read them if you’ve already read every article?*
 
 **This post answers that directly.**
 
@@ -314,5 +313,6 @@ If this way of thinking resonates — both books are available now:
 - **PowerShell Toolbox** — [Get your copy on Amazon](LINK)
 - **KQL Toolbox** — [Get your copy on Amazon](LINK)
 
-![DevSecOpsDad](/assets/img/KQL Toolbox/5/KQL5-6.png)
+<br/>
 
+![DevSecOpsDad](/assets/img/KQL%20Toolbox/5/KQL5-6.png)
