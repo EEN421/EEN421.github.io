@@ -51,7 +51,7 @@ If you’ve followed the blog series closely, a fair question is: *Why publish b
 
 **This post answers that directly.**
 
----
+<br/><br/>
 
 ## The Blogs Provide _Tools_ 👉 The Books Provide _Systems_
 
@@ -70,7 +70,7 @@ They fail because those tools never get connected into a **deliberate system**.
 
 The books exist to provide that system.
 
----
+<br/><br/>
 
 ## What the Blogs Don’t Try to Do (On Purpose)
 
@@ -88,7 +88,7 @@ So I didn’t.
 
 The books exist to carry that weight instead.
 
----
+<br/><br/>
 
 ## Two Toolboxes, One Shared Philosophy
 
@@ -98,7 +98,7 @@ Although the **PowerShell Toolbox** and **KQL Toolbox** focus on different layer
 
 Each book organizes its tools into an intentional progression — something the blogs intentionally avoid.
 
----
+<br/><br/>
 
 ## KQL Toolbox: From Data to Discipline
 
@@ -124,7 +124,7 @@ The **book** connects those answers into a **Sentinel operating model**.
 The blogs give you queries.  
 The book teaches you how to **run Sentinel intentionally**.
 
----
+<br/><br/>
 
 ## PowerShell Toolbox: From Automation to Evidence
 
@@ -152,7 +152,7 @@ The **book** reframes those scripts as **security artifacts**, not just automati
 The blogs help you *run scripts*.  
 The book helps you *stand behind them*.
 
----
+<br/><br/>
 
 ## What the EPUBs Contain That the Blogs Do Not
 
@@ -190,7 +190,7 @@ These failure modes — where **correct execution produces incorrect outcomes** 
 
 That synthesis exists only in the books.
 
----
+<br/><br/>
 
 ### 1. A Deliberate End-to-End Operational Arc
 
@@ -207,7 +207,7 @@ The EPUBs introduce **explicit sequencing**:
 You don’t just learn *how* to run a script or query —  
 you learn **where it belongs in the lifecycle**.
 
----
+<br/>
 
 ### 2. Book-Only Transitions and Synthesis
 
@@ -220,7 +220,7 @@ Between chapters, the EPUBs contain connective narrative that does not exist on 
 
 This is where most of the *thinking* happens — and it only exists in the books.
 
----
+<br/>
 
 ### 3. Failure Modes and Long-Term Consequences
 
@@ -235,7 +235,7 @@ The EPUBs cover:
 
 This content is intentionally excluded from the blogs to keep them usable.
 
----
+<br/>
 
 ### 4. Decision Guidance, Not Just Execution
 
@@ -250,7 +250,7 @@ The books answer:
 
 That guidance exists only in the EPUBs.
 
----
+<br/>
 
 ### 5. Scripts and Queries Treated as Evidence
 
@@ -266,7 +266,7 @@ The EPUBs define:
 - What constitutes drift  
 - What “defensible” looks like in audits or incident reviews  
 
----
+<br/>
 
 ### 6. A Stable, Authoritative Reference
 
@@ -281,7 +281,7 @@ The EPUBs provide:
 Blogs evolve.  
 **The books define.**
 
----
+<br/>
 
 ### 7. Explicit Audience Assumptions
 
@@ -295,7 +295,7 @@ The books can be honest.
 
 That honesty is book-only.
 
----
+<br/><br/>
 
 ## The Real Difference
 
