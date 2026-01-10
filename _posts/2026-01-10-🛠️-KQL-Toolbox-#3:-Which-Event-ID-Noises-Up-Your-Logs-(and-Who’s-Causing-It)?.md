@@ -424,10 +424,6 @@ Auto-populate incidents with:
 
 <br/><br/>
 
-[**🔗  KQL Toolbox #3 — Which Devices are Spamming this EventID?**](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Devices%20are%20Throwing%20this%20EventID%3F.kql)
-
-<br/><br/>
-
 # ✅ What these queries are good for
 
 Taken together, the four queries in KQL Toolbox #3 form a progressive noise-hunting workflow — moving from “what’s loud?” to “who and what is causing it?”.
