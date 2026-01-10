@@ -314,4 +314,5 @@ If this way of thinking resonates — both books are available now:
 - **PowerShell Toolbox** — [Get your copy on Amazon](LINK)
 - **KQL Toolbox** — [Get your copy on Amazon](LINK)
 
-![DevSecOpsDad](assets/img/KQL Toolbox/5/KQL5-6.png) <br/>
+![DevSecOpsDad](/assets/img/KQL Toolbox/5/KQL5-6.png)
+
