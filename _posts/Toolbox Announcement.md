@@ -15,7 +15,7 @@ So I turned them into books. <br/>
     <img 
       src="/assets/img/KQL Toolbox/PowerShell-Cover.png"
       alt="PowerShell Toolbox: A Practitioner's Guide to Building Audit-Ready, Defensible Automation"
-      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+      style="max-width: 235px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
     />
   </a>
   <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
@@ -31,7 +31,7 @@ So I turned them into books. <br/>
     <img 
       src="/assets/img/KQL Toolbox/KQL Toolbox Cover1.png"
       alt="KQL Toolbox: A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel"
-      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+      style="max-width: 235px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
     />
   </a>
   <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
