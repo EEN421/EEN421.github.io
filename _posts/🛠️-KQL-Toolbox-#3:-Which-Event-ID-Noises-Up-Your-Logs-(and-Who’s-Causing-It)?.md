@@ -7,7 +7,7 @@ Because once you know which **log sources** and which **Event IDs** are the _mos
 
 This is where today’s KQL shines 🌞
 
-# 💡 KQL Toolbox #3: Which Event ID Noises Up Your Logs (and Who’s Causing It)?
+# 🛠️ KQL Toolbox #3: Which Event ID Noises Up Your Logs (and Who’s Causing It)?
 
 ![](/assets/img/KQL%20Toolbox/3/Toolbox3.png)
 
@@ -18,10 +18,6 @@ Instead of looking at cost, we shift focus to raw event frequency—a metric tha
 - Compare recent activity against a baseline.
 
 This gives you a clean, fast workflow for spotting noisy Event IDs, isolating misconfigured or anomalous accounts, and tightening both your detection logic and cost posture. With that, let’s jump into this week’s analysis...
-
-<br/>
-
-![](/assets/img/KQL%20Toolbox/3/DevSecSignal.png)
 
 <br/><br/>
 
@@ -36,6 +32,10 @@ These queries are perfect for your weekly cost-noise correlation checks, operati
 - [🔗 Which Event IDs Are Suddenly Acting Weird?](https://github.com/EEN421/KQL-Queries/blob/Main/Which%20Event%20IDs%20Are%20Suddenly%20Acting%20Weird%3F.kql)
 
 <br/> 
+
+![](/assets/img/KQL%20Toolbox/3/DevSecSignal.png)
+
+<br/>
 
 ## 🔍 Why This Matters
 
