@@ -8,21 +8,39 @@ The individual tools were useful —
 
 That wasn’t an accident. It was a limitation of the format.
 
-So I turned them into books.
+So I turned them into books. <br/>
 
-### 🧰 PowerShell Toolbox
-[![PowerShell Toolbox Cover](/assets/img/books/powershell-toolbox-cover.jpg)](AMAZON_POWER_SHELL_LINK)
-
-*A practitioner’s guide to building audit-ready, defensible automation*  
-[Get your copy on Amazon →](AMAZON_POWER_SHELL_LINK)
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/KQL Toolbox/PowerShell-Cover.png"
+      alt="PowerShell Toolbox: A Practitioner's Guide to Building Audit-Ready, Defensible Automation"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🧰 <strong>PowerShell Toolbox</strong><br/>
+    A Practitioner's Guide to Building Audit-Ready, Defensible Automation.
+  </p>
+</div>
 
 ---
 
-### 🛠️ KQL Toolbox 
-[![KQL Toolbox Cover](/assets/img/books/kql-toolbox-cover.jpg)](AMAZON_KQL_LINK)
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/KQL Toolbox/KQL Toolbox Cover1.png"
+      alt="KQL Toolbox: A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🛠️ <strong>KQL Toolbox</strong><br/>
+    A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel.
+  </p>
+</div>
 
-*A practitioner’s guide to cost, signal, and response discipline in Microsoft Sentinel*  
-[Get your copy on Amazon →](AMAZON_KQL_LINK)
+<br/>
 
 Both books are grounded in the same real-world problems explored in the blog posts on this site — but reorganized, expanded, and connected into something the blogs intentionally avoid becoming:
 
@@ -36,8 +54,7 @@ If you’ve followed the blog series closely, a fair question is:
 
 ---
 
-## The Blogs Provide Tools  
-## The Books Provide Systems
+## The Blogs Provide _Tools_ 👉 The Books Provide _Systems_
 
 The Toolbox blog posts are intentionally **modular**.
 
@@ -296,3 +313,5 @@ It’s an **architectural one**.
 If this way of thinking resonates — both books are available now:
 - **PowerShell Toolbox** — [Get your copy on Amazon](LINK)
 - **KQL Toolbox** — [Get your copy on Amazon](LINK)
+
+![DevSecOpsDad](assets/img/KQL Toolbox/5/KQL5-6.png) <br/>
