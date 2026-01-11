@@ -435,14 +435,18 @@ They’re particularly effective for: <br/><br/>
 
 <br/>
 
-**Sentinel cost triage** <br/>
+**Sentinel cost triage**
 - Once a noisy or expensive Event ID is identified, these queries help you pinpoint exactly where the volume is coming from, which is often just a handful of servers, services, or users driving disproportionate ingest cost.
+
+<br/>
 
 **Misconfiguration detection**
 - Consistent high-volume events (especially Event ID 4663) frequently reveal:
     - Overly broad auditing on hot file shares
     - Service or application accounts touching massive numbers of objects
     - GPO audit policies applied too widely across the environment
+
+<br/>
 
 **Safe tuning and scoping decisions**
 - By breaking noise down by `Event ID` → `device` → `account`, you gain the confidence needed to tune auditing, analytics rules, or data collection — _without blindly suppressing potentially valuable security signal._
