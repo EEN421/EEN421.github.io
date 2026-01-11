@@ -265,6 +265,7 @@ Once you identify the top accounts generating Event ID 4663, you can:
 <br/>
 
 For example:
+
 | Account		   			| Count		|
 |---------------------------|-----------|
 | domain\DevSecOpsDad	    | 12,350 	|
