@@ -1,4 +1,6 @@
+
 ## Welcome back to KQL Toolbox 👋
+
 In **KQL Toolbox #1**, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
 In **KQL Toolbox #2**, we identified which data sources were driving that cost.
 And in **KQL Toolbox #3**, we drilled all the way down to specific Event IDs, accounts, and devices generating noise.
@@ -22,21 +24,13 @@ And the best part?
 
 This allows you to _stop guessing, stop doom-scrolling charts, and **immediately zero in on what deserves investigation** first._
 
-<br/><br/>
-
-# KQL Toolbox #4: What Changed? Finding Log Sources with the Biggest Delta in Volume & Cost
-
-![](/assets/img/KQL%20Toolbox/4/Toolbox4.png)
-
 If you’re working in Azure Monitor Logs / Log Analytics or Microsoft Sentinel, tracking down why billable volume is changing is one of the most common (and most expensive) operational headaches. Whether it’s a cloud migration, a new app rollout, a misconfigured agent, or just normal growth — understanding what’s driving the delta is critical for budgeting, troubleshooting, and overall SOC hygiene.
 
 Today we’re going to unpack one of my favorite preventive analytics queries: _“Data Sources with Biggest Delta in Log Volume.”_ 💸
 
 ### _Let's break it down, put it to work, then crank it up a notch — **'cause this is DevSecOpsDad**. 😎_
 
-![](/assets/img/KQL%20Toolbox/4/BaselineCat.png)
-
-<br/><br/>
+![](/assets/img/KQL%20Toolbox/4/Toolbox4.png)
 
 ## 🕵️ What this query is trying to answer
 
@@ -49,6 +43,10 @@ It does this by:
 * doing a **full outer join** so new/discontinued sources still show up
 * calculating **absolute delta (GB)** and **percent delta (%)**
 * returning the **top 5 biggest absolute swings**
+
+<br/>
+
+![](/assets/img/KQL%20Toolbox/4/BaselineCat.png)
 
 <br/>
 
@@ -128,7 +126,7 @@ PriorData
 
 👉 Grab the Copy-Paste ready KQL from my Github library here:  **[🔗 Log_Sources_with_Greatest_Delta.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Log_Sources_with_Greatest_Delta.kql)**
 
-<br/><br/>
+<br/>
 
 ## 🔍 Line-by-line breakdown
 
