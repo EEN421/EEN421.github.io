@@ -647,6 +647,7 @@ Stay sharp. The receipts are about to get very specific. 😼⚔️
 - [📚 Analyze usage in Azure Monitor Logs – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/logs/analyze-usage)
 - [📚 StorageBlobLogs table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/storagebloblogs)
 - [📚 DeviceInfo table reference – Microsoft Learn](https://learn.microsoft.com/azure/azure-monitor/reference/tables/deviceinfo)
+- [😼 Legend of Defender Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
 
 <br/>
 

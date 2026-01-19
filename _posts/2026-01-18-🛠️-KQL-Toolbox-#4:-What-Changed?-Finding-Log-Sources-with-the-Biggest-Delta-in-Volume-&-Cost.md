@@ -1,9 +1,4 @@
-# KQL Toolbox #4: What Changed? Finding Log Sources with the Biggest Delta in Volume & Cost
-
-![](/assets/img/KQL%20Toolbox/4/Toolbox4.png)
-
 ## Welcome back to KQL Toolbox 👋
-
 In **KQL Toolbox #1**, we learned how to measure Microsoft Sentinel ingest and translate it into real dollars.
 In **KQL Toolbox #2**, we identified which data sources were driving that cost.
 And in **KQL Toolbox #3**, we drilled all the way down to specific Event IDs, accounts, and devices generating noise.
@@ -26,6 +21,12 @@ That’s where this week’s KQL comes in; Instead of ranking data sources by to
 And the best part?
 
 This allows you to _stop guessing, stop doom-scrolling charts, and **immediately zero in on what deserves investigation** first._
+
+<br/><br/>
+
+# KQL Toolbox #4: What Changed? Finding Log Sources with the Biggest Delta in Volume & Cost
+
+![](/assets/img/KQL%20Toolbox/4/Toolbox4.png)
 
 If you’re working in Azure Monitor Logs / Log Analytics or Microsoft Sentinel, tracking down why billable volume is changing is one of the most common (and most expensive) operational headaches. Whether it’s a cloud migration, a new app rollout, a misconfigured agent, or just normal growth — understanding what’s driving the delta is critical for budgeting, troubleshooting, and overall SOC hygiene.
 
@@ -832,10 +833,13 @@ In **KQL Toolbox #5**, we shift gears from cost and volume to threat hunting —
 
 # 🔗 Helpful Links & Resources
 - [🛠️ Kql Toolbox #1: Track & Price Your Microsoft Sentinel Ingest Costs](https://www.hanley.cloud/2025-12-14-KQL-Toolbox-1-Track-&-Price-Your-Microsoft-Sentinel-Ingest-Costs/)
+- [🛠️ Kql Toolbox #2: Find Your Noisiest Log Sources (with Cost 🤑)](https://www.hanley.cloud/2026-01-05-KQL-Toolbox-2-Find-Your-Noisiest-Log-Sources-(with-Cost-)/)
+- [🛠️ Kql Toolbox #3: Which Event Id Noises Up Your Logs (and Who’s Causing It)?](https://www.hanley.cloud/2026-01-10-KQL-Toolbox-3-Which-Event-ID-Noises-Up-Your-Logs-(and-Who-s-Causing-It)/)
 - [🔗 Log_Sources_with_Greatest_Delta.kql](https://github.com/EEN421/KQL-Queries/blob/Main/Log_Sources_with_Greatest_Delta.kql)
 - [🔗 Data Sources with Biggest Delta in Log Volume.kql](https://github.com/EEN421/KQL-Queries/blob/Main/QBRs/Data%20Sources%20with%20Biggest%20Delta%20in%20Log%20Volume.kql)
 - [💲 Official Sentinel Pricing Page](https://learn.microsoft.com/en-us/azure/sentinel/billing?utm_source=chatgpt.com&tabs=simplified%2Ccommitment-tiers)
 - [💰 Microsoft Billing](https://learn.microsoft.com/en-us/azure/sentinel/billing)
+- [😼 Legend of Defender Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
 
 <br/>
 
