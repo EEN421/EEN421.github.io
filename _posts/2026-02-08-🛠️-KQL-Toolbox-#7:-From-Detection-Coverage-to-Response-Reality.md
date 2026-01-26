@@ -1,16 +1,13 @@
-# 🛠️ KQL Toolbox #7: From Detection Coverage to Response Reality
+## Welcome back to KQL Toolbox 👋
+In KQL Toolbox #6, we followed attacks past delivery and into their most dangerous phase — human action and identity impact. We tracked what happens when users click, when adversaries attempt interactive access, when directory objects change, and when privilege is activated. At that point, you’re no longer talking about abstract threats — _you’re watching real attacker behavior unfold inside your environment._
+
+So now comes the unavoidable next question: _**Are our detections actually aligned to how attackers operate — and are we getting faster at shutting them down?**_ This is where many SOCs stall out... They collect alerts, map techniques, and celebrate coverage — but never stop to ask whether all that visibility is translating into **better response outcomes.**
+
+<br/>
 
 ![](/assets/img/KQL%20Toolbox/7/KQL7.png)
 
-## Welcome back to KQL Toolbox 👋
-
-In KQL Toolbox #6, we followed attacks past delivery and into their most dangerous phase — human action and identity impact. We tracked what happens when users click, when adversaries attempt interactive access, when directory objects change, and when privilege is activated.
-
-At that point, you’re no longer talking about abstract threats — _you’re watching real attacker behavior unfold inside your environment._
-
-So now comes the unavoidable next question: _**Are our detections actually aligned to how attackers operate — and are we getting faster at shutting them down?**_
-
-This is where many SOCs stall out... They collect alerts, map techniques, and celebrate coverage — but never stop to ask whether all that visibility is translating into **better response outcomes.**
+<br/>
 
 In this installment of KQL Toolbox, we zoom out just enough to connect the dots:
 - MITRE ATT&CK tells us what adversary behaviors are showing up most often
