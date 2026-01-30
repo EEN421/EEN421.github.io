@@ -2,14 +2,14 @@
 
 ## Why these books exist — even if you’ve read every blog post
 
-After publishing the **PowerShell Toolbox** and **KQL Toolbox** blog series, one thing became clear:
-
-The individual tools were useful — **but the system they formed was hard to see.**
+After publishing the **PowerShell Toolbox** and **KQL Toolbox** blog series, one thing became clear: _The individual tools were useful — **but the system they formed was hard to see.**_
 
 That wasn’t an accident.  
 It was a limitation of the blog format.
 
 So I turned them into books.
+
+<br/>
 
 <div style="
   display: flex;
@@ -25,7 +25,7 @@ So I turned them into books.
       <img 
         src="/assets/img/KQL Toolbox/PowerShell-Cover.png"
         alt="PowerShell Toolbox: Hands-On Automation for Auditing and Defense"
-        style="max-width:235px; box-shadow:0 10px 28px rgba(0,0,0,.35); border-radius:8px;"
+        style="max-width:215px; box-shadow:0 10px 28px rgba(0,0,0,.35); border-radius:8px;"
       />
     </a>
     <p style="margin-top:0.6em; font-size:0.9em; opacity:0.85;">
@@ -34,13 +34,15 @@ So I turned them into books.
     </p>
   </div>
 
+  <br/><br/>
+
   <!-- KQL Toolbox -->
   <div style="text-align:center; max-width:260px;">
     <a href="https://a.co/d/hZ1TVpO" target="_blank" rel="noopener noreferrer">
       <img 
         src="/assets/img/KQL Toolbox/KQL Toolbox Cover1.png"
         alt="KQL Toolbox: Turning Logs into Decisions in Microsoft Sentinel & Defender XDR"
-        style="max-width:235px; box-shadow:0 10px 28px rgba(0,0,0,.35); border-radius:8px;"
+        style="max-width:215px; box-shadow:0 10px 28px rgba(0,0,0,.35); border-radius:8px;"
       />
     </a>
     <p style="margin-top:0.6em; font-size:0.9em; opacity:0.85;">
@@ -50,6 +52,8 @@ So I turned them into books.
   </div>
 
 </div>
+
+<br/>
 
 Both books are grounded in the same real-world problems explored in the DevSecOpsDad blog — but reorganized, expanded, and connected into something the blogs intentionally avoid becoming:
 
@@ -305,6 +309,8 @@ It’s an **architectural one**.
 
 - **PowerShell Toolbox** — Hands-On Automation for Auditing and Defense  
   👉 [Get your copy on Amazon](https://a.co/d/ifIo6eT)
+
+<br/>
 
 - **KQL Toolbox** — Turning Logs into Decisions in Microsoft Sentinel & Defender XDR  
   👉 [Get your copy on Amazon](https://a.co/d/hZ1TVpO)
