@@ -747,7 +747,8 @@ Now take these patterns, adapt them to your environment, and keep pushing your S
 
 # 📚 Want to go deeper?
 
-My **Toolbox** books turn real Microsoft security telemetry into defensible operations:
+From logs and scripts to judgment and evidence — the DevSecOpsDad Toolbox shows how to operate Microsoft security platforms defensibly, not just effectively.
+
 
 <div style="text-align:center; margin: 2.5em 0;">
   <a href="https://a.co/d/hZ1TVpO" target="_blank" rel="noopener noreferrer">
@@ -773,7 +774,7 @@ My **Toolbox** books turn real Microsoft security telemetry into defensible oper
     />
   </a>
   <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
-    🧰 <strong>PowerShell Toolbox</strong> Hands-On Automation for Auditing and Defense
+    🧰 <strong>PowerShell Toolbox:</strong> Hands-On Automation for Auditing and Defense
   </p>
 </div>
 
