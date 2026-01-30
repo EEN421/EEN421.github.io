@@ -667,10 +667,39 @@ In **KQL Toolbox #7**, we step back and get brutally honest about outcomes — m
 
 <br/><br/>
 
-# 📚 Want to Go Deeper?
+# 📚 Want to go deeper?
 
-⚡ If you like this kind of **practical KQL + cost-tuning** content, keep an eye on the **DevSecOpsDad KQL Toolbox** series—and if you want the bigger picture across Defender, Sentinel, and Entra, my book *Ultimate Microsoft XDR for Full Spectrum Cyber Defense* goes even deeper with real-world examples, detections, and automation patterns.
-&#128591; Huge thanks to everyone who’s already picked up a copy — and if you’ve read it, a quick review on Amazon goes a long way!
+My **Toolbox** books turn real Microsoft security telemetry into defensible operations:
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/hZ1TVpO" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/KQL Toolbox Cover.jpg"
+      alt="KQL Toolbox: Turning Logs into Decisions in Microsoft Sentinel"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🛠️ <strong>KQL Toolbox:</strong> Turning Logs into Decisions in Microsoft Sentinel
+  </p>
+</div>
+
+<br/>
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/ifIo6eT" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/PowerShell-Cover.jpg"
+      alt="PowerShell Toolbox: Hands-On Automation for Auditing and Defense"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🧰 <strong>PowerShell Toolbox</strong> Hands-On Automation for Auditing and Defense
+  </p>
+</div>
+
+<br/>
 
 <div style="text-align:center; margin: 2.5em 0;">
   <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
@@ -681,7 +710,7 @@ In **KQL Toolbox #7**, we step back and get brutally honest about outcomes — m
     />
   </a>
   <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
-    📘 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    📖 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
     Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
   </p>
 </div>
