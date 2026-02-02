@@ -245,9 +245,6 @@ This supports:
 ## ⚔️ Steps to Operationalize
 - Alert in near-real-time (last 1h/24h) for account deletions.
 
-<br/>
-
-## ⚔️ Steps to Operationalize
 **Escalate immediately if:**
 - the deleted user was privileged
 - deletion occurred outside approved change window
