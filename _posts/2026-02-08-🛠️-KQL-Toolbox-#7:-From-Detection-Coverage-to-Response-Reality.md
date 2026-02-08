@@ -1,7 +1,4 @@
 ![](/assets/img/KQL%20Toolbox/7/KQL7.png)
-
-<br/>
-
 ## Welcome back to KQL Toolbox 👋
 So now comes the unavoidable next question: _**Are our detections actually aligned to how attackers operate — and are we getting faster at shutting them down?**_ This is where many SOCs stall out... They collect alerts, map techniques, and celebrate coverage — but never stop to ask whether all that visibility is translating into **better response outcomes.**
 
