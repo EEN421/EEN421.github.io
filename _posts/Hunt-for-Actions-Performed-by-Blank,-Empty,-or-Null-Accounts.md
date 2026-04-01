@@ -1,684 +1,343 @@
-# When “Who Did It” Stops Working
+## DevSecOpsDad Intro: What This Query Is *Really* About
 
-Most security programs assume one thing without ever saying it out loud:
+There’s a class of problems most environments quietly ignore:
 
-Every action in your environment can be tied back to a real identity.
+> **“Who did this?” → “We don’t know.”**
 
-That assumption breaks more often than people realize.
+Blank usernames. Missing UPNs. “Unknown.” “N/A.”
+And yet… actions still happened.
 
-Sometimes it’s sloppy telemetry.
-Sometimes it’s parser drift.
-Sometimes it’s system-level behavior that never mapped cleanly in the first place.
-And sometimes… it’s something you actually need to worry about.
+That’s not just messy telemetry—that’s **broken accountability**.
 
-But here’s the problem:
+This query is built to hunt one thing:
 
-👉 Most teams never go looking for it.
+> **Actions performed without a clear identity — and reconstruct who (or what) actually did them.**
 
-They hunt for malicious activity, not missing identity.
-They alert on bad behavior, not broken attribution.
+Not just in one place, either. This pulls across:
 
-And that’s a gap.
+* Entra ID sign-ins
+* Entra ID audit logs
+* Azure control plane
+* Defender for Endpoint (process + logon activity)
 
-Because the moment you lose the ability to answer “who did this?”, you’re no longer operating a security program — you’re operating a guessing engine.
+And then does the most important thing:
 
-This Is an Attribution Problem, Not Just a Detection Problem
+> **Normalizes the chaos into a decision-grade dataset.**
 
-In mature environments, detection isn’t just about what happened.
-It’s about:
+Let’s break it down. 
 
-Who did it
-From where
-Under what context
-With what level of confidence
+---
 
-If any of those fall apart — especially identity — your detections degrade fast.
+# 🧠 Step 1 — Define the Problem Space (Blank Identity Hunting)
 
-You can’t:
-
-enforce accountability
-build reliable detections
-trust your incident timelines
-or defend decisions in front of leadership
-
-And yet, most teams never explicitly measure this.
-
-What This Query Is Actually Doing
-
-This isn’t a “find bad stuff” query.
-
-It’s a “find where identity breaks down” query.
-
-Across:
-
-Entra sign-ins
-Entra audit logs
-Azure control plane activity
-Defender for Endpoint telemetry
-
-…it asks a very simple, very uncomfortable question:
-
-“Where are things happening in my environment without a clean, trustworthy identity attached?”
-
-Not nulls for the sake of nulls.
-Not noise for the sake of noise.
-
-Signal about where your security model loses attribution fidelity.
-
-Why This Matters More Than You Think
-
-If you’re running:
-
-an MDR practice
-a SOC
-or any kind of detection engineering function
-
-…this is where maturity shows up.
-
-Anyone can write a detection.
-
-Fewer teams can answer:
-
-“How confident are we in the identity behind the event?”
-
-And almost nobody builds that into their operating model.
-
-The Real Goal
-
-This isn’t about cleaning up logs.
-
-It’s about moving from:
-
-👉 “We saw something happen”
-to
-👉 “We know who did it, and we trust that answer”
-
-Because without that…
-
-You don’t have detection.
-You don’t have response.
-You don’t have accountability.
-
-You have ambiguity.
-
-## What this query is trying to do
-
-At a high level, the query is asking:
-
-**“Where in my environment are things happening under accounts that don’t resolve cleanly to an actual user or service identity?”** 
-
-That matters because blank or weird account values usually mean one of four things:
-
-* bad telemetry
-* parser / schema inconsistency
-* system-level activity that was not attributed cleanly
-* something genuinely suspicious that deserves a second look
-
-This is a **hunting query**, not a clean compliance report. Its purpose is to surface identity gaps and force you to inspect them. 
+Every section starts with the same core pattern:
 
 ```kql
-// Hunt for actions performed by blank/empty/null accounts
-// Covers: Entra ID Sign-ins, Audit Logs, Azure Activity, Defender for Endpoint
-// ── 1. Entra ID Sign-In Logs ──────────────────────────────────────────────────
-let EntraSignIns = SigninLogs
-| where TimeGenerated > ago(7d)
-| where isnull(UserPrincipalName) or isempty(UserPrincipalName) or UserPrincipalName in ("", "N/A", "unknown", "-")
-       or isnull(UserDisplayName) or isempty(UserDisplayName) or UserDisplayName in ("", "N/A", "unknown", "-")
-| project
-    TimeGenerated,
-    Source          = "EntraID - SigninLogs",
-    AccountUPN      = UserPrincipalName,
-    AccountDisplay  = UserDisplayName,
-    Action          = "Sign-In",
-    Result          = tostring(ResultType),
-    ResultDesc      = ResultDescription,
-    AppDisplayName,
-    IPAddress,
-    Location        = tostring(LocationDetails),
-    DeviceDetail    = tostring(DeviceDetail),
-    ConditionalAccessStatus,
-    CorrelationId;
-// ── 2. Entra ID Audit Logs ───────────────────────────────────────────────────
-let EntraAudit = AuditLogs
-| where TimeGenerated > ago(7d)
-| extend InitiatedUPN = tostring(InitiatedBy.user.userPrincipalName)
-| extend InitiatedApp = tostring(InitiatedBy.app.displayName)
-| where (isnull(InitiatedUPN) or isempty(InitiatedUPN) or InitiatedUPN in ("", "N/A", "unknown", "-"))
-      and (isnull(InitiatedApp) or isempty(InitiatedApp) or InitiatedApp in ("", "N/A", "unknown", "-"))
-| project
-    TimeGenerated,
-    Source          = "EntraID - AuditLogs",
-    AccountUPN      = InitiatedUPN,
-    AccountDisplay  = InitiatedApp,
-    Action          = OperationName,
-    Result          = Result,
-    ResultDesc      = ResultDescription,
-    AppDisplayName  = InitiatedApp,
-    IPAddress       = tostring(InitiatedBy.user.ipAddress),
-    Location        = "",
-    DeviceDetail    = "",
-    ConditionalAccessStatus = "",
-    CorrelationId;
-
-// ── 3. Azure Activity Logs (Control Plane) ───────────────────────────────────
-let AzureActivity_ = AzureActivity
-| where TimeGenerated > ago(7d)
-| where isnull(Caller) or isempty(Caller) or Caller in ("", "N/A", "unknown", "-")
-| project
-    TimeGenerated,
-    Source          = "AzureActivity",
-    AccountUPN      = Caller,
-    AccountDisplay  = Caller,
-    Action          = OperationNameValue,
-    Result          = ActivityStatusValue,
-    ResultDesc      = tostring(Properties),
-    AppDisplayName  = "",
-    IPAddress       = CallerIpAddress,
-    Location        = "",
-    DeviceDetail    = "",
-    ConditionalAccessStatus = "",
-    CorrelationId;
-
-// ── 4. Microsoft Defender for Endpoint – Device Events ───────────────────────
-let DefenderEvents = DeviceEvents
-| where TimeGenerated > ago(7d)
-| where (isnull(AccountName) or isempty(AccountName) or AccountName in ("", "N/A", "unknown", "-"))
-       or (isnull(AccountDomain) or isempty(AccountDomain) or AccountDomain in ("", "N/A", "unknown", "-"))
-| where isnotempty(ActionType)
-| project
-    TimeGenerated,
-    Source          = "MDE - DeviceEvents",
-    AccountUPN      = strcat(AccountDomain, "\\", AccountName),
-    AccountDisplay  = AccountName,
-    Action          = ActionType,
-    Result          = "",
-    ResultDesc      = tostring(AdditionalFields),
-    AppDisplayName  = InitiatingProcessFileName,
-    IPAddress       = RemoteIP,
-    Location        = "",
-    DeviceDetail    = DeviceName,
-    ConditionalAccessStatus = "",
-    CorrelationId   = "";
-
-// ── 5. Microsoft Defender for Endpoint – Logon Events ────────────────────────
-let DefenderLogons = DeviceLogonEvents
-| where TimeGenerated > ago(7d)
-| where (isnull(AccountName) or isempty(AccountName) or AccountName in ("", "N/A", "unknown", "-"))
-       or (isnull(AccountSid) or isempty(AccountSid) or AccountSid in ("", "N/A", "unknown", "-"))
-| project
-    TimeGenerated,
-    Source          = "MDE - DeviceLogonEvents",
-    AccountUPN      = strcat(AccountDomain, "\\", AccountName),
-    AccountDisplay  = AccountName,
-    Action          = strcat("Logon (", LogonType, ")"),
-    Result          = ActionType,
-    ResultDesc      = tostring(AdditionalFields),
-    AppDisplayName  = InitiatingProcessFileName,
-    IPAddress       = RemoteIP,
-    Location        = "",
-    DeviceDetail    = DeviceName,
-    ConditionalAccessStatus = "",
-    CorrelationId   = "";
-// ── Union + Summarize ─────────────────────────────────────────────────────────
-EntraSignIns
-| union isfuzzy=true EntraAudit, AzureActivity_, DefenderEvents, DefenderLogons
-| summarize
-    EventCount      = count(),
-    FirstSeen       = min(TimeGenerated),
-    LastSeen        = max(TimeGenerated),
-    Actions         = make_set(Action, 25),
-    Results         = make_set(Result, 10),
-    IPAddresses     = make_set(IPAddress, 10),
-    Devices         = make_set(DeviceDetail, 10)
-  by Source, AccountUPN, AccountDisplay
-| extend BlankReason = case(
-    isnull(AccountUPN) or AccountUPN == "",   "Null/Empty UPN",
-    AccountUPN == "N/A",                       "Explicit N/A",
-    AccountUPN == "unknown",                   "Unknown string",
-    AccountUPN startswith "\\",                "Domain only - no username",
-                                               "Other blank pattern"
-  )
-| project-reorder
-    Source, BlankReason, AccountUPN, AccountDisplay,
-    EventCount, FirstSeen, LastSeen,
-    Actions, Results, IPAddresses, Devices
-| sort by EventCount desc
+isnull(...) or isempty(...) or in ("", "N/A", "unknown", "-")
 ```
+
+This is deliberate.
+
+You’re not just looking for:
+
+* `null`
+
+You’re looking for:
+
+* **Telemetry lies** (“unknown”)
+* **Bad parsing** (“-”)
+* **Broken integrations** (“N/A”)
+* **Empty strings masquerading as valid data**
+
+👉 DevSecOpsDad takeaway:
+
+> **If you only hunt nulls, you miss half the problem.**
 
 ---
 
-## The operating model behind it
+# 🔐 Step 2 — Entra ID Sign-Ins (Authentication Without Identity)
 
-The query is built like a proper cross-platform hunt:
-
-1. Pull potentially unattributed activity from several tables.
-2. Normalize the columns so the results can be unioned together.
-3. Summarize by account and source.
-4. Add a reason label explaining *why* the account looks blank.
-5. Sort by event volume so the biggest issues rise to the top. 
-
-That is good engineering discipline. It is not just “dump everything weird.” It is trying to make different telemetry sources speak a common language.
-
----
-
-# Section-by-section breakdown
-
-## 1. Entra ID sign-in logs
-
-```kusto
+```kql
 let EntraSignIns = SigninLogs
-| where TimeGenerated > ago(7d)
-| where isnull(UserPrincipalName) or isempty(UserPrincipalName) or UserPrincipalName in ("", "N/A", "unknown", "-")
-       or isnull(UserDisplayName) or isempty(UserDisplayName) or UserDisplayName in ("", "N/A", "unknown", "-")
 ```
 
-This part looks at **interactive or non-interactive sign-in activity** from Entra ID over the last 7 days and filters for records where the user identity fields are missing or junk values. 
+### What it's doing:
 
-### What it’s doing
+* Filters last 7 days
+* Finds sign-ins with missing identity fields
+* Builds **Originator context**
+
+### The key move:
+
+```kql
+extend Originator = case(...)
+```
+
+This is where the query starts thinking like an architect.
+
+Instead of saying:
+
+> “User is blank → shrug”
 
 It says:
 
-* give me sign-ins from the past week
-* keep only rows where either:
+> “Fine. Who else can I attribute this to?”
 
-  * `UserPrincipalName` is null/empty/fake
-  * or `UserDisplayName` is null/empty/fake 
+Hierarchy:
 
-### Why this matters
+1. Service Principal Name (SPN)
+2. Service Principal ID
+3. App name / App ID
+4. Client app
+5. Device name
+6. Fallback: Unknown
 
-In a healthy tenant, sign-in events should generally tell you **who** signed in. If that falls apart, you want to know whether:
+👉 This is **identity reconstruction**.
 
-* the event came from an app or token flow that did not map cleanly
-* there is connector normalization drift
-* the sign-in is malformed or partially populated
-* identity attribution is breaking where you least want it to break: authentication telemetry
+### Why this matters:
 
-### What gets projected
+In modern environments:
 
-This block standardizes columns like:
+* Apps act
+* Tokens act
+* Devices act
 
-* source
-* account UPN
-* display name
-* action = “Sign-In”
-* result / result description
-* app name
-* IP
-* location
-* device detail
-* CA status
-* correlation ID 
-
-That projection step is important because later every data source has to fit the same shape.
+> **The “user” is often the least reliable identity field.**
 
 ---
 
-## 2. Entra ID audit logs
+# 🧾 Step 3 — Entra Audit Logs (Control Plane Actions Without Attribution)
 
-```kusto
+```kql
 let EntraAudit = AuditLogs
-| where TimeGenerated > ago(7d)
-| extend InitiatedUPN = tostring(InitiatedBy.user.userPrincipalName)
-| extend InitiatedApp = tostring(InitiatedBy.app.displayName)
-| where (isnull(InitiatedUPN) or isempty(InitiatedUPN) or InitiatedUPN in ("", "N/A", "unknown", "-"))
-      and (isnull(InitiatedApp) or isempty(InitiatedApp) or InitiatedApp in ("", "N/A", "unknown", "-"))
 ```
 
-This block checks **directory audit activity** where the actor is unclear. 
+Here we’re hunting:
 
-### What it’s doing
+* Changes to identity, permissions, config
+* Where BOTH user AND app context are missing
 
-Audit logs can be initiated by:
+That’s critical:
 
-* a user
-* an application
-* automation / service principal behavior
+```kql
+where (InitiatedUPN is blank)
+  and (InitiatedApp is blank)
+```
 
-So the query extracts both:
+👉 That’s a **true attribution gap**
 
-* `InitiatedUPN`
-* `InitiatedApp`
+Then again:
 
-Then it keeps only records where **both are blank or junk**. 
+```kql
+extend Originator = case(...)
+```
 
-### Why that’s smart
+We fall back to:
 
-This is stricter than the sign-in logic.
+* SPN
+* App ID
+* User ID (GUID-level attribution)
 
-For sign-ins, if either the UPN or display name is blank, that is notable.
+👉 DevSecOpsDad takeaway:
 
-For audit logs, the query only flags records when **neither a user nor an app identity is meaningfully present**. That reduces false positives. A lot of audit actions are legitimately app-driven, so you do not want to alert just because the user field is empty if the app field clearly identifies the actor.
-
-### What this means operationally
-
-If something changed in Entra — app registration, policy update, group membership, directory config — and the actor is effectively unknown, that is worth attention.
+> **When names fail, IDs still tell the truth.**
 
 ---
 
-## 3. Azure Activity logs
+# ☁️ Step 4 — Azure Activity Logs (Control Plane Without Caller)
 
-```kusto
+```kql
 let AzureActivity_ = AzureActivity
-| where TimeGenerated > ago(7d)
-| where isnull(Caller) or isempty(Caller) or Caller in ("", "N/A", "unknown", "-")
 ```
 
-This block looks for **Azure control plane operations** where `Caller` is blank or junk. 
+Here’s the problem:
 
-### Why this matters
+* `Caller` is blank
 
-`AzureActivity` is where you see subscription/resource-manager actions like:
+So we pivot to:
 
-* resource creation
-* role assignments
-* policy changes
-* networking changes
-* VM actions
+```kql
+ClaimsJson = todynamic(Claims)
+```
 
-If `Caller` is empty, your ability to attribute who made the change is degraded.
+Now we extract:
 
-### DevSecOpsDad translation
+* `appid`
+* `oid` (object ID)
+* `tid` (tenant)
 
-This is the cloud-control-plane equivalent of someone changing production and the badge reader not recording who entered the room.
+This is **token-level attribution**.
 
-That does not always mean compromise. But it absolutely means **reduced accountability**.
+👉 This is advanced hunting.
+
+Most engineers stop at `Caller`.
+
+You’re digging into:
+
+> **JWT claim-level identity reconstruction**
 
 ---
 
-## 4. Defender for Endpoint device events
+# 🖥️ Step 5 — Defender Device Events (Execution Without User Context)
 
-```kusto
+```kql
 let DefenderEvents = DeviceEvents
-| where TimeGenerated > ago(7d)
-| where (isnull(AccountName) or isempty(AccountName) or AccountName in ("", "N/A", "unknown", "-"))
-       or (isnull(AccountDomain) or isempty(AccountDomain) or AccountDomain in ("", "N/A", "unknown", "-"))
-| where isnotempty(ActionType)
 ```
 
-This block hunts through **MDE device events** where account attribution is incomplete. 
+Looking for:
 
-### What it means
+* Process activity
+* Where account name/domain is missing
 
-Device events often contain process, file, registry, network, and other endpoint activity. This block keeps events where:
+Then:
 
-* `AccountName` is bad
-* or `AccountDomain` is bad
-* and there is still a valid `ActionType` 
-
-That last line matters. It avoids meaningless blank rows by requiring that an actual event action exists.
-
-### Why it’s useful
-
-On endpoints, unattributed events are common enough to exist but dangerous enough to monitor. Sometimes they reflect:
-
-* SYSTEM / kernel-ish behavior
-* telemetry gaps
-* edge-case parsing failures
-* attacker activity through contexts that do not cleanly map to a normal user
-
-The query builds a synthetic identity field here:
-
-```kusto
-AccountUPN = strcat(AccountDomain, "\\", AccountName)
+```kql
+Originator = InitiatingProcess*
 ```
 
-That is not a real UPN — it is a convenience string so the endpoint data can align with the same account column concept used elsewhere. 
+Now we pivot from identity → execution context:
+
+* Process name
+* Parent process
+* Process account
+* Command line
+
+👉 DevSecOpsDad truth:
+
+> **On endpoints, processes are often more trustworthy than users.**
 
 ---
 
-## 5. Defender for Endpoint logon events
+# 🔑 Step 6 — Defender Logon Events (Authentication Without Identity)
 
-```kusto
-let DefenderLogons = DeviceLogonEvents
-| where TimeGenerated > ago(7d)
-| where (isnull(AccountName) or isempty(AccountName) or AccountName in ("", "N/A", "unknown", "-"))
-       or (isnull(AccountSid) or isempty(AccountSid) or AccountSid in ("", "N/A", "unknown", "-"))
-```
+Same pattern as above, but focused on:
 
-This one is focused specifically on **logon activity on devices** where the account name or SID is missing. 
+* Logon activity
+* Missing SID / username
 
-### Why SID matters
+Again:
 
-A SID is often more trustworthy than a display label. If the SID is blank too, then the logon event is missing one of the strongest identity anchors available in Windows telemetry.
-
-### Why this is worth checking
-
-A blank account name might be annoying.
-
-A blank account name **and** weak identity backing on a logon event is much more worth investigation.
-
-This section again normalizes the output into the common schema and labels the action as:
-
-```kusto
-strcat("Logon (", LogonType, ")")
-```
-
-Nice touch. That preserves the logon type context instead of reducing everything to a generic “logon.”
+* Attribute via process chain
 
 ---
 
-# The union step
+# 🔗 Step 7 — Union Everything (This Is Where It Gets Powerful)
 
-```kusto
-EntraSignIns
-| union isfuzzy=true EntraAudit, AzureActivity_, DefenderEvents, DefenderLogons
+```kql
+union isfuzzy=true EntraAudit, AzureActivity_, DefenderEvents, DefenderLogons
 ```
 
-This is the glue. It combines all those shaped datasets into one result set. 
+Now we:
 
-### Why `isfuzzy=true` matters
+* Break silos
+* Combine identity + control plane + endpoint
 
-Different tables do not always have perfectly matching column sets or types. `isfuzzy=true` tells KQL to be more forgiving during union, which is practical when you are normalizing heterogeneous sources.
-
-Translation: **“Don’t make me perfectly align every schema edge case before I can hunt.”**
-
-That is a good move in exploratory cross-table hunting.
+👉 `isfuzzy=true` ensures schema mismatches don’t break the union
 
 ---
 
-# The summarize step
+# 📊 Step 8 — Normalize into Decision-Grade Data
 
-```kusto
-| summarize
-    EventCount      = count(),
-    FirstSeen       = min(TimeGenerated),
-    LastSeen        = max(TimeGenerated),
-    Actions         = make_set(Action, 25),
-    Results         = make_set(Result, 10),
-    IPAddresses     = make_set(IPAddress, 10),
-    Devices         = make_set(DeviceDetail, 10)
-  by Source, AccountUPN, AccountDisplay
+This is the **money section**:
+
+```kql
+summarize
 ```
 
-This is where the query stops being raw telemetry and starts becoming investigation-ready. 
+We collapse noise into:
 
-### What it does
-
-It groups results by:
-
-* source
-* account identifier
-* account display value
-
-Then it rolls up:
-
-* total event count
-* first seen / last seen
-* distinct actions
-* distinct results
+* EventCount
+* FirstSeen / LastSeen
+* Actions
+* Results
 * IPs
-* devices 
+* Devices
+* OriginatorDetails
 
-### Why this is the right move
+👉 This transforms:
 
-Analysts do not want 600 rows of the same bad identity pattern.
-
-They want:
-
-* how often it happened
-* where it happened
-* over what time window
-* what actions were associated
-* what infrastructure it touched
-
-This is exactly the difference between **query output** and **decision support**.
+> Raw telemetry → **Operational signal**
 
 ---
 
-# The `BlankReason` logic
+# 🧾 Step 9 — Classify the “Why is it Blank?”
 
-```kusto
-| extend BlankReason = case(
-    isnull(AccountUPN) or AccountUPN == "",   "Null/Empty UPN",
-    AccountUPN == "N/A",                       "Explicit N/A",
-    AccountUPN == "unknown",                   "Unknown string",
-    AccountUPN startswith "\\",                "Domain only - no username",
-                                               "Other blank pattern"
-  )
+```kql
+extend BlankReason = case(...)
 ```
 
-This adds interpretation. 
+Now we categorize:
 
-### Why it matters
+* Null/Empty
+* Explicit “N/A”
+* “unknown”
+* Domain-only (no username)
 
-Without this, the analyst still has to eyeball why the account is considered blank.
+👉 This is subtle but powerful:
 
-With this, the query starts classifying the defect pattern:
-
-* null/empty
-* explicitly marked N/A
-* literally “unknown”
-* domain present but username missing
-* other weirdness 
-
-### DevSecOpsDad take
-
-This is good because it turns an ambiguous “bad identity” result into a **triageable data quality signal**.
-
-It helps you separate:
-
-* expected telemetry ugliness
-  from
-* strange operational conditions
-  from
-* suspicious attribution failures
+> You’re not just finding bad data—you’re **understanding failure modes**
 
 ---
 
-# Final output shape
+# 📦 Step 10 — Output Designed for Humans
 
-```kusto
-| project-reorder
-    Source, BlankReason, AccountUPN, AccountDisplay,
-    EventCount, FirstSeen, LastSeen,
-    Actions, Results, IPAddresses, Devices
-| sort by EventCount desc
+```kql
+project-reorder ...
+sort by EventCount desc
 ```
 
-This is just presentation, but it is good presentation. 
+This ensures:
 
-### Why sort by event count?
-
-Because the biggest piles of unattributed activity are where your operational risk usually lives first.
-
-Not always the most malicious.
-But usually the most impactful to investigate.
+* High-signal entities bubble to the top
+* Output is analyst-friendly
+* Context is preserved
 
 ---
 
-# What this query is good at
+# 🔥 DevSecOpsDad Closing: What This Query Actually Gives You
 
-This query is strong for:
+This isn’t just a query.
 
-* surfacing unattributed actions across identity, cloud, and endpoint logs
-* exposing telemetry normalization issues
-* identifying service/system activity that lacks clear identity mapping
-* finding places where accountability breaks down
-* building follow-on investigations from IPs, devices, and actions 
+This is an **operating model for broken identity telemetry**.
 
----
+Most teams:
 
-# What it is *not* good at
+* Trust identity fields blindly
+* Ignore blanks
+* Lose attribution
 
-This query is **not** automatically proving malicious behavior.
+This query does the opposite:
 
-A blank identity does **not** equal compromise.
-
-It may just mean:
-
-* connector weirdness
-* ingestion/parser inconsistency
-* platform-generated activity
-* fields that are legitimately unset for a given event type
-
-So the right mindset is:
-
-**“This is a hunting pivot, not a verdict.”**
+> **It assumes identity is unreliable—and rebuilds truth from surrounding signals.**
 
 ---
 
-# Things I would tell an engineer or SOC analyst about it
+## The Real Maturity Shift
 
-## 1. It is intentionally broad
+This is the difference between:
 
-This query is trying to catch **identity ambiguity**, not just attacker behavior.
-
-That means there will be false positives.
-
-## 2. It is schema-normalized well
-
-The author did a good job forcing multiple sources into a common structure so the results can be compared side by side. 
-
-## 3. The MDE sections may surface a lot of benign noise
-
-Especially on endpoints, missing account context can happen around system activity, service activity, or telemetry edge cases.
-
-## 4. The Entra Audit block is more disciplined than the others
-
-Requiring both user and app initiator to be blank is a more mature filter than blindly flagging missing user-only fields.
-
-## 5. The summary output is investigation-friendly
-
-You get counts, time bounds, actions, IPs, and devices rather than drowning in raw rows.
+| Level        | Behavior                                          |
+| ------------ | ------------------------------------------------- |
+| Basic        | “User is null → ignore”                           |
+| Intermediate | “User is null → alert”                            |
+| Advanced     | “User is null → reconstruct identity”             |
+| Elite        | “User is null → understand *why* identity failed” |
 
 ---
 
-# Where I would tighten it up
+## Final Thought
 
-A few improvements I’d consider:
+If actions are happening in your environment without identity:
 
-## Add known benign exclusions
+> **You don’t have a logging problem.
+> You have an accountability problem.**
 
-For example, exclude well-known system-generated patterns once you validate them. Otherwise this can become a “look how weird telemetry is” report instead of a detection aid.
-
-## Normalize case before comparison
-
-Values like `"Unknown"` vs `"unknown"` can slip through. Using `tolower()` would make this sturdier.
-
-## Treat `"-"` and `"N/A"` carefully
-
-Those are often parser placeholders, not native product values. Good to catch them, but they may indicate upstream transformation issues more than original log issues.
-
-## Consider preserving raw rows for drilldown
-
-The summarize is great, but in a production hunt workbook you might want a second view with raw events for immediate pivoting.
-
-## Consider splitting “identity missing” from “identity malformed”
-
-Those are related, but not always the same operational problem.
+And accountability is the foundation of detection, response, and trust.
 
 ---
 
-# The plain-English summary
+If you want, next step I can help you turn this into:
 
-This query is a **cross-source hunt for actions that happened without a trustworthy identity attached**. It checks Entra sign-ins, Entra audit logs, Azure control-plane logs, and Defender endpoint telemetry for blank, null, or obviously placeholder account fields, then summarizes the results so you can see where attribution is breaking down at scale. 
-
-Or in DevSecOpsDad language:
-
-**It’s not asking “was this evil?” first.**
-It’s asking:
-**“Where am I making security decisions without being able to cleanly say who did the thing?”**
-
-That is exactly the kind of question mature defenders should ask.
-
-Paste the next query and I’ll break that one down the same way.
+* A polished blog post (ready for DevSecOpsDad site)
+* A LinkedIn teaser post (high-conversion style)
+* Or a “Decision Surface” section to match your book format
