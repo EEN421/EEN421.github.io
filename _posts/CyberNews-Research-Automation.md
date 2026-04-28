@@ -1,4 +1,45 @@
+Most teams don’t have a threat intelligence problem.
+They have a signal translation problem.
 
+Every morning, security leaders wake up to the same flood:
+
+dozens of RSS feeds
+overlapping headlines
+vendor-biased narratives
+and just enough technical detail to be dangerous, but not actionable
+
+Somewhere in that noise is what actually matters:
+
+What is being exploited right now
+Who is actually at risk
+What needs to be patched, monitored, or explained to leadership
+
+But most teams never get there.
+
+They skim. They bookmark. They forward links.
+And then they move on to the next incident.
+
+This is where automation earns its keep—not by pulling in more data, but by forcing clarity out of chaos.
+
+In this post, we’re going to break down a practical, opinionated n8n workflow that does exactly that:
+
+Aggregates high-signal cybersecurity RSS feeds
+Normalizes and deduplicates overlapping stories
+Prioritizes what actually matters
+Translates raw articles into a CISO-ready briefing using Google Gemini
+Delivers it in a clean, readable format to Discord
+
+Not as a novelty.
+Not as a demo.
+But as a repeatable system that answers one uncomfortable question every day:
+
+“If this is the only security update leadership reads today… is it enough?”
+
+This isn’t about building a news bot.
+
+It’s about building a decision surface.
+
+Because the gap between information and action is where most security programs quietly fail.
 
 ## What this automation does
 
