@@ -358,6 +358,38 @@ This is the schema enforcement layer.
 
 > 💡 **Ian's Insights:** this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts; these 'Set' nodes creates them.
 
+Here's the JavaScript used in this example...
+
+```java
+const itemsIn = $input.all();
+
+return itemsIn.slice(0, 5).map(item => {
+  const j = item.json;
+
+  return {
+    json: {
+      source: 'Bleeping Computer',
+      category: 'news',
+
+      title: j.title || '',
+      link: j.link || '',
+
+      published:
+        j.isoDate ||
+        j.pubDate ||
+        j.published ||
+        '',
+
+      summary: (j.contentSnippet || j.content || j.summary || '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 300)
+    }
+  };
+});
+```
+
 <br/><br/>
 
 ### Merge
@@ -397,11 +429,25 @@ It creates a key from:
 (j.link || j.title || '').toLowerCase().trim()
 ```
 
-Then it skips anything already seen.
+Then it skips anything already seen. That means exact duplicate URLs or titles get removed. Here's the JavaScript used in this build...
 
-That means exact duplicate URLs or titles get removed.
+```java
+const seen = new Set();
+const output = [];
 
-DevSecOpsDad read: this is good enough for operational hygiene, but not true semantic dedupe. If three outlets cover the same breach with different URLs and different headlines, Gemini still has to collapse that later.
+for (const item of items) {
+  const j = item.json;
+
+  const key = (j.link || j.title || '').toLowerCase().trim();
+
+  if (!key || seen.has(key)) continue;
+
+  seen.add(key);
+  output.push(item);
+}
+
+return output;
+```
 
 <br/><br/>
 
@@ -542,8 +588,6 @@ contents → parts → text
 ```
 
 That is the handoff from deterministic workflow logic to generative summarization.
-
-Important: your exported workflow contains what looks like a Gemini API key. Rotate it.
 
 <br/><br/>
 
