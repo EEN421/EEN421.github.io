@@ -91,7 +91,7 @@ For our use case, we'll use a Flash model, not a Pro preview model. A safe targe
 
 ###  Go to Google AI Studio
 
-Open: 👉 https://aistudio.google.com
+Open: 👉 [https://aistudio.google.com](https://aistudio.google.com)
 
 Sign in with your Google account.
 
@@ -841,12 +841,13 @@ The below books are about closing that gap; turning curated signal into defensib
 
 <br/><br/>
 
-# Helpful Links and Resources
+# Helpful Links & Resources
 - [N8N Documentation](https://docs.n8n.io/)
 - [N8N Self Hosting Documentation](https://docs.n8n.io/hosting/)
 - [Google Cloud APIs](https://docs.cloud.google.com/apis/docs/overview?_gl=1*lchl98*_up*MQ..&gclid=c7a5d1db77c3166c5b96b829e39f0860&gclsrc=3p.ds)
 - [Google Gemini API Design Guide](https://docs.cloud.google.com/apis/design?_gl=1*lchl98*_up*MQ..&gclid=c7a5d1db77c3166c5b96b829e39f0860&gclsrc=3p.ds)
 - [Google API Github Repository](https://github.com/googleapis/googleapis)
+- [😼 Legend of Defender Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
 
 <br/>
 
