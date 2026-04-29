@@ -29,6 +29,7 @@ In this post, we’ll walk through a practical, opinionated n8n workflow that do
 
 This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day: *If this is the only security update leadership reads today… is it enough?*
 
+<br/><br/>
 
 ## What this automation does
 
@@ -48,6 +49,8 @@ The big idea: **RSS feeds are noisy. This workflow turns them into a decision-gr
 
 ![N8N Diagram(.png)](/assets/img/SecurityNews/n8n_diag.png)
 
+<br/><br/>
+
 ## Node-by-node breakdown
 
 ### Manual Trigger
@@ -57,7 +60,6 @@ This is the front door. Nothing runs on a schedule yet. You click **Execute Work
 > Note: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
 
 You'll want to automate this later such that it runs every morning right around the time you've sat down at your desk with that first cup of hot coffee (or tea). 
-
 
 <br/><br/>
 
@@ -81,8 +83,6 @@ I use six RSS collection nodes:
 Each one fetches articles from a specific cyber/security news feed.
 
 These nodes do not make decisions. They just ingest raw feed items. Different RSS feeds use different fields like `content`, `summary`, `description`, `pubDate`, or `isoDate`, so the output is inconsistent at this stage.
-
- 
 
 <br/><br/>
 
@@ -117,8 +117,6 @@ This is the schema enforcement layer.
 
 Ian's Insight: this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts. This node creates one.
 
- 
-
 <br/><br/>
 
 ### Merge
@@ -138,8 +136,6 @@ At this point, you could have up to 30 articles:
 ```
 
 This is still raw volume, not intelligence.
-
- 
 
 <br/><br/>
 
@@ -166,8 +162,6 @@ That means exact duplicate URLs or titles get removed.
 
 DevSecOpsDad read: this is good enough for operational hygiene, but not true semantic dedupe. If three outlets cover the same breach with different URLs and different headlines, Gemini still has to collapse that later.
 
- 
-
 <br/><br/>
 
 ### Filter - Top N(10)
@@ -189,8 +183,6 @@ return items
 This is your cost and signal-control gate.
 
 Instead of feeding Gemini 30 stories, you feed it 10. That lowers token use, reduces prompt noise, and keeps the final Discord post readable.
-
- 
 
 <br/><br/>
 
@@ -241,8 +233,6 @@ Published: ${a.published}
 Snippet: ${a.summary}
 ```
 
- 
-
 <br/><br/>
 
 ### Gemini Offload
@@ -269,8 +259,6 @@ That is the handoff from deterministic workflow logic to generative summarizatio
 
 Important: your exported workflow contains what looks like a Gemini API key. Rotate it.
 
- 
-
 <br/><br/>
 
 ### Parse AI Results
@@ -295,8 +283,6 @@ Then it returns a simple object:
 
 This is another schema-control point. Gemini’s response shape is ugly; this node turns it into something the rest of the workflow can use.
 
- 
-
 <br/><br/>
 
 ### Split/Chunk
@@ -315,8 +301,6 @@ That avoids ugly mid-sentence cuts when possible.
 
 DevSecOpsDad read: this is delivery engineering. The best briefing in the world still fails if it arrives as a broken wall of text.
 
- 
-
 <br/><br/>
 
 ### Loop Over Items
@@ -332,8 +316,6 @@ This node loops over each chunk one at a time.
 Its job is sequencing.
 
 Without this, Discord posts may arrive out of order or too quickly. With the loop, each chunk gets passed to Discord, then the workflow loops back for the next one.
-
- 
 
 <br/><br/>
 
@@ -357,7 +339,7 @@ This is the final delivery point.
 
 Important: your exported workflow contains the Discord webhook URL. Rotate it too. A Discord webhook is effectively a write credential.
 
----
+<br/><br/>
 
 ## The workflow in plain English
 
