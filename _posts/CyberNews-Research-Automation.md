@@ -55,7 +55,9 @@ It does five jobs:
 
 The big idea: **RSS feeds are noisy. This workflow turns them into a decision-grade briefing.**
 
----
+<br/>
+
+![N8N Diagram(.png)](/assets/img/SecurityNews/n8n_diag.png)
 
 ## Node-by-node breakdown
 
@@ -65,13 +67,25 @@ This is the front door.
 
 Nothing runs on a schedule yet. You click **Execute Workflow**, and it kicks off all six RSS branches at once.
 
-DevSecOpsDad read: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
+Note: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
+
+You'll want to automate this later such that it runs every morning right around the time you've sat down at your desk with that first cup of hot coffee (or tea). 
+
+<br/><br/>
 
 ---
 
+<br/><br/>
+
 ### RSS Read nodes
 
-You have six RSS collection nodes:
+<br/>
+
+![RSS Node(.png)](/assets/img/SecurityNews/RSS.png)
+
+<br/>
+
+I use six RSS collection nodes:
 
 * `RSS Read - Krebs`
 * `RSS Read - Hacker News`
@@ -84,9 +98,19 @@ Each one fetches articles from a specific cyber/security news feed.
 
 These nodes do not make decisions. They just ingest raw feed items. Different RSS feeds use different fields like `content`, `summary`, `description`, `pubDate`, or `isoDate`, so the output is inconsistent at this stage.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Set / normalization nodes
+
+<br/>
+
+![Set Node(.png)](/assets/img/SecurityNews/set.png)
+
+<br/>
 
 Each RSS feed flows into a matching Code node:
 
@@ -109,11 +133,21 @@ Each one does roughly the same thing:
 
 This is the schema enforcement layer.
 
-DevSecOpsDad read: this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts. This node creates one.
+Ian's Insight: this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts. This node creates one.
+
+<br/><br/>
 
 ---
 
+<br/><br/>
+
 ### Merge
+
+<br/>
+
+![Merge Node(.png)](/assets/img/SecurityNews/merge.png)
+
+<br/>
 
 The `Merge` node combines the six normalized feed streams into one article stream.
 
@@ -125,9 +159,20 @@ At this point, you could have up to 30 articles:
 
 This is still raw volume, not intelligence.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Dedupe
+
+<br/>
+
+![Deduplication Node(.png)](/assets/img/SecurityNews/dedupe.png)
+
+<br/>
+
 
 The `Dedupe` Code node removes repeated stories.
 
@@ -143,9 +188,19 @@ That means exact duplicate URLs or titles get removed.
 
 DevSecOpsDad read: this is good enough for operational hygiene, but not true semantic dedupe. If three outlets cover the same breach with different URLs and different headlines, Gemini still has to collapse that later.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Filter - Top N(10)
+
+<br/>
+
+![Filter Node (TopN)(.png)](/assets/img/SecurityNews/Filter.png)
+
+<br/>
 
 This node sorts all remaining articles newest-first using `published`, then keeps the first 10.
 
@@ -159,9 +214,19 @@ This is your cost and signal-control gate.
 
 Instead of feeding Gemini 30 stories, you feed it 10. That lowers token use, reduces prompt noise, and keeps the final Discord post readable.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Prompt
+
+<br/>
+
+![Prompt Node(.png)](/assets/img/SecurityNews/prompt.png)
+
+<br/>
 
 This node builds the Gemini prompt.
 
@@ -202,9 +267,19 @@ Published: ${a.published}
 Snippet: ${a.summary}
 ```
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Gemini Offload
+
+<br/>
+
+![AI Offload Node(.png)](/assets/img/SecurityNews/AI%20Offload.png)
+
+<br/>
 
 This HTTP Request node sends the prompt to Gemini:
 
@@ -222,9 +297,19 @@ That is the handoff from deterministic workflow logic to generative summarizatio
 
 Important: your exported workflow contains what looks like a Gemini API key. Rotate it.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Parse AI Results
+
+<br/>
+
+![Parse AI Response Node(.png)](/assets/img/SecurityNews/parse.png)
+
+<br/>
 
 This Code node extracts Gemini’s response from the nested JSON:
 
@@ -240,9 +325,15 @@ Then it returns a simple object:
 
 This is another schema-control point. Gemini’s response shape is ugly; this node turns it into something the rest of the workflow can use.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Split/Chunk
+
+![Split/Chunk Node(.png)](/assets/img/SecurityNews/chunk.png)
 
 Discord has message size limits, so this node splits the briefing into chunks of about 1,800 characters.
 
@@ -256,7 +347,11 @@ That avoids ugly mid-sentence cuts when possible.
 
 DevSecOpsDad read: this is delivery engineering. The best briefing in the world still fails if it arrives as a broken wall of text.
 
+<br/><br/>
+
 ---
+
+<br/><br/>
 
 ### Loop Over Items
 
@@ -266,9 +361,19 @@ Its job is sequencing.
 
 Without this, Discord posts may arrive out of order or too quickly. With the loop, each chunk gets passed to Discord, then the workflow loops back for the next one.
 
+<br/><br/>
+
 ---
 
+<br/><br/>
+
 ### Post to Discord
+
+<br/>
+
+![Post to Discord Node(.png)](/assets/img/SecurityNews/Discord.png)
+
+<br/>
 
 This HTTP Request node posts each chunk to Discord via webhook:
 
@@ -302,15 +407,4 @@ Manual Run
   → Post to Discord
 ```
 
-## The one thing I would fix first
 
-Fix the field mismatch in the `Prompt` node:
-
-```js
-Published: ${a.published}
-Snippet: ${a.summary}
-```
-
-Right now the prompt asks for `pubDate` and `snippet`, but your upstream normalization nodes create `published` and `summary`.
-
-That is the kind of bug that makes an automation “work” while quietly degrading the output.
