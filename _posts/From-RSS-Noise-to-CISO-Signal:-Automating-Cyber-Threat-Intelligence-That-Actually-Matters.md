@@ -72,17 +72,23 @@ Go to Google AI Studio and create an API key for the Gemini API. New accounts be
 
 For our use case, we'll use a Flash model, not a Pro preview model. A safe target to start with is: **gemini-3-flash-preview...** That matches Google’s current free-tier guidance for Gemini API use.
 
+<br/>
+
 ###  Go to Google AI Studio
 
 Open: 👉 https://aistudio.google.com
 
 Sign in with your Google account.
 
+<br/>
+
 ### Create (or select) a project
 
 When you first land in AI Studio:
 
 If prompted → click **“Create Project,”** otherwise it will auto-create one behind the scenes. You don’t need to overthink this—this is just a container for your API usage.
+
+<br/>
 
 ### Navigate to API Keys
 
@@ -93,6 +99,8 @@ OR
 - Click your profile icon (top right) → “API keys”
 
 You’ll land on the API key management page.
+
+<br/>
 
 ### Create a new API key
 
@@ -562,9 +570,9 @@ This HTTP Request node posts each chunk to Discord via webhook:
 }
 ```
 
-This is the final delivery point.
+This is the final delivery point...
 
-Important: your exported workflow contains the Discord webhook URL. Rotate it too. A Discord webhook is effectively a write credential.
+![Discord Results(.png)](/assets/img/SecurityNews/output.png)
 
 <br/><br/>
 
