@@ -2,20 +2,20 @@ What does your daily “stay current” routine actually look like? If you’re 
 
 Every morning, security leaders face the same flood:
 
-dozens of RSS feeds
-overlapping headlines
-vendor-biased narratives
-just enough technical detail to sound important, but not enough to act on
+- dozens of RSS feeds
+- overlapping headlines
+- vendor-biased narratives
+- just enough technical detail to sound important, but not enough to act on
+
+<br/>
 
 Buried somewhere in that noise are the answers that actually matter:
 
-What’s being exploited right now?
-Who’s truly at risk?
-What needs to be patched, monitored, or escalated today?
+- What’s being exploited right now?
+- Who’s truly at risk?
+- What needs to be patched, monitored, or escalated today?
 
-Most teams never quite get there. They skim, bookmark, forward a link or two—and then move on to whatever is on fire next.
-
-This is where automation proves its value. Not by collecting more data, but by forcing clarity out of chaos.
+Most teams never quite get there. They skim, bookmark, forward a link or two—and then move on to whatever is on fire next. *This is where automation proves its value. Not by collecting more data, but by forcing clarity out of chaos.*
 
 <br/>
 
@@ -25,11 +25,9 @@ This is where automation proves its value. Not by collecting more data, but by f
 
 In this post, we’ll walk through a practical, opinionated n8n workflow that does exactly that. It aggregates high-signal cybersecurity RSS feeds, normalizes and deduplicates overlapping stories, prioritizes what matters, and translates raw reporting into a concise, CISO-ready briefing using Google Gemini—delivered straight into Discord in a format people will actually read.
 
-This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day:
+This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day: *If this is the only security update leadership reads today… is it enough?*
 
-If this is the only security update leadership reads today… is it enough?
-
-Because the real problem isn’t access to information—it’s the gap between information and action. And that gap is where most security programs quietly fail.
+<br/><br/>
 
 ## What this automation does
 
@@ -49,6 +47,8 @@ The big idea: **RSS feeds are noisy. This workflow turns them into a decision-gr
 
 ![N8N Diagram(.png)](/assets/img/SecurityNews/n8n_diag.png)
 
+<br/><br/>
+
 ## Node-by-node breakdown
 
 ### Manual Trigger
@@ -61,9 +61,7 @@ Note: this is safer while testing because you control when API calls, Gemini usa
 
 You'll want to automate this later such that it runs every morning right around the time you've sat down at your desk with that first cup of hot coffee (or tea). 
 
-<br/><br/>
 
----
 
 <br/><br/>
 
@@ -88,9 +86,7 @@ Each one fetches articles from a specific cyber/security news feed.
 
 These nodes do not make decisions. They just ingest raw feed items. Different RSS feeds use different fields like `content`, `summary`, `description`, `pubDate`, or `isoDate`, so the output is inconsistent at this stage.
 
-<br/><br/>
 
----
 
 <br/><br/>
 
@@ -127,10 +123,6 @@ Ian's Insight: this is where the workflow stops trusting the feeds and starts sh
 
 <br/><br/>
 
----
-
-<br/><br/>
-
 ### Merge
 
 <br/>
@@ -148,10 +140,6 @@ At this point, you could have up to 30 articles:
 ```
 
 This is still raw volume, not intelligence.
-
-<br/><br/>
-
----
 
 <br/><br/>
 
@@ -180,10 +168,6 @@ DevSecOpsDad read: this is good enough for operational hygiene, but not true sem
 
 <br/><br/>
 
----
-
-<br/><br/>
-
 ### Filter - Top N(10)
 
 <br/>
@@ -203,10 +187,6 @@ return items
 This is your cost and signal-control gate.
 
 Instead of feeding Gemini 30 stories, you feed it 10. That lowers token use, reduces prompt noise, and keeps the final Discord post readable.
-
-<br/><br/>
-
----
 
 <br/><br/>
 
@@ -259,10 +239,6 @@ Snippet: ${a.summary}
 
 <br/><br/>
 
----
-
-<br/><br/>
-
 ### Gemini Offload
 
 <br/>
@@ -286,10 +262,6 @@ contents → parts → text
 That is the handoff from deterministic workflow logic to generative summarization.
 
 Important: your exported workflow contains what looks like a Gemini API key. Rotate it.
-
-<br/><br/>
-
----
 
 <br/><br/>
 
@@ -317,10 +289,6 @@ This is another schema-control point. Gemini’s response shape is ugly; this no
 
 <br/><br/>
 
----
-
-<br/><br/>
-
 ### Split/Chunk
 
 ![Split/Chunk Node(.png)](/assets/img/SecurityNews/chunk.png)
@@ -339,21 +307,19 @@ DevSecOpsDad read: this is delivery engineering. The best briefing in the world 
 
 <br/><br/>
 
----
-
-<br/><br/>
-
 ### Loop Over Items
+
+<br/>
+
+![Loop Node(.png)](/assets/img/SecurityNews/loop.png)
+
+<br/>
 
 This node loops over each chunk one at a time.
 
 Its job is sequencing.
 
 Without this, Discord posts may arrive out of order or too quickly. With the loop, each chunk gets passed to Discord, then the workflow loops back for the next one.
-
-<br/><br/>
-
----
 
 <br/><br/>
 
