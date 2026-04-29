@@ -52,7 +52,17 @@ The big idea: **RSS feeds are noisy. This workflow turns them into a decision-gr
 
 <br/>
 
-![N8N Diagram(.png)](/assets/img/SecurityNews/n8n_diag.png)
+<video
+  autoplay
+  loop
+  muted
+  playsinline
+  preload="metadata"
+  style="width:100%; border-radius:12px;"
+>
+  <source src="{{ '/assets/img/SecurityNews/SecuirtyFeed.mp4' | relative_url }}" type="video/mp4">
+</video>
+
 
 <br/><br/>
 
@@ -711,6 +721,7 @@ This HTTP Request node posts each chunk to Discord via webhook:
 
 This is the final delivery point...
 
+![N8N Diagram(.png)](/assets/img/SecurityNews/n8n_diag.png)
 ![Discord Results(.png)](/assets/img/SecurityNews/output.png)
 
 <br/><br/>
