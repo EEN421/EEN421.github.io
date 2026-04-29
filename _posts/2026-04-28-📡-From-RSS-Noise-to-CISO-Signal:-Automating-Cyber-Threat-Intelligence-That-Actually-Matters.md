@@ -1,7 +1,5 @@
 ![Title Image(.png)](/assets/img/SecurityNews/intro.png)
-It’s been a while since my last post, not because there wasn’t anything worth writing about—but because life happened. In the span of a month, I started a new role and welcomed a new baby into the world. Both incredible. Both demanding. Both very effective at exposing how little “free time” actually exists to study up and keep in the know. They say "necessity is the mother of all invention" and that couldn't be farther from the truth here; this automation saves me time every day ⏱️
-
-So what does your daily “stay current” routine actually look like? If you’re honest, it’s probably a blur—tabs open, feeds scrolling, headlines competing for attention. Cybersecurity moves fast enough that even well-run teams struggle to keep pace. So here’s a better question: *what if the signal came to you, already **filtered**, already **prioritized**, already **useful?*** 
+So what does your daily “stay current” routine actually look like? If you’re honest, it’s probably a blur—tabs open, feeds scrolling, headlines competing for attention. Cybersecurity moves fast enough that even well-run teams struggle to keep pace. So here’s a better question: *what if the signal **came to you**, already **filtered**, already **prioritized**, already **useful?*** 
 
 Every morning, security leaders face the same flood:
 
@@ -239,8 +237,12 @@ N8N_SECURE_COOKIE=false
 ```bash
 GEMINI_API_KEY=REPLACE_WITH_YOUR_GEMINI_KEY
 ```
+<br/>
 
->👉 **GENERIC_TIMEZONE** matters here because n8n scheduling uses the instance timezone.
+### Timezone
+```bash
+GENERIC_TIMEZONE matters here because n8n scheduling uses the instance timezone.
+```
 
 <br/>
 
