@@ -1,35 +1,29 @@
-What's your daily routine look like for keeping up with the times? Things move so fast it's hard to stay on the edge, wouldn't it be cool if you got a CISO briefing aggregated from several of the most trusted cyber security RSS feeds curated and prioritized to your discord channel? Why spend hours tracking down the latest when you can have it all in one place... Every morning, security leaders wake up to the same flood:
+What does your daily “stay current” routine actually look like? If you’re honest, it’s probably a blur—tabs open, feeds scrolling, headlines competing for attention. Cybersecurity moves fast enough that even well-run teams struggle to keep pace. So here’s a better question: what if the signal came to you, already filtered, already prioritized, already useful?
 
-- dozens of RSS feeds
-- overlapping headlines
-- vendor-biased narratives
-- just enough technical detail to be dangerous, but not actionable
+Every morning, security leaders face the same flood:
 
-Somewhere in that noise is what actually matters:
+dozens of RSS feeds
+overlapping headlines
+vendor-biased narratives
+just enough technical detail to sound important, but not enough to act on
 
-- What is being exploited right now
-- Who is actually at risk
-- What needs to be patched, monitored, or explained to leadership
+Buried somewhere in that noise are the answers that actually matter:
 
-But most teams never get there.
+What’s being exploited right now?
+Who’s truly at risk?
+What needs to be patched, monitored, or escalated today?
 
-They skim. They bookmark. They forward links... And then they move on to the next incident. **This is where automation earns its keep—not by pulling in more data, but by forcing clarity out of chaos.**
+Most teams never quite get there. They skim, bookmark, forward a link or two—and then move on to whatever is on fire next.
 
-In this post, we’re going to break down a practical, opinionated n8n workflow that does exactly that:
+This is where automation proves its value. Not by collecting more data, but by forcing clarity out of chaos.
 
-- Aggregates high-signal cybersecurity RSS feeds
-- Normalizes and deduplicates overlapping stories
-- Prioritizes what actually matters
-- Translates raw articles into a CISO-ready briefing using Google Gemini
-- Delivers it in a clean, readable format to Discord
+In this post, we’ll walk through a practical, opinionated n8n workflow that does exactly that. It aggregates high-signal cybersecurity RSS feeds, normalizes and deduplicates overlapping stories, prioritizes what matters, and translates raw reporting into a concise, CISO-ready briefing using Google Gemini—delivered straight into Discord in a format people will actually read.
 
-Not as a novelty.
-Not as a demo.
-But as a repeatable system that answers one uncomfortable question every day:
+This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day:
 
-“If this is the only security update leadership reads today… is it enough?”
+If this is the only security update leadership reads today… is it enough?
 
-This isn’t about building a news bot --> It’s about building a decision surface. *Because the gap between information and action is where most security programs quietly fail.*
+Because the real problem isn’t access to information—it’s the gap between information and action. And that gap is where most security programs quietly fail.
 
 ## What this automation does
 
