@@ -51,13 +51,219 @@ The big idea: **RSS feeds are noisy. This workflow turns them into a decision-gr
 
 <br/><br/>
 
+## Prerequisites
+
+On the Pi 4B, you will want:
+
+- Raspberry Pi OS Lite
+- Docker and Docker Compose
+- n8n in Docker Compose
+- A Gemini API key from Google AI Studio
+- One delivery target:
+- Discord webhook, or
+  - SMTP/Gmail account, or
+  - Teams webhook / Power Automate flow
+
+<br/><br/>
+
+## Grab your Gemini API Key
+
+Go to Google AI Studio and create an API key for the Gemini API. New accounts begin on the Free Tier, and Google’s docs note that free tier access applies to certain models, including Flash-class options rather than every premium model.
+
+For our use case, we'll use a Flash model, not a Pro preview model. A safe target to start with is: **gemini-3-flash-preview...** That matches Google’s current free-tier guidance for Gemini API use.
+
+###  Go to Google AI Studio
+
+Open: 👉 https://aistudio.google.com
+
+Sign in with your Google account.
+
+### Create (or select) a project
+
+When you first land in AI Studio:
+
+If prompted → click **“Create Project,”** otherwise it will auto-create one behind the scenes. You don’t need to overthink this—this is just a container for your API usage.
+
+### Navigate to API Keys
+
+In the left sidebar:
+
+- Click “Get API key”
+OR
+- Click your profile icon (top right) → “API keys”
+
+You’ll land on the API key management page.
+
+### Create a new API key
+
+Click: **“Create API key”**
+
+Then select your project (or default one) and click **Create.**
+
+You’ll immediately get something like:
+
+```
+AIzaSyD...your-long-key...
+```
+
+>⚠️ IMPORTANT! <br/><br/>
+>Treat this like a password... 👇
+>- ❌ Don’t commit it to GitHub
+>- ❌ Don’t paste it in screenshots
+>- ✅ Store it in .env 
+
+### Save that Key ☝️
+
+<br/><br/>
+
+## Prep the Pi 4B
+
+### Update the box:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo reboot
+```
+
+<br/>
+
+![Update && Upgrade -y(.png)](/assets/img/SecurityNews/update.png)
+
+<br/>
+
+### Install Docker:
+
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+<br/>
+
+![Install Docker(.png)](/assets/img/SecurityNews/docker.png)
+
+<br/>
+
+### Confirm it works:
+```bash
+docker --version
+docker compose version
+```
+<br/>
+
+![Docker Version(.png)](/assets/img/SecurityNews/dockerBuild.png)
+
+<br/>
+
+### Create an n8n working folder
+```bash
+mkdir -p ~/n8n-stack
+cd ~/n8n-stack
+mkdir -p n8n_data
+```
+
+<br/>
+
+Generate a strong encryption key for n8n credentials:
+
+```bash
+openssl rand -hex 32
+```
+
+> 🔒 n8n uses an encryption key to protect saved credentials, and the docs recommend setting your own persistent key instead of relying on an auto-generated one.
+
+<br/>
+
+### Create your .env file
+
+Create ~/n8n-stack/.env:
+
+```bash
+nano .env
+```
+
+<br/>
+
+Paste this, replacing values:
+
+```bash
+N8N_HOST=pi4b.local
+N8N_PORT=5678
+N8N_PROTOCOL=http
+GENERIC_TIMEZONE=America/New_York
+```
+
+<br/>
+
+### Use the value you generated with openssl
+```bash
+N8N_ENCRYPTION_KEY=REPLACE_WITH_LONG_RANDOM_HEX
+```
+
+<br/>
+
+### Optional but recommended
+```bash
+N8N_SECURE_COOKIE=false
+```
+
+<br/>
+
+### Gemini
+```bash
+GEMINI_API_KEY=REPLACE_WITH_YOUR_GEMINI_KEY
+```
+
+>👉 **GENERIC_TIMEZONE** matters here because n8n scheduling uses the instance timezone.
+
+<br/>
+
+## Create docker-compose.yml
+
+Create ~/n8n-stack/docker-compose.yml:
+
+```bash
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    environment:
+      - TZ=America/New_York
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+```
+
+> ✔️ This follows the official Docker/Docker Compose self-hosting pattern for n8n.
+
+Start it:
+
+```bash
+docker compose up -d
+docker compose logs -f
+```
+
+Then open:
+```
+http://<your-pi4-ip>:5678
+```
+
+Create your n8n owner account in the browser and get started on your first workflow.
+
+<br/><br/>
+
 ## Node-by-node breakdown
 
 ### Manual Trigger
 
 This is the front door. Nothing runs on a schedule yet. You click **Execute Workflow**, and it kicks off all six RSS branches at once.
 
-> Note: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
+> 🔑 Note: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
 
 You'll want to automate this later such that it runs every morning right around the time you've sat down at your desk with that first cup of hot coffee (or tea). 
 
@@ -83,6 +289,17 @@ I use six RSS collection nodes:
 Each one fetches articles from a specific cyber/security news feed.
 
 These nodes do not make decisions. They just ingest raw feed items. Different RSS feeds use different fields like `content`, `summary`, `description`, `pubDate`, or `isoDate`, so the output is inconsistent at this stage.
+
+<br/>
+
+Here's the full list of RSS URLs used in this example: 
+
+- [https://www.bleepingcomputer.com/feed/](https://www.bleepingcomputer.com/feed/)
+- [https://feeds.feedburner.com/securityweek](https://feeds.feedburner.com/securityweek)
+- [https://www.darkreading.com/rss.xml](https://www.darkreading.com/rss.xml)
+- [https://www.schneier.com/feed/](https://www.schneier.com/feed/)
+- [https://feeds.feedburner.com/TheHackersNews](https://feeds.feedburner.com/TheHackersNews)
+- [https://krebsonsecurity.com/feed/](https://krebsonsecurity.com/feed/)
 
 <br/><br/>
 
@@ -115,7 +332,7 @@ Each one does roughly the same thing:
 
 This is the schema enforcement layer.
 
-Ian's Insight: this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts. This node creates one.
+> 💡 **Ian's Insights:** this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts; these 'Set' nodes creates them.
 
 <br/><br/>
 
@@ -370,8 +587,12 @@ At the end of the day, this isn’t about RSS feeds, n8n, or even AI—it’s ab
 
 # 📚 Want to go deeper?
 
-From logs and scripts to judgment and evidence — the DevSecOpsDad Toolbox shows how to operate Microsoft security platforms defensibly, not just effectively.
+Anyone can aggregate threat intel.
+Very few teams can prove why they acted—or why they didn’t.
 
+The below books are about closing that gap; turning curated signal into defensible decisions across KQL, PowerShell, and the Microsoft security stack.
+
+<br/><br/>
 
 <div style="text-align:center; margin: 2.5em 0;">
   <a href="https://a.co/d/hZ1TVpO" target="_blank" rel="noopener noreferrer">
