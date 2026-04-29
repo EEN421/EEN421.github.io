@@ -114,6 +114,16 @@ AIzaSyD...your-long-key...
 
 ### Save that Key ☝️
 
+<br/>
+
+### Know your limits (free tier reality)
+
+Google’s Gemini API:
+
+- ✅ Has a free tier
+- ⚠️ Limited to certain models (use Flash, not Pro)
+- ⚠️ Has request + token limits
+
 <br/><br/>
 
 ## Prep the Pi 4B
