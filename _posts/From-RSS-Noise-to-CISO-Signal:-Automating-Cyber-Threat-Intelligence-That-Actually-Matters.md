@@ -1,6 +1,8 @@
 ![Title Image(.png)](/assets/img/SecurityNews/intro.png)
 
-What does your daily “stay current” routine actually look like? If you’re honest, it’s probably a blur—tabs open, feeds scrolling, headlines competing for attention. Cybersecurity moves fast enough that even well-run teams struggle to keep pace. So here’s a better question: what if the signal came to you, already filtered, already prioritized, already useful?
+It’s been a while since my last post, not because there wasn’t anything worth writing about—but because life happened. In the span of a month, I started a new role and welcomed a new baby into the world. Both incredible. Both demanding. Both very effective at exposing how little “free time” actually exists to study up and keep in the know. They say "necessity is the mother of all invention" and that couldn't be farther from the truth here; this automation saves me time every day ⏱️
+
+So what does your daily “stay current” routine actually look like? If you’re honest, it’s probably a blur—tabs open, feeds scrolling, headlines competing for attention. Cybersecurity moves fast enough that even well-run teams struggle to keep pace. So here’s a better question: *what if the signal came to you, already **filtered**, already **prioritized**, already **useful?*** 
 
 Every morning, security leaders face the same flood:
 
@@ -11,7 +13,7 @@ Every morning, security leaders face the same flood:
 
 <br/>
 
-Buried somewhere in that noise are the answers that actually matter:
+Buried somewhere in that noise are the answers that **actually matter**:
 
 - What’s being exploited right now?
 - Who’s truly at risk?
@@ -27,7 +29,7 @@ Most teams never quite get there. They skim, bookmark, forward a link or two—a
 
 In this post, we’ll walk through a practical, opinionated n8n workflow that does exactly that. It aggregates high-signal cybersecurity RSS feeds, normalizes and deduplicates overlapping stories, prioritizes what matters, and translates raw reporting into a concise, CISO-ready briefing using Google Gemini—delivered straight into Discord in a format people will actually read.
 
-This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day: *If this is the only security update leadership reads today… is it enough?*
+This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single question every day: *If this is the only security update leadership reads today… is it enough?*
 
 <br/>
 
