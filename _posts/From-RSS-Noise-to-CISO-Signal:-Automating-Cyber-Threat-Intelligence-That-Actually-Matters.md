@@ -29,6 +29,12 @@ In this post, we’ll walk through a practical, opinionated n8n workflow that do
 
 This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day: *If this is the only security update leadership reads today… is it enough?*
 
+<br/>
+
+![Discord Output1(.png)](/assets/img/SecurityNews/discord1.png)
+![Discord Output2(.png)](/assets/img/SecurityNews/discord2.png)
+![Discord Output3(.png)](/assets/img/SecurityNews/discord3.png)
+
 <br/><br/>
 
 ## What this automation does
