@@ -60,7 +60,7 @@ The big idea: **RSS feeds are noisy. This workflow turns them into a decision-gr
   preload="metadata"
   style="width:100%; border-radius:12px;"
 >
-  <source src="{{ '/assets/img/SecurityNews/SecuirtyFeed.mp4' | relative_url }}" type="video/mp4">
+  <source src="/assets/img/SecurityNews/SecurityFeed.mp4" type="video/mp4">
 </video>
 
 
