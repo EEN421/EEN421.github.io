@@ -756,7 +756,7 @@ You are feeding untrusted external text into a model. <br/><br/>
 <br/><br/>
 
 ## Final Thoughts
-At the end of the day, this isn’t about RSS feeds, n8n, or even AI—it’s about whether your security program **decides before it reacts.** The teams that win aren’t the ones reading more—**they’re the ones structuring signal faster than attackers can generate noise.** Automation isn’t replacing analysts; it’s removing the excuse that “we didn’t see it in time.” If your threat intelligence still depends on someone having a free 30 minutes and a cup of coffee, you don’t have a pipeline—you have a hope. Build the system that tells you what matters before the alerts fire, or accept that you’ll always be triaging someone else’s timeline.
+At the end of the day, this isn’t about RSS feeds, n8n, or even AI—it’s about whether your security program **decides before it reacts.** The teams that win aren’t the ones reading more — **they’re the ones structuring signal faster than attackers can generate noise.** Automation isn’t replacing analysts; it’s removing the excuse that “we didn’t see it in time.” If your threat intelligence still depends on someone having a free 30 minutes and a cup of coffee, you don’t have a pipeline — you have *hope.* **Build the system that tells you what matters before the alerts fire**, or accept that you’ll always be triaging someone else’s timeline.
 
 <br/><br/>
 
