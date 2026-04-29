@@ -2,28 +2,31 @@ What does your daily “stay current” routine actually look like? If you’re 
 
 Every morning, security leaders face the same flood:
 
-dozens of RSS feeds
-overlapping headlines
-vendor-biased narratives
-just enough technical detail to sound important, but not enough to act on
+- dozens of RSS feeds
+- overlapping headlines
+- vendor-biased narratives
+- just enough technical detail to sound important, but not enough to act on
+
+<br/>
 
 Buried somewhere in that noise are the answers that actually matter:
 
-What’s being exploited right now?
-Who’s truly at risk?
-What needs to be patched, monitored, or escalated today?
+- What’s being exploited right now?
+- Who’s truly at risk?
+- What needs to be patched, monitored, or escalated today?
 
-Most teams never quite get there. They skim, bookmark, forward a link or two—and then move on to whatever is on fire next.
+Most teams never quite get there. They skim, bookmark, forward a link or two—and then move on to whatever is on fire next. *This is where automation proves its value. Not by collecting more data, but by forcing clarity out of chaos.*
 
-This is where automation proves its value. Not by collecting more data, but by forcing clarity out of chaos.
+<br/>
+
+![Coffee Cat(.png)](/assets/img/SecurityNews/coffeecat.png)
+
+<br/>
 
 In this post, we’ll walk through a practical, opinionated n8n workflow that does exactly that. It aggregates high-signal cybersecurity RSS feeds, normalizes and deduplicates overlapping stories, prioritizes what matters, and translates raw reporting into a concise, CISO-ready briefing using Google Gemini—delivered straight into Discord in a format people will actually read.
 
-This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day:
+This isn’t a novelty project or a demo bot. It’s a repeatable system designed to answer a single uncomfortable question every day: *If this is the only security update leadership reads today… is it enough?*
 
-If this is the only security update leadership reads today… is it enough?
-
-Because the real problem isn’t access to information—it’s the gap between information and action. And that gap is where most security programs quietly fail.
 
 ## What this automation does
 
@@ -47,17 +50,12 @@ The big idea: **RSS feeds are noisy. This workflow turns them into a decision-gr
 
 ### Manual Trigger
 
-This is the front door.
+This is the front door. Nothing runs on a schedule yet. You click **Execute Workflow**, and it kicks off all six RSS branches at once.
 
-Nothing runs on a schedule yet. You click **Execute Workflow**, and it kicks off all six RSS branches at once.
-
-Note: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
+> Note: this is safer while testing because you control when API calls, Gemini usage, and Discord posting happen.
 
 You'll want to automate this later such that it runs every morning right around the time you've sat down at your desk with that first cup of hot coffee (or tea). 
 
-<br/><br/>
-
----
 
 <br/><br/>
 
@@ -82,9 +80,7 @@ Each one fetches articles from a specific cyber/security news feed.
 
 These nodes do not make decisions. They just ingest raw feed items. Different RSS feeds use different fields like `content`, `summary`, `description`, `pubDate`, or `isoDate`, so the output is inconsistent at this stage.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -119,9 +115,7 @@ This is the schema enforcement layer.
 
 Ian's Insight: this is where the workflow stops trusting the feeds and starts shaping the data. Good automation needs contracts. This node creates one.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -143,9 +137,7 @@ At this point, you could have up to 30 articles:
 
 This is still raw volume, not intelligence.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -172,9 +164,7 @@ That means exact duplicate URLs or titles get removed.
 
 DevSecOpsDad read: this is good enough for operational hygiene, but not true semantic dedupe. If three outlets cover the same breach with different URLs and different headlines, Gemini still has to collapse that later.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -198,9 +188,7 @@ This is your cost and signal-control gate.
 
 Instead of feeding Gemini 30 stories, you feed it 10. That lowers token use, reduces prompt noise, and keeps the final Discord post readable.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -251,9 +239,7 @@ Published: ${a.published}
 Snippet: ${a.summary}
 ```
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -281,9 +267,7 @@ That is the handoff from deterministic workflow logic to generative summarizatio
 
 Important: your exported workflow contains what looks like a Gemini API key. Rotate it.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -309,9 +293,7 @@ Then it returns a simple object:
 
 This is another schema-control point. Gemini’s response shape is ugly; this node turns it into something the rest of the workflow can use.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -331,13 +313,17 @@ That avoids ugly mid-sentence cuts when possible.
 
 DevSecOpsDad read: this is delivery engineering. The best briefing in the world still fails if it arrives as a broken wall of text.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
 ### Loop Over Items
+
+<br/>
+
+![Loop Node(.png)](/assets/img/SecurityNews/loop.png)
+
+<br/>
 
 This node loops over each chunk one at a time.
 
@@ -345,9 +331,7 @@ Its job is sequencing.
 
 Without this, Discord posts may arrive out of order or too quickly. With the loop, each chunk gets passed to Discord, then the workflow loops back for the next one.
 
-<br/><br/>
-
----
+ 
 
 <br/><br/>
 
@@ -391,4 +375,64 @@ Manual Run
   → Post to Discord
 ```
 
+<br/><br/>
 
+## Final Thoughts
+At the end of the day, this isn’t about RSS feeds, n8n, or even AI—it’s about whether your security program **decides before it reacts.** The teams that win aren’t the ones reading more—**they’re the ones structuring signal faster than attackers can generate noise.** Automation isn’t replacing analysts; it’s removing the excuse that “we didn’t see it in time.” If your threat intelligence still depends on someone having a free 30 minutes and a cup of coffee, you don’t have a pipeline—you have a hope. Build the system that tells you what matters before the alerts fire, or accept that you’ll always be triaging someone else’s timeline.
+
+<br/><br/>
+
+![CoffeeKat(.png)](/assets/img/SecurityNews/CoffeeKat.png)
+
+# 📚 Want to go deeper?
+
+From logs and scripts to judgment and evidence — the DevSecOpsDad Toolbox shows how to operate Microsoft security platforms defensibly, not just effectively.
+
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/hZ1TVpO" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/KQL Toolbox Cover.jpg"
+      alt="KQL Toolbox: Turning Logs into Decisions in Microsoft Sentinel"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🛠️ <strong>KQL Toolbox:</strong> Turning Logs into Decisions in Microsoft Sentinel
+  </p>
+</div>
+
+<br/>
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/ifIo6eT" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/PowerShell-Cover.jpg"
+      alt="PowerShell Toolbox: Hands-On Automation for Auditing and Defense"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🧰 <strong>PowerShell Toolbox:</strong> Hands-On Automation for Auditing and Defense
+  </p>
+</div>
+
+<br/>
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📖 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
+
+<br/><br/>
+
+![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
