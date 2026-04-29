@@ -602,6 +602,8 @@ contents → parts → text
 
 That is the handoff from deterministic workflow logic to generative summarization.
 
+> &#x1F9E0; 👉 You can use any AI you want if you have an API subscription, just plug your API key into the N8N config file and the AI Offload Node. 
+
 <br/><br/>
 
 ### Parse AI Results
@@ -838,5 +840,14 @@ The below books are about closing that gap; turning curated signal into defensib
 </div>
 
 <br/><br/>
+
+# Helpful Links and Resources
+- [N8N Documentation](https://docs.n8n.io/)
+- [N8N Self Hosting Documentation](https://docs.n8n.io/hosting/)
+- [Google Cloud APIs](https://docs.cloud.google.com/apis/docs/overview?_gl=1*lchl98*_up*MQ..&gclid=c7a5d1db77c3166c5b96b829e39f0860&gclsrc=3p.ds)
+- [Google Gemini API Design Guide](https://docs.cloud.google.com/apis/design?_gl=1*lchl98*_up*MQ..&gclid=c7a5d1db77c3166c5b96b829e39f0860&gclsrc=3p.ds)
+- [Google API Github Repository](https://github.com/googleapis/googleapis)
+
+<br/>
 
 ![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
