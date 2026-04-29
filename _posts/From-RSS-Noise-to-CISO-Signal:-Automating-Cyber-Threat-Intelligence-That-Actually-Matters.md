@@ -451,27 +451,72 @@ It takes the filtered articles and creates a briefing instruction set:
 
 This is the most important node in the workflow.
 
-DevSecOpsDad read: this is where “news” becomes “executive decision support.”
+Here's the prompt I used...
 
-One issue: your prompt code references:
+```java
+const articles = $input.all().map(i => i.json);
 
-```js
-a.pubDate
-a.snippet
-```
+const articleText = articles.map((a, idx) => {
+  return `${idx + 1}. ${a.title}
+Published: ${a.pubDate}
+URL: ${a.link}
+Snippet: ${a.snippet}`;
+}).join('\n\n');
 
-But your normalization nodes output:
+const prompt = `
+You are preparing a daily cyber threat and defense brief for a working security practitioner.
 
-```js
-published
-summary
-```
+Use only the supplied articles.
 
-So the prompt may produce blank/undefined values for published date and snippet. You probably want:
+Requirements:
+- Deduplicate overlapping stories.
+- Prioritize incidents, breaches, exploitation activity, major vulnerabilities, identity abuse, ransomware, cloud abuse, and major vendor security issues.
+- Focus on attacker behavior, defender implications, detection opportunities, patch urgency, and operational risk.
+- Ignore fluff, product marketing, and low-signal filler.
+- Explain why this matters in business terms
+- Mention who is most likely affected
+- Identify the type of threat
+- Say whether it appears opportunistic or targeted
+- Recommend what a CISO should consider next
+- Keep it concise
+- Use 3 to 5 bullet points
+- Do not use placeholders
+- Do not write things like {{ $json.title }} or variable names
+- Do not invent missing facts
 
-```js
-Published: ${a.published}
-Snippet: ${a.summary}
+
+Output in markdown:
+
+# Daily Cyber Brief
+
+## Executive Summary
+- 5 to 8 bullets
+
+## Top Stories
+For each grouped story:
+- Headline
+- What happened
+- What type of threat this represents
+- Whether it is opportunistic or targeted
+- What a CISO should consider next
+
+## Watch Items
+- 3 bullets
+
+## Source Links
+- Include article links
+
+Articles:
+${articleText}
+`;
+
+return [
+  {
+    json: {
+      prompt
+    }
+  }
+];
 ```
 
 <br/><br/>
@@ -540,7 +585,48 @@ It prefers splitting on:
 
 That avoids ugly mid-sentence cuts when possible.
 
-DevSecOpsDad read: this is delivery engineering. The best briefing in the world still fails if it arrives as a broken wall of text.
+> ⚡ Ian's Insights: this is delivery engineering. The best briefing in the world still fails if it arrives as a broken wall of text.
+
+Here's the full JavaScript I used...
+
+```java
+const summary = $json.summary || "";
+const maxLen = 1800; // leave some safety room under Discord limit
+
+const chunks = [];
+let remaining = summary.trim();
+
+while (remaining.length > 0) {
+  if (remaining.length <= maxLen) {
+    chunks.push(remaining);
+    break;
+  }
+
+  // Prefer to split on a newline near the limit
+  let splitAt = remaining.lastIndexOf('\n', maxLen);
+
+  // If no newline, try splitting on a space
+  if (splitAt < maxLen * 0.5) {
+    splitAt = remaining.lastIndexOf(' ', maxLen);
+  }
+
+  // If still no good split point, hard split
+  if (splitAt < maxLen * 0.5) {
+    splitAt = maxLen;
+  }
+
+  chunks.push(remaining.slice(0, splitAt).trim());
+  remaining = remaining.slice(splitAt).trim();
+}
+
+return chunks.map((chunk, index) => ({
+  json: {
+    content: index === 0
+      ? `${chunk}`
+      : chunk
+  }
+}));
+```
 
 <br/><br/>
 
@@ -554,9 +640,7 @@ DevSecOpsDad read: this is delivery engineering. The best briefing in the world 
 
 This node loops over each chunk one at a time.
 
-Its job is sequencing.
-
-Without this, Discord posts may arrive out of order or too quickly. With the loop, each chunk gets passed to Discord, then the workflow loops back for the next one.
+Its job is sequencing: Without this, Discord posts may arrive out of order or too quickly. With the loop, each chunk gets passed to Discord, then the workflow loops back for the next one.
 
 <br/><br/>
 
@@ -582,7 +666,7 @@ This is the final delivery point...
 
 <br/><br/>
 
-## The workflow in plain English
+## Workflow Summary
 
 ```text
 Manual Run
