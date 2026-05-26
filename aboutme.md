@@ -6,17 +6,15 @@ subtitle: Who Am I?
 
 Hi! &#128075; My name is Ian Hanley. 
 
-I’m a **Principal Microsoft Security Architect** and **author** who helps organizations—from startups to Fortune 500s—secure and operationalize **Microsoft Defender, Sentinel, Entra, and Azure**.
+I build security capabilities that work in production—not just in demos.
 
-Over the years, I’ve designed **MSSP-ready services**, built **automation frameworks** that reduce alert fatigue and cost, and helped clients modernize their **Zero Trust** and **SecOps** strategies through practical, threat-informed defense. If it involves the Microsoft security stack, there’s a good chance I’ve architected, automated, or optimized it.
+My background spans detection engineering, threat intelligence, telemetry architecture, Microsoft security platforms, and large-scale automation. Today, I focus on applying that experience to product innovation, helping engineering and AI teams build security capabilities grounded in how modern SOCs actually operate.
 
-As the creator of [**DevSecOpsDad.com**](https://DevSecOpsDad.com), I share real-world lessons from the trenches—bridging the gap between hands-on engineering and strategic cybersecurity leadership.
+Author of [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI), [KQL Toolbox](https://a.co/d/hZ1TVpO), and [PowerShell Toolbox](https://a.co/d/ifIo6eT), I'm passionate about detection quality, machine-speed security operations, AI-assisted defense, and turning raw telemetry into decisions defenders can trust.
 
-My book, *[Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI)*, captures that same philosophy: turning complex Microsoft security ecosystems into clear, actionable roadmaps for defenders. <br/> <br/> ![Ultimate Microsoft XDR for Full Spectrum Cyber Defense](/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg)
+Outside of work, I’m a proud father—and I can confidently say that parenthood has taught me more about **incident response and risk management** than any certification ever could 😁
 
-Outside of work, I’m a proud father of two daughters—and I can confidently say that parenthood has taught me more about **incident response and risk management** than any certification ever could.
-
-⚡ To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [twitter](https://twitter.com/IanDHanley).
+⚡ To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [X](https://X.com/IanDHanley).
 
 Cheers,<br/>
 Ian D. Hanley
