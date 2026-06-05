@@ -23,7 +23,7 @@ tags:
   - threat-hunting
 ---
 
-Every week the [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and deployment-readiness calls. This week's five briefs produced **23 KQL candidates** across npm supply-chain attacks, NetSupport RAT, a macOS FlutterShell dropper chain, a Key Vault secret-access anomaly, an API-recon sweep, and more.
+Every week our [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and deployment-readiness calls. This week's five briefs produced **23 KQL candidates** across npm supply-chain attacks, NetSupport RAT, a macOS FlutterShell dropper chain, a Key Vault secret-access anomaly, an API-recon sweep, and more.
 
 Out of all 23, two queries stuck with me — not because of the malware they target, but because of the *primitives* they're built on. One counts **rhythm**. The other detects **absence**. Both generalize far beyond the threat that produced them, and both are worth adding to your mental toolkit.
 
@@ -31,7 +31,7 @@ Let's pull them apart.
 
 ---
 
-## 🥁 The main event: count the rhythm, not the racket
+## 🥇 The main event: count the rhythm, not the racket
 
 The featured query this week comes from the **Argamal RAT** hunt (Thursday's brief). Argamal is a remote access trojan recently caught hiding inside trojanized game installers — it drops its payload into user-writable directories and then quietly phones home (h/t Securelist). It's the C2 stage that's interesting here, because the detection isn't really about Argamal at all. It's about how you find any implant that beacons low-and-slow.
 
@@ -124,7 +124,7 @@ If `PercentPopulated` is low, pivot the path logic to a join against `DeviceProc
 
 ---
 
-## 🕵️ The honorable mention, in depth: detect the login that never happened
+## 🥈 The honorable mention, in depth: detect the login that never happened
 
 If the beaconing query wins on reusability, Monday's **GlobalProtect VPN Session Without Prior Authentication** detection wins on ambition — and it's the more instructive of the two, because it's a powerful idea wrapped around a subtle, ship-breaking bug.
 
@@ -236,11 +236,7 @@ Both of these came straight out of this week's daily briefs, fully written up wi
 
 If you want this kind of detection content landing in your inbox every day, that's the whole point of the **[Detection Engineering Brief at DevSecOpsDadAttack.com](https://DevSecOpsDadAttack.com)** — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving.
 
-What's your go-to KQL pattern for low-and-slow beaconing — or for absence detection done right? I'd love to hear it.
-
 ---
-
-_Curated from the DevSecOpsDad Detection Engineering Brief. Validate every detection against your own telemetry before deployment._
 
 <br/>
 
