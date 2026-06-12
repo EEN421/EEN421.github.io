@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "KQL of the Week: Catch the Attacker Who Turns Off the Cameras"
+title: "KQL of the Week: Detecting Cloud Logging Suppression (T1562.008) — Catch the Attacker Who Turns Off the Cameras"
 subtitle: "Telemetry suppression, sequence correlation, and the windowed join done right."
 date: 2026-06-12
 author: DevSecOpsDad
@@ -169,22 +169,34 @@ An administrator modifies logging and goes to lunch. An attacker modifies loggin
 
 The Thursday brief is marked **hunting-only — "do not schedule yet; validate as an analyst-led hunt first"** — and it earns that label. Don't promote this to a scheduled rule until you've dealt with three things, all of which the brief calls out plainly:
 
-**1. The join is on `Caller` alone, and that's a real weakness.** Any coincidental activity by the same identity inside the 60-minute window will match. In an active tenant where admins are constantly doing legitimate work, that's a meaningful false-positive source — one identity that deletes a stale diagnostic setting and then does *anything* else for the next hour lights up. The single best hardening, straight from the brief's tuning notes, is to require the **same source IP** for both halves of the chain, so you're correlating a *session*, not just an *identity*:
+**1. The join is on `Caller` alone, and that's a real weakness.** Any coincidental activity by the same identity inside the 60-minute window will match. In an active tenant where admins are constantly doing legitimate work, that's a meaningful false-positive source — one identity that deletes a stale diagnostic setting and then does *anything* else for the next hour lights up. The single best hardening, straight from the brief's tuning notes, is to require the **same source IP** for both halves of the chain, so you're correlating a *session*, not just an *identity*. Carry `CallerIpAddress` through the `followOnActivity` summarize as `FollowOnIp`, then compare the two after the join:
 
 ```kql
+let followOnActivity = AzureActivity
+    | where TimeGenerated > ago(lookback)
+    | where ActivityStatus in ("Succeeded", "Success")
+    | where tolower(OperationName) !in (deletionOps)
+    | summarize FollowOnTime = min(TimeGenerated),
+        FollowOnOperation = take_any(OperationName),
+        FollowOnResource = take_any(ResourceId),
+        FollowOnIp = take_any(CallerIpAddress)            // carry the IP through
+        by Caller, bin(TimeGenerated, 1m)
+    | project FollowOnTime, Caller, FollowOnResource, FollowOnOperation, FollowOnIp;
 loggingDeletions
 | join kind=inner followOnActivity on Caller
 | where FollowOnTime >= DeletionTime and FollowOnTime <= DeletionTime + followOnWindow
 | where FollowOnResource != DeletedResource
-// require the follow-on to come from the same session, not just the same person
-| where FollowOnIp == CallerIpAddress
+| where FollowOnIp == CallerIpAddress                     // same session, not just same person
+| extend TimeDeltaMinutes = datetime_diff('minute', FollowOnTime, DeletionTime)
+| project DeletionTime, FollowOnTime, TimeDeltaMinutes, Caller, CallerIpAddress, DeletedResource, FollowOnResource, FollowOnOperation
+| order by DeletionTime desc
 ```
 
-(You'd carry `CallerIpAddress` through the `followOnActivity` summarize as `FollowOnIp` to make that comparison.) Same identity is a coincidence generator. Same identity *and* same IP *and* same hour is a story.
+Same identity is a coincidence generator. Same identity *and* same IP *and* same hour is a story. (One caveat worth a comment in your own copy: if a real attacker rides a shared NAT or egress IP, the same-IP check can suppress a true chain — so keep the looser `Caller`-only version as your hunting query and treat the same-IP version as the higher-fidelity alerting variant.)
 
 **2. Ingestion latency can break the window at the edges.** `AzureActivity` commonly lags 5–15 minutes, and that lag isn't uniform across operations. A follow-on event can land in the workspace *before* the deletion it logically followed, dropping a real chain right at the `followOnWindow` boundary. Widen the window for hunting; don't trust tight boundaries for alerting.
 
-**3. The follow-on summarize hides detail.** `take_any(OperationName)` and `take_any(ResourceId)` keep the row count sane but collapse a multi-step follow-on into a single sampled operation. Great for triage triage volume, lossy for reconstructing the full chain — so when something hits, pivot back to raw `AzureActivity` for that `Caller` and window before you write the verdict.
+**3. The follow-on summarize hides detail.** `take_any(OperationName)` and `take_any(ResourceId)` keep the row count sane but collapse a multi-step follow-on into a single sampled operation. Great for triage volume, lossy for reconstructing the full chain — so when something hits, pivot back to raw `AzureActivity` for that `Caller` and window before you write the verdict.
 
 ### How I'd evolve it
 
