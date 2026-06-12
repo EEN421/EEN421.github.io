@@ -1,5 +1,5 @@
 ![DevSecOpsDadAttack!](/assets/img/Attack1.png)
-Every week our [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and deployment-readiness calls. This week's five briefs produced **23 KQL candidates** across npm supply-chain attacks, NetSupport RAT, a macOS FlutterShell dropper chain, a Key Vault secret-access anomaly, an API-recon sweep, and more.
+Every day our [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and deployment-readiness calls. This week's five briefs produced **23 KQL candidates** across npm supply-chain attacks, NetSupport RAT, a macOS FlutterShell dropper chain, a Key Vault secret-access anomaly, an API-recon sweep, and more.
 
 Out of all 23, two queries stuck with me — not because of the malware they target, but because of the *primitives* they're built on. One counts **rhythm**. The other detects **absence**. Both generalize far beyond the threat that produced them, and both are worth adding to your mental toolkit.
 
