@@ -17,7 +17,7 @@ tags:
 
 ![DevSecOpsDadAttack!](/assets/img/Attack1.png)
 
-Every week-day our [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and deployment-readiness calls. This week's five briefs produced **21 KQL candidates** across Apache ActiveMQ and Gogs RCE, a Check Point VPN zero-day (CVE-2026-50751), PAN-OS exploitation (CVE-2026-0257), the Ivanti Sentry auth-bypass/RCE pair (CVE-2026-10520 / CVE-2026-10523), an Oracle PeopleSoft zero-day (CVE-2026-35273), and Azure cloud-logging tampering.
+Every day our [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and deployment-readiness calls. This week's five briefs produced **21 KQL candidates** across Apache ActiveMQ and Gogs RCE, a Check Point VPN zero-day (CVE-2026-50751), PAN-OS exploitation (CVE-2026-0257), the Ivanti Sentry auth-bypass/RCE pair (CVE-2026-10520 / CVE-2026-10523), an Oracle PeopleSoft zero-day (CVE-2026-35273), and Azure cloud-logging tampering.
 
 Most of those detections were built around a familiar shape: **find the exploit, detect the exploit, alert on the exploit.**
 
