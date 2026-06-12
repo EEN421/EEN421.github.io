@@ -257,8 +257,8 @@ _Looking for actionable threat intelligence and detection engineering insights?_
 
 DevSecOpsDadAttack publishes daily:
 
-📈 Threat Intelligence Briefs focused on active campaigns, exploitation trends, and operational risk <br/>
-🛠️ Detection Engineering Briefs with ATT&CK mappings, telemetry requirements, KQL detections, tuning guidance, and triage workflows <br/>
+📈 Threat Intelligence Briefs focused on active campaigns, exploitation trends, and operational risk <br/><br/>
+🛠️ Detection Engineering Briefs with ATT&CK mappings, telemetry requirements, KQL detections, tuning guidance, and triage workflows <br/><br/>
 🔍 Practical analysis designed for SOC teams, threat hunters, detection engineers, and security leaders <br/><br/>
 
 Visit [DevSecOpsDadAttack.com](https://devsecopsdadattack.com) for the latest intelligence and detection content.
