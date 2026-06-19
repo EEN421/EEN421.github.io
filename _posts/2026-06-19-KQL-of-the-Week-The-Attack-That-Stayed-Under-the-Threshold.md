@@ -1,27 +1,5 @@
----
-layout: post
-title: "KQL of the Week: The Attack That Stayed Under the Threshold"
-subtitle: "Distributed SSH brute force, the login it was building toward, and the one detection idea that ties them together."
-date: 2026-06-19
-author: DevSecOpsDad
-tags:
-  - detection-engineering
-  - kql
-  - SSH
-  - Linux
-  - Syslog
-  - T1110
-  - T1110.001
-  - T1078
-  - brute-force
-  - AutoGen Studio
-  - AI agent security
-  - Microsoft Sentinel
----
-
 ![DevSecOpsDadAttack!](/assets/img/Attack1.png)
-
-Every day our [Detection Engineering Brief](https://DevSecOpsDadAttack.com) turns fresh threat intel into deployable detection content — KQL for Microsoft Sentinel and Defender XDR, ATT&CK mappings, triage runbooks, and honest deployment-readiness calls. This week's five briefs produced **20 KQL candidates** across an Oracle PeopleSoft zero-day (CVE-2026-35273), evil MSI loaders, the VHDX-to-Remcos delivery chain, Dropping Elephant's Fondue.exe side-loading, a Tor-speaking crypto clipper, the Mastra npm supply-chain compromise, an AI-agent RCE, and a pile of SSH brute force.
+This week's five briefs produced **20 KQL candidates** across an Oracle PeopleSoft zero-day (CVE-2026-35273), evil MSI loaders, the VHDX-to-Remcos delivery chain, Dropping Elephant's Fondue.exe side-loading, a Tor-speaking crypto clipper, the Mastra npm supply-chain compromise, an AI-agent RCE, and a pile of SSH brute force.
 
 Most of those detections live on the endpoint. They watch one host's process tree, one parent spawning one suspicious child. Good, necessary work.
 
