@@ -283,7 +283,14 @@ Visit [DevSecOpsDadAttack.com](https://devsecopsdadattack.com) for the latest in
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/Attack1.png)
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://devsecopsdadattack.com" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Attack1.png"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+</div>
 
 <br/><br/>
 
