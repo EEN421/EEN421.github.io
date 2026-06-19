@@ -349,4 +349,3 @@ The below books are about closing that gap; turning curated signal into defensib
 
 <br/>
 
-![DevSecOpsDad.com](/assets/img/NewFooter_DevSecOpsDad.png)
