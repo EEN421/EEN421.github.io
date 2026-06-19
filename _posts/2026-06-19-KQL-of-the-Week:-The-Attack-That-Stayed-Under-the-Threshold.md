@@ -1,4 +1,4 @@
-![DevSecOpsDadAttack!](/assets/img/Attack1.png)
+![DevSecOpsDadAttack!](/assets/img/KQL of the Week/Designer.png)
 This week's five briefs produced **20 KQL candidates** across an Oracle PeopleSoft zero-day (CVE-2026-35273), evil MSI loaders, the VHDX-to-Remcos delivery chain, Dropping Elephant's Fondue.exe side-loading, a Tor-speaking crypto clipper, the Mastra npm supply-chain compromise, an AI-agent RCE, and a pile of SSH brute force.
 
 Most of those detections live on the endpoint. They watch one host's process tree, one parent spawning one suspicious child. Good, necessary work.
@@ -258,6 +258,10 @@ Three weeks, three different shapes of the same truth: the best detections this 
 Every one of those came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, triage runbooks, false-positive notes, and an honest readiness call. Twenty of them this week.
 
 If you want this kind of detection content landing in your inbox every morning — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving — that's the whole point of the **[Detection Engineering Brief at DevSecOpsDadAttack.com](https://DevSecOpsDadAttack.com)**.
+
+<br/>
+
+![](/assets/img/KQL of the Week/KQL-of-the-Week-Threshold.png)
 
 <br/>
 
