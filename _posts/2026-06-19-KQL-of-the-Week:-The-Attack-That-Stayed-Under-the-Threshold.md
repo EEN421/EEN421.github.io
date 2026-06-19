@@ -7,7 +7,11 @@ But the detection that stuck with me this week wasn't about a process tree at al
 
 This week's KQL of the Week is the **coordinated SSH brute force** story — and it's really two queries, from Thursday's and Friday's briefs, that tell one campaign in two acts.
 
+<br/>
+
 ---
+
+<br/>
 
 ## 🥇 Act I: the attack that learned to spread out
 
@@ -28,6 +32,8 @@ Your rule never fires.
 Not because the attack got quieter. Because the attack got **wider**, and your rule was only ever looking at one axis: failures *per source*. The attacker simply moved the load onto an axis you weren't counting.
 
 Think of it as a bouncer who throws you out after you fail to show ID ten times. Reasonable policy. So the attacker doesn't send one person ten times — they send a hundred people one time each. Nobody hits ten. The bouncer never moves. And the line keeps shuffling toward the door.
+
+<br/>
 
 ### The KQL
 
@@ -53,6 +59,8 @@ FailedSSHSyslog
 | order by DistinctSourceIPs desc, TimeGenerated desc
 ```
 
+<br/>
+
 ### The line that does the work
 
 It's this one:
@@ -70,6 +78,8 @@ You flipped the axis. You stopped counting knocks and started counting **faces a
 
 That's the reusable lesson, and it's worth more than the query: **the threshold you're proud of is the threshold they're built to evade.** When an attack defeats your detection by spreading the load, don't lower the threshold — change what you're counting.
 
+<br/>
+
 ### Keeping it honest
 
 This query is a campaign-in-progress detector, not a compromise detector, and it has real edges:
@@ -80,7 +90,11 @@ This query is a campaign-in-progress detector, not a compromise detector, and it
 
 Act I tells you the storm is happening. It does not tell you whether the lightning hit anything. For that, you need Act II.
 
+<br/>
+
 ---
+
+<br/>
 
 ## 🥈 Act II: the login it was building toward
 
@@ -126,6 +140,8 @@ successSSH
     AlertDetail = strcat("SSH success after ", tostring(FailCount), " failures from ", SourceIP)
 ```
 
+<br/>
+
 ### The line that does the work
 
 Long-time readers will recognize this one, because we just praised its cousin last week:
@@ -137,6 +153,8 @@ Long-time readers will recognize this one, because we just praised its cousin la
 That's the line that turns a coincidence into a sequence. Without it, any successful login from a noisy IP matches that IP's historical failures and you get garbage — successes that happened to share an address with old noise. With it, the query insists on **order**: the failures came first, the success came after. The story has a direction.
 
 If that feels familiar, it should. Last week's winner — the Azure logging-suppression sequence — leaned on the exact same primitive: enforce the time relationship with an explicit `where` *after* the join, never inside the `on`. Different telemetry, different table, same move. This is what it looks like when a primitive earns its keep across totally unrelated detections. The windowed, ordered join isn't a trick. It's a tool you reach for every week.
+
+<br/>
 
 ### Event versus story
 
@@ -160,6 +178,8 @@ then logged in successfully at 02:53 as svc_backup
 
 Now you have a subject, a target, a timeline, and a verb. `AlertDetail` even hands the analyst that sentence pre-written. The raw events didn't change. The **context** did — and context is the entire job.
 
+<br/>
+
 ### Keeping it honest
 
 Two queries from the same source, and they don't actually agree on one important thing — so let's say it out loud:
@@ -178,7 +198,11 @@ Act II never fires. Six is below ten.
 
 Act I *did* fire — it saw the storm — but Act I can't tell you the lightning hit. So the winning login sails through the seam between a per-target storm detector and a per-source conversion detector. That's not a bug in either query. It's the **architecture** telling you something: distributed credential-access attacks have to be watched on *both* axes, because the attacker gets to choose which axis to hide on. Run Act I to catch the campaign. Run Act II to catch the conversion. Mind the gap between them, and tune `failThreshold` down on hosts where a successful guess matters more than alert volume.
 
+<br/>
+
 ---
+
+<br/>
 
 ## 🎖 Honorable Mention: when the AI agent becomes the exploit
 
@@ -217,7 +241,11 @@ The honest catch — and the brief flags it — is that this same shape is *also
 
 Today that's a niche detection for the handful of teams running agentic AI with shell access. Give it eighteen months. Process-spawn detection around AI workloads is going to be as routine as PowerShell logging is now — and the teams who started baselining early are the ones who'll have a baseline when it matters. That's why it earns the mention.
 
+<br/>
+
 ---
+
+<br/>
 
 ## The bigger lesson
 
@@ -230,6 +258,8 @@ Three weeks, three different shapes of the same truth: the best detections this 
 Every one of those came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, triage runbooks, false-positive notes, and an honest readiness call. Twenty of them this week.
 
 If you want this kind of detection content landing in your inbox every morning — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving — that's the whole point of the **[Detection Engineering Brief at DevSecOpsDadAttack.com](https://DevSecOpsDadAttack.com)**.
+
+<br/>
 
 ---
 
