@@ -86,9 +86,9 @@ Act I catches the costume. It does not catch the attacker who reused a *name* yo
 
 <br/>
 
----
-
 ![](/assets/img/Name is not a Claim/kql-of-the-week-linkedin.png) 
+
+---
 
 <br/>
 
@@ -196,6 +196,8 @@ Strip both queries down and they're the same sentence. Act I: *this binary claim
 
 <br/>
 
+![](/assets/img/Name is not a Claim/another_image.png)
+
 ---
 
 <br/>
@@ -234,8 +236,6 @@ The honest catch — and the brief flags it — is that `/_next/` static assets 
 But the reason it earns the mention: detecting by *result* instead of *signature* is the most variant-proof move in the book. The next bypass header, the next CVE in this class, the next framework with the same middleware pattern — the payload changes, but "a source getting both 401 and 200 on locked routes" doesn't. That detector ages well. Most don't.
 
 <br/>
-
-![](/assets/img/Name is not a Claim/another_image.png)
 
 ---
 
