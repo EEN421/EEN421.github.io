@@ -237,6 +237,8 @@ But the reason it earns the mention: detecting by *result* instead of *signature
 
 <br/>
 
+![](/assets/img/Name is not a Claim/linkedin.png)
+
 ---
 
 <br/>
