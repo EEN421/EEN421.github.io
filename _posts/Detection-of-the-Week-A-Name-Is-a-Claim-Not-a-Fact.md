@@ -1,4 +1,4 @@
-![DevSecOpsDadAttack!](/assets/img/KQL of the Week/Designer.png)
+![DevSecOpsDadAttack!](/assets/img/Name is not a Claim/Detection of the Week.png)
 This week's six briefs produced **30 KQL candidates** across an NTLM-relay-to-Shadow-Credentials privilege chain, the WhatsApp VBScript RMM dropper, an npm postinstall implant, SharkLoader staging Cobalt Strike under the StrikeShark campaign, StealC and Amadey infostealers raiding browser credential stores, a photo-themed ZIP delivering a Node.js implant, and a fresh batch of Metasploit modules pointed at LiteLLM, Next.js, and Audiobookshelf.
 
 Most of those detections do what good detections do: they watch a thing *behave* badly. A process spawns a shell. A beacon phones home. An unsigned binary reads `login.json` out of a browser profile. Behavior is the bread and butter, and the briefs were full of it.
@@ -87,6 +87,8 @@ Act I catches the costume. It does not catch the attacker who reused a *name* yo
 <br/>
 
 ---
+
+![](/assets/img/Name is not a Claim/kql-of-the-week-linkedin.png) 
 
 <br/>
 
@@ -233,6 +235,8 @@ But the reason it earns the mention: detecting by *result* instead of *signature
 
 <br/>
 
+![](/assets/img/Name is not a Claim/another_image.png)
+
 ---
 
 <br/>
@@ -251,7 +255,7 @@ If you want this kind of detection content landing in your inbox every morning â
 
 <br/>
 
-![](/assets/img/KQL of the Week/KQL-of-the-Week-A-Name-Is-a-Claim.png)
+![DevSecOpsDadAttack!](/assets/img/Name is not a Claim/Name_is_not_a_claim.png)
 
 <br/>
 
