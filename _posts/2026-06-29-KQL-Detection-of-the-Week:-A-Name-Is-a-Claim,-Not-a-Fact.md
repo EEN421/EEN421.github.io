@@ -196,7 +196,7 @@ Strip both queries down and they're the same sentence. Act I: *this binary claim
 
 <br/>
 
-![](/assets/img/Name is not a Claim/another_image.png)
+![DevSecOpsDadAttack!](/assets/img/Name is not a Claim/Name_is_not_a_claim.png)
 
 ---
 
@@ -255,7 +255,7 @@ If you want this kind of detection content landing in your inbox every morning â
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/Name is not a Claim/Name_is_not_a_claim.png)
+![](/assets/img/Name is not a Claim/another_image.png)
 
 <br/>
 
