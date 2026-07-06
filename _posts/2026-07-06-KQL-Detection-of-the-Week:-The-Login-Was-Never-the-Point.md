@@ -23,7 +23,7 @@ We spent a decade teaching identity teams to watch **logins**. Failed logins, im
 
 OAuth consent breaks that assumption in one motion. When a user clicks "Allow" on an application's permission request, they don't hand over a password — they hand over a **delegated grant**: a durable, refreshable token that acts on their behalf. That token doesn't care if the password rotates tomorrow. It already satisfied MFA at consent time, so it never gets challenged again. And it doesn't generate the sign-in events your impossible-travel rules are built on, because the app is calling the API directly, not logging in as the user.
 
-Securelist's ToddyCat Part 2 (the Umbrij write-up behind this detection) lays out exactly this play: rather than steal credentials and fight the login stack, the tooling targets **OAuth authorization tokens** to establish persistent access to Google Workspace and Gmail on behalf of a compromised corporate identity. The grant *is* the persistence. MITRE files it under T1098.003, Additional Cloud Credentials — and that ATT&CK line is the whole insight in four words. The attacker didn't take a credential. They **added** one.
+[Securelist's ToddyCat Part 2 (the Umbrij write-up behind this detection)](https://securelist.com/toddycat-apt-umbrij-tool-and-oauth/120251/) lays out exactly this play: rather than steal credentials and fight the login stack, the tooling targets **OAuth authorization tokens** to establish persistent access to Google Workspace and Gmail on behalf of a compromised corporate identity. The grant *is* the persistence. MITRE files it under T1098.003, Additional Cloud Credentials — and that ATT&CK line is the whole insight in four words. The attacker didn't take a credential. They **added** one.
 
 Think of a house key. Everyone's watching the front door — who knocks, who fumbles the lock, who tries the window. Meanwhile the attacker got the homeowner to cut them a copy at the hardware store. No knock, no forced lock, no broken window. Just a key that keeps working after you change the deadbolt, because the copy was never tied to the lock you changed.
 
@@ -181,7 +181,7 @@ Act I and Act II are the same sentence in two tenses. *A key was minted.* *A key
 
 If Act I and Act II win on the identity lesson, the week's freshest host-side detection wins on *where the puck is going* — and it pulls the same trick one more way.
 
-This week's Rapid7 wrap shipped a Metasploit module that does something quietly nasty: it **upgrades an existing SMB session** into a Meterpreter shell. Read that carefully. It doesn't authenticate fresh. It doesn't exploit a memory-corruption bug. It takes a key already in hand — an authenticated SMB session, the kind admin tooling opens ten thousand times a day — and turns it into interactive execution via PsExec. Same family as the OAuth acts: don't knock, reuse a key. The catch is that the resulting shell looks *local*. On the target host, you see `psexec.exe` spawning `cmd.exe` or `powershell.exe`, and the process tree tells you nothing about the fact that the whole thing started from another machine.
+This week's [Rapid7 wrap](https://www.rapid7.com/blog/post/pt-metasploit-wrap-up-07-03-2026/) shipped a [Metasploit](https://devsecopsdadattack.com/tags/#Metasploit) module that does something quietly nasty: it **upgrades an existing SMB session** into a [Meterpreter](https://devsecopsdadattack.com/tags/#Meterpreter) shell. Read that carefully. It doesn't authenticate fresh. It doesn't exploit a memory-corruption bug. It takes a key already in hand — an authenticated SMB session, the kind admin tooling opens ten thousand times a day — and turns it into interactive execution via PsExec. Same family as the OAuth acts: don't knock, reuse a key. The catch is that the resulting shell looks *local*. On the target host, you see `psexec.exe` spawning `cmd.exe` or `powershell.exe`, and the process tree tells you nothing about the fact that the whole thing started from another machine.
 
 The detection doesn't read the process tree for badness. It reads the **login table** for the shell's true origin.
 
@@ -234,6 +234,35 @@ Seven briefs, and the detections that mattered most weren't the most complex KQL
 Every one of those came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, deployment gates, triage runbooks, false-positive notes, and an honest readiness call. Twenty-nine of them this week.
 
 If you want this kind of detection content landing in your inbox every morning — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving — that's the whole point of the **[Detection Engineering Brief at DevSecOpsDadAttack.com](https://devsecopsdadattack.com/detectionengineering/)**.
+
+<br/>
+
+---
+
+<br/>
+
+## Helpful Links and References:
+
+This Week's Detection engineering Briefs: 
+[Monday](https://devsecopsdadattack.com/2026-06-29-detection-engineering-brief-monday-june-29-2026/)
+[Tuesday](https://devsecopsdadattack.com/2026-06-30-detection-engineering-brief-tuesday-june-30-2026/)
+[Wednesday](https://devsecopsdadattack.com/2026-07-01-detection-engineering-brief-wednesday-july-1-2026/)
+[Thursday](https://devsecopsdadattack.com/2026-07-02-detection-engineering-brief-thursday-july-2-2026/)
+[Friday](https://devsecopsdadattack.com/2026-07-03-detection-engineering-brief-friday-july-3-2026/)
+[Saturday](https://devsecopsdadattack.com/2026-07-04-detection-engineering-brief-saturday-july-4-2026/)
+[Sunday](https://devsecopsdadattack.com/2026-07-05-detection-engineering-brief-sunday-july-5-2026/)
+
+DevSecOpsdadAttack Tags:
+[Metasploit](https://devsecopsdadattack.com/tags/#Metasploit)
+[Meterpreter](https://devsecopsdadattack.com/tags/#Meterpreter)
+[Umbrij](https://devsecopsdadattack.com/tags/#Umbrij)
+[ToddyCat](https://devsecopsdadattack.com/tags/#ToddyCat)
+[PsExec](https://devsecopsdadattack.com/tags/#PsExec)
+
+External Sources: 
+[Rapid7's Metasploit Wrap-Up](https://www.rapid7.com/blog/post/pt-metasploit-wrap-up-07-03-2026/)
+[Securelist's ToddyCat Part 2](https://securelist.com/toddycat-apt-umbrij-tool-and-oauth/120251/)
+
 
 <br/>
 
