@@ -1,4 +1,4 @@
-![DevSecOpsDadAttack!](/assets/img/The Login Was Never the Point/Detection of the Week.png)
+![DevSecOpsDadAttack!](/assets/img/Login_was_Never_the_Point/Cat.png)
 This week's seven briefs produced **29 KQL candidates** across ToddyCat's Umbrij OAuth tooling raiding Google Workspace, a trojanized-ScreenConnect campaign dropping AsyncRAT, Armored Likho's BusySnake Python stealer arriving on AI-generated phishing loaders, a photo-themed ZIP delivering a Node.js implant into hospitality, a malicious Chromium extension quietly redirecting search, and two Rapid7 Metasploit batches pointed at LiteLLM, Next.js, Dalfox, Audiobookshelf, Peyara Remote Mouse, and a new SMB-to-Meterpreter upgrade.
 
 Most of those detections do what good detections do: they watch a thing *behave*. ScreenConnect spawns a shell it has no business spawning. An Office document births a Python process. A stealer beacons out on a weird port. Behavior was the bread and butter again this week, and the briefs were full of it.
@@ -14,6 +14,8 @@ That's the tell that ties this week together. The most durable compromise on the
 <br/>
 
 ## 🥇 Act I: the backdoor you approved yourself
+
+![Act I](assets/img/Login_was_Never_the_Point/Act_I.png)
 
 Here's the problem the winning query solves.
 
@@ -94,6 +96,8 @@ Act I catches the key being cut. It does not catch what happens once the key is 
 <br/>
 
 ## 🥈 Act II: the key that turned up in a country the user has never visited
+
+![Act II](assets/img/Login_was_Never_the_Point/Act_II.png)
 
 Same idea, one step downstream.
 
@@ -176,6 +180,8 @@ Act I and Act II are the same sentence in two tenses. *A key was minted.* *A key
 <br/>
 
 ## 🎖 Honorable Mention: the shell that arrived over the wire
+
+![Honorable Mention](assets/img/Login_was_Never_the_Point/Honorable.png)
 
 If Act I and Act II win on the identity lesson, the week's freshest host-side detection wins on *where the puck is going* — and it pulls the same trick one more way.
 
