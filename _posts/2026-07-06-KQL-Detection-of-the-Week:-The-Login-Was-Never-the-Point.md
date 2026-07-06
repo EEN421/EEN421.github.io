@@ -244,24 +244,37 @@ If you want this kind of detection content landing in your inbox every morning â
 ## Helpful Links and References:
 
 This Week's Detection engineering Briefs: 
-[Monday](https://devsecopsdadattack.com/2026-06-29-detection-engineering-brief-monday-june-29-2026/)
-[Tuesday](https://devsecopsdadattack.com/2026-06-30-detection-engineering-brief-tuesday-june-30-2026/)
-[Wednesday](https://devsecopsdadattack.com/2026-07-01-detection-engineering-brief-wednesday-july-1-2026/)
-[Thursday](https://devsecopsdadattack.com/2026-07-02-detection-engineering-brief-thursday-july-2-2026/)
-[Friday](https://devsecopsdadattack.com/2026-07-03-detection-engineering-brief-friday-july-3-2026/)
-[Saturday](https://devsecopsdadattack.com/2026-07-04-detection-engineering-brief-saturday-july-4-2026/)
-[Sunday](https://devsecopsdadattack.com/2026-07-05-detection-engineering-brief-sunday-july-5-2026/)
+- [Monday, 29th June](https://devsecopsdadattack.com/2026-06-29-detection-engineering-brief-monday-june-29-2026/)
+- [Tuesday, 20th June](https://devsecopsdadattack.com/2026-06-30-detection-engineering-brief-tuesday-june-30-2026/)
+- [Wednesday, 1st July](https://devsecopsdadattack.com/2026-07-01-detection-engineering-brief-wednesday-july-1-2026/)
+- [Thursday, 2nd July](https://devsecopsdadattack.com/2026-07-02-detection-engineering-brief-thursday-july-2-2026/)
+- [Friday, 3rd July](https://devsecopsdadattack.com/2026-07-03-detection-engineering-brief-friday-july-3-2026/)
+- [Saturday, 4th July](https://devsecopsdadattack.com/2026-07-04-detection-engineering-brief-saturday-july-4-2026/)
+- [Sunday, 5th July](https://devsecopsdadattack.com/2026-07-05-detection-engineering-brief-sunday-july-5-2026/)
 
 DevSecOpsdadAttack Tags:
-[Metasploit](https://devsecopsdadattack.com/tags/#Metasploit)
-[Meterpreter](https://devsecopsdadattack.com/tags/#Meterpreter)
-[Umbrij](https://devsecopsdadattack.com/tags/#Umbrij)
-[ToddyCat](https://devsecopsdadattack.com/tags/#ToddyCat)
-[PsExec](https://devsecopsdadattack.com/tags/#PsExec)
+- [detection-engineering](https://devsecopsdadattack.com/tags/#detection-engineering)
+- [kql](https://devsecopsdadattack.com/tags/#kql)
+- [ToddyCat](https://devsecopsdadattack.com/tags/#ToddyCat)
+- [Umbrij](https://devsecopsdadattack.com/tags/#Umbrij)
+- [OAuth](https://devsecopsdadattack.com/tags/#OAuth)
+- [Gmail](https://devsecopsdadattack.com/tags/#Gmail)
+- [Google Workspace](https://devsecopsdadattack.com/tags/#Google-Workspace)
+- [T1098](https://devsecopsdadattack.com/tags/#T1098)
+- [T1098.003](https://devsecopsdadattack.com/tags/#T1098.003)
+- [Microsoft Sentinel](https://devsecopsdadattack.com/tags/#Microsoft-Sentinel)
+- [Metasploit](https://devsecopsdadattack.com/tags/#Metasploit)
+- [Meterpreter](https://devsecopsdadattack.com/tags/#Meterpreter)
+- [PsExec](https://devsecopsdadattack.com/tags/#PsExec)
+- [SMB](https://devsecopsdadattack.com/tags/#SMB)
+- [T1021.002](https://devsecopsdadattack.com/tags/#T1021.002)
+- [T1210](https://devsecopsdadattack.com/tags/#T1210)
+- [Defender XDR](https://devsecopsdadattack.com/tags/#Defender-XDR)
+- [Windows](https://devsecopsdadattack.com/tags/#Windows)
 
 External Sources: 
-[Rapid7's Metasploit Wrap-Up](https://www.rapid7.com/blog/post/pt-metasploit-wrap-up-07-03-2026/)
-[Securelist's ToddyCat Part 2](https://securelist.com/toddycat-apt-umbrij-tool-and-oauth/120251/)
+- Securelist. *ToddyCat: your hidden email assistant. Part 2.* <https://securelist.com/toddycat-apt-umbrij-tool-and-oauth/120251/>
+- Rapid7. *Weekly Metasploit Update: Modules for SMB-to-Meterpreter, Peyara Remote Mouse RCE exploit, and more.* <https://www.rapid7.com/blog/post/pt-metasploit-wrap-up-07-03-2026/>
 
 
 <br/>
