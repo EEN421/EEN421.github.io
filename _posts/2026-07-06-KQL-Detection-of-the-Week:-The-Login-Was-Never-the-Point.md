@@ -15,7 +15,7 @@ That's the tell that ties this week together. The most durable compromise on the
 
 ## 🥇 Act I: the backdoor you approved yourself
 
-![Act I](assets/img/Login_was_Never_the_Point/Act_I.png)
+![Act I](/assets/img/Login_was_Never_the_Point/Act_I.png)
 
 Here's the problem the winning query solves.
 
@@ -95,7 +95,7 @@ Act I catches the key being cut. It does not catch what happens once the key is 
 
 ## 🥈 Act II: the key that turned up in a country the user has never visited
 
-![Act II](assets/img/Login_was_Never_the_Point/Act_II.png)
+![Act II](/assets/img/Login_was_Never_the_Point/Act_II.png)
 
 Same idea, one step downstream.
 
@@ -177,7 +177,7 @@ Act I and Act II are the same sentence in two tenses. *A key was minted.* *A key
 
 ## 🎖 Honorable Mention: the shell that arrived over the wire
 
-![Honorable Mention](assets/img/Login_was_Never_the_Point/Honorable.png)
+![Honorable Mention](/assets/img/Login_was_Never_the_Point/Honorable.png)
 
 If Act I and Act II win on the identity lesson, the week's freshest host-side detection wins on *where the puck is going* — and it pulls the same trick one more way.
 
