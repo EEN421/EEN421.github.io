@@ -89,8 +89,6 @@ Act I catches the key being cut. It does not catch what happens once the key is 
 
 <br/>
 
-![](/assets/img/The Login Was Never the Point/kql-of-the-week-linkedin.png)
-
 ---
 
 <br/>
@@ -173,8 +171,6 @@ Act I and Act II are the same sentence in two tenses. *A key was minted.* *A key
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/The Login Was Never the Point/The_login_was_never_the_point.png)
-
 ---
 
 <br/>
@@ -220,13 +216,14 @@ But the reason it earns the mention: it's the same move as the OAuth acts, porte
 
 <br/>
 
-![](/assets/img/The Login Was Never the Point/linkedin.png)
 
 ---
 
 <br/>
 
 ## The bigger lesson
+
+![](/assets/img/Login_was_Never_the_Point/Lock.png)
 
 Seven briefs, and the detections that mattered most weren't the most complex KQL. They were the ones that stopped treating the login as the perimeter.
 
@@ -237,10 +234,6 @@ Seven briefs, and the detections that mattered most weren't the most complex KQL
 Every one of those came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, deployment gates, triage runbooks, false-positive notes, and an honest readiness call. Twenty-nine of them this week.
 
 If you want this kind of detection content landing in your inbox every morning — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving — that's the whole point of the **[Detection Engineering Brief at DevSecOpsDadAttack.com](https://DevSecOpsDadAttack.com)**.
-
-<br/>
-
-![](/assets/img/The Login Was Never the Point/another_image.png)
 
 <br/>
 
