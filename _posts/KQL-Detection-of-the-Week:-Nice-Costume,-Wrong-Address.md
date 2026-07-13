@@ -1,4 +1,4 @@
-![DevSecOpsDadAttack!](/assets/img/Nice_Costume_Wrong_Address/Cat.png)
+![DevSecOpsDadAttack!](/assets/img/Nice_Costume/intro.png)
 This week's seven briefs produced **27 KQL candidates** across a Vidar-plus-XMRig malvertising wave hiding behind a forged code-signing certificate and a 491&nbsp;MB null-byte suit, device-code phishing that sails straight past URL filters, an SMB session quietly upgraded into Meterpreter, a Peyara Remote Mouse RCE, Armored Likho's BusySnake Python stealer, a GigaWiper destructor cosplaying as ransomware, HTML phishing from first-time external senders, and a brand-new **unauthenticated RCE in an AI agent framework where the whole exploit ships as a spreadsheet**.
 
 Most of those detections do what good detections do: they watch a thing *behave*. PsExec spawns a shell over the wire. A wiper deletes shadow copies before it starts renaming files. A stealer beacons out to a Telegram bot. Behavior was the bread and butter again this week, and the briefs were full of it.
@@ -15,7 +15,7 @@ That's the tell that ties this week together. Three different pieces of malware 
 
 ## 🥇 Act I: the DLL wearing Defender's uniform
 
-![Act I](/assets/img/Nice_Costume_Wrong_Address/Act_I.png)
+![Act I](/assets/img/Nice_Costume/Act1.png)
 
 Here's the problem the winning query solves.
 
@@ -97,7 +97,7 @@ Act I catches the costume in the wrong place. It says nothing about the sample t
 
 ## 🥈 Act II: the file that was too big to search
 
-![Act II](/assets/img/Nice_Costume_Wrong_Address/Act_II.png)
+![Act II](/assets/img/Nice_Costume/Act2.png)
 
 Same idea, a different disguise.
 
@@ -191,7 +191,7 @@ Act I and Act II are the same sentence about the same campaign, told twice. *A D
 
 ## 🎖 Honorable Mention: the spreadsheet that was actually a shell
 
-![Honorable Mention](/assets/img/Nice_Costume_Wrong_Address/Honorable.png)
+![Honorable Mention](/assets/img/Nice_Costume/Act3.png)
 
 If Act I and Act II win on the masquerade lesson, the week's freshest detection wins on *where the puck is going* — and it wears the same disguise one more way.
 
@@ -258,7 +258,7 @@ But the reason it earns the mention: it's the same move as the two Vidar acts, p
 
 ## The bigger lesson
 
-![](/assets/img/Nice_Costume_Wrong_Address/Lock.png)
+![](/assets/img/Nice_Costume/DetectionOfTheWeek.png)
 
 Seven briefs, and the detections that mattered most weren't the most complex KQL. They were the ones that refused to take a file, a DLL, or an upload at its word.
 
