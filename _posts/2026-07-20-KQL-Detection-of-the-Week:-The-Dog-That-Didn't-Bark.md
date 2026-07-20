@@ -147,7 +147,7 @@ DeviceFileEvents
 
 <br/>
 
-### The KQL note before the lesson
+### A KQL note...
 
 One practical fix over the brief's original: the path filter now carries **both separators** — `@".github\workflows"` alongside `".github/workflows"`. `DeviceFileEvents` reports Windows paths with backslashes, so a forward-slash-only fragment silently skips every Windows checkout in your fleet while the rule sits there looking healthy. That's the flavor of silent failure that never throws an error and never fires an alert, and it's worth thirty seconds of `DeviceFileEvents | where FolderPath has "workflows" | take 10` to confirm what your environment actually emits.
 
