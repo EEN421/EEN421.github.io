@@ -1,4 +1,4 @@
-![DevSecOpsDadAttack!](/assets/img/Didnt_Bark/intro.png)
+![DevSecOpsDadAttack!](/assets/img/DogBark/dog_didnt_bark.png)
 This week's six briefs produced **29 KQL candidates** (the Friday automation decided to take a personal day) across continued Flowise CSV-agent exploitation, a GigaWiper destructor, HTML phishing from first-time external senders, live internet scanning for exposed **MCP servers and AI assistant credentials**, ShinyHunters OAuth consent and guest-account abuse, a SharePoint **JWT authentication bypass** (CVE-2026-55040), OkoBot droppers writing into Chromium extension storage, TuxBot ELF deployments from world-writable Linux directories, a SonicWall SMA1000 root RCE, the **AsyncAPI npm supply-chain compromise**, AWS IAM policy persistence, a second SharePoint RCE wave (CVE-2026-58644), a WordPress core RCE (CVE-2026-63030), and ACR Stealer riding ClickFix lures into browser credential stores.
 
 Most of those detections do what detections have always done: they watch for something to *happen*. A web worker spawns a shell. A script host reads `Login Data`. A wiper deletes shadow copies. Presence-hunting was the bread and butter again this week, and the briefs were full of it.
@@ -15,9 +15,9 @@ Three of this week's detections are built on exactly that move. One catches a Sh
 
 <br/>
 
-## 🥇 Act I: the session with no sign-in
+## 🥇 Act I: The Session with No Sign-in
 
-![Act I](/assets/img/Didnt_Bark/Act1.png)
+![Act I](/assets/img/DogBark/no_sign-in.png)
 
 Here's the problem the winning query solves.
 
@@ -95,7 +95,7 @@ Act I catches the missing check-in. The next act moves from the cloud to the bui
 
 ## 🥈 Act II: the config change nobody made
 
-![Act II](/assets/img/Didnt_Bark/Act2.png)
+![Act II](/assets/img/DogBark/who_signed.png)
 
 Same idea, a different silence.
 
@@ -188,9 +188,9 @@ Act I found the missing sign-in. Act II found the missing author. The last act l
 
 <br/>
 
-## 🎖 Honorable Mention: the build that called a stranger
+## 🎖 Honorable Mention: The Build that Called a Stranger
 
-![Honorable Mention](/assets/img/Didnt_Bark/Act3.png)
+![Honorable Mention](/assets/img/DogBark/you_rang.png)
 
 If Acts I and II win on the absence lesson, the week's third listener wins on *where it points the microphone* — the network behavior of the build itself.
 
@@ -240,15 +240,17 @@ The briefs kept this **hunting-only** and it should stay that way until you've e
 
 <br/>
 
-## The bigger lesson
+## The Bigger Lesson
 
-![](/assets/img/Didnt_Bark/DetectionOfTheWeek.png)
+![](/assets/img/DogBark/corroboration.png)
 
 Six briefs, and the detections that mattered most weren't hunting for an artifact. They were auditing an alibi.
 
 - **When the event can be forged, demand its corroboration.** A bypassed authentication produces a flawless access log — every field of it is the forgery succeeding. But the attacker can't retroactively write the sign-in their bypass skipped, so the `leftanti` join catches them in the log they *didn't* touch (Act I). The forged event is under the attacker's control; its missing corroboration never is.
 - **When the action is normal, check for the missing author.** A workflow-file write is the most ordinary event in a dev environment — until you enumerate the short list of processes allowed to make it and alert on everyone else (Act II). The write wasn't suspicious. The absence of `git`, an editor, or a runner behind it was the whole finding.
 - **When the actor is predictable, check for the missing destination.** An npm install has a known itinerary. A build that calls anywhere off that list — or anywhere that can't even present a hostname — has some explaining to do (honorable mention). And when you correlate to prove it, collapse the join fan-out on purpose, or your one finding becomes five.
+
+![](/assets/img/DogBark/whats_missing.png)
 
 Last week's theme was provenance — *where did this come from?* This week is its mirror: *what should have come with it, and where is it?* Presence can be forged, renamed, padded, and disguised. The corroborating record in a log the attacker never touched cannot. Sometimes the strongest signal in the SOC is a silence, and the whole craft is knowing which dog was supposed to bark.
 
