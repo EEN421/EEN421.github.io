@@ -234,6 +234,75 @@ Two honest catches, both from the original brief version, both the kind of thing
 
 The briefs kept this **hunting-only** and it should stay that way until you've expanded `KnownRegistries` with every private registry and artifact store you actually use, scoped `DeviceName` to real CI runner groups, and tuned that 120-second window against your actual install durations. But the reason it earns the mention: it completes the set. The sign-in that never happened. The author who was never there. The destination that was never on the list. Three logs, one grammar.
 
+
+<br/>
+
+---
+
+<br/>
+
+## ✨ Bonus: `leftanti`, the join that keeps what didn't match
+
+![Left-Anti](/assets/img/DogBark/whats_missing.png)
+
+Act I leaned on a join flavor most analysts write twice a year, so it's worth pulling apart properly — because `leftanti` is the single most direct way KQL lets you query for absence, and it has a couple of sharp edges that will quietly hand you wrong answers if you don't know they're there.
+
+<br/>
+
+### The join family, in one table
+
+Every KQL join answers the same question — *for each row on the left, is there a matching key on the right?* — and the `kind=` decides what you keep:
+
+| kind | What you get back | Columns in output | Plain English |
+|---|---|---|---|
+| `inner` | Left rows **with** a match, multiplied per match | Left + right | "Show me the pairs" |
+| `leftouter` | Every left row; right columns filled where matched, null where not | Left + right | "Show me everything, annotated" |
+| `leftsemi` | Left rows **with** a match, once each | **Left only** | "Show me who has an alibi" |
+| `leftanti` | Left rows **without** a match | **Left only** | "Show me who has no alibi" |
+
+Two things jump out of that table. First, `leftsemi` and `leftanti` are mirror twins — they partition the left side into "matched" and "didn't," and neither returns a single right-side column. Second, and this matters for correctness: **`leftanti` cannot fan out.** An `inner` join with five matching right rows turns one left row into five output rows — the exact duplication the honorable mention had to `summarize` away. A `leftanti` doesn't care whether the right side would have matched zero times or a thousand; a left row either survives once or not at all. Duplicates in your alibi set cost you performance, never correctness. (The `distinct CompositeKey` in Act I is a courtesy to the query engine, not a requirement of the logic.)
+
+If you prefer the procedural mental model: `leftanti` is `where Key !in (( subquery ))` wearing a join's clothes. Semantically identical for a single key. The join form earns its keep the moment your "key" is really *user AND IP together* — which is exactly why Act I welds them into one `strcat` composite before joining, instead of juggling multi-column conditions.
+
+<br/>
+
+### The three ways `leftanti` lies to you
+
+An anti-join's output is only as honest as its match logic, and a failed match *is* the detection. That means every accidental mismatch manufactures a finding. The three classic ways:
+
+- **Join keys are case-sensitive. Full stop.** `Alice@contoso.com` on the left and `alice@contoso.com` on the right do not match, and with `leftanti` that non-match doesn't just drop a row — it *surfaces* one, as a fake bypass. UPNs are the worst offenders because different tables case them differently. This is why the composite key in Act I runs through `tolower()` on **both** sides before anything else. With `inner` joins, case drift loses you results and you notice the silence; with `leftanti`, case drift *creates* results and they look like exactly what you were hunting for. That asymmetry is the whole reason anti-joins deserve extra paranoia.
+- **Empty keys always "fail to match."** A left row whose key is empty or null can never find a partner, so it appears in your output every single time — a permanent resident of your findings. If `ClientIP` is blank on some `OfficeActivity` operations (and for some operation types, it is), those rows aren't bypasses; they're telemetry gaps cosplaying as bypasses. Gate the left side with `isnotempty()` on every key component, or at minimum know which of your "findings" are really blanks.
+- **The default join isn't the one you meant.** Write `| join Table on Key` with no `kind=` and KQL gives you `innerunique` — which not only isn't an anti-join, it's a join that *arbitrarily deduplicates the left side first*. Forgetting `kind=leftanti` doesn't error; it silently inverts your logic and hands you the matched population instead of the unmatched one. Always say the kind out loud.
+
+<br/>
+
+### The self-check that makes anti-joins trustworthy
+
+Here's the habit worth stealing, and it costs one throwaway query. Because `leftsemi` and `leftanti` partition the left side, their counts must sum to the whole:
+
+```kql
+let SP = OfficeActivity
+| where TimeGenerated > ago(1d)
+| where OfficeWorkload == "SharePoint" and ResultStatus =~ "Succeeded"
+| where isnotempty(UserId) and isnotempty(ClientIP)
+| extend CompositeKey = strcat(tolower(UserId), "|", ClientIP);
+let Alibis = SigninLogs
+| where TimeGenerated > ago(2d) and ResultType == 0
+| project CompositeKey = strcat(tolower(UserPrincipalName), "|", IPAddress)
+| distinct CompositeKey;
+union
+    (SP | join kind=leftsemi Alibis on CompositeKey | summarize Rows = count() | extend Population = "Matched (has alibi)"),
+    (SP | join kind=leftanti Alibis on CompositeKey | summarize Rows = count() | extend Population = "Unmatched (no alibi)"),
+    (SP | summarize Rows = count() | extend Population = "Total")
+```
+
+If `Matched + Unmatched != Total`, your join is broken — usually an empty-key or normalization problem — and you found out in thirty seconds instead of after a week of triaging phantom bypasses. And read the ratio while you're there: if 40% of your SharePoint operations have "no alibi," you don't have a mass exploitation event, you have an incomplete alibi set — a missing sign-in table, an unonboarded auth path, an IP normalization gap. A healthy anti-join detection returns a *sliver*. When absence is common, the absence isn't the signal; your blind spot is.
+
+One last performance note for when the left side is a firehose: `leftanti` keeps left rows, so you can't shrink the left without changing the question — but you can and should shrink the right. `distinct` the alibi keys (done above), and if the alibi set is small, `join hint.strategy=broadcast kind=leftanti` ships it to every node instead of shuffling your firehose across the cluster. Same answer, a fraction of the wait.
+
+The one-line takeaway: **`leftsemi` proves presence, `leftanti` proves absence, and absence is only evidence after you've proven the match logic can't miss.** Normalize the keys, gate the empties, name the kind, and check that the partition sums. Then — and only then — the silence means something.
+
+
 <br/>
 
 ---
@@ -249,8 +318,6 @@ Six briefs, and the detections that mattered most weren't hunting for an artifac
 - **When the event can be forged, demand its corroboration.** A bypassed authentication produces a flawless access log — every field of it is the forgery succeeding. But the attacker can't retroactively write the sign-in their bypass skipped, so the `leftanti` join catches them in the log they *didn't* touch (Act I). The forged event is under the attacker's control; its missing corroboration never is.
 - **When the action is normal, check for the missing author.** A workflow-file write is the most ordinary event in a dev environment — until you enumerate the short list of processes allowed to make it and alert on everyone else (Act II). The write wasn't suspicious. The absence of `git`, an editor, or a runner behind it was the whole finding.
 - **When the actor is predictable, check for the missing destination.** An npm install has a known itinerary. A build that calls anywhere off that list — or anywhere that can't even present a hostname — has some explaining to do (honorable mention). And when you correlate to prove it, collapse the join fan-out on purpose, or your one finding becomes five.
-
-![](/assets/img/DogBark/whats_missing.png)
 
 Last week's theme was provenance — *where did this come from?* This week is its mirror: *what should have come with it, and where is it?* Presence can be forged, renamed, padded, and disguised. The corroborating record in a log the attacker never touched cannot. Sometimes the strongest signal in the SOC is a silence, and the whole craft is knowing which dog was supposed to bark.
 
