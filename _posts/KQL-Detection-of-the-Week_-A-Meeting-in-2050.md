@@ -19,7 +19,7 @@ So this week's KQL of the Week is the CAV3RN calendar channel, told in three que
 
 ## 🥇 Act I: The Standing Meeting Nobody Will Ever Attend
 
-![Act I](/assets/img/Meeting2050/ACT I.png)
+![Act I](/assets/img/Meeting2050/ACT_I.png)
 
 Here's the problem the winning query solves.
 
@@ -164,7 +164,7 @@ Act I hunts the mailbox. Which raises the question the briefs never asked — an
 
 ## 🥈 Act II: You Are Probably Not the Mailbox
 
-![Act II](/assets/img/Meeting2050/ACT II.png)
+![Act II](/assets/img/Meeting2050/ACT_II.png)
 
 Every CAV3RN detection filed this week hunts tenant-side telemetry: `CloudAppEvents`, `OfficeActivity`, `AuditLogs`. Calendar operations, service principals, Graph calls. All of it assumes the suspicious calendar activity will show up in **your** logs.
 
@@ -288,7 +288,7 @@ Act I hunts the drop box. Act II hunts the agent. The last act hunts what the ag
 
 ## 🎖 Honorable Mention: The Address That Was Never an Address
 
-![Honorable Mention](/assets/img/Meeting2050/Honorable Mention.png)
+![Honorable Mention](/assets/img/Meeting2050/Honorable_Mention.png)
 
 If Acts I and II win on where they point, the third query wins on the sheer nerve of what it's looking for.
 
@@ -465,7 +465,7 @@ The one-line takeaway: **`leftanti` reasons about membership, `prev()` reasons a
 
 ## The Bigger Lesson
 
-![](/assets/img/Meeting2050/Borrowed Trust.png)
+![](/assets/img/Meeting2050/Borrowed_Trust.png)
 
 Seven briefs, twenty-eight candidates, and one thread running through nearly all of them: **this week's attackers didn't bring anything.**
 
