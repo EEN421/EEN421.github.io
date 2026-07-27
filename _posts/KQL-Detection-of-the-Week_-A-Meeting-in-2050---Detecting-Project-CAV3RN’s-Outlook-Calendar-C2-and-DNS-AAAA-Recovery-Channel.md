@@ -120,7 +120,25 @@ Not the marker list. Markers are strings, strings are free, and the operator can
 | where strlen(trim(@"\s", PrevSubject)) between (1 .. 2)
 ```
 
-Note `between (1 .. 2)` and not `<= 2`, because that difference is the whole detection. `Item.Subject` is not guaranteed to be populated on `Create` records the way it is on `Update` records — and if it comes back empty, `strlen()` returns zero, zero satisfies `<= 2`, and the filter matches **every create-then-update pair in the tenant**. The marker branch of this query fails toward silence when extraction breaks. This branch fails toward noise. Same missing field, opposite direction, and only one of them is obvious from reading the results. Excluding the empty case costs nothing — the placeholder the module actually writes is a single character — and it's the difference between a hunt and a pager.
+Note `between (1 .. 2)` and not `<= 2`. `Item.Subject` is not guaranteed to be populated on `Create` records the way it is on `Update` records — and if it comes back empty, `strlen()` returns zero, zero satisfies `<= 2`, and the filter matches **every create-then-update pair in the tenant**. The marker branch of this query fails toward silence when extraction breaks. Written with `<= 2`, this branch fails toward noise. Same missing field, opposite direction, and only one of them is obvious from reading the results.
+
+But I want to be precise about what that operator actually buys, because it is easy to read this as "I picked the safe one" and it isn't. It's a **build gate**, and it only has two settings.
+
+If `Subject` *is* populated on `Create` in your tenant, `between (1 .. 2)` is correct and the branch works: the placeholder the module writes is a single character, so excluding the empty case costs nothing and it's the difference between a hunt and a pager. If `Subject` is *not* populated on `Create` in your tenant, then `between (1 .. 2)` doesn't make this branch safe — it makes it **structurally incapable of ever firing on real CAV3RN activity**, silently, because every genuine placeholder rename arrives with an empty `PrevSubject` and gets discarded by the guard. Switching back to `<= 2` doesn't rescue it either; that's the firehose. There is no operator that makes an absent field into a working detection.
+
+So run this before you build anything on top of it, and read the `Item` blob on a `Create` with your own eyes:
+
+```kql
+OfficeActivity
+| where TimeGenerated > ago(1d)
+| where OfficeWorkload =~ "Exchange"
+| where Operation =~ "Create"
+| where isnotempty(Item)
+| take 20
+| project Operation, ItemName, Item
+```
+
+If `Subject` is in there, ship the rename branch. If it isn't, delete the branch rather than tuning it, and lean on the two lanes that don't depend on it: the marker strings above, and the `AADServicePrincipalSignInLogs` anti-join further down — which is keyed on token acquisition and doesn't care what Exchange writes into a subject field at all. A detection you can't validate the input for isn't a conservative detection. It's an unknown wearing a threshold.
 
 Beyond that, this is the detection with a shelf life. The placeholder subject isn't a naming choice the operator made for fun — it's **forced by the protocol**. The module cannot create the event with its final subject, because it needs an event ID to attach the encrypted payload to, and it doesn't want a half-built dead drop sitting in the calendar advertising itself while the upload is in flight. Create blank, attach, then rename. That sequence is load-bearing. Rename the markers all you like; the create-then-patch shape stays, because the alternative is a race condition in your own C2.
 
@@ -212,6 +230,10 @@ The module looks for a relative file named `logAzure.txt` before it does anythin
 
 That's not a C2 artifact. That's a plaintext credential file dropped into an arbitrary directory by the malware itself, and it is the highest-fidelity, lowest-cost signal in this entire campaign.
 
+There's a second one, and getting to it requires saying out loud something the endpoint framing makes easy to skip: **`AzureCommunication.dll` is a DLL.** It has no process of its own. Whatever `InitiatingProcessFileName` your network telemetry records for its Graph traffic belongs to *the thing that loaded it* — and if that's `svchost.exe`, `rundll32.exe`, `powershell.exe`, or any signed host on the fleet, then a detection built on "which processes talk to Graph" is looking at an allowlisted name and moving on. The blind spot is not that the operator spoofs a process name. It's that they don't have to.
+
+Which means the process-behavior branch below cannot stand on its own, and the fix is to ask the question one layer down: **which processes loaded a module by that name at all.** `DeviceImageLoadEvents` answers that, it costs the same as the filename check, and it hands you the loader identity for free — which is the thing you actually need in order to know where `logAzure.txt` went.
+
 <br/>
 
 ### The KQL
@@ -219,6 +241,7 @@ That's not a C2 artifact. That's a plaintext credential file dropped into an arb
 ```kql
 let lookback = 30d;
 let ConfigArtifacts = dynamic(["logAzure.txt"]);
+let ModuleImages    = dynamic(["AzureCommunication.dll"]);
 let GraphEndpoints  = dynamic(["graph.microsoft.com", "login.microsoftonline.com"]);
 let ExpectedGraphClients = dynamic([
     "outlook.exe", "olk.exe", "teams.exe", "ms-teams.exe", "msteams.exe",
@@ -238,14 +261,34 @@ let ConfigWrites = DeviceFileEvents
 | where FileName in~ (ConfigArtifacts)
 // Row-level branch: first and last are the same instant. Name them anyway, so the
 // union carries one vocabulary and the outer summarize has nothing to guess about.
+// Connections/ActiveDays are long(0) here for the same reason — they describe the
+// network branch, and 0 reads as "not a network finding", not as a missing value.
 | extend FirstSeen = Timestamp, LastSeen = Timestamp
+| extend Connections = long(0), ActiveDays = long(0)
 | project
     FirstSeen, LastSeen, DeviceId, DeviceName,
     Process     = InitiatingProcessFileName,
     ProcessPath = InitiatingProcessFolderPath,
     Account     = InitiatingProcessAccountName,
+    Connections, ActiveDays,
     Detail      = strcat(FolderPath, " <- ", InitiatingProcessCommandLine)
 | extend Signal = "ConfigArtifactWrite";
+// The module is a DLL. This branch is the only one that sees it regardless of
+// which host process loaded it — including hosts on the allowlist below.
+let ModuleLoads = DeviceImageLoadEvents
+| where Timestamp > ago(lookback)
+| where FileName in~ (ModuleImages)
+| extend FirstSeen = Timestamp, LastSeen = Timestamp
+| extend Connections = long(0), ActiveDays = long(0)
+| project
+    FirstSeen, LastSeen, DeviceId, DeviceName,
+    Process     = InitiatingProcessFileName,
+    ProcessPath = InitiatingProcessFolderPath,
+    Account     = InitiatingProcessAccountName,
+    Connections, ActiveDays,
+    Detail      = strcat(FolderPath, " loaded by ", InitiatingProcessFileName,
+                         " [", coalesce(SHA256, "no hash"), "]")
+| extend Signal = "ModuleImageLoad";
 let UnexpectedGraphClients = DeviceNetworkEvents
 | where Timestamp > ago(lookback)
 | where ActionType == "ConnectionSuccess"
@@ -262,26 +305,32 @@ let UnexpectedGraphClients = DeviceNetworkEvents
        Process     = InitiatingProcessFileName,
        ProcessPath = InitiatingProcessFolderPath,
        Account     = InitiatingProcessAccountName
+// Detail carries the endpoints only. Connections and ActiveDays stay first-class
+// columns so they can be sorted, filtered, and thresholded — not parsed out of prose.
 | extend
-    Detail = strcat(tostring(Connections), " connections over ", tostring(ActiveDays),
-                    " active days to ", strcat_array(Endpoints, ", ")),
+    Detail = strcat_array(Endpoints, ", "),
     Signal = "UnexpectedGraphClient"
-| project-away Connections, ActiveDays, Endpoints;
-union ConfigWrites, UnexpectedGraphClients
+| project-away Endpoints;
+union ConfigWrites, ModuleLoads, UnexpectedGraphClients
 | summarize
-    Signals   = make_set(Signal),
-    Processes = make_set(Process, 10),
-    Paths     = make_set(ProcessPath, 10),
-    Accounts  = make_set(Account, 5),
-    Details   = make_set(Detail, 10),
-    FirstSeen = min(FirstSeen),
-    LastSeen  = max(LastSeen)
+    Signals     = make_set(Signal),
+    Processes   = make_set(Process, 10),
+    Paths       = make_set(ProcessPath, 10),
+    Accounts    = make_set(Account, 5),
+    Details     = make_set(Detail, 10),
+    Connections = sum(Connections),
+    ActiveDays  = max(ActiveDays),
+    FirstSeen   = min(FirstSeen),
+    LastSeen    = max(LastSeen)
     by DeviceId, DeviceName
 | extend
     HasConfigArtifact = set_has_element(Signals, "ConfigArtifactWrite"),
+    HasModuleLoad     = set_has_element(Signals, "ModuleImageLoad"),
     SignalCount       = array_length(Signals),
     ActiveSpanDays    = datetime_diff('day', LastSeen, FirstSeen)
-| order by SignalCount desc, HasConfigArtifact desc, LastSeen desc
+// Fidelity first, then breadth, then behavior. Raw volume is not in the ordering
+// at all — a beacon and a busy integration are not separable by counting.
+| order by HasModuleLoad desc, HasConfigArtifact desc, SignalCount desc, ActiveDays desc, LastSeen desc
 ```
 
 <br/>
@@ -294,9 +343,13 @@ union ConfigWrites, UnexpectedGraphClients
 
 That's it. Two words of logic against `DeviceFileEvents`, and it beats every clever thing in this article on cost-per-unit-confidence. `logAzure.txt` is not a filename that appears in legitimate software. There is no tuning phase, no baseline, no threshold, no exclusion list. It runs in seconds across thirty days of fleet telemetry and it either returns zero rows or it returns an incident.
 
-It is also, obviously, the most fragile detection here — it dies the moment the developers change one string in the next build. So it's paired, not standalone, and the pairing is the point: `UnexpectedGraphClients` asks a question the filename change doesn't answer. **Which processes on this endpoint are talking to Microsoft Graph, and are they processes that have any business doing so?** Graph is a browser-and-Office-suite destination. A binary that isn't in that family, authenticating to `login.microsoftonline.com` and then calling `graph.microsoft.com`, is doing something a normal endpoint does not do — no matter what it calls its config file.
+It is also, obviously, the most fragile detection here — it dies the moment the developers change one string in the next build. So it's paired, not standalone, and the pairing is the point. The other two branches each answer a question a string change doesn't.
 
-Note the join key: `DeviceId`. Both branches are host-scoped, both resolve to a device, and the `summarize` collapses them onto one row per endpoint with `SignalCount` doing the ranking. *That's* what a legitimate union looks like — same entity, two questions, one verdict. Contrast Thursday's version, which correlated `graph_callers` back to the full network stream with `join kind=inner ... on DeviceName` and then filtered `InitiatingProcessFileName =~ SuspectProcess` after the fact. It gets the right answer, but it fans out first — a device with four suspect processes multiplies every candidate row by four before the filter throws three away. The fix is to join on the compound key up front:
+`ModuleLoads` asks: **did anything on this host load a module by that name, and what loaded it?** That's the branch that survives the process-host problem, and it's the one I'd have missed if I'd stopped at the endpoint framing. A DLL borrows its loader's identity in every process-keyed table on the box — `DeviceNetworkEvents`, `DeviceProcessEvents`, proxy logs, all of it. `DeviceImageLoadEvents` is where the module is still itself. It costs the same as the filename check and it returns the loader path, which is the fact that turns "something on this host is beaconing" into "this specific service is compromised."
+
+`UnexpectedGraphClients` asks: **which processes on this endpoint are talking to Microsoft Graph, and are they processes that have any business doing so?** Graph is a browser-and-Office-suite destination. A binary that isn't in that family, authenticating to `login.microsoftonline.com` and then calling `graph.microsoft.com`, is doing something a normal endpoint does not do. But note what that branch cannot see, and why the order of the three matters: it is keyed on the *host process*, and the host process for a side-loaded DLL is whatever the operator chose. Land inside `svchost.exe` and this branch is structurally silent, because `svchost.exe` is on the allowlist and has to be — Web Account Manager alone will dominate `login.microsoftonline.com` volume on every managed fleet. Remove it and the branch is unusable; leave it and the branch has a hole shaped exactly like a competent implant. That is not a tuning problem, and it is why `ModuleLoads` leads the ordering.
+
+Note the join key: `DeviceId`. All three branches are host-scoped, all three resolve to a device, and the `summarize` collapses them onto one row per endpoint with fidelity — not volume — doing the ranking. *That's* what a legitimate union looks like — same entity, three questions, one verdict. Contrast Thursday's version, which correlated `graph_callers` back to the full network stream with `join kind=inner ... on DeviceName` and then filtered `InitiatingProcessFileName =~ SuspectProcess` after the fact. It gets the right answer, but it fans out first — a device with four suspect processes multiplies every candidate row by four before the filter throws three away. The fix is to join on the compound key up front:
 
 ```kql
 | extend SuspectProcess = InitiatingProcessFileName
@@ -309,14 +362,17 @@ Same answer, a fraction of the shuffle — and note that it's `DeviceId`, not `D
 
 ### Keeping it honest
 
-I'd take `ConfigWrites` to a scheduled rule tomorrow. `UnexpectedGraphClients` is a hunt, and the gap between those two is where the work is:
+I'd take `ConfigWrites` and `ModuleLoads` to a scheduled rule tomorrow. `UnexpectedGraphClients` is a hunt, and the gap between those two states is where the work is:
 
+- **The allowlist excludes the process class this malware is most likely to run inside, and there is no version of it that doesn't.** Spelled out above, repeated here because it's the bullet people skip: a name-based `ExpectedGraphClients` list is a statement about *processes*, and this is a *module*. `svchost.exe`, `rundll32.exe`, `powershell.exe`, `msedgewebview2.exe` and `backgroundtaskhost.exe` are all on the list, all legitimately, and all viable hosts. Treat `UnexpectedGraphClients` as the branch that catches the lazy implementation, `ModuleLoads` as the branch that catches the careful one, and don't report coverage from the first without the second. If you can't ingest `DeviceImageLoadEvents` at fleet scale — and plenty of shops can't, it's a high-volume table — scope it to the module name at the connector rather than dropping the branch.
 - **Thursday's allowlist has last week's bug in it.** The query excluded destinations with `not(RemoteUrl has_any ("graph.microsoft.com", "login.microsoftonline.com", "microsoft.com", "windows.com", "windowsupdate.com"))`. The hole is real, but it isn't the one I first wrote, and the mechanism is worth getting right because it changes which hostnames get through. `has_any` is **term-based**, not substring-based — KQL tokenizes both sides into maximal alphanumeric runs, and a multi-token needle matches when its tokens appear as an *adjacent sequence* in the haystack. So `microsoft.com` does **not** match `login.microsoftonline.com.c2.example.net`: the tokens there are `login`, `microsoftonline`, `com`, and there is no `microsoft` immediately followed by `com`. That's what `contains` would have done. What `has_any` does instead is match without regard to *position*, which is the actual problem: `windowsupdate.com.attacker.io` tokenizes to `windowsupdate`, `com`, `attacker`, `io` — the needle's two tokens sit adjacent at the front, so the allowlist suppresses it. Register `microsoft.com.c2.example.net` and you walk out the same door. A term test answers "do these tokens appear next to each other somewhere," and a suffix test answers "does this name end here." Those are different questions, and only the second one is the one an allowlist means to ask. This is the `RemoteIP startswith "172."` mistake from the AsyncAPI honorable mention wearing different clothes: an operator whose semantics almost fit, used in a filter whose job is to *suppress*, where every over-broad match is an invisible hole. Act II uses `in~` for exact host equality, which cannot over-suppress. If you need to cover subdomains, `endswith` on a normalized hostname is the floor, not `has_any`.
 - **The expected-client list is the whole detection, and mine is not yours.** Every enterprise runs Graph SDK background services nobody documented: RMM agents, backup tools, CASB shims, HR integrations, a PowerShell scheduled task somebody wrote in 2023. Run `DeviceNetworkEvents | where RemoteUrl in~ ("graph.microsoft.com") | summarize count() by InitiatingProcessFileName, InitiatingProcessFolderPath | order by count_ desc` and build the list from your own fleet before this goes anywhere near a schedule.
 - **Name-only exclusions are spoofable, and `teams.exe` from `%TEMP%` is not `teams.exe`.** Harden to `(FileName, FolderPath)` pairs or signer checks before promotion — the same correction the CI/CD detection needed last week, for the same reason.
 - **`RemoteUrl` is not reliably populated in `DeviceNetworkEvents`.** A connection recorded with only `RemoteIP` will never match `in~ (GraphEndpoints)` and drops out silently. That's a false-negative direction, which is the safer failure, but know it's there: your Graph-client inventory is a floor, not a census.
 - **Working directory means the path is unpredictable.** Because the module supplies a bare filename, `logAzure.txt` lands wherever the host process happened to be running — `System32`, a user profile, a service directory, anywhere. Don't scope the file query by `FolderPath`. Let it fire from anywhere and read the path as evidence: *where* it landed tells you which process loaded the DLL.
 - **An aggregate collapses a time range into whatever fields you name — and a field you didn't name is a field the analyst will infer wrongly.** My first version summarized the network branch to `Timestamp = min(Timestamp)` before the union, so the outer `max(Timestamp)` faithfully reported the maximum of a set of minimums, which is a number that describes nothing. `LastSeen: 29 days ago` on a host that has been beaconing every day since is how a live finding gets triaged to the bottom of the queue. Carry `min` *and* `max` through any branch that aggregates, and reconcile them at the top. `ActiveDays` is the field that actually answers the question anyway: a config write is a point event, but a Graph client is a behavior, and "180 connections across 28 of 30 days" is a different finding from "180 connections in one afternoon."
+
+  And having argued that, my first version then computed `ActiveDays`, `strcat`'d it into a human-readable `Detail` string, and `project-away`ed the column. Which is a subtler version of the same mistake: the number was *present* and it was no longer *data*. You can't sort on it, you can't threshold on it, you can't put it in an `order by`, and the analyst reads it out of a sentence instead of a grid. **A field you buried in a string is a field you deleted, with extra steps.** Carry it as a column, keep the string for the parts that are genuinely prose, and let the ranking use the number. It's now third in the `order by`, behind the two fidelity flags and ahead of recency, which is where it belongs.
 - **Coverage is the silent gate, again.** No MDE agent, no `DeviceFileEvents`, no finding. A quiet result across a fleet you haven't fully onboarded is a coverage report wearing a clean bill of health.
 
 Act I hunts the drop box. Act II hunts the agent. The last act hunts what the agent does when the drop box stops answering.
@@ -521,10 +577,18 @@ And serialization is **not sticky**. `where`, `extend`, `project`, and `take` pr
 | sort by ItemId asc, TimeGenerated asc
 | summarize OpSequence = make_list(Operation), Subjects = make_list(ItemSubject) by ItemId
 | where array_length(OpSequence) >= 2
-| where tostring(OpSequence) has 'Create","Update'
+| where tostring(OpSequence[0]) =~ "Create" and tostring(OpSequence[1]) =~ "Update"
 ```
 
 Option 2 is the one to reach for when the partition guard starts feeling like something you might forget. Option 3 is what you want when the question is "show me the whole story of this item" rather than "did these two things happen back to back" — but note that `make_list` only preserves order if the input was serialized first, so the `sort` is doing real work, not decoration.
+
+Option 3 also has a trap in it that I walked into on the first draft, and it's the same one from the honorable mention wearing a third outfit. The tempting way to test the sequence is to flatten the array and string-match it:
+
+```kql
+| where tostring(OpSequence) has 'Create","Update'      // don't
+```
+
+That looks like it's asserting *adjacent array elements*, because you can see the `","` between them. It isn't. `has` is term-based, so the punctuation is discarded before evaluation and the query you shipped is "the term `Create` immediately followed by the term `Update`, anywhere in this string." Here that happens to be the right answer — array adjacency and term adjacency coincide when the elements are single words — which is worse than being wrong, because it's **accidental correctness**. Put a two-word operation name in that list, or a value containing a hyphen, and the coincidence stops holding with no error and no obvious symptom. Index the array as an array: `OpSequence[0]` and `OpSequence[1]` are asking about positions, and positions are what you meant. If you need "did this pair occur anywhere in the history" rather than "did it open the history," `mv-apply with_itemindex` over the list is the honest version — more typing, and it says what it does.
 
 For genuine multi-stage state machines — sign-in, then rule creation, then bulk download, in that order, within a window — none of these three is right. That's the `scan` operator, which walks a serialized table maintaining explicit state and is the correct tool for the M365 chain detection in Sunday's brief. `scan` is heavier and considerably less readable, but it's the only one of the four that can express "these five things, in this order, with backtracking."
 
@@ -618,18 +682,29 @@ DevSecOpsDadAttack Tags:
 - [T1071.004](https://devsecopsdadattack.com/tags/#T1071-004)
 - [T1550.001](https://devsecopsdadattack.com/tags/#T1550-001)
 - [T1132.001](https://devsecopsdadattack.com/tags/#T1132-001)
+- [T1573.002](https://devsecopsdadattack.com/tags/#T1573-002)
 - [T1486](https://devsecopsdadattack.com/tags/#T1486)
+- [T1490](https://devsecopsdadattack.com/tags/#T1490)
+- [T1021.001](https://devsecopsdadattack.com/tags/#T1021-001)
 - [Microsoft Sentinel](https://devsecopsdadattack.com/tags/#Microsoft-Sentinel)
 - [Defender XDR](https://devsecopsdadattack.com/tags/#Defender-XDR)
 - [Entra ID](https://devsecopsdadattack.com/tags/#Entra-ID)
 
 ATT&CK Coverage in This Article:
-- **T1102.002** — Web Service: Bidirectional Communication (calendar dead drop, Act I)
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token (app-only Graph auth)
-- **T1071.004** — Application Layer Protocol: DNS (configuration recovery, honorable mention)
-- **T1132.001** — Data Encoding: Standard Encoding (hex agent ID, 16-byte AAAA containers)
-- **T1573.002** — Encrypted Channel: Asymmetric Cryptography (RSA-OAEP + AES-256-GCM payloads)
-- **T1486 / T1490 / T1021.001** — BitLocker extortion chain (corrected mapping, see The Bigger Lesson)
+
+**Detected by the queries above:**
+- **T1102.002** — Web Service: Bidirectional Communication (calendar dead drop — Act I from the mailbox tenant, Act II from the endpoint)
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token (app-only `client_credentials` Graph auth — Act I's service principal lane, Act II's network branch)
+- **T1071.004** — Application Layer Protocol: DNS (configuration recovery — honorable mention)
+- **T1132.001** — Data Encoding: Standard Encoding (hex agent ID in the query labels, 16-byte AAAA containers — honorable mention, shape lane)
+
+**Present in the malware, not detected here:**
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography (RSA-OAEP + AES-256-GCM on the calendar attachments). This is why the dead drop's contents are opaque; nothing in this article fires on it. Listed for completeness, not claimed as coverage.
+
+**Discussed as a correction, not covered by any query here:**
+- **T1486 / T1490 / T1021.001** — BitLocker extortion chain, correcting the briefs' inherited **T1505.003** mapping (see The Bigger Lesson). No query in this article detects any of the three.
+
+A note on the two branches that aren't in any of those lists. Act II's `ConfigWrites` and `ModuleLoads` deliberately carry **no technique mapping**, and that's not an oversight — `logAzure.txt` and `AzureCommunication.dll` are *artifacts*, not behaviors. There's no ATT&CK cell for "the developers wrote their config to disk." The nearest candidates are wrong in a way worth naming: T1552.001 Credentials In Files describes an adversary *searching* for credentials, not creating them, and T1574.002 DLL Side-Loading asserts a loading mechanism GReAT's analysis doesn't establish. Forcing either one in would make the two highest-fidelity detections in this article report coverage of techniques they don't detect — which is the exact failure the BitLocker note above is about, and it would be a poor look to commit it three lines later. If your coverage map can't represent an artifact detection without a technique, that's a gap in the map, not a reason to invent a mapping.
 
 External Sources:
 - Kaspersky GReAT / Securelist. *New Project CAV3RN module abuses Outlook calendar events for C2 and DNS AAAA records for configuration recovery.* 21 July 2026. <https://securelist.com/project-cav3rn-cyberespionage-framework-using-outlook-and-dns/120757/>
