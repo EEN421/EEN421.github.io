@@ -95,16 +95,19 @@ let PlaceholderRenames = CalendarOps
 | project-away Prev*;
 let Findings = union MarkerHits, PlaceholderRenames
 | extend EventKey = strcat(ItemId, "|", tostring(TimeGenerated), "|", Operation);
-// Stage 1 — corroboration is settled at the ITEM, not the mailbox. The rename
-// target IS the row that carries the final marker subject, so a single physical
-// event lands in both branches. Two signals on two events is corroboration.
-// Two signals on one event is one event, counted twice.
+// Stage 1 — corroboration is settled at the ITEM, not the mailbox.
+// The two branches test different FACTS, not different events: MarkerHits reads
+// the subject's content after the patch; PlaceholderRenames reads the transition.
+// The protocol forces both to resolve on the same Update record, so DistinctEvents == 1
+// is the TIGHTEST association available, not a duplicate. It leads the ranking.
 let ItemVerdicts = Findings
 | summarize
     ItemSignals    = make_set(Signal),
     DistinctEvents = dcount(EventKey)
     by Mailbox, ItemId
-| extend ItemCorroborated = array_length(ItemSignals) > 1 and DistinctEvents > 1;
+| extend
+    ItemCorroborated    = array_length(ItemSignals) > 1,
+    ItemMarkerViaRename = array_length(ItemSignals) > 1 and DistinctEvents == 1;
 // Stage 2 — the mailbox is the REPORTING unit. Counts are de-duplicated on EventKey
 // for the same reason: a dual-signal row must not inflate the volume it's ranked on.
 Findings
@@ -126,13 +129,20 @@ Findings
     by Mailbox
 | join kind=leftouter (
     ItemVerdicts
-    | summarize CorroboratedItems = countif(ItemCorroborated), SuspectItems = count() by Mailbox
+    | summarize
+        MarkerViaRenameItems = countif(ItemMarkerViaRename),
+        CorroboratedItems    = countif(ItemCorroborated),
+        SuspectItems         = count()
+        by Mailbox
   ) on Mailbox
 | project-away Mailbox1
 | extend
     BothSignals = CorroboratedItems > 0,
     MixedActors = array_length(ActorTypes) > 1
-| order by CorroboratedItems desc, MixedActors desc, Items desc, Events desc
+// MarkerViaRenameItems first: marker content arriving VIA a placeholder rename on one
+// record is the CAV3RN signature. Two signals spread across two records on the same
+// item is a looser association and ranks below it.
+| order by MarkerViaRenameItems desc, CorroboratedItems desc, MixedActors desc, Items desc, Events desc
 ```
 
 <br/>
@@ -173,14 +183,23 @@ Which is a claim you have to actually honor, and my first two versions didn't �
 
 **Version one grouped too finely.** I used `by MailboxOwnerUPN, UserId, UserType` — the entity, plus two attributes of the record. Every extra key in a `by` clause is a finer partition, and a finer partition is a *smaller* chance that two signals about the same thing land on the same row. If Exchange attributes the marker write to the service principal and the rename to the mailbox owner, those become two rows, `array_length(Signals)` is 1 on both, and `BothSignals` — the entire point of the union — can never fire. The rule that falls out: **anything that isn't the entity belongs in the aggregation, not the `by` clause.** `Actors = make_set(UserId, 5)` tells you the same thing without fragmenting the row. And it tells you something extra — `MixedActors` flags a mailbox whose calendar writes are attributed to *both* a service principal and an interactive owner.
 
-**Version two then grouped too coarsely, and that one is worse**, because it produced a result that looked like corroboration and wasn't. Trace a real dead drop through both branches. The module creates the event with subject `d`, then PATCHes `Boss Report ID: A1B2C3D1500` onto it. That `Update` row is the rename target — so it satisfies `PlaceholderRenames`. It is also the row whose subject now contains a marker string — so it satisfies `MarkerHits`. **One physical event, two branches, `array_length(Signals) == 2`.** With everything summarized straight to the mailbox, `BothSignals` fires on a single audit record counted twice, and the article's sales pitch — two independent signals agreeing — is describing something that didn't happen. It would fire on a *lone* renamed event with no other activity in the mailbox at all.
+**Version two then grouped too coarsely**, and fixing that surfaced the more interesting question. Trace a real dead drop through both branches. The module creates the event with subject `d`, then PATCHes `Boss Report ID: A1B2C3D1500` onto it. That `Update` row is the rename target — so it satisfies `PlaceholderRenames`. It is also the row whose subject now contains a marker string — so it satisfies `MarkerHits`. **One audit record, two branches, two rows in the union.** Summarized straight to the mailbox, `Events = count()` reports two events where Exchange logged one, and the number an analyst reads as "how much of this is there" is doubled.
 
-So corroboration has to be settled one level down, at the **item**, and that means the correlation unit and the reporting unit are different things:
+So the volume counters get de-duplicated: `Events = dcount(EventKey)` where `EventKey` is item, timestamp and operation. That part is uncontroversial.
 
-- The **item** is where signals are proven independent. `ItemCorroborated` requires two distinct signals *and* `DistinctEvents > 1` — the marker row and the rename row have to be different rows. That second clause is the entire fix.
-- The **mailbox** is where findings are reported, because that's the thing an analyst opens and triages. `CorroboratedItems` counts how many items on that mailbox cleared the item-level bar, and it leads the `order by`.
+**And then I overcorrected, which is the part worth reading.** Having established that one record was producing two rows, I carried the same de-duplication into the corroboration flag — `ItemCorroborated` required two distinct signals *and* `DistinctEvents > 1`, on the reasoning that two signals on one record couldn't be two independent findings. Run the canonical CAV3RN item through that and it returns `false`. The marker and the rename both resolve on record #2, `DistinctEvents` is 1, the clause fails, and `BothSignals` — the flag whose entire job is to promote the CAV3RN shape — **excludes the CAV3RN shape specifically.** With `CorroboratedItems` leading the sort, a real dead drop would have ranked below incidental single-signal noise.
 
-The same de-duplication has to reach the volume counters, or the ranking inherits the bug the flag just lost: `Events = dcount(EventKey)` rather than `count()`, so a dual-signal row doesn't inflate the number it's sorted on. This refines the rule above rather than contradicting it — anything that isn't the entity still stays out of the `by` clause. The correction is that "the entity" depends on the question. For *correlating signals*, it's the calendar item. For *reporting a finding*, it's the mailbox. Collapsing those two into one `summarize` is how a query ends up proving something about itself.
+The mistake was collapsing two different questions. *Is this one event or two?* is a **volume** question, and `EventKey` answers it correctly. *Are these two independent findings?* is a **corroboration** question, and I answered it with the machinery built for the first one. The branches don't test two events. They test two different facts about the same item: `MarkerHits` reads the subject's **content** after the patch, `PlaceholderRenames` reads the **transition** — a one-character subject replaced within seconds. Those tests are independent of each other. That they land on the same audit record isn't duplication, it's the protocol: the module *must* patch the marker onto a placeholder, so marker-content and rename-shape are forced to coincide on one row. Requiring them not to is requiring the malware not to work the way this section spends four paragraphs explaining it works.
+
+Which flips the sign on `DistinctEvents` rather than removing it:
+
+- **`ItemMarkerViaRename`** — two signals, one record. The marker arrived *via* a placeholder rename. This is the tightest association the data can express and it leads the `order by`.
+- **`ItemCorroborated`** — two signals on the item, however they fell. Looser, still worth promoting, ranks second.
+- **`Events`** — de-duplicated on `EventKey`, because volume still shouldn't double-count.
+
+The general form: **de-duplicate your counts, not your corroboration.** A record satisfying two independent tests is one event and two findings, and a query that can't hold both of those at once will get one of them wrong.
+
+All of which refines the rule above rather than contradicting it — anything that isn't the entity still stays out of the `by` clause. The correction is that "the entity" depends on the question. For *correlating signals*, it's the calendar item. For *reporting a finding*, it's the mailbox. Collapsing those two into one `summarize` is how a query ends up proving something about itself.
 
 And the mailbox key changed for the same class of reason. The old version wrote `coalesce(MailboxOwnerUPN, UserId)`, which is a mailbox with an *actor* as its fallback — two different entity types sharing one column, so a mailbox with no UPN on the record silently becomes whoever Exchange thought was acting. `coalesce(tostring(MailboxGuid), MailboxOwnerUPN)` keeps both candidates in the same species, prefers the identifier that survives a rename, and leaves `UserId` where it belongs: in `Actors`, as an attribute of the finding.
 
@@ -563,7 +582,7 @@ Six things about how those lanes are handled, four of which I got wrong on the f
 - **But put something cheap in front of it.** My first version ran the `mv-apply` and the address comparison against *every* AAAA lookup in the window, and filtered afterwards. That is the expensive operation sitting upstream of the filter that would have contained it — on an IPv6-enabled network it's a query that returns the right answer and never finishes. The fix is `| where IPAddresses has "8000"` ahead of the `mv-apply`. KQL's tokenizer treats the colon as a separator, so the trailing hextet is a distinct term in every textual form of that address, and the final group is always four hex digits — there's no zero-padded variant that hides it. Narrowing with a string operation and *deciding* with a structured one is not a contradiction; it's the whole pattern. The mistake is letting the string operation make the call.
 - **Separate lanes, not shared booleans.** Computing `ShapeMatch`, `DomainMatch`, and `SentinelMatch` as columns on one row set forces every row through every test, and it couples their preconditions. That coupling had already broken something: `| where LabelCount >= 5` is a *shape* precondition, but sitting at the top of a single pipeline it also discarded every domain-IOC hit on the bare `cloudlanecdn.com` — two labels — and every sentinel hit returned to a short hostname. Three `let`-bound branches let each lane carry its own floor. The union at the bottom is legitimate for the usual reason: same entity, `ClientIP` and `Computer`, three questions.
 - **`max()` doesn't aggregate booleans**, so the `ShapeSeen`/`DomainSeen`/`SentinelSeen` flags are built with counting functions and compared after the `summarize`. And the ordering runs on `ShapeSeen` first, not on volume. A chatty host that tripped the domain IOC once should not outrank a single host exhibiting the protocol shape — that's the same corroboration discipline from Act I, applied to three lanes of very unequal fidelity instead of two of equal fidelity.
-- **A union counts rows, and rows are not events.** `d.a1b2c3d4e5f6a7.0.p.cloudlanecdn.com` satisfies the shape lane *and* the domain lane, so it enters the union twice. My first version then reported `Queries = count()`, which doubled that lookup and inflated the exact number the analyst reads as "how much of this is there." Same defect as Act I's `BothSignals`, in a different query, on the same day — a lane overlap and a signal overlap are the same bug wearing different hats. `Queries = dcount(EventKey)` counts DNS events; `LaneHits = count()` counts union rows; the per-lane counters use `dcountif` on the same key. Carrying both is deliberate: when `LaneHits` exceeds `Queries`, that gap is telling you the lanes agree, which is itself corroboration you'd otherwise have to infer.
+- **A union counts rows, and rows are not events.** `d.a1b2c3d4e5f6a7.0.p.cloudlanecdn.com` satisfies the shape lane *and* the domain lane, so it enters the union twice. My first version then reported `Queries = count()`, which doubled that lookup and inflated the exact number the analyst reads as "how much of this is there." Same defect as Act I's `Events` counter, in a different query, on the same day — a lane overlap and a signal overlap are the same bug wearing different hats. `Queries = dcount(EventKey)` counts DNS events; `LaneHits = count()` counts union rows; the per-lane counters use `dcountif` on the same key. Note what the lane *flags* deliberately do **not** do: they don't require the lanes to have fired on different lookups. That's the Act I lesson applied on the first pass rather than the second — one query satisfying both the shape test and the domain IOC is one event and two findings, and demanding they be separate events would penalise the strongest evidence in the set. Carrying both counters is the same idea from the other end: when `LaneHits` exceeds `Queries`, that gap is telling you the lanes agree, which is corroboration you'd otherwise have to infer.
 - **The entity is `ClientIP`, not `ClientIP, Computer`.** `Computer` in `DnsEvents` is the resolver that logged the query, not the host that asked it. Put it in the `by` clause and a client that talks to two DNS servers splits into two findings, each with half the evidence — the identical fan-out that `DeviceName` causes in Act II, in the query that's supposed to be demonstrating the discipline. It belongs in the aggregation as `Resolvers = make_set(Computer, 5)`, where it's useful: two resolvers seeing the same shape is confirmation, not duplication.
 
 **One correction, and it's the important one.** Thursday's Detection 4 was titled "DNS AAAA Queries from Non-Browser Processes," and it does not query DNS record types, because it can't — the brief says so plainly in its own caveats: `DeviceNetworkEvents` doesn't expose query type, and `DnsQueryResponse` isn't a valid `ActionType` for that table. So the query substitutes a behavioral proxy: find non-browser processes that hit `graph.microsoft.com`, then find other external connections from those same processes. That's honest engineering under a constraint, and I respect that the brief documented it rather than shipping a query that returns zero rows and calling it clean.
