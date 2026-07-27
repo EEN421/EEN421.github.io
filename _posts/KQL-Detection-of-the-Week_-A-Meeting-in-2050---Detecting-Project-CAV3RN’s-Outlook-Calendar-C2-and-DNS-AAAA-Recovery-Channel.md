@@ -63,12 +63,20 @@ let CalendarOps = OfficeActivity
     FolderPath  = coalesce(tostring(ItemJson.ParentFolder.Path), Folder)
 | where FolderPath has_any (CalendarFolderNames)
 | where isnotempty(ItemId)
+// The mailbox is the entity, and MailboxGuid is the only stable name for it —
+// it survives a UPN change and is populated more reliably on app-only records.
+// UserId is the ACTOR. It is never a fallback for a mailbox. Check the casing
+// of MailboxGuid in your own workspace before you run this.
+| extend Mailbox = coalesce(tostring(MailboxGuid), MailboxOwnerUPN)
+| where isnotempty(Mailbox)
 | project
-    TimeGenerated, ItemId, ItemSubject, Operation, FolderPath,
-    UserId, UserType, ClientIP, ClientInfoString, AppId, MailboxOwnerUPN;
+    TimeGenerated, Mailbox, MailboxOwnerUPN, ItemId, ItemSubject, Operation, FolderPath,
+    UserId, UserType, ClientIP, ClientInfoString, AppId;
 let MarkerHits = CalendarOps
 | where ItemSubject has_any (DeadDropMarkers)
-| extend Signal = "SubjectMarker", RenameLatencySec = int(null);
+// long(null), matching tolong() below. int and long unioned together split into
+// two columns the first time either side's type changes.
+| extend Signal = "SubjectMarker", RenameLatencySec = long(null);
 let PlaceholderRenames = CalendarOps
 | sort by ItemId asc, TimeGenerated asc
 | extend
@@ -81,17 +89,28 @@ let PlaceholderRenames = CalendarOps
 // between (1 .. 2), NOT <= 2 — an empty PrevSubject would otherwise match every create/update pair
 | where strlen(trim(@"\s", PrevSubject)) between (1 .. 2)
 | where isnotempty(ItemSubject) and PrevSubject != ItemSubject
-| extend RenameLatencySec = datetime_diff('second', TimeGenerated, PrevTime)
+| extend RenameLatencySec = tolong(datetime_diff('second', TimeGenerated, PrevTime))
 | where RenameLatencySec between (0 .. RenameWindowSec)
 | extend Signal = "PlaceholderRename"
 | project-away Prev*;
-union MarkerHits, PlaceholderRenames
-// The entity is the mailbox. Everything else is an attribute of the finding,
-// not a dimension of it — including who Exchange thinks did it.
-| extend Mailbox = coalesce(MailboxOwnerUPN, UserId)
-| where isnotempty(Mailbox)
+let Findings = union MarkerHits, PlaceholderRenames
+| extend EventKey = strcat(ItemId, "|", tostring(TimeGenerated), "|", Operation);
+// Stage 1 — corroboration is settled at the ITEM, not the mailbox. The rename
+// target IS the row that carries the final marker subject, so a single physical
+// event lands in both branches. Two signals on two events is corroboration.
+// Two signals on one event is one event, counted twice.
+let ItemVerdicts = Findings
 | summarize
-    Events       = count(),
+    ItemSignals    = make_set(Signal),
+    DistinctEvents = dcount(EventKey)
+    by Mailbox, ItemId
+| extend ItemCorroborated = array_length(ItemSignals) > 1 and DistinctEvents > 1;
+// Stage 2 — the mailbox is the REPORTING unit. Counts are de-duplicated on EventKey
+// for the same reason: a dual-signal row must not inflate the volume it's ranked on.
+Findings
+| summarize
+    Events       = dcount(EventKey),
+    Items        = dcount(ItemId),
     Signals      = make_set(Signal),
     Subjects     = make_set(ItemSubject, 10),
     Operations   = make_set(Operation, 10),
@@ -100,14 +119,20 @@ union MarkerHits, PlaceholderRenames
     Clients      = make_set(ClientInfoString, 5),
     ClientIPs    = make_set(ClientIP, 5),
     AppIds       = make_set(AppId, 5),
+    UPNs         = make_set(MailboxOwnerUPN, 3),
     MinRenameSec = min(RenameLatencySec),
     FirstSeen    = min(TimeGenerated),
     LastSeen     = max(TimeGenerated)
     by Mailbox
+| join kind=leftouter (
+    ItemVerdicts
+    | summarize CorroboratedItems = countif(ItemCorroborated), SuspectItems = count() by Mailbox
+  ) on Mailbox
+| project-away Mailbox1
 | extend
-    BothSignals = array_length(Signals) > 1,
+    BothSignals = CorroboratedItems > 0,
     MixedActors = array_length(ActorTypes) > 1
-| order by BothSignals desc, MixedActors desc, Events desc
+| order by CorroboratedItems desc, MixedActors desc, Items desc, Events desc
 ```
 
 <br/>
@@ -142,11 +167,22 @@ If `Subject` is in there, ship the rename branch. If it isn't, delete the branch
 
 Beyond that, this is the detection with a shelf life. The placeholder subject isn't a naming choice the operator made for fun — it's **forced by the protocol**. The module cannot create the event with its final subject, because it needs an event ID to attach the encrypted payload to, and it doesn't want a half-built dead drop sitting in the calendar advertising itself while the upload is in flight. Create blank, attach, then rename. That sequence is load-bearing. Rename the markers all you like; the create-then-patch shape stays, because the alternative is a race condition in your own C2.
 
-The supporting choice is the **entity-keyed union**. `MarkerHits` and `PlaceholderRenames` are two genuinely different questions, and I've unioned them anyway — but only because both sides are projected to the same columns and both resolve to the *same entity*, the mailbox. The `summarize` at the bottom then earns its keep: `BothSignals` promotes any mailbox where a marker string *and* a placeholder rename both landed, which is the CAV3RN shape and essentially nothing else's.
+The supporting choice is the **entity-keyed union**. `MarkerHits` and `PlaceholderRenames` are two genuinely different questions, and I've unioned them anyway — but only because both sides are projected to the same columns and both resolve to the *same entity*. The `summarize` then earns its keep: `BothSignals` promotes anywhere a marker string *and* a placeholder rename both landed, which is the CAV3RN shape and essentially nothing else's.
 
-Which is a claim you have to actually honor in the `summarize`, and my first version didn't. I grouped by `MailboxOwnerUPN, UserId, UserType` — the entity, plus two attributes of the record. Every extra key in a `by` clause is a finer partition, and a finer partition is a *smaller* chance that two signals about the same thing land on the same row. If Exchange attributes the marker write to the service principal and the rename to the mailbox owner, those become two rows, `array_length(Signals)` is 1 on both, and `BothSignals` — the entire point of the union — can never fire. The correlation was defeated by the grouping, in a query whose whole argument is that correlations live and die by their key.
+Which is a claim you have to actually honor, and my first two versions didn't — in opposite directions, which is what makes the pair worth walking through.
 
-The rule that falls out: **anything that isn't the entity belongs in the aggregation, not the `by` clause.** `Actors = make_set(UserId, 5)` tells you the same thing without fragmenting the row. And it tells you something extra — `MixedActors` flags a mailbox whose calendar writes are attributed to *both* a service principal and an interactive owner. Legitimate integrations and humans share calendars all the time; sharing them in a create-then-rename pattern is a different matter.
+**Version one grouped too finely.** I used `by MailboxOwnerUPN, UserId, UserType` — the entity, plus two attributes of the record. Every extra key in a `by` clause is a finer partition, and a finer partition is a *smaller* chance that two signals about the same thing land on the same row. If Exchange attributes the marker write to the service principal and the rename to the mailbox owner, those become two rows, `array_length(Signals)` is 1 on both, and `BothSignals` — the entire point of the union — can never fire. The rule that falls out: **anything that isn't the entity belongs in the aggregation, not the `by` clause.** `Actors = make_set(UserId, 5)` tells you the same thing without fragmenting the row. And it tells you something extra — `MixedActors` flags a mailbox whose calendar writes are attributed to *both* a service principal and an interactive owner.
+
+**Version two then grouped too coarsely, and that one is worse**, because it produced a result that looked like corroboration and wasn't. Trace a real dead drop through both branches. The module creates the event with subject `d`, then PATCHes `Boss Report ID: A1B2C3D1500` onto it. That `Update` row is the rename target — so it satisfies `PlaceholderRenames`. It is also the row whose subject now contains a marker string — so it satisfies `MarkerHits`. **One physical event, two branches, `array_length(Signals) == 2`.** With everything summarized straight to the mailbox, `BothSignals` fires on a single audit record counted twice, and the article's sales pitch — two independent signals agreeing — is describing something that didn't happen. It would fire on a *lone* renamed event with no other activity in the mailbox at all.
+
+So corroboration has to be settled one level down, at the **item**, and that means the correlation unit and the reporting unit are different things:
+
+- The **item** is where signals are proven independent. `ItemCorroborated` requires two distinct signals *and* `DistinctEvents > 1` — the marker row and the rename row have to be different rows. That second clause is the entire fix.
+- The **mailbox** is where findings are reported, because that's the thing an analyst opens and triages. `CorroboratedItems` counts how many items on that mailbox cleared the item-level bar, and it leads the `order by`.
+
+The same de-duplication has to reach the volume counters, or the ranking inherits the bug the flag just lost: `Events = dcount(EventKey)` rather than `count()`, so a dual-signal row doesn't inflate the number it's sorted on. This refines the rule above rather than contradicting it — anything that isn't the entity still stays out of the `by` clause. The correction is that "the entity" depends on the question. For *correlating signals*, it's the calendar item. For *reporting a finding*, it's the mailbox. Collapsing those two into one `summarize` is how a query ends up proving something about itself.
+
+And the mailbox key changed for the same class of reason. The old version wrote `coalesce(MailboxOwnerUPN, UserId)`, which is a mailbox with an *actor* as its fallback — two different entity types sharing one column, so a mailbox with no UPN on the record silently becomes whoever Exchange thought was acting. `coalesce(tostring(MailboxGuid), MailboxOwnerUPN)` keeps both candidates in the same species, prefers the identifier that survives a rename, and leaves `UserId` where it belongs: in `Actors`, as an attribute of the finding.
 
 This is worth stating precisely, because the briefs got it wrong on Tuesday and it's an easy mistake to make. **A union is legitimate when the branches share an entity key and illegitimate when they don't.** Tuesday's Detection 4 unioned calendar Graph activity (keyed on `AccountId`) with a DNS AAAA volume spike (keyed on `DeviceName`), then padded the second branch with `AccountId = ""`, `CalendarOps = 0`, `ActionTypes = dynamic([])` so the schemas would line up. The result is two unrelated hunts sharing an output grid, with half the columns structurally empty on every row. Nothing correlates, because there's nothing to correlate *on* — the brief's own caveat notes that `IPAddress` from `CloudAppEvents` and `DeviceName` from `DeviceNetworkEvents` can't be equated without a device inventory. If you're padding columns to make a union compile, you don't have one detection. You have two, in a trench coat.
 
@@ -198,7 +234,7 @@ The `leftanti` is doing the load-bearing work, and it's worth saying why, becaus
 
 Every CAV3RN `get` and `send` cycle starts with a `client_credentials` token request. A service principal that first appears this month, authenticates to Graph from one or two addresses, and never stops, is a much shorter list than "applications that touch calendars."
 
-- **`MailboxOwnerUPN` is not guaranteed to be populated**, and app-only access is precisely where it goes missing. Group on an empty key and every such record collapses into a single row that appears to represent one mailbox and actually represents all of them — a `BothSignals` hit on a group with no entity in it. The `coalesce(MailboxOwnerUPN, UserId)` and the `isnotempty()` guard exist for that. Same failure family as the `strlen` case above: a missing field turning a filter into a firehose.
+- **Neither mailbox identifier is guaranteed to be populated**, and app-only access is precisely where `MailboxOwnerUPN` goes missing. Group on an empty key and every such record collapses into a single row that appears to represent one mailbox and actually represents all of them. The `coalesce(tostring(MailboxGuid), MailboxOwnerUPN)` and the `isnotempty()` guard exist for that — and note the order: GUID first, because it's the stable identifier and it's the one that tends to survive on app-only records. What the old version did instead was fall back to `UserId`, which is not a mailbox at all; that turns a missing-field problem into a wrong-entity problem, which is harder to see because the output still looks populated. Confirm both columns before you rely on either: `OfficeActivity | where OfficeWorkload =~ "Exchange" | summarize Records = count(), WithGuid = countif(isnotempty(MailboxGuid)), WithUPN = countif(isnotempty(MailboxOwnerUPN)) by UserType`. Same failure family as the `strlen` case above: a missing field turning a filter into a firehose, or a key into a fiction.
 - **And the finding is a *lead*, not a verdict.** Confirm in the mailbox, not in the SIEM. Pull the item and look at its start time. If it's a real meeting, it's on a real date. If it's a dead drop, it's in 2050. That's the whole triage step.
 
 Act I hunts the mailbox. Which raises the question the briefs never asked — and it's the one that changes your coverage.
@@ -253,7 +289,11 @@ let ExpectedGraphClients = dynamic([
     // Windows itself. svchost (Web Account Manager / TokenBroker) alone will dominate
     // login.microsoftonline.com volume on every managed fleet.
     "svchost.exe", "searchhost.exe", "searchapp.exe", "runtimebroker.exe",
-    "backgroundtaskhost.exe", "phoneexperiencehost.exe", "microsoft.sharepoint.exe"
+    "backgroundtaskhost.exe", "phoneexperiencehost.exe", "microsoft.sharepoint.exe",
+    // Generic module hosts. These are here because they genuinely produce Graph
+    // traffic in most estates -- and they are also the likeliest hosts for a
+    // side-loaded DLL, which is exactly why ModuleLoads is not optional.
+    "rundll32.exe", "regsvr32.exe", "dllhost.exe"
 ]);
 let ConfigWrites = DeviceFileEvents
 | where Timestamp > ago(lookback)
@@ -274,7 +314,9 @@ let ConfigWrites = DeviceFileEvents
     Detail      = strcat(FolderPath, " <- ", InitiatingProcessCommandLine)
 | extend Signal = "ConfigArtifactWrite";
 // The module is a DLL. This branch is the only one that sees it regardless of
-// which host process loaded it — including hosts on the allowlist below.
+// which host process loaded it — including the module hosts on the allowlist above.
+// It is not more durable than the filename check; it is durable against a
+// DIFFERENT thing. Both die on a rename in the next build.
 let ModuleLoads = DeviceImageLoadEvents
 | where Timestamp > ago(lookback)
 | where FileName in~ (ModuleImages)
@@ -292,7 +334,16 @@ let ModuleLoads = DeviceImageLoadEvents
 let UnexpectedGraphClients = DeviceNetworkEvents
 | where Timestamp > ago(lookback)
 | where ActionType == "ConnectionSuccess"
-| where RemoteUrl in~ (GraphEndpoints)
+| where isnotempty(RemoteUrl)
+// RemoteUrl is populated inconsistently -- sometimes a bare host, sometimes a full
+// URL with scheme, port, or path. Exact equality against a hostname list silently
+// misses every non-bare form. Normalize to a host, THEN match exactly.
+// This is a positive selector, so breadth here is free; the endswith-vs-has_any
+// argument later applies to SUPPRESSION filters, where breadth is a hole.
+| extend RemoteHost = tolower(tostring(split(
+             trim_start(@"[a-zA-Z]+://", tostring(RemoteUrl)), "/")[0]))
+| extend RemoteHost = tostring(split(RemoteHost, ":")[0])
+| where RemoteHost in~ (GraphEndpoints)
 | where isnotempty(InitiatingProcessFileName)
 | where not(InitiatingProcessFileName in~ (ExpectedGraphClients))
 | summarize
@@ -300,7 +351,7 @@ let UnexpectedGraphClients = DeviceNetworkEvents
     LastSeen    = max(Timestamp),
     Connections = count(),
     ActiveDays  = dcount(bin(Timestamp, 1d)),
-    Endpoints   = make_set(RemoteUrl, 5)
+    Endpoints   = make_set(RemoteHost, 5)
     by DeviceId, DeviceName,
        Process     = InitiatingProcessFileName,
        ProcessPath = InitiatingProcessFolderPath,
@@ -312,7 +363,10 @@ let UnexpectedGraphClients = DeviceNetworkEvents
     Signal = "UnexpectedGraphClient"
 | project-away Endpoints;
 union ConfigWrites, ModuleLoads, UnexpectedGraphClients
+// DeviceId ONLY. DeviceName is a label: it collides across a fleet and changes on
+// rename, and a rename mid-window would split one host into two findings.
 | summarize
+    DeviceNames = make_set(DeviceName, 3),
     Signals     = make_set(Signal),
     Processes   = make_set(Process, 10),
     Paths       = make_set(ProcessPath, 10),
@@ -322,15 +376,16 @@ union ConfigWrites, ModuleLoads, UnexpectedGraphClients
     ActiveDays  = max(ActiveDays),
     FirstSeen   = min(FirstSeen),
     LastSeen    = max(LastSeen)
-    by DeviceId, DeviceName
+    by DeviceId
 | extend
     HasConfigArtifact = set_has_element(Signals, "ConfigArtifactWrite"),
     HasModuleLoad     = set_has_element(Signals, "ModuleImageLoad"),
     SignalCount       = array_length(Signals),
+    RenamedInWindow   = array_length(DeviceNames) > 1,
     ActiveSpanDays    = datetime_diff('day', LastSeen, FirstSeen)
 // Fidelity first, then breadth, then behavior. Raw volume is not in the ordering
 // at all — a beacon and a busy integration are not separable by counting.
-| order by HasModuleLoad desc, HasConfigArtifact desc, SignalCount desc, ActiveDays desc, LastSeen desc
+| order by SignalCount desc, HasModuleLoad desc, HasConfigArtifact desc, ActiveDays desc, LastSeen desc
 ```
 
 <br/>
@@ -343,13 +398,17 @@ union ConfigWrites, ModuleLoads, UnexpectedGraphClients
 
 That's it. Two words of logic against `DeviceFileEvents`, and it beats every clever thing in this article on cost-per-unit-confidence. `logAzure.txt` is not a filename that appears in legitimate software. There is no tuning phase, no baseline, no threshold, no exclusion list. It runs in seconds across thirty days of fleet telemetry and it either returns zero rows or it returns an incident.
 
-It is also, obviously, the most fragile detection here — it dies the moment the developers change one string in the next build. So it's paired, not standalone, and the pairing is the point. The other two branches each answer a question a string change doesn't.
+It is also, obviously, a fragile detection — it dies the moment the developers change one string in the next build. So it's paired, not standalone, and the pairing is the point. The other two branches each answer a question the filename doesn't.
 
 `ModuleLoads` asks: **did anything on this host load a module by that name, and what loaded it?** That's the branch that survives the process-host problem, and it's the one I'd have missed if I'd stopped at the endpoint framing. A DLL borrows its loader's identity in every process-keyed table on the box — `DeviceNetworkEvents`, `DeviceProcessEvents`, proxy logs, all of it. `DeviceImageLoadEvents` is where the module is still itself. It costs the same as the filename check and it returns the loader path, which is the fact that turns "something on this host is beaconing" into "this specific service is compromised."
 
-`UnexpectedGraphClients` asks: **which processes on this endpoint are talking to Microsoft Graph, and are they processes that have any business doing so?** Graph is a browser-and-Office-suite destination. A binary that isn't in that family, authenticating to `login.microsoftonline.com` and then calling `graph.microsoft.com`, is doing something a normal endpoint does not do. But note what that branch cannot see, and why the order of the three matters: it is keyed on the *host process*, and the host process for a side-loaded DLL is whatever the operator chose. Land inside `svchost.exe` and this branch is structurally silent, because `svchost.exe` is on the allowlist and has to be — Web Account Manager alone will dominate `login.microsoftonline.com` volume on every managed fleet. Remove it and the branch is unusable; leave it and the branch has a hole shaped exactly like a competent implant. That is not a tuning problem, and it is why `ModuleLoads` leads the ordering.
+Be precise about what that buys, though, because I overstated it in the first cut and the overstatement is the kind that gets baked into a coverage map. `ModuleLoads` is **not more durable than `ConfigWrites`**. Both are string matches on a name the developers chose. `AzureCommunication.dll` and `logAzure.txt` die in the same commit, and a build that renames one will rename the other. What `ModuleLoads` is durable against is a *different axis*: the operator's choice of host process, which they can change without recompiling anything. That's worth having, and it's worth ranking, but it is not longevity — it's coverage of a variable the adversary can turn today rather than next release. Treat both as short-lived, and treat the third branch as the one that has to still work after the rename.
 
-Note the join key: `DeviceId`. All three branches are host-scoped, all three resolve to a device, and the `summarize` collapses them onto one row per endpoint with fidelity — not volume — doing the ranking. *That's* what a legitimate union looks like — same entity, three questions, one verdict. Contrast Thursday's version, which correlated `graph_callers` back to the full network stream with `join kind=inner ... on DeviceName` and then filtered `InitiatingProcessFileName =~ SuspectProcess` after the fact. It gets the right answer, but it fans out first — a device with four suspect processes multiplies every candidate row by four before the filter throws three away. The fix is to join on the compound key up front:
+`UnexpectedGraphClients` asks: **which processes on this endpoint are talking to Microsoft Graph, and are they processes that have any business doing so?** Graph is a browser-and-Office-suite destination. A binary that isn't in that family, authenticating to `login.microsoftonline.com` and then calling `graph.microsoft.com`, is doing something a normal endpoint does not do. But note what that branch cannot see, and why the ordering of the three matters: it is keyed on the *host process*, and the host process for a side-loaded DLL is whatever the operator chose. Land inside `svchost.exe` — or `rundll32.exe`, `regsvr32.exe`, `dllhost.exe`, all of which are on the allowlist and all of which exist to run other people's code — and this branch is structurally silent. Remove them and the branch is unusable; `svchost.exe` alone would bury you in Web Account Manager traffic. Leave them and the branch has a hole shaped exactly like a competent implant. That is not a tuning problem, and it's why the generic module hosts are called out in the list with a comment rather than quietly present.
+
+The ordering that falls out of all this is `SignalCount` first, then the two fidelity flags. Two independent branches agreeing on one device outranks any single branch, however good that branch is — the same discipline as Act I's `CorroboratedItems`, applied to a host instead of a mailbox.
+
+Note the grouping key: `DeviceId`, **alone**. All three branches are host-scoped, all three resolve to a device, and the `summarize` collapses them onto one row per endpoint. My earlier version grouped `by DeviceId, DeviceName`, which is the exact mistake this article spends a paragraph on two sections later — `DeviceName` is a label, it changes on rename, and a rename inside a thirty-day window splits one compromised host into two half-findings, each below the bar. It's in the aggregation now as `DeviceNames = make_set(DeviceName, 3)`, where it costs nothing and buys something: `RenamedInWindow` turns the rename from a defect into a triage fact. *That's* what a legitimate union looks like — same entity, three questions, one verdict. Contrast Thursday's version, which correlated `graph_callers` back to the full network stream with `join kind=inner ... on DeviceName` and then filtered `InitiatingProcessFileName =~ SuspectProcess` after the fact. It gets the right answer, but it fans out first — a device with four suspect processes multiplies every candidate row by four before the filter throws three away. The fix is to join on the compound key up front:
 
 ```kql
 | extend SuspectProcess = InitiatingProcessFileName
@@ -364,11 +423,12 @@ Same answer, a fraction of the shuffle — and note that it's `DeviceId`, not `D
 
 I'd take `ConfigWrites` and `ModuleLoads` to a scheduled rule tomorrow. `UnexpectedGraphClients` is a hunt, and the gap between those two states is where the work is:
 
-- **The allowlist excludes the process class this malware is most likely to run inside, and there is no version of it that doesn't.** Spelled out above, repeated here because it's the bullet people skip: a name-based `ExpectedGraphClients` list is a statement about *processes*, and this is a *module*. `svchost.exe`, `rundll32.exe`, `powershell.exe`, `msedgewebview2.exe` and `backgroundtaskhost.exe` are all on the list, all legitimately, and all viable hosts. Treat `UnexpectedGraphClients` as the branch that catches the lazy implementation, `ModuleLoads` as the branch that catches the careful one, and don't report coverage from the first without the second. If you can't ingest `DeviceImageLoadEvents` at fleet scale — and plenty of shops can't, it's a high-volume table — scope it to the module name at the connector rather than dropping the branch.
+- **The allowlist excludes the process class this malware is most likely to run inside, and there is no version of it that doesn't.** Spelled out above, repeated here because it's the bullet people skip: a name-based `ExpectedGraphClients` list is a statement about *processes*, and this is a *module*. `svchost.exe`, `rundll32.exe`, `regsvr32.exe`, `dllhost.exe`, `powershell.exe`, `msedgewebview2.exe` and `backgroundtaskhost.exe` are all on the list, all legitimately, and all viable hosts — the generic module hosts are grouped and commented in the query for exactly that reason, so nobody removes them without understanding the trade. Treat `UnexpectedGraphClients` as the branch that catches the lazy implementation, `ModuleLoads` as the branch that catches the careful one, and don't report coverage from the first without the second. If you can't ingest `DeviceImageLoadEvents` at fleet scale — and plenty of shops can't, it's a high-volume table — scope it to the module name at the connector rather than dropping the branch.
+- **Both name-matched branches have the same expiry date.** `ConfigWrites` and `ModuleLoads` are string matches on developer-chosen names, and one rename retires both. Don't let the fidelity ranking imply otherwise: high confidence *today* is not the same as durable, and a coverage map that records "CAV3RN — covered" on the strength of two filename matches is recording a date, not a capability. Re-derive both strings from the next round of reporting rather than assuming they held.
 - **Thursday's allowlist has last week's bug in it.** The query excluded destinations with `not(RemoteUrl has_any ("graph.microsoft.com", "login.microsoftonline.com", "microsoft.com", "windows.com", "windowsupdate.com"))`. The hole is real, but it isn't the one I first wrote, and the mechanism is worth getting right because it changes which hostnames get through. `has_any` is **term-based**, not substring-based — KQL tokenizes both sides into maximal alphanumeric runs, and a multi-token needle matches when its tokens appear as an *adjacent sequence* in the haystack. So `microsoft.com` does **not** match `login.microsoftonline.com.c2.example.net`: the tokens there are `login`, `microsoftonline`, `com`, and there is no `microsoft` immediately followed by `com`. That's what `contains` would have done. What `has_any` does instead is match without regard to *position*, which is the actual problem: `windowsupdate.com.attacker.io` tokenizes to `windowsupdate`, `com`, `attacker`, `io` — the needle's two tokens sit adjacent at the front, so the allowlist suppresses it. Register `microsoft.com.c2.example.net` and you walk out the same door. A term test answers "do these tokens appear next to each other somewhere," and a suffix test answers "does this name end here." Those are different questions, and only the second one is the one an allowlist means to ask. This is the `RemoteIP startswith "172."` mistake from the AsyncAPI honorable mention wearing different clothes: an operator whose semantics almost fit, used in a filter whose job is to *suppress*, where every over-broad match is an invisible hole. Act II uses `in~` for exact host equality, which cannot over-suppress. If you need to cover subdomains, `endswith` on a normalized hostname is the floor, not `has_any`.
 - **The expected-client list is the whole detection, and mine is not yours.** Every enterprise runs Graph SDK background services nobody documented: RMM agents, backup tools, CASB shims, HR integrations, a PowerShell scheduled task somebody wrote in 2023. Run `DeviceNetworkEvents | where RemoteUrl in~ ("graph.microsoft.com") | summarize count() by InitiatingProcessFileName, InitiatingProcessFolderPath | order by count_ desc` and build the list from your own fleet before this goes anywhere near a schedule.
 - **Name-only exclusions are spoofable, and `teams.exe` from `%TEMP%` is not `teams.exe`.** Harden to `(FileName, FolderPath)` pairs or signer checks before promotion — the same correction the CI/CD detection needed last week, for the same reason.
-- **`RemoteUrl` is not reliably populated in `DeviceNetworkEvents`.** A connection recorded with only `RemoteIP` will never match `in~ (GraphEndpoints)` and drops out silently. That's a false-negative direction, which is the safer failure, but know it's there: your Graph-client inventory is a floor, not a census.
+- **`RemoteUrl` is neither reliably populated nor consistently shaped in `DeviceNetworkEvents`.** Two separate problems. First, a connection recorded with only `RemoteIP` will never match at all and drops out silently — a false-negative direction, which is the safer failure, but know it's there: your Graph-client inventory is a floor, not a census. Second, when it *is* populated the value arrives in different shapes depending on the sensor path — sometimes a bare host, sometimes with a scheme, a port, or a trailing path. My first version ran `RemoteUrl in~ (GraphEndpoints)` straight against it, which matches the bare form and nothing else, so the branch would have gone quiet on exactly the estates where the field is richest. The query now strips scheme, path and port to a `RemoteHost` and matches that. Note this doesn't contradict the `endswith`-over-`has_any` argument in the previous bullet: that one is about a *suppression* filter, where every over-broad match is an invisible hole. This is a positive selector, where breadth costs nothing and a missed form costs you the finding. Survey the real values first: `DeviceNetworkEvents | where RemoteUrl contains "graph.microsoft" | summarize count() by RemoteUrl | take 20`.
 - **Working directory means the path is unpredictable.** Because the module supplies a bare filename, `logAzure.txt` lands wherever the host process happened to be running — `System32`, a user profile, a service directory, anywhere. Don't scope the file query by `FolderPath`. Let it fire from anywhere and read the path as evidence: *where* it landed tells you which process loaded the DLL.
 - **An aggregate collapses a time range into whatever fields you name — and a field you didn't name is a field the analyst will infer wrongly.** My first version summarized the network branch to `Timestamp = min(Timestamp)` before the union, so the outer `max(Timestamp)` faithfully reported the maximum of a set of minimums, which is a number that describes nothing. `LastSeen: 29 days ago` on a host that has been beaconing every day since is how a live finding gets triaged to the bottom of the queue. Carry `min` *and* `max` through any branch that aggregates, and reconcile them at the top. `ActiveDays` is the field that actually answers the question anyway: a config write is a point event, but a Graph client is a behavior, and "180 connections across 28 of 30 days" is a different finding from "180 connections in one afternoon."
 
@@ -424,11 +484,16 @@ let ShapeLane = AaaaLookups
     MarkerLabel = iff(set_has_element(Labels, "p"), "p", "q")
 | project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
 // Lane 2 — bootstrap domain IOC. No label-count floor: the bare domain is two labels.
-// has_any is term-sequence matching, so this also catches sub.cloudlanecdn.com and
-// cloudlanecdn.com.evil.net. In a positive lane that breadth is free; in the suppression
-// filter discussed in Act II, the same behavior is a hole.
+// endswith on a normalized name, OR exact equality for the apex. Consistency, not
+// correction: has_any would work here (breadth is free in a positive lane), but a
+// reader who lifts this block into a suppression filter inherits the Act II hole.
+// Write the boundary-aware form so the safe version is the one that travels.
 let DomainLane = AaaaLookups
-| where QueryName has_any (BootstrapDomains)
+| where QueryName has_any (BootstrapDomains)          // cheap term prefilter
+| mv-apply Dom = BootstrapDomains to typeof(string) on (
+    summarize DomainHits = countif(QueryName == Dom or QueryName endswith strcat(".", Dom))
+  )
+| where DomainHits > 0
 | extend Lane = "BootstrapDomain", MarkerLabel = ""
 | project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
 // Lane 3 — failure sentinel in the ANSWER. Cheap lossy prefilter, then authoritative compare.
@@ -444,18 +509,26 @@ let SentinelLane = AaaaLookups
 | extend Lane = "FailureSentinel", MarkerLabel = ""
 | project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
 union ShapeLane, DomainLane, SentinelLane
+// One lookup can satisfy more than one lane — d.<hex>.<idx>.p.cloudlanecdn.com hits
+// both Shape and Domain. EventKey de-duplicates so Queries counts DNS events, not
+// union rows. LaneHits counts rows, and the two being different is the point.
+| extend EventKey = strcat(tostring(TimeGenerated), "|", QueryName)
+// ClientIP is the entity. Computer is the RESOLVER that logged the query, not the
+// host that asked — a client talking to two DNS servers would fragment into two rows.
 | summarize
-    Queries       = count(),
+    Queries       = dcount(EventKey),
+    LaneHits      = count(),
     DistinctNames = dcount(QueryName),
+    Resolvers     = make_set(Computer, 5),
     SampleNames   = make_set(QueryName, 10),
     MarkerLabels  = make_set_if(MarkerLabel, isnotempty(MarkerLabel)),
-    ShapeCount    = countif(Lane == "ProtocolShape"),
-    DomainCount   = countif(Lane == "BootstrapDomain"),
-    SentinelCount = countif(Lane == "FailureSentinel"),
+    ShapeCount    = dcountif(EventKey, Lane == "ProtocolShape"),
+    DomainCount   = dcountif(EventKey, Lane == "BootstrapDomain"),
+    SentinelCount = dcountif(EventKey, Lane == "FailureSentinel"),
     Lanes         = make_set(Lane),
     FirstSeen     = min(TimeGenerated),
     LastSeen      = max(TimeGenerated)
-    by ClientIP, Computer
+    by ClientIP
 | extend
     ShapeSeen    = ShapeCount > 0,
     SentinelSeen = SentinelCount > 0,
@@ -483,16 +556,32 @@ The agent ID is hex-encoded **uppercase**. `^[0-9a-f]+$` does not match `A1B2C3`
 
 The domain and sentinel lanes are the cheap IOC lanes riding alongside — `cloudlanecdn[.]com` and the hardcoded failure address `2001:4998:44:3507::8000` (which lives inside a Yahoo allocation, for reasons GReAT couldn't determine either). Those two will be dead within the month. The shape lane outlives them.
 
-Four things about how those lanes are handled, three of which I got wrong on the first pass:
+Six things about how those lanes are handled, four of which I got wrong on the first pass:
 
+- **The domain lane now matches on a boundary, and that's a consistency change, not a correction.** Worth separating the two, because flattening them would retract a claim that was right. `QueryName has_any (BootstrapDomains)` is *correct* here: this is a positive selector, the extra breadth catches `sub.cloudlanecdn.com` and `cloudlanecdn.com.evil.net` for free, and there's no suppression semantics for it to break. The argument in Act II — that a term test asks "do these tokens appear adjacent somewhere" while an allowlist means to ask "does this name end here" — is about filters whose job is to *remove* rows, and it doesn't apply to a filter whose job is to select them. So why change it? Because code travels and comments don't. A reader lifting this block into an exclusion list inherits precisely the hole Act II spends a paragraph on, and the comment explaining why it was safe stays behind on this page. The `has_any` survives as a cheap term prefilter; the `mv-apply` does exact-apex-or-suffix matching after it. Same results, one fewer trap, and the version that gets copied is the one that's safe in both contexts.
 - **Don't string-match an IPv6 address.** `IPAddresses has "2001:4998:44:3507::8000"` only fires if your resolver logged that exact compression. The same address written `2001:4998:44:3507:0:0:0:8000` is a different string and an identical destination, and the miss is silent. `ipv6_compare()` normalizes both sides and answers the question you actually asked. It would be a strange article that spends a paragraph arguing structured label matching beats string matching, and then string-matches an address three lines later.
 - **But put something cheap in front of it.** My first version ran the `mv-apply` and the address comparison against *every* AAAA lookup in the window, and filtered afterwards. That is the expensive operation sitting upstream of the filter that would have contained it — on an IPv6-enabled network it's a query that returns the right answer and never finishes. The fix is `| where IPAddresses has "8000"` ahead of the `mv-apply`. KQL's tokenizer treats the colon as a separator, so the trailing hextet is a distinct term in every textual form of that address, and the final group is always four hex digits — there's no zero-padded variant that hides it. Narrowing with a string operation and *deciding* with a structured one is not a contradiction; it's the whole pattern. The mistake is letting the string operation make the call.
 - **Separate lanes, not shared booleans.** Computing `ShapeMatch`, `DomainMatch`, and `SentinelMatch` as columns on one row set forces every row through every test, and it couples their preconditions. That coupling had already broken something: `| where LabelCount >= 5` is a *shape* precondition, but sitting at the top of a single pipeline it also discarded every domain-IOC hit on the bare `cloudlanecdn.com` — two labels — and every sentinel hit returned to a short hostname. Three `let`-bound branches let each lane carry its own floor. The union at the bottom is legitimate for the usual reason: same entity, `ClientIP` and `Computer`, three questions.
-- **`max()` doesn't aggregate booleans**, so the `ShapeSeen`/`DomainSeen`/`SentinelSeen` flags are built with `countif()` and compared after the `summarize`. And the ordering runs on `ShapeSeen` first, not on volume. A chatty host that tripped the domain IOC once should not outrank a single host exhibiting the protocol shape — that's the same `BothSignals` discipline from Act I, applied to three lanes of very unequal fidelity instead of two of equal fidelity.
+- **`max()` doesn't aggregate booleans**, so the `ShapeSeen`/`DomainSeen`/`SentinelSeen` flags are built with counting functions and compared after the `summarize`. And the ordering runs on `ShapeSeen` first, not on volume. A chatty host that tripped the domain IOC once should not outrank a single host exhibiting the protocol shape — that's the same corroboration discipline from Act I, applied to three lanes of very unequal fidelity instead of two of equal fidelity.
+- **A union counts rows, and rows are not events.** `d.a1b2c3d4e5f6a7.0.p.cloudlanecdn.com` satisfies the shape lane *and* the domain lane, so it enters the union twice. My first version then reported `Queries = count()`, which doubled that lookup and inflated the exact number the analyst reads as "how much of this is there." Same defect as Act I's `BothSignals`, in a different query, on the same day — a lane overlap and a signal overlap are the same bug wearing different hats. `Queries = dcount(EventKey)` counts DNS events; `LaneHits = count()` counts union rows; the per-lane counters use `dcountif` on the same key. Carrying both is deliberate: when `LaneHits` exceeds `Queries`, that gap is telling you the lanes agree, which is itself corroboration you'd otherwise have to infer.
+- **The entity is `ClientIP`, not `ClientIP, Computer`.** `Computer` in `DnsEvents` is the resolver that logged the query, not the host that asked it. Put it in the `by` clause and a client that talks to two DNS servers splits into two findings, each with half the evidence — the identical fan-out that `DeviceName` causes in Act II, in the query that's supposed to be demonstrating the discipline. It belongs in the aggregation as `Resolvers = make_set(Computer, 5)`, where it's useful: two resolvers seeing the same shape is confirmation, not duplication.
 
 **One correction, and it's the important one.** Thursday's Detection 4 was titled "DNS AAAA Queries from Non-Browser Processes," and it does not query DNS record types, because it can't — the brief says so plainly in its own caveats: `DeviceNetworkEvents` doesn't expose query type, and `DnsQueryResponse` isn't a valid `ActionType` for that table. So the query substitutes a behavioral proxy: find non-browser processes that hit `graph.microsoft.com`, then find other external connections from those same processes. That's honest engineering under a constraint, and I respect that the brief documented it rather than shipping a query that returns zero rows and calling it clean.
 
-But the constraint isn't real. It's a *table* constraint, not a *telemetry* constraint. `DnsEvents` — the Windows DNS Server connector, or Sysmon Event ID 22, or your resolver's own logs — carries `QueryType` as a first-class field. If you want AAAA, you need a DNS source, and MDE endpoint telemetry is not one. The general lesson is worth more than this campaign: **when a query's title describes something the table cannot express, the answer is usually a different table, not a cleverer proxy.** Check your DNS ingestion before you build around its absence:
+But the constraint isn't real. It's a *table* constraint, not a *telemetry* constraint. `DnsEvents` — the Windows DNS Server connector — carries `QueryType` as a first-class field, and so do most dedicated DNS sources. If you want AAAA, you need a DNS source, and MDE endpoint telemetry is not one.
+
+One correction to my own first draft here, because I reached for the obvious alternative and it doesn't work. **Sysmon Event ID 22 cannot answer this question either.** It doesn't write to `DnsEvents` — it lands in `Event` or `WindowsEvent` depending on your ingestion path — and, more to the point, its schema has no record-type field at all. `QueryName`, `QueryStatus`, `QueryResults`, and that's it. You'd be inferring "this was an AAAA lookup" from the presence of IPv6-looking strings in the results, which is a guess about the answer rather than a fact about the question, and it fails silently on NXDOMAIN — which for a bootstrap channel that's probing for field lengths is a meaningful share of the traffic. If Sysmon is your only DNS source, the shape lane still works on `QueryName` alone; the `QueryType =~ "AAAA"` filter has to come out, and the query gets noisier.
+
+The portable answer is **ASIM**. `_Im_Dns` normalizes `DnsQueryType` across the Windows connector, Infoblox, Corelight, Cisco Umbrella, and the rest, so the same detection runs wherever your DNS actually comes from rather than only where mine does:
+
+```kql
+_Im_Dns(starttime=ago(7d), responsecodename="NOERROR")
+| where DnsQueryType == 28          // AAAA, by IANA number
+| take 20
+| project TimeGenerated, SrcIpAddr, DnsQuery, DnsResponseName
+```
+
+The general lesson is worth more than this campaign: **when a query's title describes something the table cannot express, the answer is usually a different table, not a cleverer proxy.** Check what your DNS ingestion actually contains before you build around its absence:
 
 ```kql
 DnsEvents
@@ -514,7 +603,7 @@ DnsEvents
 
 The Windows DNS connector writes multiple answers comma-delimited, which is what the query assumes. If yours uses spaces, change the separator — `trim(@"\s", ...)` covers `", "` but not a bare space.
 
-Keep this one **hunting-only**. Legitimate AAAA volume is enormous on IPv6-enabled networks, `ClientIP` in `DnsEvents` is your resolver's view and may be a forwarder rather than the real originator, and the shape test will occasionally catch a CDN or telemetry vendor doing genuinely weird things with hostnames. Confirm the shape by eye — the label structure is distinctive enough that thirty seconds of reading `SampleNames` will tell you whether you're looking at a protocol or a coincidence.
+Keep this one **hunting-only**. Legitimate AAAA volume is enormous on IPv6-enabled networks, and the shape test will occasionally catch a CDN or telemetry vendor doing genuinely weird things with hostnames. The bigger caveat is the entity itself: `ClientIP` in `DnsEvents` is your resolver's view, and if your clients query through a forwarder or a conditional forwarder chain, that field is the forwarder — every host behind it collapses into one finding with no way to tell them apart from this table. That's a coverage limit, not a bug, and it's the reason `Resolvers` is in the output: if `ClientIP` resolves to infrastructure rather than an endpoint, the finding tells you *that a host somewhere behind this resolver* is running the protocol, and the next step is DHCP or endpoint telemetry, not another DNS query. Confirm the shape by eye — the label structure is distinctive enough that thirty seconds of reading `SampleNames` will tell you whether you're looking at a protocol or a coincidence.
 
 <br/>
 
@@ -629,7 +718,7 @@ The one-line takeaway: **`leftanti` reasons about membership, `prev()` reasons a
 Seven briefs, twenty-eight candidates, and one thread running through nearly all of them: **this week's attackers didn't bring anything.**
 
 - **The C2 was a calendar.** Not a domain you can block, not a beacon you can fingerprint — an app-only token, a Graph API call, and an appointment in 2050 that no human will ever open (Act I). When the channel is trusted infrastructure, the detection has to move to the *shape of the usage*: a placeholder subject, a rename seconds later, a protocol constraint the operator can't rename away.
-- **The malware's best tell was its own housekeeping.** Not the encryption, not the tradecraft, not the dead drop — a config file written to disk because the developers wanted persistence across restarts (Act II). The five-line query beat everything clever in this article. Look for the artifact the adversary created for their own convenience, not the one they built to hide.
+- **The malware's best tell was its own housekeeping.** Not the encryption, not the tradecraft, not the dead drop — a config file written to disk because the developers wanted persistence across restarts, and a module that has to be loaded by name before any of it happens (Act II). Two filename matches beat everything clever in this article on cost-per-unit-confidence, and they will both stop working in the same commit. Look for the artifact the adversary created for their own convenience rather than the one they built to hide — then write down the date, because that class of signal buys you months, not years.
 - **The fallback channel was a record type.** Sixteen bytes at a time, formatted as IPv6 addresses that were never meant to be routed anywhere (honorable mention). And the reason to check your DNS ingestion this week rather than next: if `QueryType` isn't in your workspace, this detection is unbuildable and you don't currently know that.
 - **The encryptor was `manage-bde.exe`.** Wednesday and Thursday both covered BitLocker turned against its owners for extortion — Microsoft-signed, already installed, already trusted, already excluded from half the EDR policies in the industry. Worth a QA note before you deploy either version: both briefs mapped that detection to **T1505.003 Web Shell**, inherited from the initial-access step in the source reporting. The encryption behavior is **T1486 Data Encrypted for Impact**, with **T1490 Inhibit System Recovery** and **T1021.001 Remote Desktop Protocol** alongside it. Thursday's tags carried T1486; the MITRE line didn't. Fix it before it lands in your coverage map, because a mismapped detection reports coverage you don't have. Also worth checking: Thursday's version bounds both the RDP logon and the `manage-bde` execution by the same `ago(1h)` lookback, which means the `TimeDeltaMinutes <= 60` correlation window can never actually be exercised at its stated width — and the `not(ipv4_is_private(RemoteIP))` filter scopes it to internet-facing RDP only, missing the far more common pivot from an already-compromised internal host.
 - **And the admin console was your firewall's.** CVE-2026-16232 ran Friday through Sunday across six candidates, all of them variations on the same problem: distinguishing an authenticated administrative session from an authenticated administrative session. All six were filed as *requires environment mapping*, which is exactly right and exactly the point — you cannot detect abuse of a trusted tool without first knowing who is supposed to be using it, from where.
