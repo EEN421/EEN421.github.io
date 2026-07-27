@@ -1,4 +1,4 @@
-![DevSecOpsDadAttack!](/assets/img/Meeting2050/meeting_in_2050.png)
+![DevSecOpsDadAttack!](/assets/img/Meeting2050/NinjaCat.png)
 This week's seven briefs produced **28 KQL candidates** across a second SharePoint RCE wave (CVE-2026-58644), the WordPress core RCE (CVE-2026-63030) and its web-shell aftermath, ACR Stealer riding ClickFix lures into browser credential stores, BitLocker turned into an extortion tool against office print infrastructure, WebDAV remote paths used to launch execution, a Check Point SmartConsole authentication bypass (CVE-2026-16232) that ran Friday through Sunday, Teams external-guest social engineering, Microsoft's Q2 2026 email threat landscape and its machine-speed M365 attack chains, and — the one this week is about — **Project CAV3RN storing its command-and-control traffic inside Outlook calendar events**.
 
 Last week's theme was *absence*: the sign-in that never happened, the author who was never there. The detections won by demanding a corroborating record the attacker couldn't forge.
@@ -19,7 +19,7 @@ So this week's KQL of the Week is the CAV3RN calendar channel, told in three que
 
 ## 🥇 Act I: The Standing Meeting Nobody Will Ever Attend
 
-![Act I](/assets/img/Meeting2050/dead_drop.png)
+![Act I](/assets/img/Meeting2050/ACT I.png)
 
 Here's the problem the winning query solves.
 
@@ -164,7 +164,7 @@ Act I hunts the mailbox. Which raises the question the briefs never asked — an
 
 ## 🥈 Act II: You Are Probably Not the Mailbox
 
-![Act II](/assets/img/Meeting2050/two_victims.png)
+![Act II](/assets/img/Meeting2050/ACT II.png)
 
 Every CAV3RN detection filed this week hunts tenant-side telemetry: `CloudAppEvents`, `OfficeActivity`, `AuditLogs`. Calendar operations, service principals, Graph calls. All of it assumes the suspicious calendar activity will show up in **your** logs.
 
@@ -288,7 +288,7 @@ Act I hunts the drop box. Act II hunts the agent. The last act hunts what the ag
 
 ## 🎖 Honorable Mention: The Address That Was Never an Address
 
-![Honorable Mention](/assets/img/Meeting2050/not_an_address.png)
+![Honorable Mention](/assets/img/Meeting2050/Honorable Mention.png)
 
 If Acts I and II win on where they point, the third query wins on the sheer nerve of what it's looking for.
 
@@ -375,7 +375,7 @@ Keep this one **hunting-only**. Legitimate AAAA volume is enormous on IPv6-enabl
 
 ## ✨ Bonus: `serialize`, `prev()`, and detecting a *sequence* instead of an *event*
 
-![Sequence](/assets/img/Meeting2050/in_order.png)
+![Sequence](/assets/img/Meeting2050/Bonus.png)
 
 Act I's placeholder-rename test needed something most KQL doesn't: it needed to know what happened *immediately before* a given row, within that row's own history. Last week's bonus covered `leftanti`, which reasons about sets — is this key present in that population? This week's is the other axis: reasoning about **order**.
 
@@ -465,7 +465,7 @@ The one-line takeaway: **`leftanti` reasons about membership, `prev()` reasons a
 
 ## The Bigger Lesson
 
-![](/assets/img/Meeting2050/borrowed_trust.png)
+![](/assets/img/Meeting2050/Borrowed Trust.png)
 
 Seven briefs, twenty-eight candidates, and one thread running through nearly all of them: **this week's attackers didn't bring anything.**
 
