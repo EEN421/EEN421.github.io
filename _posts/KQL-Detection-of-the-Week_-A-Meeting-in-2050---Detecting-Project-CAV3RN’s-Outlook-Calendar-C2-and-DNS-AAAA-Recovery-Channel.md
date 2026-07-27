@@ -695,9 +695,11 @@ And serialization is **not sticky**. `where`, `extend`, `project`, and `take` pr
       and PrevOp =~ "Create" and Operation =~ "Update"
 
 // 2. partition — same logic, guard enforced by the operator instead of by you.
-//    Composite partition keys are supported; verify the hint strategy in your own
-//    workspace, since the available strategies constrain what the subquery may do.
-| partition by Mailbox, ItemId (
+//    partition takes ONE column, so a compound entity needs a synthetic key first.
+//    Viable only on LOW-cardinality keys: it materialises a subquery per partition,
+//    so a per-item key across a tenant is the wrong tool. See the note below.
+| extend PartKey = strcat(Mailbox, "|", ItemId)
+| partition by PartKey (
     sort by TimeGenerated asc
     | extend PrevOp = prev(Operation)
     | where PrevOp =~ "Create" and Operation =~ "Update"
@@ -711,7 +713,15 @@ And serialization is **not sticky**. `where`, `extend`, `project`, and `take` pr
 | where tostring(OpSequence[0]) =~ "Create" and tostring(OpSequence[1]) =~ "Update"
 ```
 
-Option 2 is the one to reach for when the partition guard starts feeling like something you might forget. Option 3 is what you want when the question is "show me the whole story of this item" rather than "did these two things happen back to back" — but note that `make_list` only preserves order if the input was serialized first, so the `sort` is doing real work, not decoration.
+Option 2 looks like the safest of the three — the operator enforces the boundary so you can't forget the guard — and for Act I it's the **wrong** choice, which I had backwards until someone checked the syntax and the check turned up something bigger.
+
+Two constraints, one of which I asserted the opposite of in an earlier draft. First, `partition` takes a **single** column, so a compound entity needs a synthetic key built with `strcat` before you can partition on it at all. Second, and the one that actually decides it: `partition` materialises a subquery per distinct value of the key. `Mailbox × ItemId` across a tenant is hundreds of thousands of distinct values, easily millions over a seven-day window. That isn't a query that runs slowly; it's a query that hits a partition-count limit or takes your workspace with it. The available strategies trade off differently but none of them make a per-item key across a tenant viable.
+
+So the rule is about **cardinality, not convenience**. `partition` earns its keep on a key with a few hundred or a few thousand values — per-device, per-account, per-rule — where materialising a subquery each is cheap and the enforced boundary is free safety. On a per-item key, Option 1's manual guard is not the compromise. It's the correct answer, and the guard being your responsibility is the price of a construct that scales to the cardinality you actually have.
+
+And the reason this correction is in the article rather than quietly patched: I wrote a comment claiming composite partition keys were supported, in the same paragraph where I told the reader to go verify the hint strategy in their own workspace. Assert something about an operator's grammar without checking it, while instructing someone else to check — that's the same failure as the `has_any` model two sections up, and I'd rather it stay on the page than be edited out of it.
+
+Option 3 is what you want when the question is "show me the whole story of this item" rather than "did these two things happen back to back" — but note that `make_list` only preserves order if the input was serialized first, so the `sort` is doing real work, not decoration.
 
 Option 3 also has a trap in it that I walked into on the first draft, and it's the same one from the honorable mention wearing a third outfit. The tempting way to test the sequence is to flatten the array and string-match it:
 
@@ -816,7 +826,6 @@ DevSecOpsDadAttack Tags:
 - [T1102](https://devsecopsdadattack.com/tags/#T1102)
 - [T1102.002](https://devsecopsdadattack.com/tags/#T1102-002)
 - [T1071.004](https://devsecopsdadattack.com/tags/#T1071-004)
-- [T1550.001](https://devsecopsdadattack.com/tags/#T1550-001)
 - [T1132.001](https://devsecopsdadattack.com/tags/#T1132-001)
 - [T1573.002](https://devsecopsdadattack.com/tags/#T1573-002)
 - [T1486](https://devsecopsdadattack.com/tags/#T1486)
@@ -830,7 +839,6 @@ ATT&CK Coverage in This Article:
 
 **Detected by the queries above:**
 - **T1102.002** — Web Service: Bidirectional Communication (calendar dead drop — Act I from the mailbox tenant, Act II from the endpoint)
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token (app-only `client_credentials` Graph auth — Act I's service principal lane, Act II's network branch)
 - **T1071.004** — Application Layer Protocol: DNS (configuration recovery — honorable mention)
 - **T1132.001** — Data Encoding: Standard Encoding (hex agent ID in the query labels, 16-byte AAAA containers — honorable mention, shape lane)
 
@@ -840,7 +848,13 @@ ATT&CK Coverage in This Article:
 **Discussed as a correction, not covered by any query here:**
 - **T1486 / T1490 / T1021.001** — BitLocker extortion chain, correcting the briefs' inherited **T1505.003** mapping (see The Bigger Lesson). No query in this article detects any of the three.
 
-A note on the two branches that aren't in any of those lists. Act II's `ConfigWrites` and `ModuleLoads` deliberately carry **no technique mapping**, and that's not an oversight — `logAzure.txt` and `AzureCommunication.dll` are *artifacts*, not behaviors. There's no ATT&CK cell for "the developers wrote their config to disk." The nearest candidates are wrong in a way worth naming: T1552.001 Credentials In Files describes an adversary *searching* for credentials, not creating them, and T1574.002 DLL Side-Loading asserts a loading mechanism GReAT's analysis doesn't establish. Forcing either one in would make the two highest-fidelity detections in this article report coverage of techniques they don't detect — which is the exact failure the BitLocker note above is about, and it would be a poor look to commit it three lines later. If your coverage map can't represent an artifact detection without a technique, that's a gap in the map, not a reason to invent a mapping.
+A note on the three branches that aren't in any of those lists. Act II's `ConfigWrites` and `ModuleLoads` deliberately carry **no technique mapping**, and that's not an oversight — `logAzure.txt` and `AzureCommunication.dll` are *artifacts*, not behaviors. There's no ATT&CK cell for "the developers wrote their config to disk." The nearest candidates are wrong in a way worth naming: T1552.001 Credentials In Files describes an adversary *searching* for credentials, not creating them, and T1574.002 DLL Side-Loading asserts a loading mechanism GReAT's analysis doesn't establish.
+
+**Act I's service principal lane doesn't map either, and that one I got wrong first.** It carried T1550.001, Use Alternate Authentication Material: Application Access Token, which is the mapping everyone reaches for when an app-only identity shows up in Graph. Read the technique, though: it describes an adversary *replaying stolen tokens* to bypass authentication. CAV3RN doesn't do that. It holds a client ID and secret — the ones sitting in `logAzure.txt` — and runs an ordinary `client_credentials` flow to mint its own. Possessing credentials and authenticating with them is not reuse of stolen authentication material, and the difference isn't pedantic: one is token theft, the other is an application doing exactly what an application does.
+
+The detection makes the case worse rather than better. What `AADServicePrincipalSignInLogs` anti-joined against a Graph baseline returns is "a service principal authenticated to Graph that hadn't before." That result is equally consistent with an attacker-registered application, a legitimate registration with an attacker-added secret, and a genuinely replayed token — and the query cannot separate them. Every neighbouring candidate fails on the same fact: T1098.001 Additional Cloud Credentials fits *if* the secret was added to an existing app, T1078.004 Valid Accounts: Cloud Accounts fits *if* the registration was pre-existing and legitimate, and the analytic establishes neither. A detection that can't distinguish between three techniques doesn't cover any of them. It covers an observation.
+
+Forcing any of these in would make four of the strongest detections in this article report coverage they don't have — the exact failure the BitLocker note above describes, committed a few lines below it. Which is worth saying plainly: **that's five mapping corrections in one article**, four of them mine. The pattern isn't carelessness about ATT&CK, it's that mapping is the step where a plausible answer and a correct answer look identical, and nothing downstream ever contradicts a wrong one. A bad KQL filter returns strange rows and you notice. A bad technique mapping returns a green cell on a coverage map and stays there for a year. If your coverage map can't represent a detection that has no technique, that's a gap in the map, not a licence to invent one.
 
 External Sources:
 - Kaspersky GReAT / Securelist. *New Project CAV3RN module abuses Outlook calendar events for C2 and DNS AAAA records for configuration recovery.* 21 July 2026. <https://securelist.com/project-cav3rn-cyberespionage-framework-using-outlook-and-dns/120757/>
