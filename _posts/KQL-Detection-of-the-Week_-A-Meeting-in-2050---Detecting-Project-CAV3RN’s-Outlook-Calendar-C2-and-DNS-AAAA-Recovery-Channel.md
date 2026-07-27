@@ -78,13 +78,16 @@ let MarkerHits = CalendarOps
 // two columns the first time either side's type changes.
 | extend Signal = "SubjectMarker", RenameLatencySec = long(null);
 let PlaceholderRenames = CalendarOps
-| sort by ItemId asc, TimeGenerated asc
+// Sort key and partition guard must both be the FULL entity: an item ID is only
+// unique within a mailbox, so Mailbox comes first and both keys are compared below.
+| sort by Mailbox asc, ItemId asc, TimeGenerated asc
 | extend
+    PrevMailbox = prev(Mailbox),
     PrevItemId  = prev(ItemId),
     PrevOp      = prev(Operation),
     PrevSubject = prev(ItemSubject),
     PrevTime    = prev(TimeGenerated)
-| where ItemId == PrevItemId
+| where Mailbox == PrevMailbox and ItemId == PrevItemId
 | where PrevOp =~ "Create" and Operation =~ "Update"
 // between (1 .. 2), NOT <= 2 — an empty PrevSubject would otherwise match every create/update pair
 | where strlen(trim(@"\s", PrevSubject)) between (1 .. 2)
@@ -94,7 +97,7 @@ let PlaceholderRenames = CalendarOps
 | extend Signal = "PlaceholderRename"
 | project-away Prev*;
 let Findings = union MarkerHits, PlaceholderRenames
-| extend EventKey = strcat(ItemId, "|", tostring(TimeGenerated), "|", Operation);
+| extend EventKey = strcat(Mailbox, "|", ItemId, "|", tostring(TimeGenerated), "|", Operation);
 // Stage 1 — corroboration is settled at the ITEM, not the mailbox.
 // The two branches test different FACTS, not different events: MarkerHits reads
 // the subject's content after the patch; PlaceholderRenames reads the transition.
@@ -211,8 +214,8 @@ This is worth stating precisely, because the briefs got it wrong on Tuesday and 
 
 `prev()` requires a **serialized** row set, and `sort by` provides that serialization. Two things about that line will bite you, and they're covered properly in the bonus section below — but the short version, because it changes whether this query works at all:
 
-- `| sort by ItemId asc, TimeGenerated asc` — the `asc` is not decorative. **KQL's `sort by` defaults to descending.** Omit it and `prev()` hands you the *later* row, inverting the entire sequence test into a silent no-op.
-- `| where ItemId == PrevItemId` — `prev()` walks the whole serialized table and does not respect groups. Without that guard, the first row of every calendar item borrows the last row of the previous item, and you manufacture "sequences" that never occurred.
+- `| sort by Mailbox asc, ItemId asc, TimeGenerated asc` — the `asc` is not decorative. **KQL's `sort by` defaults to descending.** Omit it and `prev()` hands you the *later* row, inverting the entire sequence test into a silent no-op.
+- `| where Mailbox == PrevMailbox and ItemId == PrevItemId` — `prev()` walks the whole serialized table and does not respect groups. Without that guard, the first row of every calendar item borrows the last row of the previous item, and you manufacture "sequences" that never occurred. Note that the guard names **both** keys, because an item ID is only unique inside a mailbox: the partition key has to be the full entity, not the part of it that looks unique.
 
 <br/>
 
@@ -228,9 +231,14 @@ The briefs filed the CAV3RN calendar work as **hunting-only** every time it appe
 - **Thursday's Detection 3 queried the wrong table entirely.** It hunted `AuditLogs` for Graph calendar operations. `AuditLogs` is Entra ID's **directory control plane** — app registrations, consent grants, role assignments, group membership. Reading or writing a calendar event is **data plane**, and it does not write an `AuditLogs` record no matter how many times it happens. The query is syntactically fine, will run without error, and will return nothing forever. For app-only Graph activity, the tables that actually see it are `OfficeActivity` / `MailboxAudit` (the operation), `CloudAppEvents` (if you're licensed for Defender for Cloud Apps), and `AADServicePrincipalSignInLogs` (the token acquisition). That last one is genuinely useful here and no brief this week reached for it:
 
 ```kql
+// The baseline must be scoped to the SAME resource as the population, or the
+// anti-join answers "new service principal" instead of "new to Graph" -- and
+// silently drops the likeliest case: an app registration that has existed for
+// years against other resources and started calling Graph last week.
 let Baseline = AADServicePrincipalSignInLogs
 | where TimeGenerated between (ago(180d) .. ago(30d))
 | where ResultType == 0
+| where ResourceDisplayName =~ "Microsoft Graph"
 | distinct AppId;
 AADServicePrincipalSignInLogs
 | where TimeGenerated > ago(30d)
@@ -239,6 +247,7 @@ AADServicePrincipalSignInLogs
 | summarize
     SignIns     = count(),
     IPs         = make_set(IPAddress, 10),
+    DistinctIPs = dcount(IPAddress),
     Countries   = make_set(Location, 10),
     FirstSeen   = min(TimeGenerated),
     LastSeen    = max(TimeGenerated),
@@ -246,12 +255,16 @@ AADServicePrincipalSignInLogs
     by AppId, ServicePrincipalName, ServicePrincipalId
 | join kind=leftanti Baseline on AppId
 | extend ObservedSpanDays = datetime_diff('day', LastSeen, FirstSeen)
+// DistinctIPs and ActiveDays are triage columns, NOT filters. A threshold here
+// would be the volume-gating mistake from two bullets down; read them, don't gate on them.
 | order by FirstSeen desc
 ```
 
 The `leftanti` is doing the load-bearing work, and it's worth saying why, because the obvious version of this query silently can't answer the question. `FirstSeen = min(TimeGenerated)` is bounded by the lookback. Inside a 30-day window, a service principal that has been running since 2023 reports the same `FirstSeen` as one registered last Tuesday — the aggregate cannot see past its own filter, and "new" is not a property you can compute from a single window. It's a **membership** question, which means it needs a population to be absent from. Hence the 180-day baseline and the anti-join: *authenticating now, and not in the six months before now.* Last week's operator, doing this week's job.
 
-Every CAV3RN `get` and `send` cycle starts with a `client_credentials` token request. A service principal that first appears this month, authenticates to Graph from one or two addresses, and never stops, is a much shorter list than "applications that touch calendars."
+Every CAV3RN `get` and `send` cycle starts with a `client_credentials` token request, so the token acquisition is the one part of the channel that can't be moved. What the query *selects* is exactly one thing: successful app-only Graph authentication with no successful Graph authentication in the six months prior. What you then *read off the result* is the shape — `DistinctIPs`, `ActiveDays`, `ObservedSpanDays`, `Countries`. A beacon looks like a small number of addresses, near-daily activity, and a span that runs to the edge of the window. A legitimately new integration usually looks like a burst, or a rollout, or a single day. Those are triage columns and I've deliberately left them unthresholded — gating on them would be the counting mistake from two bullets down, in a query that's supposed to demonstrate the alternative.
+
+The baseline scope is the part to copy, though, and it's the part I had wrong at first. My first version baselined on *every* successful service principal sign-in and compared it against a Graph-only population. That doesn't answer "new to Graph." It answers "new service principal" — and it silently discards the case you'd most want, which is an app registration that has been authenticating to some other resource for two years and started calling Graph last week. A compromised existing registration is at least as plausible here as a freshly minted one, and the mismatched baseline made it invisible. **An anti-join is only as honest as the symmetry between its two sides:** if the population is filtered and the baseline isn't, every filter you applied to one side becomes a false "seen before" on the other.
 
 - **Neither mailbox identifier is guaranteed to be populated**, and app-only access is precisely where `MailboxOwnerUPN` goes missing. Group on an empty key and every such record collapses into a single row that appears to represent one mailbox and actually represents all of them. The `coalesce(tostring(MailboxGuid), MailboxOwnerUPN)` and the `isnotempty()` guard exist for that — and note the order: GUID first, because it's the stable identifier and it's the one that tends to survive on app-only records. What the old version did instead was fall back to `UserId`, which is not a mailbox at all; that turns a missing-field problem into a wrong-entity problem, which is harder to see because the output still looks populated. Confirm both columns before you rely on either: `OfficeActivity | where OfficeWorkload =~ "Exchange" | summarize Records = count(), WithGuid = countif(isnotempty(MailboxGuid)), WithUPN = countif(isnotempty(MailboxOwnerUPN)) by UserType`. Same failure family as the `strlen` case above: a missing field turning a filter into a firehose, or a key into a fiction.
 - **And the finding is a *lead*, not a verdict.** Confirm in the mailbox, not in the SIEM. Pull the item and look at its start time. If it's a real meeting, it's on a real date. If it's a dead drop, it's in 2050. That's the whole triage step.
@@ -285,7 +298,7 @@ The module looks for a relative file named `logAzure.txt` before it does anythin
 
 That's not a C2 artifact. That's a plaintext credential file dropped into an arbitrary directory by the malware itself, and it is the highest-fidelity, lowest-cost signal in this entire campaign.
 
-There's a second one, and getting to it requires saying out loud something the endpoint framing makes easy to skip: **`AzureCommunication.dll` is a DLL.** It has no process of its own. Whatever `InitiatingProcessFileName` your network telemetry records for its Graph traffic belongs to *the thing that loaded it* — and if that's `svchost.exe`, `rundll32.exe`, `powershell.exe`, or any signed host on the fleet, then a detection built on "which processes talk to Graph" is looking at an allowlisted name and moving on. The blind spot is not that the operator spoofs a process name. It's that they don't have to.
+There's a second one, and getting to it requires saying out loud something the endpoint framing makes easy to skip: **`AzureCommunication.dll` is a DLL.** It has no process of its own. GReAT never recovered the updated controller — what they assess is that something loads this DLL and calls its export. That's a deliberately modest claim and I want to keep it modest, because the detection consequence doesn't need any more than it. Whatever `InitiatingProcessFileName` your network telemetry records for this module's Graph traffic belongs to *the thing that loaded it*, whatever that thing is. Land it in a signed host that's already on your allowlist and a detection built on "which processes talk to Graph" reads an expected name and moves on. The blind spot is not that the operator spoofs a process name. It's that they never have to touch the name at all.
 
 Which means the process-behavior branch below cannot stand on its own, and the fix is to ask the question one layer down: **which processes loaded a module by that name at all.** `DeviceImageLoadEvents` answers that, it costs the same as the filename check, and it hands you the loader identity for free — which is the thing you actually need in order to know where `logAzure.txt` went.
 
@@ -308,11 +321,11 @@ let ExpectedGraphClients = dynamic([
     // Windows itself. svchost (Web Account Manager / TokenBroker) alone will dominate
     // login.microsoftonline.com volume on every managed fleet.
     "svchost.exe", "searchhost.exe", "searchapp.exe", "runtimebroker.exe",
-    "backgroundtaskhost.exe", "phoneexperiencehost.exe", "microsoft.sharepoint.exe",
-    // Generic module hosts. These are here because they genuinely produce Graph
-    // traffic in most estates -- and they are also the likeliest hosts for a
-    // side-loaded DLL, which is exactly why ModuleLoads is not optional.
-    "rundll32.exe", "regsvr32.exe", "dllhost.exe"
+    "backgroundtaskhost.exe", "phoneexperiencehost.exe", "microsoft.sharepoint.exe"
+    // Deliberately NOT here: rundll32.exe, regsvr32.exe, dllhost.exe. They produce
+    // little legitimate Graph traffic in most estates and exist to run other people's
+    // code. If yours are noisy against Graph, add them from your own baseline query
+    // and understand what you're giving up -- don't inherit them from this list.
 ]);
 let ConfigWrites = DeviceFileEvents
 | where Timestamp > ago(lookback)
@@ -423,7 +436,7 @@ It is also, obviously, a fragile detection — it dies the moment the developers
 
 Be precise about what that buys, though, because I overstated it in the first cut and the overstatement is the kind that gets baked into a coverage map. `ModuleLoads` is **not more durable than `ConfigWrites`**. Both are string matches on a name the developers chose. `AzureCommunication.dll` and `logAzure.txt` die in the same commit, and a build that renames one will rename the other. What `ModuleLoads` is durable against is a *different axis*: the operator's choice of host process, which they can change without recompiling anything. That's worth having, and it's worth ranking, but it is not longevity — it's coverage of a variable the adversary can turn today rather than next release. Treat both as short-lived, and treat the third branch as the one that has to still work after the rename.
 
-`UnexpectedGraphClients` asks: **which processes on this endpoint are talking to Microsoft Graph, and are they processes that have any business doing so?** Graph is a browser-and-Office-suite destination. A binary that isn't in that family, authenticating to `login.microsoftonline.com` and then calling `graph.microsoft.com`, is doing something a normal endpoint does not do. But note what that branch cannot see, and why the ordering of the three matters: it is keyed on the *host process*, and the host process for a side-loaded DLL is whatever the operator chose. Land inside `svchost.exe` — or `rundll32.exe`, `regsvr32.exe`, `dllhost.exe`, all of which are on the allowlist and all of which exist to run other people's code — and this branch is structurally silent. Remove them and the branch is unusable; `svchost.exe` alone would bury you in Web Account Manager traffic. Leave them and the branch has a hole shaped exactly like a competent implant. That is not a tuning problem, and it's why the generic module hosts are called out in the list with a comment rather than quietly present.
+`UnexpectedGraphClients` asks: **which processes on this endpoint are talking to Microsoft Graph, and are they processes that have any business doing so?** Graph is a browser-and-Office-suite destination. A binary that isn't in that family, authenticating to `login.microsoftonline.com` and then calling `graph.microsoft.com`, is doing something a normal endpoint does not do. But note what that branch cannot see, and why the ordering of the three matters: it is keyed on the *host process*, and the host process is not a property of the module. GReAT did not recover the updated controller — they assess that it loads the DLL and calls its export, and the loading mechanism is unestablished. Which is precisely why this branch is fragile: whatever the mechanism turns out to be, the operator picks the host, and picking a host that's on your allowlist requires no change to the DLL at all. Land inside `svchost.exe` and the branch is structurally silent, because `svchost.exe` has to be on the list — Web Account Manager alone would bury you. That is not a tuning problem. It's why the generic module hosts are *excluded* from the default list with a comment, and why `ModuleLoads` exists.
 
 The ordering that falls out of all this is `SignalCount` first, then the two fidelity flags. Two independent branches agreeing on one device outranks any single branch, however good that branch is — the same discipline as Act I's `CorroboratedItems`, applied to a host instead of a mailbox.
 
@@ -442,9 +455,10 @@ Same answer, a fraction of the shuffle — and note that it's `DeviceId`, not `D
 
 I'd take `ConfigWrites` and `ModuleLoads` to a scheduled rule tomorrow. `UnexpectedGraphClients` is a hunt, and the gap between those two states is where the work is:
 
-- **The allowlist excludes the process class this malware is most likely to run inside, and there is no version of it that doesn't.** Spelled out above, repeated here because it's the bullet people skip: a name-based `ExpectedGraphClients` list is a statement about *processes*, and this is a *module*. `svchost.exe`, `rundll32.exe`, `regsvr32.exe`, `dllhost.exe`, `powershell.exe`, `msedgewebview2.exe` and `backgroundtaskhost.exe` are all on the list, all legitimately, and all viable hosts — the generic module hosts are grouped and commented in the query for exactly that reason, so nobody removes them without understanding the trade. Treat `UnexpectedGraphClients` as the branch that catches the lazy implementation, `ModuleLoads` as the branch that catches the careful one, and don't report coverage from the first without the second. If you can't ingest `DeviceImageLoadEvents` at fleet scale — and plenty of shops can't, it's a high-volume table — scope it to the module name at the connector rather than dropping the branch.
+- **A process allowlist is a statement about processes, and this is a module.** Spelled out above, repeated here because it's the bullet people skip. `AzureCommunication.dll` has no process identity of its own; every process-keyed table on the box records whatever loaded it. GReAT didn't recover the updated controller, so nobody outside the operator knows what that is — and the honest consequence is that `UnexpectedGraphClients` has a hole whose shape you cannot predict from the reporting. `svchost.exe`, `powershell.exe`, `msedgewebview2.exe` and `backgroundtaskhost.exe` are on the list legitimately and are all capable of hosting it. Treat `UnexpectedGraphClients` as the branch that catches an implementation that didn't think about this, `ModuleLoads` as the branch that doesn't care, and don't report coverage from the first without the second. If you can't ingest `DeviceImageLoadEvents` at fleet scale — and plenty of shops can't, it's a high-volume table — scope it to the module name at the connector rather than dropping the branch.
+- **The generic module hosts are deliberately absent from the default list.** `rundll32.exe`, `regsvr32.exe` and `dllhost.exe` are not in `ExpectedGraphClients`, and that's a choice rather than an oversight: they generate little legitimate Graph traffic in most estates, and they're the entries whose inclusion costs the most. If they're noisy in yours, add them — but derive that from your own baseline query rather than inheriting it from mine, and note what you're conceding when you do.
 - **Both name-matched branches have the same expiry date.** `ConfigWrites` and `ModuleLoads` are string matches on developer-chosen names, and one rename retires both. Don't let the fidelity ranking imply otherwise: high confidence *today* is not the same as durable, and a coverage map that records "CAV3RN — covered" on the strength of two filename matches is recording a date, not a capability. Re-derive both strings from the next round of reporting rather than assuming they held.
-- **Thursday's allowlist has last week's bug in it.** The query excluded destinations with `not(RemoteUrl has_any ("graph.microsoft.com", "login.microsoftonline.com", "microsoft.com", "windows.com", "windowsupdate.com"))`. The hole is real, but it isn't the one I first wrote, and the mechanism is worth getting right because it changes which hostnames get through. `has_any` is **term-based**, not substring-based — KQL tokenizes both sides into maximal alphanumeric runs, and a multi-token needle matches when its tokens appear as an *adjacent sequence* in the haystack. So `microsoft.com` does **not** match `login.microsoftonline.com.c2.example.net`: the tokens there are `login`, `microsoftonline`, `com`, and there is no `microsoft` immediately followed by `com`. That's what `contains` would have done. What `has_any` does instead is match without regard to *position*, which is the actual problem: `windowsupdate.com.attacker.io` tokenizes to `windowsupdate`, `com`, `attacker`, `io` — the needle's two tokens sit adjacent at the front, so the allowlist suppresses it. Register `microsoft.com.c2.example.net` and you walk out the same door. A term test answers "do these tokens appear next to each other somewhere," and a suffix test answers "does this name end here." Those are different questions, and only the second one is the one an allowlist means to ask. This is the `RemoteIP startswith "172."` mistake from the AsyncAPI honorable mention wearing different clothes: an operator whose semantics almost fit, used in a filter whose job is to *suppress*, where every over-broad match is an invisible hole. Act II uses `in~` for exact host equality, which cannot over-suppress. If you need to cover subdomains, `endswith` on a normalized hostname is the floor, not `has_any`.
+- **Thursday's allowlist has last week's bug in it.** The query excluded destinations with `not(RemoteUrl has_any ("graph.microsoft.com", "login.microsoftonline.com", "microsoft.com", "windows.com", "windowsupdate.com"))`. The hole is real, and the reason is simpler than the one I first wrote. `has_any` is **term matching against an index** — Microsoft's documentation is explicit that these operators test whether terms are present, not where they sit. Presence is not position, and an allowlist means to ask a question about position: *does this name end here.* `windowsupdate.com.attacker.io` contains the terms the needle is made of; a term test says yes; a suffix test says no. Register `microsoft.com.c2.example.net` and you walk out the same door. I originally spelled out a token-adjacency model to explain exactly which hostnames slip through, and I've cut it — that model is inferred from observed behaviour rather than documented, and the argument doesn't need it. Presence-versus-position is enough, it's what the docs actually say, and building a *suppression* filter on inferred semantics is the failure mode here regardless of which inference you make. This is the `RemoteIP startswith "172."` mistake from the AsyncAPI honorable mention wearing different clothes: an operator whose semantics almost fit, used in a filter whose job is to suppress, where every over-broad match is an invisible hole. Act II uses exact host equality after normalization, which cannot over-suppress. If you need to cover subdomains, `endswith` on a normalized hostname is the floor.
 - **The expected-client list is the whole detection, and mine is not yours.** Every enterprise runs Graph SDK background services nobody documented: RMM agents, backup tools, CASB shims, HR integrations, a PowerShell scheduled task somebody wrote in 2023. Run `DeviceNetworkEvents | where RemoteUrl in~ ("graph.microsoft.com") | summarize count() by InitiatingProcessFileName, InitiatingProcessFolderPath | order by count_ desc` and build the list from your own fleet before this goes anywhere near a schedule.
 - **Name-only exclusions are spoofable, and `teams.exe` from `%TEMP%` is not `teams.exe`.** Harden to `(FileName, FolderPath)` pairs or signer checks before promotion — the same correction the CI/CD detection needed last week, for the same reason.
 - **`RemoteUrl` is neither reliably populated nor consistently shaped in `DeviceNetworkEvents`.** Two separate problems. First, a connection recorded with only `RemoteIP` will never match at all and drops out silently — a false-negative direction, which is the safer failure, but know it's there: your Graph-client inventory is a floor, not a census. Second, when it *is* populated the value arrives in different shapes depending on the sensor path — sometimes a bare host, sometimes with a scheme, a port, or a trailing path. My first version ran `RemoteUrl in~ (GraphEndpoints)` straight against it, which matches the bare form and nothing else, so the branch would have gone quiet on exactly the estates where the field is richest. The query now strips scheme, path and port to a `RemoteHost` and matches that. Note this doesn't contradict the `endswith`-over-`has_any` argument in the previous bullet: that one is about a *suppression* filter, where every over-broad match is an invisible hole. This is a positive selector, where breadth costs nothing and a missed form costs you the finding. Survey the real values first: `DeviceNetworkEvents | where RemoteUrl contains "graph.microsoft" | summarize count() by RemoteUrl | take 20`.
@@ -482,6 +496,12 @@ The agent ID is seven characters, hex-encoded to fourteen, and embedded in every
 ```kql
 let lookback = 7d;
 let BootstrapDomains = dynamic(["cloudlanecdn.com"]);
+// Single-token prefilter, derived from the registrable label only. A hostname ending
+// in ".cloudlanecdn.com" must contain "cloudlanecdn" as a whole indexed term, because
+// dots delimit it on both sides -- so this is PROVABLY broader than the boundary test
+// below and cannot discard a row the authoritative check would have kept. No
+// multi-token adjacency behaviour is relied on anywhere.
+let BootstrapTerms   = dynamic(["cloudlanecdn"]);
 let FailureSentinel  = "2001:4998:44:3507::8000";
 // Shared, cheap base. Nothing expensive happens here.
 let AaaaLookups = DnsEvents
@@ -503,12 +523,11 @@ let ShapeLane = AaaaLookups
     MarkerLabel = iff(set_has_element(Labels, "p"), "p", "q")
 | project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
 // Lane 2 — bootstrap domain IOC. No label-count floor: the bare domain is two labels.
-// endswith on a normalized name, OR exact equality for the apex. Consistency, not
-// correction: has_any would work here (breadth is free in a positive lane), but a
-// reader who lifts this block into a suppression filter inherits the Act II hole.
-// Write the boundary-aware form so the safe version is the one that travels.
+// Cheap single-token prefilter, then exact apex-or-suffix as the authoritative test.
+// Narrow with something cheap, DECIDE with something structured -- same pattern as
+// the sentinel lane, and the prefilter is chosen so it can only over-match.
 let DomainLane = AaaaLookups
-| where QueryName has_any (BootstrapDomains)          // cheap term prefilter
+| where QueryName has_any (BootstrapTerms)
 | mv-apply Dom = BootstrapDomains to typeof(string) on (
     summarize DomainHits = countif(QueryName == Dom or QueryName endswith strcat(".", Dom))
   )
@@ -563,7 +582,7 @@ The line that does the work is the shape test, and specifically this half of it:
 set_has_element(Labels, "p") or set_has_element(Labels, "q")
 ```
 
-Note what that *isn't*. It isn't `QueryName has ".p."` — and the reason is more interesting than "that would over-match," because it wouldn't over-match the way you'd guess. `has` is term-based, so the dots in that needle are **silently discarded**: it tokenizes to the single term `p`, and the query you actually shipped is `has "p"`. It won't match `example.pizza.com`, because `pizza` is one term and there's no standalone `p` in it. It *will* match `cdn-p-edge.example.com`, because hyphens are term delimiters too, and anything else where a lone `p` survives tokenization in a context that has nothing to do with DNS labels. The punctuation you wrote to mean "a label, delimited by dots" was never evaluated. That's the failure worth naming — not a filter that matches too much, but a filter that quietly answers a different question than the one on the page. It also isn't a positional index like `Labels[array_length(Labels) - 3]`, which quietly assumes the registrable domain is exactly two labels and breaks the moment the operator moves to something under `.co.uk`. `set_has_element()` does exact element matching against the parsed label array — it asks "is there a label that is *precisely* the single character `p`," which is a question ordinary DNS almost never answers yes to. Splitting the hostname into labels first and reasoning about labels as structured data, rather than pattern-matching against the string, is what makes the test both specific and portable.
+Note what that *isn't*. It isn't `QueryName has ".p."`. `has` tests for a **term**, and the punctuation you wrote to mean "a label, delimited by dots" is not part of that test — the dots are separators, not content, so the predicate you shipped is a question about the term `p` appearing somewhere in the name, not about a label sitting between two dots. That's the failure worth naming, and it's the same one as the allowlist above: not a filter that matches too much, but a filter that quietly answers a different question than the one on the page. It also isn't a positional index like `Labels[array_length(Labels) - 3]`, which assumes the registrable domain is exactly two labels and breaks the moment the operator moves to something under `.co.uk`. `set_has_element()` does exact element matching against the parsed label array — it asks "is there a label that is *precisely* the single character `p`," which is a question ordinary DNS almost never answers yes to. Splitting the hostname into labels first and reasoning about labels as structured data, rather than pattern-matching against the string, is what makes the test both specific and portable. And it's the version that doesn't require you to be right about tokenizer internals: structured comparison against parsed labels means the same thing in every workspace, documented or not.
 
 One line up in the shared base is doing quiet, load-bearing work, and it deserves naming because lifting the regex without it produces a clean zero-row result:
 
@@ -577,7 +596,7 @@ The domain and sentinel lanes are the cheap IOC lanes riding alongside — `clou
 
 Six things about how those lanes are handled, four of which I got wrong on the first pass:
 
-- **The domain lane now matches on a boundary, and that's a consistency change, not a correction.** Worth separating the two, because flattening them would retract a claim that was right. `QueryName has_any (BootstrapDomains)` is *correct* here: this is a positive selector, the extra breadth catches `sub.cloudlanecdn.com` and `cloudlanecdn.com.evil.net` for free, and there's no suppression semantics for it to break. The argument in Act II — that a term test asks "do these tokens appear adjacent somewhere" while an allowlist means to ask "does this name end here" — is about filters whose job is to *remove* rows, and it doesn't apply to a filter whose job is to select them. So why change it? Because code travels and comments don't. A reader lifting this block into an exclusion list inherits precisely the hole Act II spends a paragraph on, and the comment explaining why it was safe stays behind on this page. The `has_any` survives as a cheap term prefilter; the `mv-apply` does exact-apex-or-suffix matching after it. Same results, one fewer trap, and the version that gets copied is the one that's safe in both contexts.
+- **The domain lane decides on a boundary, and prefilters on a single token.** Two changes, for two different reasons. The boundary test is a consistency fix rather than a correction: `has_any` would return the right rows in a positive lane, where extra breadth costs nothing, and the Act II argument about allowlists doesn't apply to a filter whose job is to *select*. But code travels and comments don't — a reader lifting this block into an exclusion list inherits exactly the hole Act II describes, and the comment explaining why it was safe stays behind on this page. The prefilter change is the sharper one. My first version prefiltered with `has_any(BootstrapDomains)` — a multi-token needle — and then argued at length about how KQL tokenizes both sides and matches adjacent runs. Microsoft documents `has_any` as **indexed term matching**; the adjacency model is inferred behaviour, not a documented contract, and I had it sitting *upstream* of the authoritative test where any row it wrongly drops is invisible. That's the same structural mistake as trusting a suppression filter you can't see the misses of. The fix is to prefilter on the registrable label alone, `cloudlanecdn`: a single token relies on no adjacency behaviour at all, and it's provably broader than the boundary test, because any name ending in `.cloudlanecdn.com` must contain `cloudlanecdn` as a whole term with dots delimiting it on both sides. It can over-match; it cannot under-match. The `mv-apply` still makes the call. Keep the cheap-narrow / structured-decide shape — just don't let the cheap half depend on behaviour the docs don't promise.
 - **Don't string-match an IPv6 address.** `IPAddresses has "2001:4998:44:3507::8000"` only fires if your resolver logged that exact compression. The same address written `2001:4998:44:3507:0:0:0:8000` is a different string and an identical destination, and the miss is silent. `ipv6_compare()` normalizes both sides and answers the question you actually asked. It would be a strange article that spends a paragraph arguing structured label matching beats string matching, and then string-matches an address three lines later.
 - **But put something cheap in front of it.** My first version ran the `mv-apply` and the address comparison against *every* AAAA lookup in the window, and filtered afterwards. That is the expensive operation sitting upstream of the filter that would have contained it — on an IPv6-enabled network it's a query that returns the right answer and never finishes. The fix is `| where IPAddresses has "8000"` ahead of the `mv-apply`. KQL's tokenizer treats the colon as a separator, so the trailing hextet is a distinct term in every textual form of that address, and the final group is always four hex digits — there's no zero-padded variant that hides it. Narrowing with a string operation and *deciding* with a structured one is not a contradiction; it's the whole pattern. The mistake is letting the string operation make the call.
 - **Separate lanes, not shared booleans.** Computing `ShapeMatch`, `DomainMatch`, and `SentinelMatch` as columns on one row set forces every row through every test, and it couples their preconditions. That coupling had already broken something: `| where LabelCount >= 5` is a *shape* precondition, but sitting at the top of a single pipeline it also discarded every domain-IOC hit on the bare `cloudlanecdn.com` — two labels — and every sentinel hit returned to a short hostname. Three `let`-bound branches let each lane carry its own floor. The union at the bottom is legitimate for the usual reason: same entity, `ClientIP` and `Computer`, three questions.
@@ -659,7 +678,7 @@ And serialization is **not sticky**. `where`, `extend`, `project`, and `take` pr
 `prev()` is a sharp tool with no guard rails, and every failure mode is silent:
 
 - **`sort by` defaults to descending.** This is the one that gets people. `| sort by TimeGenerated` gives you newest-first, so `prev()` returns the *later* event and `next()` returns the earlier one. Every sequence test you wrote is now backwards. It won't error. It'll just return a different, plausible-looking, wrong answer — often zero rows, which reads as "clean." Write `asc` explicitly, every time, even when you think you know the default.
-- **`prev()` does not respect partitions.** It walks the entire serialized table top to bottom. Sort by `ItemId, TimeGenerated` and the first row of item B sees the last row of item A as its "previous" — different entity, different timeline, fabricated sequence. The `| where ItemId == PrevItemId` guard in Act I isn't defensive coding, it's **required for correctness**. Every `prev()` needs a partition guard or a `partition` operator around it. The parallel to last week is exact: with `leftanti`, a bad key *creates* findings; with an unguarded `prev()`, a partition boundary *creates* sequences. Both failure modes generate exactly the artifact you were hunting for, which is the worst possible direction for a bug to fail in.
+- **`prev()` does not respect partitions.** It walks the entire serialized table top to bottom. Sort by `ItemId, TimeGenerated` and the first row of item B sees the last row of item A as its "previous" — different entity, different timeline, fabricated sequence. The `| where Mailbox == PrevMailbox and ItemId == PrevItemId` guard in Act I isn't defensive coding, it's **required for correctness**. Every `prev()` needs a partition guard or a `partition` operator around it. And the guard has to name the *whole* key: `ItemId` alone looks unique enough to guard on, but Exchange item IDs are unique within a mailbox, so a guard on `ItemId` by itself is one collision away from stitching two tenants' calendars into a single sequence. If the sort key has three columns, the guard has all but the last one. The parallel to last week is exact: with `leftanti`, a bad key *creates* findings; with an unguarded `prev()`, a partition boundary *creates* sequences. Both failure modes generate exactly the artifact you were hunting for, which is the worst possible direction for a bug to fail in.
 - **`prev()` returns null at the boundary, and "null" means different things by type.** The first row of the whole table has no predecessor. For numeric and datetime columns that's a real null, and comparisons against it quietly evaluate false, so boundary rows vanish — usually fine, occasionally the difference between catching the first beacon and catching the second. For **string** columns there is no distinct null in KQL: the null value *is* the empty string, and `isnull()` on a string always returns false. Test string boundaries with `isempty()`. Writing `isnull(PrevItemId)` against a string column isn't a bug that errors — it's a clause that never fires, sitting in your query looking like a guard.
 
 <br/>
@@ -670,20 +689,24 @@ And serialization is **not sticky**. `where`, `extend`, `project`, and `take` pr
 
 ```kql
 // 1. prev() with a partition guard — cheapest, best for adjacent-pair tests
-| sort by ItemId asc, TimeGenerated asc
-| extend PrevOp = prev(Operation), PrevId = prev(ItemId)
-| where ItemId == PrevId and PrevOp =~ "Create" and Operation =~ "Update"
+| sort by Mailbox asc, ItemId asc, TimeGenerated asc
+| extend PrevOp = prev(Operation), PrevId = prev(ItemId), PrevMbx = prev(Mailbox)
+| where Mailbox == PrevMbx and ItemId == PrevId
+      and PrevOp =~ "Create" and Operation =~ "Update"
 
-// 2. partition — same logic, guard enforced by the operator instead of by you
-| partition hint.strategy=native by ItemId (
+// 2. partition — same logic, guard enforced by the operator instead of by you.
+//    Composite partition keys are supported; verify the hint strategy in your own
+//    workspace, since the available strategies constrain what the subquery may do.
+| partition by Mailbox, ItemId (
     sort by TimeGenerated asc
     | extend PrevOp = prev(Operation)
     | where PrevOp =~ "Create" and Operation =~ "Update"
 )
 
 // 3. summarize + make_list — best when you want the whole ordered history
-| sort by ItemId asc, TimeGenerated asc
-| summarize OpSequence = make_list(Operation), Subjects = make_list(ItemSubject) by ItemId
+| sort by Mailbox asc, ItemId asc, TimeGenerated asc
+| summarize OpSequence = make_list(Operation), Subjects = make_list(ItemSubject)
+    by Mailbox, ItemId
 | where array_length(OpSequence) >= 2
 | where tostring(OpSequence[0]) =~ "Create" and tostring(OpSequence[1]) =~ "Update"
 ```
@@ -696,7 +719,7 @@ Option 3 also has a trap in it that I walked into on the first draft, and it's t
 | where tostring(OpSequence) has 'Create","Update'      // don't
 ```
 
-That looks like it's asserting *adjacent array elements*, because you can see the `","` between them. It isn't. `has` is term-based, so the punctuation is discarded before evaluation and the query you shipped is "the term `Create` immediately followed by the term `Update`, anywhere in this string." Here that happens to be the right answer — array adjacency and term adjacency coincide when the elements are single words — which is worse than being wrong, because it's **accidental correctness**. Put a two-word operation name in that list, or a value containing a hyphen, and the coincidence stops holding with no error and no obvious symptom. Index the array as an array: `OpSequence[0]` and `OpSequence[1]` are asking about positions, and positions are what you meant. If you need "did this pair occur anywhere in the history" rather than "did it open the history," `mv-apply with_itemindex` over the list is the honest version — more typing, and it says what it does.
+That looks like it's asserting *adjacent array elements*, because you can see the `","` between them. It isn't. `has` is a term test, and the punctuation isn't part of the term — so the separator you wrote to mean "these two sit next to each other in the array" is not something the predicate evaluates. Whether it returns the right rows in any given workspace depends on tokenizer behaviour that Microsoft documents as term presence and doesn't specify further, which means you're relying on something you can't check and can't cite. Index the array as an array: `OpSequence[0]` and `OpSequence[1]` are asking about positions, positions are what you meant, and the answer doesn't change with the engine. The general rule this article keeps landing on from different directions — **if your data is structured, compare it as structured data; don't flatten it to a string and pattern-match the punctuation back out.** If you need "did this pair occur anywhere in the history" rather than "did it open the history," `mv-apply with_itemindex` over the list is the honest version: more typing, and it says what it does.
 
 For genuine multi-stage state machines — sign-in, then rule creation, then bulk download, in that order, within a window — none of these three is right. That's the `scan` operator, which walks a serialized table maintaining explicit state and is the correct tool for the M365 chain detection in Sunday's brief. `scan` is heavier and considerably less readable, but it's the only one of the four that can express "these five things, in this order, with backtracking."
 
@@ -710,17 +733,22 @@ Same habit as last week, different shape. Before you trust a `prev()` result, pr
 let Base = OfficeActivity
 | where TimeGenerated > ago(1d)
 | where OfficeWorkload =~ "Exchange"
-| extend ItemId = tostring(parse_json(Item).Id)
-| where isnotempty(ItemId)
-| sort by ItemId asc, TimeGenerated asc
-| extend PrevItemId = prev(ItemId);
+| extend ItemId  = tostring(parse_json(Item).Id)
+| extend Mailbox = coalesce(tostring(MailboxGuid), MailboxOwnerUPN)
+| where isnotempty(ItemId) and isnotempty(Mailbox)
+| sort by Mailbox asc, ItemId asc, TimeGenerated asc
+| extend PrevItemId = prev(ItemId), PrevMailbox = prev(Mailbox);
 union
     (Base | summarize Rows = count() | extend Population = "All rows"),
-    (Base | where ItemId == PrevItemId | summarize Rows = count() | extend Population = "Same item as previous"),
-    (Base | where ItemId != PrevItemId or isempty(PrevItemId) | summarize Rows = count() | extend Population = "Partition boundary (discarded)")
+    (Base | where Mailbox == PrevMailbox and ItemId == PrevItemId
+          | summarize Rows = count() | extend Population = "Same item, same mailbox"),
+    (Base | where ItemId == PrevItemId and Mailbox != PrevMailbox
+          | summarize Rows = count() | extend Population = "Item ID collision ACROSS mailboxes"),
+    (Base | where ItemId != PrevItemId or isempty(PrevItemId)
+          | summarize Rows = count() | extend Population = "Partition boundary (discarded)")
 ```
 
-Two things to read off it. First, the three counts must reconcile — if they don't, your sort key isn't what you think it is. Second, and more useful: **if the discarded boundary count is nearly the whole table, your sequence detection has almost nothing to work with.** Most calendar items are touched exactly once, so most rows *are* boundaries. That's expected here. But if you run the same check against process events and find 95% boundaries, your partition key is too granular and the sequence you're hunting can't exist in the data as keyed.
+Three things to read off it. First, the counts must reconcile — if they don't, your sort key isn't what you think it is. Second, and the reason the third row is there: **"item ID collision across mailboxes" should be zero, and if it isn't, a guard on `ItemId` alone would have manufactured that many fabricated sequences.** That row is the empirical test of whether your partition key is the whole entity or just the part of it that looked unique. Run it before you decide the compound key is paranoia. Third: **if the discarded boundary count is nearly the whole table, your sequence detection has almost nothing to work with.** Most calendar items are touched exactly once, so most rows *are* boundaries. That's expected here. But if you run the same check against process events and find 95% boundaries, your partition key is too granular and the sequence you're hunting can't exist in the data as keyed.
 
 The one-line takeaway: **`leftanti` reasons about membership, `prev()` reasons about order, and order is the more fragile of the two — because a sort direction and a partition boundary are both invisible when they're wrong.** Say `asc` out loud. Guard the partition. Then the sequence means something.
 
