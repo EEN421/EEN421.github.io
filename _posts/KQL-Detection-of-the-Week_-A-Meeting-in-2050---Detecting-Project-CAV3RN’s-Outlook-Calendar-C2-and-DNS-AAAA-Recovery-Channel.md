@@ -1,13 +1,13 @@
 ![DevSecOpsDadAttack!](/assets/img/Meeting2050/NinjaCat.png)
-This week's seven briefs produced **28 KQL candidates** across a second SharePoint RCE wave (CVE-2026-58644), the WordPress core RCE (CVE-2026-63030) and its web-shell aftermath, ACR Stealer riding ClickFix lures into browser credential stores, BitLocker turned into an extortion tool against office print infrastructure, WebDAV remote paths used to launch execution, a Check Point SmartConsole authentication bypass (CVE-2026-16232) that ran Friday through Sunday, Teams external-guest social engineering, Microsoft's Q2 2026 email threat landscape and its machine-speed M365 attack chains, and — the one this week is about — **Project CAV3RN storing its command-and-control traffic inside Outlook calendar events**.
+There is a meeting on your calendar for **13 May 2050**. Nobody will ever attend it. Nobody has ever scrolled there — a quarter-century out, in a fixed one-hour window between 22:00 and 23:00 UTC, parked in the most-synced, least-read database in your tenant.
 
-Last week's theme was *absence*: the sign-in that never happened, the author who was never there. The detections won by demanding a corroborating record the attacker couldn't forge.
+That meeting is a command-and-control channel.
 
-This week the attacker solved that problem in the most annoying way possible. **They stopped bringing infrastructure.**
+This week the attacker solved the detection problem in the most annoying way possible. **They stopped bringing infrastructure.** There is no C2 domain to block, because the C2 is `graph.microsoft.com`. There is no beacon on the wire to fingerprint, because the beacon is an OAuth token request to `login.microsoftonline.com`. There is no encryptor to signature, because the encryptor is `manage-bde.exe` and Microsoft signed it. There is no rogue admin console, because the console is your firewall's. Every artifact this week belongs to *you*.
 
-There is no C2 domain to block, because the C2 is `graph.microsoft.com`. There is no beacon on the wire to fingerprint, because the beacon is an OAuth token request to `login.microsoftonline.com`. There is no encryptor to signature, because the encryptor is `manage-bde.exe` and Microsoft signed it. There is no rogue admin console, because the console is your firewall's. Every artifact this week belongs to *you*.
+That thread ran through all seven of this week's briefs and their **28 KQL candidates** — a second SharePoint RCE wave (CVE-2026-58644), the WordPress core RCE (CVE-2026-63030) and its web-shell aftermath, ACR Stealer riding ClickFix lures into browser credential stores, BitLocker turned into an extortion tool against office print infrastructure, WebDAV remote paths used to launch execution, a Check Point SmartConsole authentication bypass (CVE-2026-16232) that ran Friday through Sunday, Teams external-guest social engineering, and Microsoft's Q2 2026 email threat landscape with its machine-speed M365 attack chains. But the one that made me put down the coffee was **Project CAV3RN storing its command-and-control traffic inside Outlook calendar events**.
 
-And the best of them — the one that made me put down the coffee — hid its dead drop in the single most-ignored data store in the enterprise: a calendar, in a one-hour window, **on 13 May 2050**. Twenty-four years out. Nobody scrolls there. Nobody has ever scrolled there. It is the most-synced, least-read database in your tenant.
+Last week's theme was *absence*: the sign-in that never happened, the author who was never there. The detections won by demanding a corroborating record the attacker couldn't forge. This week there is no absence to point at. Every record is present, legitimate, and signed.
 
 So this week's KQL of the Week is the CAV3RN calendar channel, told in three queries and one correction the briefs got wrong. Act I hunts the **dead drop** from inside the mailbox tenant. Act II hunts the **infected host**, which — and this is the part that matters — is almost never the same organization. The honorable mention hunts the fallback channel, where the attacker encodes their config into things that look exactly like IPv6 addresses and are not addresses at all.
 
@@ -50,15 +50,18 @@ So the detection has three independent handles: the marker strings, the single-c
 let lookback = 7d;
 let RenameWindowSec = 300;
 let DeadDropMarkers = dynamic(["Event ID:", "Boss update ID:", "Boss Report ID:"]);
+let CalendarFolderNames = dynamic(["Calendar","Kalender","Calendrier","Calendario","Agenda","カレンダー","日历","Календарь","לוח שנה"]);
 let CalendarOps = OfficeActivity
 | where TimeGenerated > ago(lookback)
 | where OfficeWorkload =~ "Exchange"
 | where Operation in~ ("Create", "Update", "SoftDelete", "HardDelete", "MoveToDeletedItems")
+// Item is a STRING column in OfficeActivity, not dynamic. parse_json() is required.
+| extend ItemJson = parse_json(Item)
 | extend
-    ItemId      = tostring(Item.Id),
-    ItemSubject = tostring(Item.Subject),
-    FolderPath  = tostring(Item.ParentFolder.Path)
-| where FolderPath has "Calendar"
+    ItemId      = tostring(ItemJson.Id),
+    ItemSubject = coalesce(tostring(ItemJson.Subject), ItemName),
+    FolderPath  = coalesce(tostring(ItemJson.ParentFolder.Path), Folder)
+| where FolderPath has_any (CalendarFolderNames)
 | where isnotempty(ItemId)
 | project
     TimeGenerated, ItemId, ItemSubject, Operation, FolderPath,
@@ -75,8 +78,9 @@ let PlaceholderRenames = CalendarOps
     PrevTime    = prev(TimeGenerated)
 | where ItemId == PrevItemId
 | where PrevOp =~ "Create" and Operation =~ "Update"
-| where strlen(trim(@"\s", PrevSubject)) <= 2
-| where PrevSubject != ItemSubject
+// between (1 .. 2), NOT <= 2 — an empty PrevSubject would otherwise match every create/update pair
+| where strlen(trim(@"\s", PrevSubject)) between (1 .. 2)
+| where isnotempty(ItemSubject) and PrevSubject != ItemSubject
 | extend RenameLatencySec = datetime_diff('second', TimeGenerated, PrevTime)
 | where RenameLatencySec between (0 .. RenameWindowSec)
 | extend Signal = "PlaceholderRename"
@@ -104,10 +108,12 @@ union MarkerHits, PlaceholderRenames
 Not the marker list. Markers are strings, strings are free, and the operator can change `Boss Report ID:` to `Q3 Planning Sync` in the time it takes to recompile. It's this:
 
 ```kql
-| where strlen(trim(@"\s", PrevSubject)) <= 2
+| where strlen(trim(@"\s", PrevSubject)) between (1 .. 2)
 ```
 
-That is the detection with a shelf life. The placeholder subject isn't a naming choice the operator made for fun — it's **forced by the protocol**. The module cannot create the event with its final subject, because it needs an event ID to attach the encrypted payload to, and it doesn't want a half-built dead drop sitting in the calendar advertising itself while the upload is in flight. Create blank, attach, then rename. That sequence is load-bearing. Rename the markers all you like; the create-then-patch shape stays, because the alternative is a race condition in your own C2.
+Note `between (1 .. 2)` and not `<= 2`, because that difference is the whole detection. `Item.Subject` is not guaranteed to be populated on `Create` records the way it is on `Update` records — and if it comes back empty, `strlen()` returns zero, zero satisfies `<= 2`, and the filter matches **every create-then-update pair in the tenant**. The marker branch of this query fails toward silence when extraction breaks. This branch fails toward noise. Same missing field, opposite direction, and only one of them is obvious from reading the results. Excluding the empty case costs nothing — the placeholder the module actually writes is a single character — and it's the difference between a hunt and a pager.
+
+Beyond that, this is the detection with a shelf life. The placeholder subject isn't a naming choice the operator made for fun — it's **forced by the protocol**. The module cannot create the event with its final subject, because it needs an event ID to attach the encrypted payload to, and it doesn't want a half-built dead drop sitting in the calendar advertising itself while the upload is in flight. Create blank, attach, then rename. That sequence is load-bearing. Rename the markers all you like; the create-then-patch shape stays, because the alternative is a race condition in your own C2.
 
 The supporting choice is the **entity-keyed union**. `MarkerHits` and `PlaceholderRenames` are two genuinely different questions, and I've unioned them anyway — but only because both sides are projected to the same columns and both resolve to the *same entity*, `MailboxOwnerUPN`. The `summarize` at the bottom then earns its keep: `BothSignals` promotes any mailbox where a marker string *and* a placeholder rename both landed, which is the CAV3RN shape and essentially nothing else's.
 
@@ -128,27 +134,36 @@ This is worth stating precisely, because the briefs got it wrong on Tuesday and 
 
 The briefs filed the CAV3RN calendar work as **hunting-only** every time it appeared, and that's correct. Here's what has to be true before this means anything:
 
-- **`Item` is a dynamic column and its shape is not guaranteed.** `Item.Subject` and `Item.ParentFolder.Path` are populated for Exchange mailbox audit records in most tenants, but coverage depends on your mailbox audit configuration and the operation type. If those extractions come back empty, `tostring()` returns an empty string silently and the query returns a clean, meaningless nothing. Validate first: `OfficeActivity | where OfficeWorkload =~ "Exchange" | where isnotempty(Item) | take 20 | project Operation, Item`. Wednesday's brief made the same class of assumption in the other direction, filtering on `Operation in ("UpdateCalendarItem", "CreateCalendarItem", ...)` — operation names that aren't in the Exchange audit schema at all. Its own caveats section flags this. Survey the real values before you trust any of it.
+- **`Item` is a `string` column, not a dynamic one, and dot access on it will not run.** This is the trap I nearly shipped. `OfficeActivity` types `Item` as **String** — "represents the item upon which the operation was performed" — and the same is true of `AffectedItems` and `Folders`. The schema does have genuine dynamic columns (`OperationProperties`, `Members`, `ExtraProperties`), so the distinction is deliberate, not an artifact of the docs. Write `Item.Subject` and you don't get an empty result, you get a semantic error. `parse_json(Item)` first, every time. There is also no `ParentFolder` column at all — there's `Folder` and `Folders` — which is why the query above coalesces the parsed path against `Folder` rather than trusting either alone. `ItemName` is likewise a first-class column documented as carrying the subject, and if it's populated for calendar records in your tenant it's cheaper and steadier than digging into the blob. Validate all of it before you build: `OfficeActivity | where OfficeWorkload =~ "Exchange" | where isnotempty(Item) | take 20 | project Operation, Item, ItemName, Folder`. Wednesday's brief made the same class of assumption in the other direction, filtering on `Operation in ("UpdateCalendarItem", "CreateCalendarItem", ...)` — operation names that aren't in the Exchange audit schema at all. Its own caveats section flags this. Survey the real values before you trust any of it.
+- **`Calendar` is an English string.** The folder-path test above matches a name list for exactly that reason. A tenant running localized Outlook stores the same folder as `Kalender`, `Calendrier`, `カレンダー`, or `לוח שנה` — and given this campaign's targeting, the Hebrew case is not hypothetical. A hardcoded `has "Calendar"` is a silent false negative in precisely the environments most likely to be affected. Confirm what your own tenant writes: `OfficeActivity | where OfficeWorkload =~ "Exchange" | summarize count() by Folder | order by count_ desc`.
 - **Subject content is a licensing and configuration question.** Mailbox audit logging must be enabled and the Office 365 connector configured, and some tenants restrict subject capture on privacy grounds. A hunt that depends on reading meeting subjects is a hunt that needs sign-off from someone other than you.
 - **Wednesday's version keyed on `UserAgent`, and that field belongs to the attacker.** The query filtered to calendar operations where the user agent didn't contain `Mozilla`, `Outlook`, `Microsoft Office`, or `MacOutlook`. Consider what that asks of the adversary: set one HTTP header to a string starting with `Mozilla` and the detection is gone. This is an allowlist built entirely from a value the client controls, which is the same failure family as authenticating on a claim you didn't verify. Worse, the preceding `isnotempty(UserAgent)` drops every record where the field isn't populated — and the brief's own caveats note that `UserAgent` is unreliable for Graph API calls in `OfficeActivity`. The filter over-trusts what it sees and discards what it doesn't. Neither half is recoverable by tuning.
 - **Volume thresholds are the wrong axis for this threat.** Tuesday gated on `CalendarOps > 20` over seven days; Thursday on `CallCount > 20`. A room-booking integration clears twenty calendar operations before lunch. A CAV3RN agent polling every six hours clears twenty-eight in a week — barely over the line, and one config change from being under it. You cannot separate a beacon from a business integration by counting, because busy is not the same as regular. If you want to go at this from the cadence side, measure the *variance* of the inter-arrival gaps, not the total.
 - **Thursday's Detection 3 queried the wrong table entirely.** It hunted `AuditLogs` for Graph calendar operations. `AuditLogs` is Entra ID's **directory control plane** — app registrations, consent grants, role assignments, group membership. Reading or writing a calendar event is **data plane**, and it does not write an `AuditLogs` record no matter how many times it happens. The query is syntactically fine, will run without error, and will return nothing forever. For app-only Graph activity, the tables that actually see it are `OfficeActivity` / `MailboxAudit` (the operation), `CloudAppEvents` (if you're licensed for Defender for Cloud Apps), and `AADServicePrincipalSignInLogs` (the token acquisition). That last one is genuinely useful here and no brief this week reached for it:
 
 ```kql
+let Baseline = AADServicePrincipalSignInLogs
+| where TimeGenerated between (ago(180d) .. ago(30d))
+| where ResultType == 0
+| distinct AppId;
 AADServicePrincipalSignInLogs
 | where TimeGenerated > ago(30d)
 | where ResultType == 0
 | where ResourceDisplayName =~ "Microsoft Graph"
 | summarize
-    SignIns   = count(),
-    IPs       = make_set(IPAddress, 10),
-    Countries = make_set(Location, 10),
-    FirstSeen = min(TimeGenerated),
-    LastSeen  = max(TimeGenerated)
+    SignIns     = count(),
+    IPs         = make_set(IPAddress, 10),
+    Countries   = make_set(Location, 10),
+    FirstSeen   = min(TimeGenerated),
+    LastSeen    = max(TimeGenerated),
+    ActiveDays  = dcount(bin(TimeGenerated, 1d))
     by AppId, ServicePrincipalName, ServicePrincipalId
-| extend AgeDays = datetime_diff('day', LastSeen, FirstSeen)
+| join kind=leftanti Baseline on AppId
+| extend ObservedSpanDays = datetime_diff('day', LastSeen, FirstSeen)
 | order by FirstSeen desc
 ```
+
+The `leftanti` is doing the load-bearing work, and it's worth saying why, because the obvious version of this query silently can't answer the question. `FirstSeen = min(TimeGenerated)` is bounded by the lookback. Inside a 30-day window, a service principal that has been running since 2023 reports the same `FirstSeen` as one registered last Tuesday — the aggregate cannot see past its own filter, and "new" is not a property you can compute from a single window. It's a **membership** question, which means it needs a population to be absent from. Hence the 180-day baseline and the anti-join: *authenticating now, and not in the six months before now.* Last week's operator, doing this week's job.
 
 Every CAV3RN `get` and `send` cycle starts with a `client_credentials` token request. A service principal that first appears this month, authenticates to Graph from one or two addresses, and never stops, is a much shorter list than "applications that touch calendars."
 
@@ -197,7 +212,11 @@ let ExpectedGraphClients = dynamic([
     "excel.exe", "winword.exe", "powerpnt.exe", "onenote.exe",
     "officeclicktorun.exe", "msoia.exe",
     "powershell.exe", "pwsh.exe", "azurecli.exe", "msedgewebview2.exe",
-    "mssense.exe", "senseir.exe", "msmpeng.exe"
+    "mssense.exe", "senseir.exe", "msmpeng.exe",
+    // Windows itself. svchost (Web Account Manager / TokenBroker) alone will dominate
+    // login.microsoftonline.com volume on every managed fleet.
+    "svchost.exe", "searchhost.exe", "searchapp.exe", "runtimebroker.exe",
+    "backgroundtaskhost.exe", "phoneexperiencehost.exe", "microsoft.sharepoint.exe"
 ]);
 let ConfigWrites = DeviceFileEvents
 | where Timestamp > ago(lookback)
@@ -260,10 +279,10 @@ Note the join key: `DeviceId`. Both branches are host-scoped, both resolve to a 
 
 ```kql
 | extend SuspectProcess = InitiatingProcessFileName
-| join kind=inner graph_callers on DeviceName, SuspectProcess
+| join kind=inner graph_callers on DeviceId, SuspectProcess
 ```
 
-Same answer. A quarter of the shuffle.
+Same answer, a fraction of the shuffle — and note that it's `DeviceId`, not `DeviceName`. If the argument three paragraphs up is that the entity key is what makes a correlation legitimate, then the key has to be the one that actually identifies the entity. `DeviceName` is a label. It collides across a fleet, it changes on rename, and it's the reason half the "correlated" detections in circulation quietly fan out across two unrelated hosts that a naming convention happened to give the same string.
 
 <br/>
 
@@ -324,22 +343,34 @@ DnsEvents
         and strlen(SecondLabel) % 2 == 0
         and strlen(SecondLabel) >= 8
         and (set_has_element(Labels, "p") or set_has_element(Labels, "q")),
-    DomainMatch   = QueryName has_any (BootstrapDomains),
-    SentinelMatch = tostring(IPAddresses) has FailureSentinel
+    DomainMatch = QueryName has_any (BootstrapDomains)
+// IPv6 has no single textual form. 2001:4998:44:3507::8000 and its expanded
+// equivalent are the same address and different strings — compare as addresses.
+| mv-apply AnswerIP = split(tostring(IPAddresses), ",") to typeof(string) on (
+    summarize SentinelHits = countif(ipv6_compare(trim(@"\s", AnswerIP), FailureSentinel) == 0)
+  )
+| extend SentinelMatch = SentinelHits > 0
 | where ShapeMatch or DomainMatch or SentinelMatch
 | summarize
     Queries        = count(),
     DistinctNames  = dcount(QueryName),
     SampleNames    = make_set(QueryName, 10),
-    MarkerLabels   = make_set(iff(set_has_element(Labels, "p"), "p", "q"), 2),
-    SentinelSeen   = max(SentinelMatch),
-    ShapeSeen      = max(ShapeMatch),
-    DomainSeen     = max(DomainMatch),
+    MarkerLabels   = make_set_if(
+                        iff(set_has_element(Labels, "p"), "p", "q"),
+                        set_has_element(Labels, "p") or set_has_element(Labels, "q")),
+    ShapeCount     = countif(ShapeMatch),
+    DomainCount    = countif(DomainMatch),
+    SentinelCount  = countif(SentinelMatch),
     FirstSeen      = min(TimeGenerated),
     LastSeen       = max(TimeGenerated)
     by ClientIP, Computer
-| extend EntropyProxy = DistinctNames * 1.0 / Queries
-| order by DistinctNames desc
+| extend
+    ShapeSeen      = ShapeCount > 0,
+    DomainSeen     = DomainCount > 0,
+    SentinelSeen   = SentinelCount > 0,
+    NameUniqueness = DistinctNames * 1.0 / Queries
+// Rank by fidelity, not volume — a noisy IOC-only hit must not outrank a single shape hit
+| order by ShapeSeen desc, SentinelSeen desc, DistinctNames desc
 ```
 
 The line that does the work is the shape test, and specifically this half of it:
@@ -350,7 +381,20 @@ set_has_element(Labels, "p") or set_has_element(Labels, "q")
 
 Note what that *isn't*. It isn't `QueryName has ".p."`, which would match `example.pizza.com` and half the internet, and it isn't a positional index like `Labels[LabelCount - 3]`, which quietly assumes the registrable domain is exactly two labels and breaks the moment the operator moves to something under `.co.uk`. `set_has_element()` does exact element matching against the parsed label array — it asks "is there a label that is *precisely* the single character `p`," which is a question ordinary DNS almost never answers yes to. Splitting the hostname into labels first and reasoning about labels as structured data, rather than pattern-matching against the string, is what makes the test both specific and portable.
 
+One line above it is doing quiet, load-bearing work, and it deserves naming because lifting the regex without it produces a clean zero-row result:
+
+```kql
+| extend QueryName = tolower(trim_end(@"\.", Name))
+```
+
+The agent ID is hex-encoded **uppercase**. `^[0-9a-f]+$` does not match `A1B2C3`. Whether your resolver preserves query case varies by source — the Windows DNS connector generally lowercases, Sysmon generally doesn't — so the normalization is the difference between a working detection and a detection that works only on your test box. Normalize before you pattern-match, always, and never let case survive into a regex you're relying on.
+
 `DomainMatch` and `SentinelMatch` are the cheap IOC lanes riding alongside — `cloudlanecdn[.]com` and the hardcoded failure address `2001:4998:44:3507::8000` (which lives inside a Yahoo allocation, for reasons GReAT couldn't determine either). Those two will be dead within the month. `ShapeMatch` outlives them.
+
+Two things about how those lanes are handled, both of which I got wrong on the first pass:
+
+- **Don't string-match an IPv6 address.** `IPAddresses has "2001:4998:44:3507::8000"` only fires if your resolver logged that exact compression. The same address written `2001:4998:44:3507:0:0:0:8000` is a different string and an identical destination, and the miss is silent. `ipv6_compare()` normalizes both sides and answers the question you actually asked. It would be a strange article that spends a paragraph arguing structured label matching beats string matching, and then string-matches an address three lines later.
+- **`max()` doesn't aggregate booleans**, so the `ShapeSeen`/`DomainSeen`/`SentinelSeen` flags are built with `countif()` and compared after the `summarize`. And the ordering runs on `ShapeSeen` first, not on volume. A chatty host that tripped the domain IOC once should not outrank a single host exhibiting the protocol shape — that's the same `BothSignals` discipline from Act I, applied to three lanes of very unequal fidelity instead of two of equal fidelity.
 
 **One correction, and it's the important one.** Thursday's Detection 4 was titled "DNS AAAA Queries from Non-Browser Processes," and it does not query DNS record types, because it can't — the brief says so plainly in its own caveats: `DeviceNetworkEvents` doesn't expose query type, and `DnsQueryResponse` isn't a valid `ActionType` for that table. So the query substitutes a behavioral proxy: find non-browser processes that hit `graph.microsoft.com`, then find other external connections from those same processes. That's honest engineering under a constraint, and I respect that the brief documented it rather than shipping a query that returns zero rows and calling it clean.
 
@@ -401,7 +445,7 @@ And serialization is **not sticky**. `where`, `extend`, `project`, and `take` pr
 
 - **`sort by` defaults to descending.** This is the one that gets people. `| sort by TimeGenerated` gives you newest-first, so `prev()` returns the *later* event and `next()` returns the earlier one. Every sequence test you wrote is now backwards. It won't error. It'll just return a different, plausible-looking, wrong answer — often zero rows, which reads as "clean." Write `asc` explicitly, every time, even when you think you know the default.
 - **`prev()` does not respect partitions.** It walks the entire serialized table top to bottom. Sort by `ItemId, TimeGenerated` and the first row of item B sees the last row of item A as its "previous" — different entity, different timeline, fabricated sequence. The `| where ItemId == PrevItemId` guard in Act I isn't defensive coding, it's **required for correctness**. Every `prev()` needs a partition guard or a `partition` operator around it. The parallel to last week is exact: with `leftanti`, a bad key *creates* findings; with an unguarded `prev()`, a partition boundary *creates* sequences. Both failure modes generate exactly the artifact you were hunting for, which is the worst possible direction for a bug to fail in.
-- **`prev()` returns null at the boundary and nulls don't compare the way you hope.** The first row of the whole table has no predecessor. Comparisons against null quietly evaluate false, so boundary rows vanish — usually fine, occasionally the difference between catching the first beacon and catching the second.
+- **`prev()` returns null at the boundary, and "null" means different things by type.** The first row of the whole table has no predecessor. For numeric and datetime columns that's a real null, and comparisons against it quietly evaluate false, so boundary rows vanish — usually fine, occasionally the difference between catching the first beacon and catching the second. For **string** columns there is no distinct null in KQL: the null value *is* the empty string, and `isnull()` on a string always returns false. Test string boundaries with `isempty()`. Writing `isnull(PrevItemId)` against a string column isn't a bug that errors — it's a clause that never fires, sitting in your query looking like a guard.
 
 <br/>
 
@@ -443,14 +487,14 @@ Same habit as last week, different shape. Before you trust a `prev()` result, pr
 let Base = OfficeActivity
 | where TimeGenerated > ago(1d)
 | where OfficeWorkload =~ "Exchange"
-| extend ItemId = tostring(Item.Id)
+| extend ItemId = tostring(parse_json(Item).Id)
 | where isnotempty(ItemId)
 | sort by ItemId asc, TimeGenerated asc
 | extend PrevItemId = prev(ItemId);
 union
     (Base | summarize Rows = count() | extend Population = "All rows"),
     (Base | where ItemId == PrevItemId | summarize Rows = count() | extend Population = "Same item as previous"),
-    (Base | where ItemId != PrevItemId or isnull(PrevItemId) | summarize Rows = count() | extend Population = "Partition boundary (discarded)")
+    (Base | where ItemId != PrevItemId or isempty(PrevItemId) | summarize Rows = count() | extend Population = "Partition boundary (discarded)")
 ```
 
 Two things to read off it. First, the three counts must reconcile — if they don't, your sort key isn't what you think it is. Second, and more useful: **if the discarded boundary count is nearly the whole table, your sequence detection has almost nothing to work with.** Most calendar items are touched exactly once, so most rows *are* boundaries. That's expected here. But if you run the same check against process events and find 95% boundaries, your partition key is too granular and the sequence you're hunting can't exist in the data as keyed.
