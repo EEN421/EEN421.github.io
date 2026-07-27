@@ -86,19 +86,28 @@ let PlaceholderRenames = CalendarOps
 | extend Signal = "PlaceholderRename"
 | project-away Prev*;
 union MarkerHits, PlaceholderRenames
+// The entity is the mailbox. Everything else is an attribute of the finding,
+// not a dimension of it — including who Exchange thinks did it.
+| extend Mailbox = coalesce(MailboxOwnerUPN, UserId)
+| where isnotempty(Mailbox)
 | summarize
     Events       = count(),
     Signals      = make_set(Signal),
     Subjects     = make_set(ItemSubject, 10),
     Operations   = make_set(Operation, 10),
+    Actors       = make_set(UserId, 5),
+    ActorTypes   = make_set(UserType, 5),
+    Clients      = make_set(ClientInfoString, 5),
     ClientIPs    = make_set(ClientIP, 5),
     AppIds       = make_set(AppId, 5),
     MinRenameSec = min(RenameLatencySec),
     FirstSeen    = min(TimeGenerated),
     LastSeen     = max(TimeGenerated)
-    by MailboxOwnerUPN, UserId, UserType
-| extend BothSignals = array_length(Signals) > 1
-| order by BothSignals desc, Events desc
+    by Mailbox
+| extend
+    BothSignals = array_length(Signals) > 1,
+    MixedActors = array_length(ActorTypes) > 1
+| order by BothSignals desc, MixedActors desc, Events desc
 ```
 
 <br/>
@@ -115,7 +124,11 @@ Note `between (1 .. 2)` and not `<= 2`, because that difference is the whole det
 
 Beyond that, this is the detection with a shelf life. The placeholder subject isn't a naming choice the operator made for fun — it's **forced by the protocol**. The module cannot create the event with its final subject, because it needs an event ID to attach the encrypted payload to, and it doesn't want a half-built dead drop sitting in the calendar advertising itself while the upload is in flight. Create blank, attach, then rename. That sequence is load-bearing. Rename the markers all you like; the create-then-patch shape stays, because the alternative is a race condition in your own C2.
 
-The supporting choice is the **entity-keyed union**. `MarkerHits` and `PlaceholderRenames` are two genuinely different questions, and I've unioned them anyway — but only because both sides are projected to the same columns and both resolve to the *same entity*, `MailboxOwnerUPN`. The `summarize` at the bottom then earns its keep: `BothSignals` promotes any mailbox where a marker string *and* a placeholder rename both landed, which is the CAV3RN shape and essentially nothing else's.
+The supporting choice is the **entity-keyed union**. `MarkerHits` and `PlaceholderRenames` are two genuinely different questions, and I've unioned them anyway — but only because both sides are projected to the same columns and both resolve to the *same entity*, the mailbox. The `summarize` at the bottom then earns its keep: `BothSignals` promotes any mailbox where a marker string *and* a placeholder rename both landed, which is the CAV3RN shape and essentially nothing else's.
+
+Which is a claim you have to actually honor in the `summarize`, and my first version didn't. I grouped by `MailboxOwnerUPN, UserId, UserType` — the entity, plus two attributes of the record. Every extra key in a `by` clause is a finer partition, and a finer partition is a *smaller* chance that two signals about the same thing land on the same row. If Exchange attributes the marker write to the service principal and the rename to the mailbox owner, those become two rows, `array_length(Signals)` is 1 on both, and `BothSignals` — the entire point of the union — can never fire. The correlation was defeated by the grouping, in a query whose whole argument is that correlations live and die by their key.
+
+The rule that falls out: **anything that isn't the entity belongs in the aggregation, not the `by` clause.** `Actors = make_set(UserId, 5)` tells you the same thing without fragmenting the row. And it tells you something extra — `MixedActors` flags a mailbox whose calendar writes are attributed to *both* a service principal and an interactive owner. Legitimate integrations and humans share calendars all the time; sharing them in a create-then-rename pattern is a different matter.
 
 This is worth stating precisely, because the briefs got it wrong on Tuesday and it's an easy mistake to make. **A union is legitimate when the branches share an entity key and illegitimate when they don't.** Tuesday's Detection 4 unioned calendar Graph activity (keyed on `AccountId`) with a DNS AAAA volume spike (keyed on `DeviceName`), then padded the second branch with `AccountId = ""`, `CalendarOps = 0`, `ActionTypes = dynamic([])` so the schemas would line up. The result is two unrelated hunts sharing an output grid, with half the columns structurally empty on every row. Nothing correlates, because there's nothing to correlate *on* — the brief's own caveat notes that `IPAddress` from `CloudAppEvents` and `DeviceName` from `DeviceNetworkEvents` can't be equated without a device inventory. If you're padding columns to make a union compile, you don't have one detection. You have two, in a trench coat.
 
@@ -167,6 +180,7 @@ The `leftanti` is doing the load-bearing work, and it's worth saying why, becaus
 
 Every CAV3RN `get` and `send` cycle starts with a `client_credentials` token request. A service principal that first appears this month, authenticates to Graph from one or two addresses, and never stops, is a much shorter list than "applications that touch calendars."
 
+- **`MailboxOwnerUPN` is not guaranteed to be populated**, and app-only access is precisely where it goes missing. Group on an empty key and every such record collapses into a single row that appears to represent one mailbox and actually represents all of them — a `BothSignals` hit on a group with no entity in it. The `coalesce(MailboxOwnerUPN, UserId)` and the `isnotempty()` guard exist for that. Same failure family as the `strlen` case above: a missing field turning a filter into a firehose.
 - **And the finding is a *lead*, not a verdict.** Confirm in the mailbox, not in the SIEM. Pull the item and look at its start time. If it's a real meeting, it's on a real date. If it's a dead drop, it's in 2050. That's the whole triage step.
 
 Act I hunts the mailbox. Which raises the question the briefs never asked — and it's the one that changes your coverage.
@@ -222,8 +236,11 @@ let ConfigWrites = DeviceFileEvents
 | where Timestamp > ago(lookback)
 | where ActionType in ("FileCreated", "FileModified", "FileRenamed")
 | where FileName in~ (ConfigArtifacts)
+// Row-level branch: first and last are the same instant. Name them anyway, so the
+// union carries one vocabulary and the outer summarize has nothing to guess about.
+| extend FirstSeen = Timestamp, LastSeen = Timestamp
 | project
-    Timestamp, DeviceId, DeviceName,
+    FirstSeen, LastSeen, DeviceId, DeviceName,
     Process     = InitiatingProcessFileName,
     ProcessPath = InitiatingProcessFolderPath,
     Account     = InitiatingProcessAccountName,
@@ -236,17 +253,20 @@ let UnexpectedGraphClients = DeviceNetworkEvents
 | where isnotempty(InitiatingProcessFileName)
 | where not(InitiatingProcessFileName in~ (ExpectedGraphClients))
 | summarize
-    Timestamp   = min(Timestamp),
+    FirstSeen   = min(Timestamp),
+    LastSeen    = max(Timestamp),
     Connections = count(),
+    ActiveDays  = dcount(bin(Timestamp, 1d)),
     Endpoints   = make_set(RemoteUrl, 5)
     by DeviceId, DeviceName,
        Process     = InitiatingProcessFileName,
        ProcessPath = InitiatingProcessFolderPath,
        Account     = InitiatingProcessAccountName
 | extend
-    Detail = strcat(tostring(Connections), " connections to ", strcat_array(Endpoints, ", ")),
+    Detail = strcat(tostring(Connections), " connections over ", tostring(ActiveDays),
+                    " active days to ", strcat_array(Endpoints, ", ")),
     Signal = "UnexpectedGraphClient"
-| project-away Connections, Endpoints;
+| project-away Connections, ActiveDays, Endpoints;
 union ConfigWrites, UnexpectedGraphClients
 | summarize
     Signals   = make_set(Signal),
@@ -254,12 +274,13 @@ union ConfigWrites, UnexpectedGraphClients
     Paths     = make_set(ProcessPath, 10),
     Accounts  = make_set(Account, 5),
     Details   = make_set(Detail, 10),
-    FirstSeen = min(Timestamp),
-    LastSeen  = max(Timestamp)
+    FirstSeen = min(FirstSeen),
+    LastSeen  = max(LastSeen)
     by DeviceId, DeviceName
 | extend
     HasConfigArtifact = set_has_element(Signals, "ConfigArtifactWrite"),
-    SignalCount       = array_length(Signals)
+    SignalCount       = array_length(Signals),
+    ActiveSpanDays    = datetime_diff('day', LastSeen, FirstSeen)
 | order by SignalCount desc, HasConfigArtifact desc, LastSeen desc
 ```
 
@@ -290,11 +311,12 @@ Same answer, a fraction of the shuffle — and note that it's `DeviceId`, not `D
 
 I'd take `ConfigWrites` to a scheduled rule tomorrow. `UnexpectedGraphClients` is a hunt, and the gap between those two is where the work is:
 
-- **Thursday's allowlist has last week's bug in it.** The query excluded destinations with `not(RemoteUrl has_any ("graph.microsoft.com", "login.microsoftonline.com", "microsoft.com", "windows.com", "windowsupdate.com"))`. `has_any` is substring matching, so `microsoft.com` matches `login.microsoftonline.com.c2.example.net` and `windowsupdate.com.attacker.io` — an attacker registers one subdomain and walks out through your allowlist. This is precisely the `RemoteIP startswith "172."` mistake from the AsyncAPI honorable mention wearing different clothes: string operations standing in for structured matching, in a filter whose job is to *suppress*. Every over-broad match in a negative filter is an invisible hole. Act II uses `in~` for exact host equality, which cannot over-suppress. If you need suffix matching, `endswith` on a normalized hostname is the floor, not `has_any`.
+- **Thursday's allowlist has last week's bug in it.** The query excluded destinations with `not(RemoteUrl has_any ("graph.microsoft.com", "login.microsoftonline.com", "microsoft.com", "windows.com", "windowsupdate.com"))`. The hole is real, but it isn't the one I first wrote, and the mechanism is worth getting right because it changes which hostnames get through. `has_any` is **term-based**, not substring-based — KQL tokenizes both sides into maximal alphanumeric runs, and a multi-token needle matches when its tokens appear as an *adjacent sequence* in the haystack. So `microsoft.com` does **not** match `login.microsoftonline.com.c2.example.net`: the tokens there are `login`, `microsoftonline`, `com`, and there is no `microsoft` immediately followed by `com`. That's what `contains` would have done. What `has_any` does instead is match without regard to *position*, which is the actual problem: `windowsupdate.com.attacker.io` tokenizes to `windowsupdate`, `com`, `attacker`, `io` — the needle's two tokens sit adjacent at the front, so the allowlist suppresses it. Register `microsoft.com.c2.example.net` and you walk out the same door. A term test answers "do these tokens appear next to each other somewhere," and a suffix test answers "does this name end here." Those are different questions, and only the second one is the one an allowlist means to ask. This is the `RemoteIP startswith "172."` mistake from the AsyncAPI honorable mention wearing different clothes: an operator whose semantics almost fit, used in a filter whose job is to *suppress*, where every over-broad match is an invisible hole. Act II uses `in~` for exact host equality, which cannot over-suppress. If you need to cover subdomains, `endswith` on a normalized hostname is the floor, not `has_any`.
 - **The expected-client list is the whole detection, and mine is not yours.** Every enterprise runs Graph SDK background services nobody documented: RMM agents, backup tools, CASB shims, HR integrations, a PowerShell scheduled task somebody wrote in 2023. Run `DeviceNetworkEvents | where RemoteUrl in~ ("graph.microsoft.com") | summarize count() by InitiatingProcessFileName, InitiatingProcessFolderPath | order by count_ desc` and build the list from your own fleet before this goes anywhere near a schedule.
 - **Name-only exclusions are spoofable, and `teams.exe` from `%TEMP%` is not `teams.exe`.** Harden to `(FileName, FolderPath)` pairs or signer checks before promotion — the same correction the CI/CD detection needed last week, for the same reason.
 - **`RemoteUrl` is not reliably populated in `DeviceNetworkEvents`.** A connection recorded with only `RemoteIP` will never match `in~ (GraphEndpoints)` and drops out silently. That's a false-negative direction, which is the safer failure, but know it's there: your Graph-client inventory is a floor, not a census.
 - **Working directory means the path is unpredictable.** Because the module supplies a bare filename, `logAzure.txt` lands wherever the host process happened to be running — `System32`, a user profile, a service directory, anywhere. Don't scope the file query by `FolderPath`. Let it fire from anywhere and read the path as evidence: *where* it landed tells you which process loaded the DLL.
+- **An aggregate collapses a time range into whatever fields you name — and a field you didn't name is a field the analyst will infer wrongly.** My first version summarized the network branch to `Timestamp = min(Timestamp)` before the union, so the outer `max(Timestamp)` faithfully reported the maximum of a set of minimums, which is a number that describes nothing. `LastSeen: 29 days ago` on a host that has been beaconing every day since is how a live finding gets triaged to the bottom of the queue. Carry `min` *and* `max` through any branch that aggregates, and reconcile them at the top. `ActiveDays` is the field that actually answers the question anyway: a config write is a point event, but a Graph client is a behavior, and "180 connections across 28 of 30 days" is a different finding from "180 connections in one afternoon."
 - **Coverage is the silent gate, again.** No MDE agent, no `DeviceFileEvents`, no finding. A quiet result across a fleet you haven't fully onboarded is a coverage report wearing a clean bill of health.
 
 Act I hunts the drop box. Act II hunts the agent. The last act hunts what the agent does when the drop box stops answering.
@@ -326,51 +348,65 @@ The agent ID is seven characters, hex-encoded to fourteen, and embedded in every
 let lookback = 7d;
 let BootstrapDomains = dynamic(["cloudlanecdn.com"]);
 let FailureSentinel  = "2001:4998:44:3507::8000";
-DnsEvents
+// Shared, cheap base. Nothing expensive happens here.
+let AaaaLookups = DnsEvents
 | where TimeGenerated > ago(lookback)
 | where SubType =~ "LookupQuery"
 | where QueryType =~ "AAAA"
-| extend QueryName = tolower(trim_end(@"\.", Name))
+| extend QueryName = tolower(trim_end(@"\.", Name));
+// Lane 1 — protocol shape. The label-count floor belongs to THIS lane only.
+let ShapeLane = AaaaLookups
+| where QueryName startswith "d."          // leading-label test, cheap, drops nearly everything
 | extend Labels = split(QueryName, ".")
-| extend LabelCount = array_length(Labels)
-| where LabelCount >= 5
+| where array_length(Labels) >= 5
+| extend SecondLabel = tostring(Labels[1])
+| where strlen(SecondLabel) >= 8 and strlen(SecondLabel) % 2 == 0
+| where SecondLabel matches regex @"^[0-9a-f]+$"   // regex last, on the smallest surviving set
+| where set_has_element(Labels, "p") or set_has_element(Labels, "q")
 | extend
-    FirstLabel  = tostring(Labels[0]),
-    SecondLabel = tostring(Labels[1])
-| extend
-    ShapeMatch = FirstLabel == "d"
-        and SecondLabel matches regex @"^[0-9a-f]+$"
-        and strlen(SecondLabel) % 2 == 0
-        and strlen(SecondLabel) >= 8
-        and (set_has_element(Labels, "p") or set_has_element(Labels, "q")),
-    DomainMatch = QueryName has_any (BootstrapDomains)
+    Lane        = "ProtocolShape",
+    MarkerLabel = iff(set_has_element(Labels, "p"), "p", "q")
+| project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
+// Lane 2 — bootstrap domain IOC. No label-count floor: the bare domain is two labels.
+// has_any is term-sequence matching, so this also catches sub.cloudlanecdn.com and
+// cloudlanecdn.com.evil.net. In a positive lane that breadth is free; in the suppression
+// filter discussed in Act II, the same behavior is a hole.
+let DomainLane = AaaaLookups
+| where QueryName has_any (BootstrapDomains)
+| extend Lane = "BootstrapDomain", MarkerLabel = ""
+| project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
+// Lane 3 — failure sentinel in the ANSWER. Cheap lossy prefilter, then authoritative compare.
 // IPv6 has no single textual form. 2001:4998:44:3507::8000 and its expanded
-// equivalent are the same address and different strings — compare as addresses.
+// equivalent are the same address and different strings — so narrow on a term,
+// decide with ipv6_compare().
+let SentinelLane = AaaaLookups
+| where IPAddresses has "8000"
 | mv-apply AnswerIP = split(tostring(IPAddresses), ",") to typeof(string) on (
     summarize SentinelHits = countif(ipv6_compare(trim(@"\s", AnswerIP), FailureSentinel) == 0)
   )
-| extend SentinelMatch = SentinelHits > 0
-| where ShapeMatch or DomainMatch or SentinelMatch
+| where SentinelHits > 0
+| extend Lane = "FailureSentinel", MarkerLabel = ""
+| project TimeGenerated, ClientIP, Computer, QueryName, Lane, MarkerLabel;
+union ShapeLane, DomainLane, SentinelLane
 | summarize
-    Queries        = count(),
-    DistinctNames  = dcount(QueryName),
-    SampleNames    = make_set(QueryName, 10),
-    MarkerLabels   = make_set_if(
-                        iff(set_has_element(Labels, "p"), "p", "q"),
-                        set_has_element(Labels, "p") or set_has_element(Labels, "q")),
-    ShapeCount     = countif(ShapeMatch),
-    DomainCount    = countif(DomainMatch),
-    SentinelCount  = countif(SentinelMatch),
-    FirstSeen      = min(TimeGenerated),
-    LastSeen       = max(TimeGenerated)
+    Queries       = count(),
+    DistinctNames = dcount(QueryName),
+    SampleNames   = make_set(QueryName, 10),
+    MarkerLabels  = make_set_if(MarkerLabel, isnotempty(MarkerLabel)),
+    ShapeCount    = countif(Lane == "ProtocolShape"),
+    DomainCount   = countif(Lane == "BootstrapDomain"),
+    SentinelCount = countif(Lane == "FailureSentinel"),
+    Lanes         = make_set(Lane),
+    FirstSeen     = min(TimeGenerated),
+    LastSeen      = max(TimeGenerated)
     by ClientIP, Computer
 | extend
-    ShapeSeen      = ShapeCount > 0,
-    DomainSeen     = DomainCount > 0,
-    SentinelSeen   = SentinelCount > 0,
-    NameUniqueness = DistinctNames * 1.0 / Queries
+    ShapeSeen    = ShapeCount > 0,
+    SentinelSeen = SentinelCount > 0,
+    DomainSeen   = DomainCount > 0,
+    LaneCount    = array_length(Lanes)
 // Rank by fidelity, not volume — a noisy IOC-only hit must not outrank a single shape hit
-| order by ShapeSeen desc, SentinelSeen desc, DistinctNames desc
+| order by ShapeSeen desc, SentinelSeen desc, LaneCount desc, DistinctNames desc
 ```
 
 The line that does the work is the shape test, and specifically this half of it:
@@ -379,9 +415,9 @@ The line that does the work is the shape test, and specifically this half of it:
 set_has_element(Labels, "p") or set_has_element(Labels, "q")
 ```
 
-Note what that *isn't*. It isn't `QueryName has ".p."`, which would match `example.pizza.com` and half the internet, and it isn't a positional index like `Labels[LabelCount - 3]`, which quietly assumes the registrable domain is exactly two labels and breaks the moment the operator moves to something under `.co.uk`. `set_has_element()` does exact element matching against the parsed label array — it asks "is there a label that is *precisely* the single character `p`," which is a question ordinary DNS almost never answers yes to. Splitting the hostname into labels first and reasoning about labels as structured data, rather than pattern-matching against the string, is what makes the test both specific and portable.
+Note what that *isn't*. It isn't `QueryName has ".p."` — and the reason is more interesting than "that would over-match," because it wouldn't over-match the way you'd guess. `has` is term-based, so the dots in that needle are **silently discarded**: it tokenizes to the single term `p`, and the query you actually shipped is `has "p"`. It won't match `example.pizza.com`, because `pizza` is one term and there's no standalone `p` in it. It *will* match `cdn-p-edge.example.com`, because hyphens are term delimiters too, and anything else where a lone `p` survives tokenization in a context that has nothing to do with DNS labels. The punctuation you wrote to mean "a label, delimited by dots" was never evaluated. That's the failure worth naming — not a filter that matches too much, but a filter that quietly answers a different question than the one on the page. It also isn't a positional index like `Labels[array_length(Labels) - 3]`, which quietly assumes the registrable domain is exactly two labels and breaks the moment the operator moves to something under `.co.uk`. `set_has_element()` does exact element matching against the parsed label array — it asks "is there a label that is *precisely* the single character `p`," which is a question ordinary DNS almost never answers yes to. Splitting the hostname into labels first and reasoning about labels as structured data, rather than pattern-matching against the string, is what makes the test both specific and portable.
 
-One line above it is doing quiet, load-bearing work, and it deserves naming because lifting the regex without it produces a clean zero-row result:
+One line up in the shared base is doing quiet, load-bearing work, and it deserves naming because lifting the regex without it produces a clean zero-row result:
 
 ```kql
 | extend QueryName = tolower(trim_end(@"\.", Name))
@@ -389,11 +425,13 @@ One line above it is doing quiet, load-bearing work, and it deserves naming beca
 
 The agent ID is hex-encoded **uppercase**. `^[0-9a-f]+$` does not match `A1B2C3`. Whether your resolver preserves query case varies by source — the Windows DNS connector generally lowercases, Sysmon generally doesn't — so the normalization is the difference between a working detection and a detection that works only on your test box. Normalize before you pattern-match, always, and never let case survive into a regex you're relying on.
 
-`DomainMatch` and `SentinelMatch` are the cheap IOC lanes riding alongside — `cloudlanecdn[.]com` and the hardcoded failure address `2001:4998:44:3507::8000` (which lives inside a Yahoo allocation, for reasons GReAT couldn't determine either). Those two will be dead within the month. `ShapeMatch` outlives them.
+The domain and sentinel lanes are the cheap IOC lanes riding alongside — `cloudlanecdn[.]com` and the hardcoded failure address `2001:4998:44:3507::8000` (which lives inside a Yahoo allocation, for reasons GReAT couldn't determine either). Those two will be dead within the month. The shape lane outlives them.
 
-Two things about how those lanes are handled, both of which I got wrong on the first pass:
+Four things about how those lanes are handled, three of which I got wrong on the first pass:
 
 - **Don't string-match an IPv6 address.** `IPAddresses has "2001:4998:44:3507::8000"` only fires if your resolver logged that exact compression. The same address written `2001:4998:44:3507:0:0:0:8000` is a different string and an identical destination, and the miss is silent. `ipv6_compare()` normalizes both sides and answers the question you actually asked. It would be a strange article that spends a paragraph arguing structured label matching beats string matching, and then string-matches an address three lines later.
+- **But put something cheap in front of it.** My first version ran the `mv-apply` and the address comparison against *every* AAAA lookup in the window, and filtered afterwards. That is the expensive operation sitting upstream of the filter that would have contained it — on an IPv6-enabled network it's a query that returns the right answer and never finishes. The fix is `| where IPAddresses has "8000"` ahead of the `mv-apply`. KQL's tokenizer treats the colon as a separator, so the trailing hextet is a distinct term in every textual form of that address, and the final group is always four hex digits — there's no zero-padded variant that hides it. Narrowing with a string operation and *deciding* with a structured one is not a contradiction; it's the whole pattern. The mistake is letting the string operation make the call.
+- **Separate lanes, not shared booleans.** Computing `ShapeMatch`, `DomainMatch`, and `SentinelMatch` as columns on one row set forces every row through every test, and it couples their preconditions. That coupling had already broken something: `| where LabelCount >= 5` is a *shape* precondition, but sitting at the top of a single pipeline it also discarded every domain-IOC hit on the bare `cloudlanecdn.com` — two labels — and every sentinel hit returned to a short hostname. Three `let`-bound branches let each lane carry its own floor. The union at the bottom is legitimate for the usual reason: same entity, `ClientIP` and `Computer`, three questions.
 - **`max()` doesn't aggregate booleans**, so the `ShapeSeen`/`DomainSeen`/`SentinelSeen` flags are built with `countif()` and compared after the `summarize`. And the ordering runs on `ShapeSeen` first, not on volume. A chatty host that tripped the domain IOC once should not outrank a single host exhibiting the protocol shape — that's the same `BothSignals` discipline from Act I, applied to three lanes of very unequal fidelity instead of two of equal fidelity.
 
 **One correction, and it's the important one.** Thursday's Detection 4 was titled "DNS AAAA Queries from Non-Browser Processes," and it does not query DNS record types, because it can't — the brief says so plainly in its own caveats: `DeviceNetworkEvents` doesn't expose query type, and `DnsQueryResponse` isn't a valid `ActionType` for that table. So the query substitutes a behavioral proxy: find non-browser processes that hit `graph.microsoft.com`, then find other external connections from those same processes. That's honest engineering under a constraint, and I respect that the brief documented it rather than shipping a query that returns zero rows and calling it clean.
@@ -408,6 +446,17 @@ DnsEvents
 ```
 
 If that returns nothing, you have a data-source project, not a detection project — and that's a far more useful finding than a proxy query that half-works.
+
+One thing to confirm in your own workspace before you run the sentinel lane, because it's the assumption the `split()` rests on:
+
+```kql
+DnsEvents
+| where TimeGenerated > ago(1d) and QueryType =~ "AAAA" and isnotempty(IPAddresses)
+| take 20
+| project IPAddresses
+```
+
+The Windows DNS connector writes multiple answers comma-delimited, which is what the query assumes. If yours uses spaces, change the separator — `trim(@"\s", ...)` covers `", "` but not a bare space.
 
 Keep this one **hunting-only**. Legitimate AAAA volume is enormous on IPv6-enabled networks, `ClientIP` in `DnsEvents` is your resolver's view and may be a forwarder rather than the real originator, and the shape test will occasionally catch a CDN or telemetry vendor doing genuinely weird things with hostnames. Confirm the shape by eye — the label structure is distinctive enough that thirty seconds of reading `SampleNames` will tell you whether you're looking at a protocol or a coincidence.
 
@@ -433,7 +482,9 @@ By default a KQL result set is unordered. There's no "previous row," because the
 |---|---|
 | `sort by` / `order by` | Sorts *and* serializes. The usual entry point. |
 | `serialize` | Freezes the current arbitrary order into a row order. Fast, and almost never what you want alone. |
-| `range`, `row_number()`, `top` | Naturally ordered producers. |
+| `range`, `top`, `top-hitters`, `getschema` | Operators that emit an already-serialized set. |
+
+Note what is *not* on that list: `row_number()`. It's easy to assume a function that assigns sequence numbers must be creating the sequence, but it's the other way round — `row_number()` is one of the functions that *requires* a serialized input, exactly like `prev()` and `next()`. It reads an order someone else established. If you reach for it to fix a serialization error, you'll get the same error back.
 
 And serialization is **not sticky**. `where`, `extend`, `project`, and `take` preserve it. `summarize`, `join`, `union`, and `mv-expand` destroy it — after any of those, `prev()` will fail or, worse, silently operate on a re-shuffled order. If you need sequence logic after an aggregation, re-`sort` before you reach for `prev()`.
 
