@@ -18,9 +18,9 @@ That thread ran through nearly all seven of this week's briefs and their **28 KQ
 
 Count the ones where the adversary's core move was **reading something they were technically permitted to read**: the heapdump, the TeamCity credential files, the Rails file read, LSASS, the Xcode projects, the vCenter directory, the Midnight Blizzard sign-in. That's most of the week.
 
-But the one worth four thousand words is the Spring Boot heapdump, because it is the purest form of the problem and because **all four of the briefs' heapdump detections would have missed the traffic the source report actually documented.** Not through bad engineering — through one string.
+But the one worth four thousand words is the Spring Boot heapdump, because it is the purest form of the problem and because **all three of the briefs' web-tier heapdump detections would have missed the traffic the source report actually documented.** Not through bad engineering — through one string.
 
-So this week's KQL of the Week is heapdump exfiltration, in three queries and five corrections. Act I hunts the **request**, from the web tier, and the fight there is over a number that most connectors don't populate. Act II hunts the **host**, and turns out to be the stronger query, because Spring leaves a file behind whose name tells you an HTTP request happened even when your web logs don't. The honorable mention stops hunting the attacker altogether and hunts **your own exposure**, which is the only finite population in this whole article.
+So this week's KQL of the Week is heapdump exfiltration, in three queries and eleven corrections — five of theirs and six of mine. Act I hunts the **request**, from the web tier, and the fight there is over a number that most connectors don't populate. Act II hunts the **host**, and turns out to be the stronger query, because Spring leaves a file behind whose name tells you an HTTP request happened even when your web logs don't. The honorable mention stops hunting the attacker altogether and hunts **your own exposure**, which is the only finite population in this whole article.
 
 <br/>
 
@@ -36,9 +36,9 @@ Here's the problem the winning query solves.
 
 On July 27, [SANS ISC published a diary on active scanning for Spring Boot heapdump endpoints](https://isc.sans.edu/diary/33188). The mechanic is about as simple as intrusion gets. Spring Boot Actuator exposes a management endpoint that, when called, triggers a full JVM heap dump and streams it back as the HTTP response body. On HotSpot that's an HPROF file; on OpenJ9 it's PHD. Either way it is a byte-for-byte image of everything live in the process: every object, every field, every `String` — which in a real application means the contents of your `HikariConfig`, your OAuth client secrets, your signing keys, and every session token currently in flight.
 
-The briefs picked it up Monday and Tuesday and produced four detection candidates from it: endpoint access from any source, successful retrieval by an external IP, external scanning, and heapdump file creation on the application host. Two of those are good ideas. All four have the same defect.
+The briefs picked it up Monday and Tuesday and produced four detection candidates from it: endpoint access from any source, successful retrieval by an external IP, external scanning, and heapdump file creation on the application host. Two of those are good ideas. The first three — the ones that read the web tier — share a single defect. The fourth reads the host instead, has a different defect entirely, and gets Act II to itself.
 
-**Every one of them hardcodes the literal path `/actuator/heapdump`.**
+**Every one of the three web-tier candidates hardcodes the literal path `/actuator/heapdump`.**
 
 Read the ISC diary again. The requests Johannes Ullrich actually captured were not to `/actuator/heapdump`. They were to **`/admin-api/actuator/heapdump`**, and the diary explains why: the management base path is configuration, set with `management.endpoints.web.base-path`, and moving it off the default is a normal — arguably *recommended* — thing to do. The attacker in that capture also sent `Authorization: Basic YWRtaW46YWRtaW4=`, which is `admin:admin`, because they assumed the endpoint would be behind authentication and just bet on the password.
 
@@ -65,12 +65,12 @@ let ActuatorEndpoints = dynamic([
 // Endpoints that leak secrets directly rather than structure. Used for RANKING,
 // not for filtering -- a 200 on /beans is still an exposed management surface.
 let SecretBearing   = dynamic(["heapdump","env","configprops","jolokia","dump"]);
-// Prefilter terms MUST be the endpoint list itself, not a trimmed "cheap" subset.
-// Trimming this narrows the detection silently. See the encoding caveat below.
-let PrefilterTerms  = dynamic([
-    "actuator","heapdump","env","configprops","beans","threaddump","mappings",
-    "loggers","httpexchanges","httptrace","auditevents","jolokia"
-]);
+// DERIVED from the endpoint list, not maintained beside it. The prefilter has to be a
+// SUPERSET of the authoritative test or it narrows the detection silently -- and a
+// hand-kept parallel copy drifts, which is exactly what mine did (see below). The
+// "actuator" term is added as free breadth, not because the path is assumed to
+// contain it. See the encoding caveat below.
+let PrefilterTerms  = array_concat(ActuatorEndpoints, dynamic(["actuator"]));
 // A ranking hint, NOT a gate. Nothing is discarded for being under it.
 let ServedFloorBytes = 1048576;
 _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
@@ -86,11 +86,26 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // /actuator/heapdump are the same request -- because to Spring, they are.
 | extend NormPath = trim_end(@"/+", replace_regex(PathOnly, @"/{2,}", "/"))
 | extend Segments = split(NormPath, "/")
-| extend Endpoint = tostring(Segments[array_length(Segments) - 1])
-// THE authoritative test: exact equality against a parsed path SEGMENT.
-// Not `Url has "heapdump"` -- that is a question about a term appearing somewhere,
-// which is a different question and answers yes to /docs/heapdump-howto.html.
-| where Endpoint in (ActuatorEndpoints)
+// THE authoritative test: exact equality against a parsed path SEGMENT, at ANY
+// position. Not `Url has "heapdump"` -- that is a question about a term appearing
+// somewhere, which is a different question and answers yes to /docs/heapdump-howto.html.
+// And not the LAST segment either: /env, /loggers, /metrics and /health all take a path
+// selector, and jolokia is mounted at /**, so on those the endpoint ID is never final.
+| extend Matched = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
+// Matched is almost always a single element. When it isn't (a selector that happens to
+// equal another endpoint ID -- rare, e.g. /actuator/env/loggers), the element order of
+// set_intersect is not documented, so Matched[0] is arbitrary rather than "the first in
+// the path". `Matched` stays in the output so you can see when that happened.
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
+// Everything BEFORE the endpoint ID is the management base path, recovered from the
+// data rather than assumed. Everything AFTER it is the selector, and the selector is
+// evidence: /env/spring.datasource.password is a targeted secret read, /env is a sweep.
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
+| extend TargetedSelector = isnotempty(Selector)
 // --- Result. EventResultDetails is the HTTP status code; HttpStatusCode is an alias.
 // EventOriginalResultDetails holds the source's raw value when normalization couldn't
 // map it, so it's the better second look before falling back to anything coarser.
@@ -117,9 +132,15 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // web session it is the RESPONSE. HttpResponseBodyBytes is more precise and arrived in
 // schema 0.2.7, so it may not exist in your parser at all -- column_ifexists, not
 // coalesce, because coalesce on an absent column is a semantic error, not a null.
-| extend RespBytes = coalesce(
-             column_ifexists("HttpResponseBodyBytes", long(null)),
-             column_ifexists("DstBytes", long(null)))
+| extend RespBodyBytes = column_ifexists("HttpResponseBodyBytes", long(null))
+| extend RespDstBytes  = column_ifexists("DstBytes", long(null))
+// Resolve zero-as-null HERE, not only in the verdict below. coalesce() takes the first
+// non-null value, so a parser that writes 0 into the PRECISE column shadows a real
+// measurement sitting in the coarse one, and the more accurate field silently makes
+// the answer worse. iff() on a null predicate returns the else branch, so an absent
+// column and a zero both fall through to DstBytes.
+| extend RespBytes = coalesce(iff(RespBodyBytes > 0, RespBodyBytes, long(null)),
+                              RespDstBytes)
 // Three states, not two. "No byte count" is NOT "small response" -- see the bonus.
 | extend SizeVerdict = case(
       isnull(RespBytes),                "Unknown",
@@ -144,14 +165,21 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
     MaybeServedHits = countif(MaybeServed),
     SecretHits      = countif(Served and Secretive),
     SecretMaybeHits = countif(MaybeServed and Secretive),
+    // A selector means the caller named a specific property, logger or MBean rather
+    // than sweeping the endpoint. Ranked, not gated -- a bare /heapdump has no selector
+    // and is still the worst row in this table.
+    TargetedHits    = countif(TargetedSelector),
     // A sub-400 with an unknown code and a multi-megabyte body is served in
     // everything but the paperwork, so this counter spans both verdicts.
     LargeBodyHits   = countif((Served or MaybeServed) and SizeVerdict == "LargeBody"),
     UnknownSizeHits = countif(Served and SizeVerdict == "Unknown"),
     MaxRespBytes    = max(RespBytes),
     Endpoints       = make_set(Endpoint, 15),
+    MultiMatchPaths = make_set_if(NormPath, array_length(Matched) > 1, 5),
     Services        = make_set(Service, 10),
     Paths           = make_set(NormPath, 10),
+    BasePaths       = make_set_if(BasePath, isnotempty(BasePath), 10),
+    Selectors       = make_set_if(Selector, isnotempty(Selector), 10),
     Statuses        = make_set(StatusRaw, 10),
     Verdicts        = make_set(AnswerVerdict, 8),
     UserAgents      = make_set(UserAgent, 5),
@@ -165,7 +193,10 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 | extend
     DistinctEndpoints = array_length(Endpoints),
     Enumerating       = array_length(Endpoints) > 2,
-    ProbablyInternal  = ipv4_is_private(Client),
+    // ipv4_is_private() returns null for a v6 literal, so an unguarded call leaves a
+    // v6 client as neither internal nor external. Default to "not internal" -- same
+    // direction as the honorable mention, for the same reason.
+    ProbablyInternal  = coalesce(ipv4_is_private(Client), false),
     MaxRespReadable   = format_bytes(coalesce(MaxRespBytes, long(0)))
 // Ranking, in order of what actually changes your afternoon:
 //   1. a secret-bearing endpoint returned a CONFIRMED 200
@@ -177,7 +208,8 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // Raw request volume is deliberately last. One successful GET is the whole incident;
 // ten thousand 404s are Tuesday.
 | order by SecretHits desc, LargeBodyHits desc, UnknownSizeHits desc,
-           SecretMaybeHits desc, DistinctEndpoints desc, ServedHits desc
+           SecretMaybeHits desc, TargetedHits desc, DistinctEndpoints desc,
+           ServedHits desc
 ```
 
 <br/>
@@ -185,14 +217,56 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 ### The line that does the work
 
 ```kql
-| where Endpoint in (ActuatorEndpoints)
+| extend Matched = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
 ```
 
-Four words, and they're the difference between a detection and a decoration.
+Two lines, and they're the difference between a detection and a decoration.
 
-Note what this **isn't**. It isn't `Url has "/actuator/heapdump"`, which is what all four brief candidates do in one spelling or another. That predicate asserts a full path, and a full path is a *default value* — the one thing about this endpoint that the operator of the application controls freely and that the attacker doesn't need to touch. It also isn't `Url has "heapdump"`, which looks like the safe broadening but quietly changes the question: `has` tests whether a **term** appears anywhere in the value, so it returns true for `/docs/heapdump-analysis.html`, for a referrer, for a query string parameter named `heapdump`, and for a WAF rule name that got logged into the URL field. Presence is not position, and a detection that can't tell the difference between "the client requested the heapdump endpoint" and "the string heapdump occurred in this record" will be tuned into silence within a week by an analyst who is, correctly, sick of it.
+Note what this **isn't**. It isn't `Url has "/actuator/heapdump"`, which is what all three web-tier brief candidates do in one spelling or another. That predicate asserts a full path, and a full path is a *default value* — the one thing about this endpoint that the operator of the application controls freely and that the attacker doesn't need to touch. It also isn't `Url has "heapdump"`, which looks like the safe broadening but quietly changes the question: `has` tests whether a **term** appears anywhere in the value, so it returns true for `/docs/heapdump-analysis.html`, for a referrer, for a query string parameter named `heapdump`, and for a WAF rule name that got logged into the URL field. Presence is not position, and a detection that can't tell the difference between "the client requested the heapdump endpoint" and "the string heapdump occurred in this record" will be tuned into silence within a week by an analyst who is, correctly, sick of it.
 
-What the query does instead is parse the URL into segments and compare a **segment** for exact equality. That's the same discipline as splitting a hostname into DNS labels rather than pattern-matching the dots: if your data is structured, compare it as structured data. `/admin-api/actuator/heapdump` has a final segment of `heapdump`. So does `/actuator/heapdump`, `/mgmt/heapdump`, `/internal/ops/actuator/heapdump`, and whatever your platform team invented in 2023. All four match. `/docs/heapdump-analysis.html` doesn't, because its final segment is `heapdump-analysis.html`, and equality knows that and `has` doesn't.
+What the query does instead is parse the URL into segments and compare a **segment** for exact equality. That's the same discipline as splitting a hostname into DNS labels rather than pattern-matching the dots: if your data is structured, compare it as structured data. `/admin-api/actuator/heapdump` contains the segment `heapdump`. So do `/actuator/heapdump`, `/mgmt/heapdump`, `/internal/ops/actuator/heapdump`, and whatever your platform team invented in 2023. All four match. `/docs/heapdump-analysis.html` doesn't, because its segments are `docs` and `heapdump-analysis.html`, and equality knows that and `has` doesn't.
+
+<br/>
+
+### The right test at the wrong position, which was mine
+
+The first draft of this query did the segment comparison **at a fixed index**:
+
+```kql
+| extend Endpoint = tostring(Segments[array_length(Segments) - 1])
+| where Endpoint in (ActuatorEndpoints)          // don't
+```
+
+Last segment, exact equality. It is correct for `heapdump`, which is why the article's own example never caught it, and it is wrong for a good fraction of the endpoint list sitting three lines above it.
+
+Several actuator endpoints take a **path selector**, and on those the endpoint ID is not the last segment and never will be:
+
+| Request | Last segment | What it actually is |
+|---|---|---|
+| `/actuator/env/spring.datasource.password` | `spring.datasource.password` | A targeted read of one secret |
+| `/actuator/loggers/org.springframework` | `org.springframework` | Logger config for one package |
+| `/actuator/metrics/jvm.memory.used` | `jvm.memory.used` | One metric |
+| `/actuator/health/db` | `db` | One health component |
+| `/actuator/jolokia/read/java.lang:type=Memory` | `java.lang:type=Memory` | An MBean read |
+
+Read the Jolokia row twice. Jolokia is mounted at `/actuator/jolokia/**`, so **every** meaningful Jolokia request carries sub-path segments — and `jolokia` is on my `SecretBearing` list, which is to say I ranked it as one of the highest-value endpoints in the query and then wrote a test that could only ever match the bare, uninteresting form of it. The MBean invocation that turns an exposed Jolokia into remote code execution is exactly the request the fixed index throws away.
+
+And `/actuator/env/spring.datasource.password` is worse than a miss, because it's the *sharpest* signal in the whole family. A bare `GET /actuator/env` is a scanner sweeping. A `GET` for one named property is somebody who has already read the sweep and come back for the credential. The old query saw the first and was blind to the second.
+
+So the fix is `set_intersect()` against the segment array — position-independent, still exact equality, still not `has` — and then `array_index_of()` to find where the match landed, which gives you two columns for free:
+
+```kql
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
+```
+
+`BasePath` is where your management surface actually lives, recovered from your own traffic rather than assumed — the thing this whole Act says you can't hardcode, now produced as output instead of taken as input. `Selector` is what they asked for. Both go in the grid, neither gates anything.
+
+The general form is uncomfortable and worth stating plainly: **"compare a segment, not a string" is only half a rule.** The other half is *which* segment, and a positional assumption is a hardcoded default wearing better clothes. I spent this section arguing that `/actuator/heapdump` is a default that shouldn't be baked in, and baked in a different one four lines later.
 
 The normalization above it is doing real work too, and each line is there because a real evasion exists for it:
 
@@ -283,6 +357,8 @@ Act I references three columns that may not exist in your workspace at all — `
 
 `coalesce()` handles *values*. `column_ifexists()` handles *schemas*. They are not interchangeable and the failure modes are opposite: a value problem gives you a wrong answer, a schema problem gives you no answer. Note the typed default — `long(null)` and not `0`, and not `""`. A default of `0` would turn "this schema has no byte counts" into "every response was zero bytes long", which is the `isnotempty()` mistake wearing a different hat: an unknown laundered into a measurement. Type it to match the column you're substituting for, and let it stay null so that the `case` above can see it.
 
+A fair question, since these queries reference plenty of columns *without* the wrapper: what's the rule? Mine is that `column_ifexists()` goes on anything I can't guarantee is in every parser's projection — fields marked Optional, fields added in a specific schema version, and anything a source-specific parser might reasonably decline to emit. Mandatory schema core — `Url`, `SrcIpAddr`, `DstIpAddr`, `EventResult`, `TimeGenerated` — gets referenced bare. That line is a judgement, not a rule Microsoft publishes, and you may draw it somewhere else. Draw it *somewhere*, and be consistent about it, because the alternative is a query where the presence of a wrapper tells the next reader nothing about whether the column is actually at risk. Where I've wrapped something your parser guarantees, the wrapper costs a few characters. Where I've left something bare that your parser drops, you get a semantic error on day one instead of a wrong answer in month three — which is the failure I'd pick if I had to pick.
+
 This matters beyond ASIM. Any query that has to run across multiple workspaces, or across a connector migration, or against a table Microsoft is still adding columns to, is a query that should be reaching for `column_ifexists()` rather than assuming.
 
 <br/>
@@ -293,7 +369,7 @@ The briefs filed all three web-tier candidates as **requires environment mapping
 
 - **`_Im_WebSession` returns nothing at all if you have no Web Session parsers deployed, and it returns it silently.** The unifying ASIM parsers are a union over the source-specific parsers you've actually enabled. Zero enabled parsers is a valid, empty union. Run this before anything else: `_Im_WebSession(starttime=ago(1d)) | summarize Events = count() by EventVendor, EventProduct, EventType | order by Events desc`. If that comes back empty, you have a parser deployment task, not a detection task — and finding that out in ninety seconds is worth more than the rest of this section.
 - **`EventType` changes what the other fields mean.** `HTTPSession` events come from a proxy or web gateway that terminated the client connection: they carry full URLs with scheme and host, and they usually carry byte counts. `WebServerSession` and `ApiRequest` events come from the server or application itself: the docs are explicit that these "typically have less network related information", the URL is path-and-parameters only, and `DstBytes` is frequently absent. So the *same detection* has different reliability depending on which side of the connection logged it, and a workspace fed only by app servers will run entirely in the `Unknown` size lane. That's not a bug, and it's exactly why the size verdict has three states.
-- **Whether your parsers write `0` or null for an absent byte count is an assumption I've made and you should test.** The Act I `case` treats a literal `0` as `Unknown` rather than as a measurement, and that choice is load-bearing: get it backwards and every unmeasured response is silently classified `SmallBody`, which is the one verdict that ranks *below* everything else — the `isnotempty()` failure re-created inside the fix for it. ASIM's schema says what `DstBytes` *means*; it does not say what a parser does when the source didn't report it, and different parsers genuinely differ. Settle it before you deploy:
+- **Whether your parsers write `0` or null for an absent byte count is an assumption I've made and you should test.** The Act I `case` treats a literal `0` as `Unknown` rather than as a measurement, and that choice is load-bearing: get it backwards and every unmeasured response is silently classified `SmallBody`, which is the one verdict that ranks *below* everything else — the `isnotempty()` failure re-created inside the fix for it. ASIM's schema says what `DstBytes` *means*; it does not say what a parser does when the source didn't report it, and different parsers genuinely differ. There's a second-order version of this that my first draft got wrong: I handled zero-as-null in the `case` and not in the `coalesce()` feeding it, so a parser writing `0` into the precise column (`HttpResponseBodyBytes`) would shadow a perfectly good measurement in the coarse one (`DstBytes`) — `coalesce` takes the first non-null, and `0` is not null. The more accurate field made the answer worse. The query above collapses zero to null on each candidate *before* the coalesce, which is where that decision belongs. Settle the underlying question before you deploy:
 
 ```kql
 _Im_WebSession(starttime=ago(7d))
@@ -317,24 +393,38 @@ _Im_WebSession(starttime=ago(7d))
 
 ```kql
 let lookback = 7d;
-let ActuatorEndpoints = dynamic(["heapdump","env","configprops","beans","threaddump",
-                                 "mappings","loggers","httpexchanges","jolokia"]);
+let ActuatorEndpoints = dynamic([
+    "heapdump","env","configprops","beans","threaddump","mappings",
+    "loggers","httpexchanges","httptrace","auditevents","jolokia","dump","trace"
+]);
+// Derived, for the same reason as the ASIM version: a prefilter that is not a superset
+// of the authoritative list is a silent narrowing you cannot see from the results.
+let PrefilterTerms = array_concat(ActuatorEndpoints, dynamic(["actuator"]));
 CommonSecurityLog
 | where TimeGenerated > ago(lookback)
 | where isnotempty(RequestURL)
-| where RequestURL has_any ("actuator","heapdump","jolokia","configprops","threaddump")
+| where RequestURL has_any (PrefilterTerms)
 | extend UrlLower = tolower(url_decode(RequestURL))
 | extend PathOnly = trim_start(@"[a-z][a-z0-9+.\-]*://[^/]*", UrlLower)
 | extend PathOnly = tostring(split(tostring(split(tostring(split(PathOnly,"?")[0]),"#")[0]),";")[0])
 | extend NormPath = trim_end(@"/+", replace_regex(PathOnly, @"/{2,}", "/"))
 | extend Segments = split(NormPath, "/")
-| extend Endpoint = tostring(Segments[array_length(Segments) - 1])
-| where Endpoint in (ActuatorEndpoints)
+| extend Matched  = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
 // BOTH directions are carried, because CEF does not tell you which one is the
 // response. Run the validation query below, then delete the column you don't need.
+// Zero is read as "not reported" on the way in, not on the way out -- otherwise
+// NoByteCounts below reads a column full of zeros as a column full of measurements.
 | extend
-    BytesIn  = tolong(column_ifexists("ReceivedBytes", long(null))),
-    BytesOut = tolong(column_ifexists("SentBytes",     long(null)))
+    BytesIn  = iff(tolong(column_ifexists("ReceivedBytes", long(null))) > 0,
+                   tolong(column_ifexists("ReceivedBytes", long(null))), long(null)),
+    BytesOut = iff(tolong(column_ifexists("SentBytes",     long(null))) > 0,
+                   tolong(column_ifexists("SentBytes",     long(null))), long(null))
 | extend BiggestSide = max_of(coalesce(BytesIn, long(0)), coalesce(BytesOut, long(0)))
 // EventOutcome is documented as success/failure. Some sources write a status code,
 // some write a word, some write "200 OK". Read it; don't gate on it.
@@ -343,6 +433,8 @@ CommonSecurityLog
     Outcomes     = make_set(EventOutcome, 10),
     Endpoints    = make_set(Endpoint, 15),
     Paths        = make_set(NormPath, 10),
+    BasePaths    = make_set_if(BasePath, isnotempty(BasePath), 10),
+    Selectors    = make_set_if(Selector, isnotempty(Selector), 10),
     Devices      = make_set(DeviceName, 5),
     Vendors      = make_set(strcat(DeviceVendor, "/", DeviceProduct), 5),
     Agents       = make_set(RequestClientApplication, 5),
@@ -677,7 +769,7 @@ Act I hunts the request. Act II hunts the artifact. The last query stops hunting
 
 ![Honorable Mention](/assets/img/HeapOfTrouble/Honorable.png)
 
-All four of the briefs' web-tier heapdump detections group by `SourceIP`. Every one of them ranks by request count. Every one of them is asking: *who is scanning us?*
+All three of the briefs' web-tier heapdump detections group by `SourceIP`. Every one of them ranks by request count. Every one of them is asking: *who is scanning us?*
 
 That question has no useful answer. Actuator scanning is background radiation. It runs continuously, from thousands of hosts, forever, and it will keep running after you block every address in the result set. A detection that ranks scanners by volume produces a list that is always populated, never actionable, and identical next week. It is a weather report.
 
@@ -696,21 +788,28 @@ let ActuatorEndpoints = dynamic([
 ]);
 let SecretBearing = dynamic(["heapdump","env","configprops","jolokia","dump"]);
 let StateChanging = dynamic(["shutdown","restart","refresh","loggers"]);
-let PrefilterTerms = dynamic([
-    "actuator","heapdump","env","configprops","beans","threaddump","mappings",
-    "loggers","httpexchanges","httptrace","auditevents","jolokia","shutdown"
-]);
+// DERIVED. This one mattered more than Act I's: `health` and `info` are on the endpoint
+// list deliberately, so that base-path recovery works on services where the only thing
+// anyone ever requests is the health check -- and my hand-written prefilter omitted
+// both, which defeated the entire reason they were there.
+let PrefilterTerms = array_concat(ActuatorEndpoints, dynamic(["actuator"]));
 _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 | extend UrlLower = tolower(url_decode(tostring(Url)))
 | extend PathOnly = trim_start(@"[a-z][a-z0-9+.\-]*://[^/]*", UrlLower)
 | extend PathOnly = tostring(split(tostring(split(tostring(split(PathOnly,"?")[0]),"#")[0]),";")[0])
 | extend NormPath = trim_end(@"/+", replace_regex(PathOnly, @"/{2,}", "/"))
 | extend Segments = split(NormPath, "/")
-| extend Endpoint = tostring(Segments[array_length(Segments) - 1])
-| where Endpoint in (ActuatorEndpoints)
+// Position-independent, same as Act I -- /health/{component}, /metrics/{name} and
+// /env/{property} all put the endpoint ID in the middle of the path.
+| extend Matched = set_intersect(Segments, ActuatorEndpoints)
+| where array_length(Matched) > 0
+| extend Endpoint    = tostring(Matched[0])
+| extend EndpointIdx = array_index_of(Segments, Endpoint)
 // The management BASE PATH, recovered from the data rather than assumed. This is the
 // output that goes to the platform team: it tells them where their surface actually is.
-| extend BasePath = trim_end(@"/+", substring(NormPath, 0, strlen(NormPath) - strlen(Endpoint)))
+| extend BasePath = iff(EndpointIdx <= 0, "",
+                        strcat_array(array_slice(Segments, 0, EndpointIdx - 1), "/"))
+| extend Selector = strcat_array(array_slice(Segments, EndpointIdx + 1, -1), "/")
 // Same three-state result verdict as Act I. EventResult "Success" is ANY status below
 // 400, so it cannot stand in for a 200 -- and on this endpoint the sub-400 response
 // you'll actually meet is a 302 to a login page, i.e. the healthy case.
@@ -725,15 +824,19 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
       isnotnull(StatusCode),               "OtherStatus",
       tostring(EventResult) =~ "Success",  "MaybeServed",
                                            "NotServed")
-| extend RespBytes = coalesce(
-             column_ifexists("HttpResponseBodyBytes", long(null)),
-             column_ifexists("DstBytes", long(null)))
+| extend RespBodyBytes = column_ifexists("HttpResponseBodyBytes", long(null))
+| extend RespDstBytes  = column_ifexists("DstBytes", long(null))
+| extend RespBytes = coalesce(iff(RespBodyBytes > 0, RespBodyBytes, long(null)),
+                              RespDstBytes)
+// A row with no destination identity is NOT dropped. It is bucketed. An unattributable
+// 200 on /heapdump is a telemetry finding AND possibly a security one, and `where
+// isnotempty(Service)` -- which is what I originally wrote here -- deletes both.
 | extend
     Service   = coalesce(tostring(column_ifexists("HttpHost","")),
                          tostring(column_ifexists("DstFQDN","")),
-                         tostring(DstIpAddr)),
+                         tostring(DstIpAddr),
+                         "UNATTRIBUTED"),
     UserAgent = tostring(column_ifexists("HttpUserAgent", ""))
-| where isnotempty(Service)
 // ipv4_is_private() returns null for a v6 literal, and not(null) is null, so a v6
 // client would count as neither internal nor external. Default it to external --
 // the safer direction for a surface report.
@@ -746,10 +849,15 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
     RedirectHits    = countif(AnswerVerdict == "Redirected"),
     NotFoundHits    = countif(AnswerVerdict == "NotPresent"),
     AuthWallHits    = countif(AnswerVerdict == "AuthWall"),
+    // A 500 or a 405 is not "not mounted" -- it is a mounted endpoint failing. Counted,
+    // because without this counter those rows fall through the case below into
+    // "OK - not mounted" and get filtered out of the report entirely.
+    OtherStatusHits = countif(AnswerVerdict == "OtherStatus"),
     DistinctClients = dcount(SrcIpAddr),
     ExternalClients = dcountif(SrcIpAddr, ExternalClient),
     MaxRespBytes    = max(RespBytes),
-    BasePaths       = make_set(BasePath, 5),
+    BasePaths       = make_set_if(BasePath, isnotempty(BasePath), 5),
+    Selectors       = make_set_if(Selector, isnotempty(Selector), 10),
     SampleClients   = make_set(SrcIpAddr, 10),
     Statuses        = make_set(StatusRaw, 10),
     Verdicts        = make_set(AnswerVerdict, 8),
@@ -765,8 +873,13 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
     PossiblyExposed = ServedHits == 0 and MaybeServedHits > 0,
     Protected       = ServedHits == 0 and MaybeServedHits == 0
                           and (AuthWallHits > 0 or RedirectHits > 0),
+    // Mounted and failing. Evidence of a management surface, just not of a served one.
+    MountedErroring = ServedHits == 0 and MaybeServedHits == 0
+                          and AuthWallHits == 0 and RedirectHits == 0
+                          and OtherStatusHits > 0,
     NotPresent      = ServedHits == 0 and MaybeServedHits == 0
-                          and AuthWallHits == 0 and RedirectHits == 0 and NotFoundHits > 0,
+                          and AuthWallHits == 0 and RedirectHits == 0
+                          and OtherStatusHits == 0 and NotFoundHits > 0,
     LeaksSecrets    = Endpoint in (SecretBearing),
     ChangesState    = Endpoint in (StateChanging),
     FoundExternally = ExternalClients > 0,
@@ -785,7 +898,9 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
       PossiblyExposed and LeaksSecrets,               "P4 - unverified, secrets endpoint answered sub-400",
       PossiblyExposed,                                "P4 - unverified, sub-400 with no status code",
       Protected,                                      "P5 - mounted, authenticated or redirected",
+      MountedErroring,                                "P5 - mounted, erroring",
                                                       "OK - not mounted")
+| extend Unattributed = Service == "UNATTRIBUTED"
 | where not(Priority startswith "OK")
 | order by Priority asc, MaxRespBytes desc, ExternalClients desc, ServedHits desc
 ```
@@ -811,6 +926,10 @@ Hence the split. `Exposed` needs a real `200`. `PossiblyExposed` is the sub-400-
 The `BasePath` extraction is the other line worth stealing, and it is the deliverable. The query recovers where your management surface is actually mounted, from your own traffic, rather than assuming `/actuator`. That's the answer to a question the platform team probably cannot answer from memory across a hundred services — and it's also the input to every other query in this article, because once you know your real base paths you can tighten the prefilters honestly instead of hopefully.
 
 Note the negative-result lanes too. `NotPresent` — endpoints that only ever returned `404` — is filtered out of the output, and it is the row you want to see in a *validation* run. So is `Protected`, which now covers both the auth wall and the redirect that usually implements it. If your entire result set is `NotPresent`, either you're clean or your parser isn't populating status codes; if it's all `P4 - unverified`, it's definitely the second one, and you should fix the telemetry before you file any of this as good news.
+
+Two lanes exist because the first draft of this query dropped them on the floor, and both failures are the same shape as everything else in this article. The first: a service that only ever returned `500` or `405` on `/…/env` has `ServedHits`, `MaybeServedHits`, `AuthWallHits`, `RedirectHits` and `NotFoundHits` all at zero, so it fell through every branch of the `case` to **`OK - not mounted`** — and then the `where` on the next line deleted it. A mounted endpoint throwing exceptions was reported as an endpoint that doesn't exist. `OtherStatusHits` and the `P5 - mounted, erroring` lane exist so that a status code nobody anticipated produces a row instead of a reassurance.
+
+The second: I opened with `| where isnotempty(Service)`, which is the exact clause this article spends a thousand words condemning, sitting in my own query. If `HttpHost`, `DstFQDN` and `DstIpAddr` are all empty, that row is gone — and the row it deletes most eagerly is the one from the parser with the thinnest telemetry, which is the parser most likely to be watching something nobody has inventoried. Now the service coalesces to `UNATTRIBUTED` and carries a flag. It is admittedly a row you cannot action as a ticket, since a fix list needs an owner; it is also the row that tells you a `200` came back on `/…/heapdump` from a service your telemetry can't name, and that is worth exactly one uncomfortable conversation rather than zero.
 
 <br/>
 
@@ -967,15 +1086,24 @@ Last week's grammar was borrowed *infrastructure*: the C2 is your calendar, the 
 
 Which is why the honorable mention is the query I'd actually run first, even though it's the least clever one in the article. Acts I and II detect an event that has already happened to a service you may not have known was exposed. The exposure query enumerates the services and hands you a list you can finish. One of those is security operations and the other is just operations, and the week's evidence is that the second one would have prevented more of this than the first would have caught.
 
-**The corrections, collected**, because five of them landed in one article and four are worth checking in your own content:
+**The corrections, collected**, because eleven of them landed in one article and most are worth checking in your own content. Five came out of the briefs:
 
-1. **All four heapdump candidates hardcode `/actuator/heapdump`**, and the ISC diary they came from documents scans against `/admin-api/actuator/heapdump`. The base path is configuration; the endpoint ID is the protocol.
+1. **All three web-tier heapdump candidates hardcode `/actuator/heapdump`**, and the ISC diary they came from documents scans against `/admin-api/actuator/heapdump`. The base path is configuration; the endpoint ID is the protocol. (The fourth candidate reads the host rather than the web tier and has a different problem — see number 5.)
 2. **`BytesReceived` is not a `CommonSecurityLog` column** — it's `ReceivedBytes` and `SentBytes` — and the brief's caveat describes the wrong failure mode for it. An absent column is a semantic error, not a null.
 3. **`isnotempty()` on the byte count deletes the finding** in exactly the environments that need the detection, and the direction of `in`/`out` is undefined relative to the client anyway. Three states, ranked, not two states, filtered.
 4. **`FileName has "heapdump"` cannot match a Spring heapdump filename**, because `heapdump2026-08-03-14-49123456.hprof` tokenizes to `heapdump2026` and `has` is a whole-term test. The clause is dead and the `endswith` beside it hides that.
 5. **The endpoint does write a file**, contrary to Monday's caveat. `HeapDumpWebEndpoint` creates it, the JVM fills it, `TemporaryFileSystemResource` deletes it after the response. That correction is what makes Act II possible at all.
 
-**And three of mine, which belong on the page rather than in a commit.** The first draft of Act I used ASIM's `EventResult == "Success"` as a fallback for a missing status code, which is *any* status below 400 — so a `302` to a login page, the signature of a correctly protected endpoint, counted as a served heap dump and could reach `P1` in the exposure inventory. The first draft of Act II collapsed thirty days of operator diagnostics into `min`/`max` and then asked a proximity question of the aggregate, which silently down-ranks every dump on any host that runs a scheduled JVM diagnostic — an exclusion list built out of a `max()`, three paragraphs after a section promising not to build one. And the same lane's filter carried a dead clause subsumed by the one below it, with multi-token needles under `has_any`, which is the exact inferred-adjacency mistake this article corrects the briefs for twice. All three are fixed above and all three are described where they happened. **Eight corrections in one article, three of them mine** — and the pattern holds from last week: the errors didn't come from not knowing the rules, they came from applying them in one place and not the one next to it.
+**And six of mine, which belong on the page rather than in a commit.**
+
+6. **`EventResult == "Success"` is not a fallback for a status code.** The first draft of Act I used it as one, and ASIM defines Success as *any* status below 400 — so a `302` to a login page, the signature of a correctly protected endpoint, counted as a served heap dump and could reach `P1` in the exposure inventory.
+7. **An exclusion list built out of a `max()`.** The first draft of Act II collapsed thirty days of operator diagnostics into `min`/`max` and then asked a proximity question of the aggregate, which permanently down-ranks every dump on any host running a scheduled JVM diagnostic — three paragraphs after a section promising not to build exclusions.
+8. **A dead clause with multi-token needles under `has_any`**, in the same lane, which is the exact inferred-adjacency mistake this article corrects the briefs for twice.
+9. **My prefilter drifted from my endpoint list**, under a comment reading *"Prefilter terms MUST be the endpoint list itself, not a trimmed cheap subset."* Act I's omitted `dump` and `trace`; the honorable mention's omitted `health`, `info` and `metrics` — including the two endpoints a paragraph directly below it says are on the list specifically so base-path recovery works. A prefilter that is not a superset of the authoritative test is a silent narrowing, and a hand-kept parallel copy is a promise, not a mechanism. Both are now `array_concat(ActuatorEndpoints, …)`, so the invariant is structural.
+10. **Right test, wrong position.** The first draft compared the **last** path segment, which is correct for `heapdump` and wrong for `/env/{property}`, `/loggers/{name}`, `/metrics/{name}`, `/health/{component}`, and every real Jolokia request — an endpoint I had put on the *secret-bearing* list and then written a test that could only match its uninteresting form. Position-independent `set_intersect()` now, with the base path and the selector both falling out as evidence.
+11. **Three more unknowns, mishandled three different ways, all in my queries.** A `coalesce()` that took a literal `0` from the precise byte column over a real value in the coarse one — an unknown laundered into a measurement. A `where isnotempty(Service)` in the exposure inventory — an unknown deleted by a guard. And a `case` whose fall-through filed a `500` on a live actuator endpoint as `OK - not mounted` — an unknown reported as safety. Three shapes, one root, and all three sat inside the article that names the root.
+
+**Eleven corrections in one article, six of them mine** — and the pattern holds from last week, harder than I'd like: the errors didn't come from not knowing the rules, they came from applying them in one place and not the one next to it. Numbers 9 through 11 were caught in review, after the draft was already arguing all three principles in prose. That is not a comfortable thing to publish and it is the most useful thing in here. **If a rule is worth writing down, write it as a mechanism — a derived list, a classification, a column — because a rule you have to remember to apply is a rule you will apply everywhere except the one place it mattered.**
 
 And one that isn't a query bug but is worth naming for anyone running a content pipeline: **the same behaviour got two different ATT&CK techniques on two consecutive days.** Monday mapped the heapdump work to **T1005 Data from Local System**. Tuesday mapped it to **T1190 Exploit Public-Facing Application**. Same endpoint, same source report, same threat, two techniques — which means a coverage map fed by both days has one behaviour reporting coverage in two cells and no way to notice. Neither mapping is unreasonable in isolation. That's the problem: a plausible mapping and a correct mapping look identical, and nothing downstream ever contradicts either one.
 
@@ -1140,3 +1268,4 @@ The below books are about closing that gap; turning curated signal into defensib
 </div>
 
 <br/>
+
