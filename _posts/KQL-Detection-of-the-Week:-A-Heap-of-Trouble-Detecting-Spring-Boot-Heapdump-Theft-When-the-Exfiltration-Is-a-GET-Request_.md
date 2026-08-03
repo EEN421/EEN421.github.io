@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "KQL Detection of the Week: Detecting Spring Boot Heapdump Theft When the Exfiltration Is a GET Request"
+title: "KQL Detection of the Week: A Heap of Trouble - Detecting Spring Boot Heapdump Theft When the Exfiltration Is a GET Request"
 subtitle: "Threat intelligence translated into detection engineering action."
 date: 2026-08-03
 author: DevSecOpsDad
