@@ -1,20 +1,9 @@
 ---
 layout: post
-title: "KQL Detection of the Week: A Heap of Trouble - Detecting Spring Boot Heapdump Theft When the Exfiltration Is a GET Request"
-subtitle: "Threat intelligence translated into detection engineering action."
+title: "KQL Detection of the Week: A Heap of Trouble"
+subtitle: "Detecting Spring Boot Heapdump Theft When the Exfiltration Is a GET Request"
 date: 2026-08-03
 author: DevSecOpsDad
-tags:
-  - detection-engineering
-  - kql
-  - Spring Boot
-  - actuator
-  - heapdump
-  - Java
-  - ASIM
-  - CommonSecurityLog
-  - T1190
-  - T1552
 ---
 
 ![DevSecOpsDadAttack!](/assets/img/HeapOfTrouble/intro.png)
