@@ -17,7 +17,7 @@ tags:
   - T1552
 ---
 
-![DevSecOpsDadAttack!](/assets/img/HeapOfTrouble/NinjaCat.png)
+![DevSecOpsDadAttack!](/assets/img/HeapOfTrouble/intro.png)
 
 There is an HTTP endpoint somewhere in your estate that will hand a stranger every string your application has ever touched. Database passwords. JWT signing keys. Session tokens. The API key for the payment processor. It returns them in a single response, over TLS, with a `200`, in about four seconds.
 
@@ -590,7 +590,7 @@ Act I hunts the request. Act II hunts the artifact. The last query stops hunting
 
 ## 🎖 Honorable Mention: Stop Detecting the Scan. Detect the Answer.
 
-![Honorable Mention](/assets/img/HeapOfTrouble/Honorable_Mention.png)
+![Honorable Mention](/assets/img/HeapOfTrouble/Honorable.png)
 
 All four of the briefs' web-tier heapdump detections group by `SourceIP`. Every one of them ranks by request count. Every one of them is asking: *who is scanning us?*
 
@@ -719,7 +719,7 @@ This one is a **hunt and a report**, not an alert, and it doesn't belong in the 
 
 ## ✨ Bonus: Three-Valued Logic, or Why `where not(X)` Isn't the Opposite of `where X`
 
-![Bonus](/assets/img/HeapOfTrouble/Bonus.png)
+![Bonus](/assets/img/HeapOfTrouble/bonus.png)
 
 Act I turned on a number that might not be there. Last week's bonus was about **order** (`prev()` and serialization); the week before was about **membership** (`leftanti`). This week's is about the thing underneath both of them: **what KQL does when it doesn't know.**
 
@@ -840,7 +840,7 @@ One last note, and it's a callback: `format_bytes()` is in these queries for rea
 
 ## The Bigger Lesson
 
-![](/assets/img/HeapOfTrouble/Authorized_Read.png)
+![](/assets/img/HeapOfTrouble/Bigger_Lesson.png)
 
 Seven briefs, twenty-eight candidates, and a thread through most of them: **nothing was exploited.**
 
@@ -866,6 +866,10 @@ And one that isn't a query bug but is worth naming for anyone running a content 
 Every one of these came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, deployment gates, triage runbooks, false-positive notes, and an honest readiness call. Twenty-eight of them this week, and once again the ones I disagreed with were the ones worth writing about.
 
 This kind of detection content is published _daily_ — fresh threat intel translated straight into deployable detections, so you spend your time tuning and shipping instead of reading and re-deriving — that's the whole point of the **[Daily Detection Engineering Brief at DevSecOpsDadAttack.com](https://devsecopsdadattack.com/detectionengineering/)**.
+
+<br/>
+
+![Outro](/assets/img/HeapOfTrouble/Outro.png)
 
 <br/>
 
