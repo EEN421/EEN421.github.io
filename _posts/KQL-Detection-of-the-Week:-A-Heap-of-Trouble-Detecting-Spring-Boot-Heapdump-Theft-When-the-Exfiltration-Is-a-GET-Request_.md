@@ -103,11 +103,27 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // which is a different question and answers yes to /docs/heapdump-howto.html.
 | where Endpoint in (ActuatorEndpoints)
 // --- Result. EventResultDetails is the HTTP status code; HttpStatusCode is an alias.
-// toint() returns null when a parser wrote a word instead of a number, so EventResult
-// (Success == status < 400) is the documented fallback, not a guess.
-| extend StatusCode = toint(EventResultDetails)
-| extend Answered = (StatusCode == 200)
-             or (isnull(StatusCode) and tostring(EventResult) =~ "Success")
+// EventOriginalResultDetails holds the source's raw value when normalization couldn't
+// map it, so it's the better second look before falling back to anything coarser.
+| extend StatusRaw  = coalesce(tostring(EventResultDetails),
+                               tostring(column_ifexists("EventOriginalResultDetails","")))
+| extend StatusCode = toint(extract(@"(\d{3})", 1, StatusRaw))
+// THREE states again, and for a sharper reason than the size field. ASIM defines
+// EventResult "Success" as status < 400 -- that is NOT evidence of a 200. A 302 to a
+// login page is Success, and a 302 to a login page is the single most common response
+// a PROPERLY PROTECTED actuator endpoint gives. Collapsing it into "answered" would
+// launder the most important negative in this query into a positive.
+| extend AnswerVerdict = case(
+      StatusCode == 200,                   "Served",
+      StatusCode between (300 .. 399),     "Redirected",
+      StatusCode in (401, 403),            "AuthWall",
+      StatusCode == 404,                   "NotPresent",
+      isnotnull(StatusCode),               "OtherStatus",
+      tostring(EventResult) =~ "Success",  "MaybeServed",   // sub-400, code unknown
+                                           "NotServed")
+| extend
+    Served      = AnswerVerdict == "Served",
+    MaybeServed = AnswerVerdict == "MaybeServed"
 // --- Size. DstBytes is defined as bytes from the destination to the source, so on a
 // web session it is the RESPONSE. HttpResponseBodyBytes is more precise and arrived in
 // schema 0.2.7, so it may not exist in your parser at all -- column_ifexists, not
@@ -135,15 +151,20 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // honorable mention, because "who took it" and "what of mine answers" are two questions.
 | summarize
     Requests        = count(),
-    AnsweredHits    = countif(Answered),
-    SecretHits      = countif(Answered and Secretive),
-    LargeBodyHits   = countif(Answered and SizeVerdict == "LargeBody"),
-    UnknownSizeHits = countif(Answered and SizeVerdict == "Unknown"),
+    ServedHits      = countif(Served),
+    MaybeServedHits = countif(MaybeServed),
+    SecretHits      = countif(Served and Secretive),
+    SecretMaybeHits = countif(MaybeServed and Secretive),
+    // A sub-400 with an unknown code and a multi-megabyte body is served in
+    // everything but the paperwork, so this counter spans both verdicts.
+    LargeBodyHits   = countif((Served or MaybeServed) and SizeVerdict == "LargeBody"),
+    UnknownSizeHits = countif(Served and SizeVerdict == "Unknown"),
     MaxRespBytes    = max(RespBytes),
     Endpoints       = make_set(Endpoint, 15),
     Services        = make_set(Service, 10),
     Paths           = make_set(NormPath, 10),
-    Statuses        = make_set(EventResultDetails, 10),
+    Statuses        = make_set(StatusRaw, 10),
+    Verdicts        = make_set(AnswerVerdict, 8),
     UserAgents      = make_set(UserAgent, 5),
     Methods         = make_set(HttpRequestMethod, 5),
     Xff             = make_set_if(ForwardedFor, isnotempty(ForwardedFor), 5),
@@ -158,14 +179,16 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
     ProbablyInternal  = ipv4_is_private(Client),
     MaxRespReadable   = format_bytes(coalesce(MaxRespBytes, long(0)))
 // Ranking, in order of what actually changes your afternoon:
-//   1. a secret-bearing endpoint answered at all
+//   1. a secret-bearing endpoint returned a CONFIRMED 200
 //   2. it answered with a body big enough to be a real dump
 //   3. it answered and we CANNOT TELL how big -- an unknown outranks a small body
-//   4. breadth of enumeration
+//   4. a secret-bearing endpoint answered sub-400 with no status code -- unverified,
+//      and unverified belongs above "nothing", never above "confirmed"
+//   5. breadth of enumeration
 // Raw request volume is deliberately last. One successful GET is the whole incident;
 // ten thousand 404s are Tuesday.
 | order by SecretHits desc, LargeBodyHits desc, UnknownSizeHits desc,
-           DistinctEndpoints desc, AnsweredHits desc
+           SecretMaybeHits desc, DistinctEndpoints desc, ServedHits desc
 ```
 
 <br/>
@@ -231,6 +254,27 @@ and then ranks `LargeBodyHits`, then `UnknownSizeHits`, then everything else. No
 The `RespBytes == 0` line is a judgement call and I want it visible rather than buried. My reading is that most parsers write `0` rather than null when the source didn't report a size, which makes treating a literal zero as "unknown" the safer default — but that is a generalization about parser behaviour, not something the schema promises, and it is the single assumption in this query I'd most want you to check rather than inherit. There's a validation query for it in *Keeping it honest* below. The cost of being wrong in my direction is that you can't detect a genuinely empty response body, which nobody needs. The cost of being wrong in the other direction is that every unmeasured response gets filed as `SmallBody` and ranks last, which is the whole failure this section exists to argue against.
 
 The floor itself — 1 MiB — is fine, and it's fine for a reason worth naming, because thresholds in this article are otherwise treated as suspect. It is not separating "big" from "small" traffic in some baselined sense. It's separating **a heap dump from an error page**. A JVM heap for a real Spring application starts in the tens of megabytes and routinely runs into the hundreds; a `404`, a WAF block page, a JSON error body, and a redirect are all under 100 KB. There is roughly three orders of magnitude of empty space between those two populations, and a threshold placed in the middle of a three-order-of-magnitude gap is not a tuning parameter, it's a type check. The threshold you should be suspicious of is the one placed inside a distribution, not the one placed in a hole.
+
+<br/>
+
+### The same mistake, three lines higher, and it was mine
+
+Everything above is about the byte count. The status code needed the identical treatment and my first draft of this query didn't give it to it, which is worth putting on the page rather than quietly fixing, because it is the exact failure this section spends a thousand words condemning.
+
+What I originally shipped was this:
+
+```kql
+| extend Answered = (StatusCode == 200)
+             or (isnull(StatusCode) and tostring(EventResult) =~ "Success")
+```
+
+The intent was reasonable — when a parser doesn't populate a numeric status, fall back to the normalized result. The problem is what ASIM's `EventResult` actually means. **`Success` is defined as any status below 400**, not as `200`. So the fallback quietly admits `201`, `204`, `206`, `301`, `302`, and `304` into a column named `Answered`, and then the rest of the query treats them as evidence that a heap dump was served.
+
+Now think about which of those you'd actually see on this endpoint. It isn't `206`. It's **`302` to a login page** — which is precisely what a correctly protected actuator surface returns, and precisely the population the honorable mention has a dedicated `Protected` bucket for. My fallback took the strongest *negative* signal available and filed it as a positive. In the exposure inventory that becomes `P1 - secrets, externally reachable` printed next to a service that is configured exactly right, and a P1 list with false emergencies at the top is a list nobody reads twice.
+
+So `Answered` is gone, replaced by `AnswerVerdict` with seven named outcomes and a `MaybeServed` state that means what it says: *the source told us this was sub-400 and did not tell us which sub-400.* It ranks below every confirmed `200` and above nothing at all, it never becomes a P1 on its own, and it gets promoted only when the body size corroborates it — because a `302` carries a few hundred bytes and a heap dump carries hundreds of megabytes, and that gap does the work the missing status code couldn't.
+
+The general form, which is the same sentence as the size argument with a different noun: **a coarse field is not a fallback for a precise one.** `EventResult` and `EventResultDetails` do not answer the same question, and substituting one for the other when the precise one is missing isn't graceful degradation — it's answering a question you weren't asked and reporting it as though you were.
 
 <br/>
 
@@ -428,7 +472,8 @@ let lookback = 30d;
 let ActuatorDumpRegex = @"^heapdump\d{4}-\d{2}-\d{2}-\d{2}-\d{2}(-live)?\d+\.hprof$";
 // -XX:+HeapDumpOnOutOfMemoryError writes java_pid<pid>.hprof to the working directory.
 let OomDumpRegex      = @"^java_pid\d+\.hprof$";
-let DumpTools         = dynamic(["jmap","jcmd","jattach","jhsdb","java"]);
+// Kept for reference in triage output, NOT used as a filter -- see the note below.
+let DumpTools         = dynamic(["jmap","jcmd","jattach","jhsdb"]);
 let DumpEvents = DeviceFileEvents
 | where Timestamp > ago(lookback)
 // endswith on the extension is the only safe prefilter. `FileName has "heapdump"`
@@ -456,16 +501,27 @@ let DumpEvents = DeviceFileEvents
 // Lane 2 -- the BENIGN corroborator. Not an exclusion. An operator-run jcmd on the
 // same host in the same window makes a dump explainable; its ABSENCE makes one
 // unexplained. Excluding these outright would delete the evidence that a dump was fine.
+// `contains`, not `has_any`. "GC.heap_dump", "-dump:" and ".hprof" are MULTI-TOKEN
+// needles -- the dot, underscore and colon are separators, not content, so a term test
+// on them leans on adjacency behaviour Microsoft doesn't document. Substring matching
+// is slower and unambiguous, and this lane is tiny. Same argument as the Act I
+// prefilter, applied to a needle instead of a haystack.
 let DiagnosticRuns = DeviceProcessEvents
 | where Timestamp > ago(lookback)
-| where FileName in~ (DumpTools) or ProcessCommandLine has_any ("GC.heap_dump","dumpHeap","-dump:")
-| where ProcessCommandLine has_any ("heap_dump","heapdump","dumpHeap","-dump:","hprof")
+| where ProcessCommandLine contains "heap_dump"
+     or ProcessCommandLine contains "heapdump"
+     or ProcessCommandLine contains "dumpHeap"
+     or ProcessCommandLine contains "-dump:"
+     or ProcessCommandLine contains ".hprof"
 | summarize
     DiagRuns     = count(),
+    // The TIMELINE, not its endpoints. Collapsing thirty days to min/max and then
+    // asking a temporal question of the aggregate is the bug this list exists to
+    // prevent -- see the note below.
+    DiagTimes    = make_list(Timestamp, 2000),
     DiagCommands = make_set(ProcessCommandLine, 5),
-    DiagAccounts = make_set(AccountName, 5),
-    DiagFirst    = min(Timestamp),
-    DiagLast     = max(Timestamp)
+    DiagTools    = make_set(FileName, 5),
+    DiagAccounts = make_set(AccountName, 5)
     by DeviceId;
 DumpEvents
 // Entity = (device, file). One file produces multiple rows: createTempFile creates it,
@@ -499,9 +555,18 @@ DumpEvents
 | extend WebEndpointConfirmed = Origin == "ActuatorWebEndpoint" and Created and Deleted
 | join kind=leftouter DiagnosticRuns on DeviceId
 | project-away DeviceId1
+// mv-apply over an empty or absent array DROPS the row -- which would delete exactly
+// the hosts with NO diagnostic activity, i.e. every finding that matters. Seed one
+// null element so those rows survive the expansion and score zero.
+| extend DiagTimes = iff(isnull(DiagTimes) or array_length(DiagTimes) == 0,
+                         dynamic([null]), DiagTimes)
+| mv-apply DiagTime = DiagTimes to typeof(datetime) on (
+    summarize NearbyDiagRuns =
+        countif(DiagTime between ((FirstEvent - 15m) .. (LastEvent + 15m)))
+  )
+| extend NearbyDiagRuns = coalesce(NearbyDiagRuns, 0)
 | extend
-    DiagnosticNearby = isnotnull(DiagRuns)
-        and DiagLast between ((FirstEvent - 15m) .. (LastEvent + 15m)),
+    DiagnosticNearby = NearbyDiagRuns > 0,
     RenamedInWindow  = array_length(DeviceNames) > 1
 // An actuator-named dump with NO operator diagnostic activity anywhere near it is the
 // finding. With one, it's probably a human being doing their job -- still worth a look,
@@ -512,7 +577,7 @@ DumpEvents
       WebEndpointConfirmed,                           "WebEndpoint-OperatorNearby",
       Origin == "JvmOutOfMemory",                     "OutOfMemory",
                                                       "Operator-Or-Unknown")
-| order by WebEndpointConfirmed desc, DiagnosticNearby asc, LiveRequested desc,
+| order by WebEndpointConfirmed desc, NearbyDiagRuns asc, LiveRequested desc,
            MaxFileSize desc, LastEvent desc
 ```
 
@@ -560,9 +625,28 @@ And the `-live` flag deserves its own sentence. `?live=true` restricts the dump 
 
 Every triage runbook in the briefs, correctly, lists "an operator generated a heap dump during troubleshooting" as the leading benign explanation. The natural next step is to write that into the query as an exclusion — drop hosts where `jmap` or `jcmd` ran, drop dumps by the APM agent's account, drop the CI runners. Don't. **Every one of those exclusions is a place to hide**, and more importantly, they throw away the fact that would have made the finding actionable.
 
-So `DiagnosticRuns` is joined `leftouter` and lands in a boolean. A dump with operator diagnostic activity fifteen minutes either side is *probably* a person doing their job — and it ranks below one with none, rather than being deleted. The `Verdict` column says which it is, in words, and the analyst reads that instead of trusting an exclusion list they didn't write.
+So `DiagnosticRuns` is joined `leftouter` and lands in a count. A dump with operator diagnostic activity fifteen minutes either side is *probably* a person doing their job — and it ranks below one with none, rather than being deleted. The `Verdict` column says which it is, in words, and the analyst reads that instead of trusting an exclusion list they didn't write.
 
 There's a second reason, and it's the honest one: `DiagnosticNearby` being true does not mean the dump was benign. It means an operator was working on that host in that window, which is also an excellent time for something else to happen unnoticed. The flag lowers the rank and it does not close the case. An exclusion would have closed the case, silently, forever, without anybody deciding to.
+
+**And then I built an exclusion anyway, out of a `max()`.** My first version of this lane summarized thirty days of process activity down to one row per device carrying `DiagFirst` and `DiagLast`, and then tested proximity like this:
+
+```kql
+| extend DiagnosticNearby = isnotnull(DiagRuns)
+        and DiagLast between ((FirstEvent - 15m) .. (LastEvent + 15m))   // don't
+```
+
+That is an aggregate that has discarded the timeline being interrogated about the timeline — the same defect as last week's `Timestamp = min(Timestamp)` before a union, in a query I wrote two sections after describing it.
+
+It fails in both directions, and the second one is the dangerous half. The obvious failure is a **miss**: `jcmd` runs on days 1, 5 and 20, the dump happens on day 5, `DiagLast` is day 20, and a genuinely explained dump reads as unexplained. Annoying, and safe — it over-alerts.
+
+The failure that actually matters is the opposite. **Any host running a monitoring agent or a scheduled JVM diagnostic keeps `DiagLast` permanently recent.** `DiagLast` then falls inside *every* window on that device, so every actuator-named dump on it is labelled `WebEndpoint-OperatorNearby` and down-ranked — permanently, on the strength of a diagnostic run that had nothing to do with it. That's a hiding place, on exactly the hosts most likely to be running something that dumps heaps, and it's the thing this section opens by promising not to build. An exclusion list would at least have been visible. A `max()` is not.
+
+The fix keeps the timeline and evaluates proximity per event: `make_list(Timestamp, 2000)` instead of `min`/`max`, then an `mv-apply` that counts how many diagnostic runs actually fall in *this* finding's window. `NearbyDiagRuns` is a better triage column than the boolean was, too — one operator command adjacent to a dump reads very differently from forty. The `iff(isnull(DiagTimes) …, dynamic([null]), DiagTimes)` seed above it is not decoration: `mv-apply` over an empty array **drops the row**, and the rows with no diagnostic activity are the entire point of the query.
+
+One caveat on the fix, because it reintroduces the original bug in a quieter form if you ignore it: `make_list` is capped. A host that exceeds the cap loses timestamps silently, and the ones it loses are arbitrary. If your diagnostic volume is high, either pre-bin before the list — `summarize by DeviceId, bin(Timestamp, 5m)` — or scope the diagnostic lookback to the finding window rather than the full thirty days.
+
+The filter above it needed two corrections of its own. The old version led with `where FileName in~ (DumpTools) or ProcessCommandLine has_any (…)` and then applied a second, broader command-line filter underneath it — which made the first clause **dead code**, subsumed entirely by the second, including the deliberately-broad `"java"` entry that was doing nothing at all. And the needles themselves were wrong for the operator: `has_any` is a term test, and `"GC.heap_dump"`, `"-dump:"` and `".hprof"` are multi-token strings whose separators aren't part of any term. That's the inferred-adjacency mistake this article corrects the briefs for twice. `contains` is the operator that asks the question I meant.
 
 Note the join key too: `DeviceId` alone, and the grouping key is `DeviceId, FileName`. `DeviceName` is in the aggregation as `DeviceNames` with a `RenamedInWindow` flag, for the same reason as always — a label that changes on rename and collides across a fleet is not an identity, and a rename inside a thirty-day window would split one compromised host into two half-findings, each below the bar.
 
@@ -573,9 +657,21 @@ Note the join key too: `DeviceId` alone, and the grouping key is `DeviceId, File
 `ActuatorWebEndpoint` with `Created and Deleted and not(DiagnosticNearby)` is a scheduled rule I'd deploy this week. The rest of it is a hunt. The gap between those two states:
 
 - **The whole detection rests on a temp file that exists for seconds.** MDE's `DeviceFileEvents` is an event stream, not a filesystem scan, so the transience doesn't matter to the query — but it matters enormously to the *response*. By the time anyone reads the alert, the file is gone, and there is no way to recover what was in it. You cannot answer "what did they get" from the artifact. You answer it from the application owner, who knows what that process holds in memory. Plan the runbook around that or the first real one will be an hour of people trying to find a deleted file.
+- **Act II assumes MDE emits an event for a file that exists for a few seconds, and that assumption is untested here.** The whole detection is a `FileCreated` and a `FileDeleted` on an artifact whose entire lifetime is one HTTP request. `DeviceFileEvents` is an event stream rather than a filesystem scan, so transience *shouldn't* matter — but "shouldn't" is a design argument, not a measurement, and MDE for Linux has documented coverage variation around temp paths, exclusion policies, and agent versions. If the events don't fire in your estate, this query is elegant and permanently empty, and empty reads as clean. Prove the pipeline before you schedule anything built on it: on an onboarded lab host, `dd if=/dev/urandom of=$(mktemp --suffix=.hprof) bs=1M count=50 && sleep 2 && rm -f /tmp/*.hprof`, then check whether both halves came back:
+
+  ```kql
+  DeviceFileEvents
+  | where TimeGenerated > ago(30m)
+  | where FileName endswith ".hprof"
+  | summarize Actions = make_set(ActionType), Events = count(),
+              First = min(Timestamp), Last = max(Timestamp)
+      by DeviceId, DeviceName, FileName
+  ```
+
+  Both `FileCreated` and `FileDeleted` present means the pipeline works and `WebEndpointConfirmed` is a real test. Only one of them means the `Created and Deleted` conjunction is a silent filter that can never be satisfied, and you should rank on the naming alone instead. Neither means you have an onboarding or exclusion problem — which is a far more valuable finding than a quiet dashboard. Do this per platform, because Windows, Linux, and containerized Linux are three separate answers. The `sleep 2` is deliberate: a create and delete in the same millisecond is a harsher test than the real thing, since an actual dump takes seconds to write and stream.
 - **Container workloads are the coverage question, and most Spring Boot is containerized.** If the JVM runs in a container and the MDE agent runs on the host, the temp file lands in the container's writable layer and shows up under an overlay path — often visible, sometimes not, depending on your runtime and MDE version. If the agent isn't on the node at all, none of this exists. Check before you rely on it: `DeviceFileEvents | where TimeGenerated > ago(7d) | where InitiatingProcessFileName has_any ("java","javaw") | summarize Files = count(), Devices = dcount(DeviceId) by tostring(split(FolderPath, "/")[1]) | order by Files desc` will show you whether you're seeing `/tmp`, `/var/lib/docker/overlay2/...`, both, or nothing.
 - **`java.io.tmpdir` is not always `/tmp`, and that's a feature here.** `createTempFile` writes to whatever `java.io.tmpdir` points at — which containers, systemd units, and app servers all commonly override. The query deliberately does **not** scope by `FolderPath`, for the same reason last week's `logAzure.txt` hunt didn't: the location is unpredictable and the location is *evidence*. Where the file landed tells you which unit the JVM runs under.
-- **The regex is a version contract, and I've stated it as one.** The `yyyy-MM-dd-HH-mm` format and the `heapdump` prefix are what current Spring Boot writes. Spring has changed this file's naming before and can change it again, and an OpenJ9 JVM produces `.phd` rather than HPROF. The extension prefilter covers both formats; the *classification* regex covers current Spring on HotSpot. If it stops matching, you'll see it as a population shift into `OperatorOrUnknown` rather than as silence — which is the right direction for that failure to fall, and is why the prefilter is deliberately broader than the classifier rather than equal to it.
+- **The regex is a version contract, and here is exactly how much I verified.** I read `HeapDumpWebEndpoint` at 2.0.x tags and the current API documentation, and both show `File.createTempFile("heapdump" + yyyy-MM-dd-HH-mm + (live ? "-live" : ""), ".hprof")`. I did **not** read the 3.x source, so treat the date component as verified-on-2.x and assumed-forward. That matters, because Spring has changed this filename before, and the claim the classifier rests on — that nothing else in the Java ecosystem writes `heapdump<date>[-live]<digits>.hprof` — is a universal statement built by reading one class. Settle it in ten minutes rather than inheriting it: on a lab instance of whatever major version you actually run, `curl -O http://host:port/<your-base-path>/heapdump`, then `DeviceFileEvents | where TimeGenerated > ago(15m) | where FileName endswith ".hprof" | project Timestamp, ActionType, FileName, FolderPath, InitiatingProcessFileName`. Read the real filename with your own eyes, write your version number in a comment next to the regex, and repeat it after a Spring upgrade. An OpenJ9 JVM produces `.phd` rather than HPROF, which the extension prefilter covers and the classifier does not. Note the direction this fails in: if the naming changes you get a population shift into `OperatorOrUnknown` rather than silence, which is why the prefilter is deliberately broader than the classifier rather than equal to it.
 - **`InitiatingProcessName` is not a column and `FileRead` is not an ActionType.** Neither error is in Monday's query, but both are in Saturday's Detection 1, which hunts the Rails file read with `where InitiatingProcessName has_any (railsProcesses)` and `where ActionType in ("FileRead", "FileAccessed")`. The column is `InitiatingProcessFileName`; `InitiatingProcessName` doesn't resolve, so the query is a semantic error. And `DeviceFileEvents` `ActionType` values are `FileCreated`, `FileModified`, `FileRenamed`, and `FileDeleted` — MDE does not emit generic file *reads* to that table, which is exactly the blind spot Thursday's and Saturday's briefs both flag in their own callouts. Two independent problems, and the second one is the interesting one, because it means **arbitrary-file-read vulnerabilities are structurally invisible to `DeviceFileEvents`**. You detect them by their consequences — a child process, an outbound connection, an authentication with a stolen secret — not by the read. Which is the same lesson as Act I from the other end: you cannot detect a read, only its effects.
 - **`.hprof` volume is not zero, and that's the point of the classifier.** APM agents, CI runners executing tests that OOM, and genuine production incidents all generate these. Run `DeviceFileEvents | where TimeGenerated > ago(30d) | where FileName endswith ".hprof" | summarize Files = dcount(FileName), Devices = dcount(DeviceId) by InitiatingProcessFileName, InitiatingProcessAccountName | order by Files desc` before you schedule anything, and expect the `OperatorOrUnknown` bucket to be the big one. If `ActuatorWebEndpoint` is non-zero in that baseline and nobody can explain it, you have your answer before you deploy the rule.
 - **This is the detection you keep when the web tier goes dark, and the one you correlate with when it doesn't.** `FilenameStamp` is a local-time minute; `Timestamp` is UTC. Compare them once per host to learn the offset, then use the stamp as a join key back into Act I. When both fire on the same minute, you have the request, the source IP, the response size, and the file — which is a complete incident narrative assembled from two telemetry domains that share no common field.
@@ -626,9 +722,20 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // The management BASE PATH, recovered from the data rather than assumed. This is the
 // output that goes to the platform team: it tells them where their surface actually is.
 | extend BasePath = trim_end(@"/+", substring(NormPath, 0, strlen(NormPath) - strlen(Endpoint)))
-| extend StatusCode = toint(EventResultDetails)
-| extend Answered   = (StatusCode == 200)
-                   or (isnull(StatusCode) and tostring(EventResult) =~ "Success")
+// Same three-state result verdict as Act I. EventResult "Success" is ANY status below
+// 400, so it cannot stand in for a 200 -- and on this endpoint the sub-400 response
+// you'll actually meet is a 302 to a login page, i.e. the healthy case.
+| extend StatusRaw  = coalesce(tostring(EventResultDetails),
+                               tostring(column_ifexists("EventOriginalResultDetails","")))
+| extend StatusCode = toint(extract(@"(\d{3})", 1, StatusRaw))
+| extend AnswerVerdict = case(
+      StatusCode == 200,                   "Served",
+      StatusCode between (300 .. 399),     "Redirected",
+      StatusCode in (401, 403),            "AuthWall",
+      StatusCode == 404,                   "NotPresent",
+      isnotnull(StatusCode),               "OtherStatus",
+      tostring(EventResult) =~ "Success",  "MaybeServed",
+                                           "NotServed")
 | extend RespBytes = coalesce(
              column_ifexists("HttpResponseBodyBytes", long(null)),
              column_ifexists("DstBytes", long(null)))
@@ -645,39 +752,53 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 // Entity = the SERVICE and the ENDPOINT. One row per thing you might have to fix.
 | summarize
     Requests        = count(),
-    AnsweredHits    = countif(Answered),
-    NotFoundHits    = countif(StatusCode == 404),
-    AuthWallHits    = countif(StatusCode in (401, 403)),
+    ServedHits      = countif(AnswerVerdict == "Served"),
+    MaybeServedHits = countif(AnswerVerdict == "MaybeServed"),
+    RedirectHits    = countif(AnswerVerdict == "Redirected"),
+    NotFoundHits    = countif(AnswerVerdict == "NotPresent"),
+    AuthWallHits    = countif(AnswerVerdict == "AuthWall"),
     DistinctClients = dcount(SrcIpAddr),
     ExternalClients = dcountif(SrcIpAddr, ExternalClient),
     MaxRespBytes    = max(RespBytes),
     BasePaths       = make_set(BasePath, 5),
     SampleClients   = make_set(SrcIpAddr, 10),
-    Statuses        = make_set(EventResultDetails, 10),
+    Statuses        = make_set(StatusRaw, 10),
+    Verdicts        = make_set(AnswerVerdict, 8),
     Agents          = make_set(UserAgent, 5),
     ActiveDays      = dcount(bin(TimeGenerated, 1d)),
     FirstSeen       = min(TimeGenerated),
     LastSeen        = max(TimeGenerated)
     by Service, Endpoint
-// Exposed == it answered at least once. Not "answered a lot". Once.
+// Exposed == it returned a CONFIRMED 200 at least once. Not "answered a lot". Once.
+// A redirect is not an answer -- it is usually the auth wall doing its job.
 | extend
-    Exposed        = AnsweredHits > 0,
-    Protected      = AnsweredHits == 0 and AuthWallHits > 0,
-    NotPresent     = AnsweredHits == 0 and AuthWallHits == 0 and NotFoundHits > 0,
-    LeaksSecrets   = Endpoint in (SecretBearing),
-    ChangesState   = Endpoint in (StateChanging),
-    FoundExternally= ExternalClients > 0,
-    MaxReadable    = format_bytes(coalesce(MaxRespBytes, long(0)))
+    Exposed         = ServedHits > 0,
+    PossiblyExposed = ServedHits == 0 and MaybeServedHits > 0,
+    Protected       = ServedHits == 0 and MaybeServedHits == 0
+                          and (AuthWallHits > 0 or RedirectHits > 0),
+    NotPresent      = ServedHits == 0 and MaybeServedHits == 0
+                          and AuthWallHits == 0 and RedirectHits == 0 and NotFoundHits > 0,
+    LeaksSecrets    = Endpoint in (SecretBearing),
+    ChangesState    = Endpoint in (StateChanging),
+    FoundExternally = ExternalClients > 0,
+    MaxReadable     = format_bytes(coalesce(MaxRespBytes, long(0)))
+// The size field resolves most of the unverified band without a status code: a 302
+// carries a few hundred bytes and a heap dump carries hundreds of megabytes. Null
+// MaxRespBytes makes this null, the case falls through, and the row stays unverified.
+| extend LikelyServed = PossiblyExposed and MaxRespBytes >= 1048576
+| extend Confirmed = Exposed or LikelyServed
 | extend Priority = case(
-      Exposed and LeaksSecrets and FoundExternally, "P1 - secrets, externally reachable",
-      Exposed and ChangesState and FoundExternally, "P1 - state change, externally reachable",
-      Exposed and LeaksSecrets,                     "P2 - secrets, internal callers only",
-      Exposed and ChangesState,                     "P2 - state change, internal callers only",
-      Exposed,                                      "P3 - management surface exposed",
-      Protected,                                    "P4 - mounted, authenticated",
-                                                    "OK - not mounted")
+      Confirmed and LeaksSecrets and FoundExternally, "P1 - secrets, externally reachable",
+      Confirmed and ChangesState and FoundExternally, "P1 - state change, externally reachable",
+      Confirmed and LeaksSecrets,                     "P2 - secrets, internal callers only",
+      Confirmed and ChangesState,                     "P2 - state change, internal callers only",
+      Confirmed,                                      "P3 - management surface exposed",
+      PossiblyExposed and LeaksSecrets,               "P4 - unverified, secrets endpoint answered sub-400",
+      PossiblyExposed,                                "P4 - unverified, sub-400 with no status code",
+      Protected,                                      "P5 - mounted, authenticated or redirected",
+                                                      "OK - not mounted")
 | where not(Priority startswith "OK")
-| order by Priority asc, MaxRespBytes desc, ExternalClients desc, AnsweredHits desc
+| order by Priority asc, MaxRespBytes desc, ExternalClients desc, ServedHits desc
 ```
 
 <br/>
@@ -685,18 +806,22 @@ _Im_WebSession(starttime=ago(lookback), url_has_any=PrefilterTerms)
 ### The line that does the work
 
 ```kql
-| extend Exposed = AnsweredHits > 0
+| extend Exposed = ServedHits > 0
 ```
 
-One. Not a threshold, not a rate, not a baseline — **one successful response, ever, in thirty days.**
+One. Not a threshold, not a rate, not a baseline — **one confirmed `200`, ever, in thirty days.**
 
 This is the opposite of everything else in this article, and it's worth being explicit about why the same author is arguing both sides. Elsewhere I've spent paragraphs objecting to volume gates, and the objection stands: you cannot separate a beacon from a business integration by counting, and `CalendarOps > 20` or `RequestCount > 1` are thresholds placed inside a distribution where the two populations overlap.
 
 But this query isn't measuring behaviour. It's measuring **configuration**, and configuration is binary. An endpoint either serves or it doesn't. A service that returned `200` on `/…/env` once is exactly as misconfigured as one that returned it ten thousand times — the difference between those two numbers is how many people have looked, not how exposed you are. Counting would rank a heavily-scanned staging box above a quiet production service holding live payment credentials, and the quiet one is the emergency.
 
+Note the word *confirmed*, because the earlier version of this line said `AnsweredHits` and that was wrong in a way that mattered more here than anywhere else in the article. `Answered` folded in ASIM's `EventResult == "Success"`, which is any status below 400 — so a `302` to a login page counted as a service handing out its secrets. That's not a marginal false positive. The redirect-to-login *is* the protected configuration; the old logic took the healthiest possible row and printed `P1 - secrets, externally reachable` next to it. Hand a platform team a P1 list whose top entries are services they secured correctly and you have not produced a fix list, you have produced a reason to stop opening your emails.
+
+Hence the split. `Exposed` needs a real `200`. `PossiblyExposed` is the sub-400-with-no-code band, it gets its own P4 label with the word *unverified* in it, and it is promoted to the confirmed bands only when `MaxRespBytes` clears the megabyte floor — because a redirect is a few hundred bytes and a heap dump is a few hundred megabytes, and when the status code is missing the body size answers the question anyway. The three-state discipline the article spends Act I arguing for applies to the status field exactly as much as to the byte count, and the first draft of this query only applied it to one of them.
+
 The `BasePath` extraction is the other line worth stealing, and it is the deliverable. The query recovers where your management surface is actually mounted, from your own traffic, rather than assuming `/actuator`. That's the answer to a question the platform team probably cannot answer from memory across a hundred services — and it's also the input to every other query in this article, because once you know your real base paths you can tighten the prefilters honestly instead of hopefully.
 
-Note the negative-result lane too. `NotPresent` — endpoints that only ever returned `404` — is filtered out of the output, and it is the row you want to see in a *validation* run. If your entire result set is `NotPresent`, either you're clean or your parser isn't populating status codes, and you should find out which before you file this as good news.
+Note the negative-result lanes too. `NotPresent` — endpoints that only ever returned `404` — is filtered out of the output, and it is the row you want to see in a *validation* run. So is `Protected`, which now covers both the auth wall and the redirect that usually implements it. If your entire result set is `NotPresent`, either you're clean or your parser isn't populating status codes; if it's all `P4 - unverified`, it's definitely the second one, and you should fix the telemetry before you file any of this as good news.
 
 <br/>
 
@@ -708,7 +833,7 @@ This one is a **hunt and a report**, not an alert, and it doesn't belong in the 
 - **It only sees endpoints somebody requested.** This is inherently a *passive* discovery method: an exposed `/…/heapdump` that nobody has ever asked for will not appear. That's fine for `heapdump`, `env`, and `configprops`, which the internet probes constantly, and it's a real gap for anything unusual. The thirty-day window exists to give background scanning time to do your reconnaissance for you.
 - **`Service` is whatever your telemetry calls the destination**, and `HttpHost`, `DstFQDN`, and `DstIpAddr` are three different granularities. A shared ingress will collapse many applications into one row; a load-balanced service will fan one application into several. Prefer `HttpHost` where it's populated — it's the virtual host the client asked for, which is closest to "the application" as an owner would understand it — and check what you've actually got before you send anyone a list: `_Im_WebSession(starttime=ago(1d)) | summarize count() by HasHost = isnotempty(column_ifexists("HttpHost","")), HasFqdn = isnotempty(column_ifexists("DstFQDN",""))`.
 - **`health` and `info` are on the endpoint list on purpose and they are not findings.** They're the two actuator endpoints that are exposed by default and are supposed to be. They're included so that the base-path recovery works on services where the only thing anyone ever hits is the health check — which is most of them — and they land in P3 at worst. If a P3 list of every health endpoint in the estate is noise for you, filter them at the end, not at the start, or you lose the base paths.
-- **A `200` is not always a served endpoint.** Some WAFs and ingress controllers return `200` with a block page. That's why `MaxRespBytes` is in the output and in the sort: an "exposed" heapdump endpoint whose largest response was 4 KB is a block page, and the size column tells you so without your having to trust the status code alone. When the size is `Unknown`, it stays in the list — same discipline as Act I.
+- **A `200` is not always a served endpoint, and a sub-400 is not always a `200`.** Two directions, both handled by the size column rather than by trusting a status. Some WAFs and ingress controllers return `200` with a block page — so an "exposed" heapdump endpoint whose largest response was 4 KB is a block page, and `MaxRespBytes` tells you that without your having to believe the code. In the other direction, a parser that reports only `EventResult` gives you `MaybeServed`, which lands in P4 with *unverified* in the label and is promoted only if the body size corroborates it. When the size itself is `Unknown`, the row stays in the list rather than being resolved in either direction — same discipline as Act I, and the reason `Verdicts` and `Statuses` are both in the output is so the analyst can see which of these they're looking at in one glance.
 - **Fixing this is not a detection engineering task and you should hand it over.** `management.endpoints.web.exposure.include` is the property that decides what's mounted; the default is `health` on Spring Boot 3.x and `health,info` on much of 2.x. Anything else on that list got there deliberately, usually during an incident, usually years ago. The detection's job is to produce the list. Somebody else's job is to shorten it.
 
 <br/>
@@ -807,7 +932,7 @@ Three lines, and the day someone's connector starts writing `"1.2M"` you find ou
 - `max()`, `min()`, `avg()`, `sum()` **skip** nulls. `avg()` of a column that's 90% null is the average of the other 10%, reported without comment. `sum()` of an all-null column is null.
 - `dcount()` doesn't count null as a distinct value.
 
-Which is why the Act I summarize carries `UnknownSizeHits = countif(Answered and SizeVerdict == "Unknown")` as a first-class column rather than inferring it from `MaxRespBytes` being null. The count of what you couldn't measure is data. Derive it explicitly, put it in the grid, and let the ranking use it.
+Which is why the Act I summarize carries `UnknownSizeHits = countif(Served and SizeVerdict == "Unknown")` as a first-class column rather than inferring it from `MaxRespBytes` being null. The count of what you couldn't measure is data. Derive it explicitly, put it in the grid, and let the ranking use it.
 
 <br/>
 
@@ -860,6 +985,8 @@ Which is why the honorable mention is the query I'd actually run first, even tho
 3. **`isnotempty()` on the byte count deletes the finding** in exactly the environments that need the detection, and the direction of `in`/`out` is undefined relative to the client anyway. Three states, ranked, not two states, filtered.
 4. **`FileName has "heapdump"` cannot match a Spring heapdump filename**, because `heapdump2026-08-03-14-49123456.hprof` tokenizes to `heapdump2026` and `has` is a whole-term test. The clause is dead and the `endswith` beside it hides that.
 5. **The endpoint does write a file**, contrary to Monday's caveat. `HeapDumpWebEndpoint` creates it, the JVM fills it, `TemporaryFileSystemResource` deletes it after the response. That correction is what makes Act II possible at all.
+
+**And three of mine, which belong on the page rather than in a commit.** The first draft of Act I used ASIM's `EventResult == "Success"` as a fallback for a missing status code, which is *any* status below 400 — so a `302` to a login page, the signature of a correctly protected endpoint, counted as a served heap dump and could reach `P1` in the exposure inventory. The first draft of Act II collapsed thirty days of operator diagnostics into `min`/`max` and then asked a proximity question of the aggregate, which silently down-ranks every dump on any host that runs a scheduled JVM diagnostic — an exclusion list built out of a `max()`, three paragraphs after a section promising not to build one. And the same lane's filter carried a dead clause subsumed by the one below it, with multi-token needles under `has_any`, which is the exact inferred-adjacency mistake this article corrects the briefs for twice. All three are fixed above and all three are described where they happened. **Eight corrections in one article, three of them mine** — and the pattern holds from last week: the errors didn't come from not knowing the rules, they came from applying them in one place and not the one next to it.
 
 And one that isn't a query bug but is worth naming for anyone running a content pipeline: **the same behaviour got two different ATT&CK techniques on two consecutive days.** Monday mapped the heapdump work to **T1005 Data from Local System**. Tuesday mapped it to **T1190 Exploit Public-Facing Application**. Same endpoint, same source report, same threat, two techniques — which means a coverage map fed by both days has one behaviour reporting coverage in two cells and no way to notice. Neither mapping is unreasonable in isolation. That's the problem: a plausible mapping and a correct mapping look identical, and nothing downstream ever contradicts either one.
 
