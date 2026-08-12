@@ -24,7 +24,7 @@ The npm cluster is worth the four thousand words, and for a specific reason: **t
 
 ## 🥇 Act I: The Payload Is Your Grandchild
 
-![Act I](/assets/img/SinsOfTheGrandfather/ACT_I.png)
+![Act I](/assets/img/SinsOfTheGrandfather/ActI.png)
 
 [Friday's Detection 1](https://devsecopsdadattack.com/2026-08-07-detection-engineering-brief-friday-august-7-2026/) wants to catch ChainDrop stealing GitHub Actions runner secrets. Here is its core:
 
@@ -247,6 +247,10 @@ And the honest limit: **MDE stops at two.** A chain of `npm → sh → node → 
 
 <br/>
 
+![RuntimeGen](/assets/img/SinsOfTheGrandfather/RuntimeGen.png)
+
+<br/>
+
 ### `has` is not a prefix operator, and `ACTIONS_` is not a prefix
 
 Friday's secret list is this:
@@ -335,7 +339,7 @@ Act I is a hunt, not a scheduled rule, and the gap is mostly volume:
 
 ## 🥈 Act II: The Dead Drop Is a Public Utility
 
-![Act II](/assets/img/SinsOfTheGrandfather/ACT_II.png)
+![Act II](/assets/img/SinsOfTheGrandfather/ActII.png)
 
 ChainDrop's C2 does not have an IP address you can block.
 
@@ -546,7 +550,7 @@ Act II is the query in this article I trust least, and it's the one with a produ
 
 ## 🎖 Honorable Mention: Inventory the Thing You Can Close
 
-![Honorable Mention](/assets/img/SinsOfTheGrandfather/Honorable.png)
+![Honorable Mention](/assets/img/SinsOfTheGrandfather/Honorable_Mention.png)
 
 Acts I and II detect a worm that has already executed on a host you may not have known was executing arbitrary code from strangers. Neither of them is finishable. There will always be another compromised package and another RPC provider.
 
@@ -665,6 +669,8 @@ That's the same move as last week's exposure inventory, in a different domain. A
 
 ## ✨ Bonus: The Term Index, or Why `has` Cannot Do What You Think
 
+![Bonus!](/assets/img/SinsOfTheGrandfather/Bonus.png)
+
 Five of this week's twenty-one queries contain a `has` or `has_any` that does not ask the question it was written to ask. Last week's article contained two. Mine contained one. It is, by a wide margin, the most common defect in circulating KQL, and it survives review because **it never errors and it usually returns rows**.
 
 Here is the entire mechanism, and it fits in a paragraph.
@@ -776,7 +782,7 @@ Two rules make this safe, and I've broken the first one in two consecutive artic
 
 ![](/assets/img/SinsOfTheGrandfather/Bigger_Lesson.png)
 
-Five briefs, twenty-one candidates, and a thread that runs through most of them: **every component of the attack was something you asked for.**
+The common thread this week: **every component of the attack was something you asked for.**
 
 - **The execution was a documented feature.** npm lifecycle scripts are not a vulnerability. They exist so native addons can compile and git hooks can install, they run by default, and they run as whoever ran the install — which on a build host is the account holding the registry token, the CI token, and the cloud credentials. ChainDrop needed no exploit, no bypass, and no persistence mechanism. It needed to be *installed*, which you did, on a schedule, automatically.
 - **The C2 was a public utility.** Not a bulletproof host, not a compromised WordPress site, not a domain you can sinkhole — a smart contract on a network with a million participants, read through a CDN-fronted API on 443 with a valid certificate. There is no takedown and no denylist that finishes. Last week's grammar was borrowed *permission*; the week before it was borrowed *infrastructure*. This week it's **borrowed trust**, and trust is worse than both because it's transitive. You audited a dependency. The dependency audited nothing.
@@ -784,28 +790,6 @@ Five briefs, twenty-one candidates, and a thread that runs through most of them:
 - **And again: you cannot detect a read.** [Friday's Detection 1](https://devsecopsdadattack.com/2026-08-07-detection-engineering-brief-friday-august-7-2026/) is titled "Secret Extraction via Environment Variable Access" and there is no telemetry anywhere in the Microsoft stack for a process reading its own environment. [Thursday's Detection 2](https://devsecopsdadattack.com/2026-08-06-detection-engineering-brief-thursday-august-6-2026/) depends on `FileRead` events that `DeviceFileEvents` does not reliably emit. Last week it was the heapdump response and the Rails file read. Three weeks, four different reporting sources, same structural gap: **the operation modern credential theft is built on is the one nobody instruments.** You detect it by what happens next — a process, a connection, an authentication somewhere else — or you don't detect it.
 
 The most useful thing in this week's data isn't in any of the three queries. It's the honorable mention's premise. Acts I and II are security operations: they find a compromise that already occurred, on infrastructure whose configuration made it inevitable. The inventory is just operations, it's boring, it produces a list of forty packages and a config flag, and it would have prevented more of this week than either detection would have caught. That was also last week's conclusion, and I'd rather it stopped being true.
-
-**The corrections, collected.** Seven from the briefs:
-
-1. **The PID self-join reconstructs a relationship that is already on the row** — and joining `child.InitiatingProcessId == npm.ProcessId` on `DeviceName + AccountName` treats a recycled PID as an identity. `InitiatingProcess*` is the parent; no join required.
-2. **The `sh`/`bash` lane in that join is dead.** A child whose initiating process is `sh` has sh's PID in `InitiatingProcessId`, which is never npm's — so the lane can only match on a PID collision. It's dead for precisely the three-level chain that npm's own documented `sh -c` behaviour guarantees.
-3. **`has_any(["GITHUB_TOKEN","ACTIONS_"])` asks a different question than it appears to.** `ACTIONS_` is the term `actions`, which is in most command lines on a GitHub runner; `GITHUB_TOKEN` is a multi-token needle. Neither is a prefix and neither is reliable.
-4. **`!has "--version"` and `!has " -v "` exclude the terms `version` and `v`** — far broader than four narrow flags, in a negation, where over-breadth deletes findings silently.
-5. **Port 8545/8546 cannot match a public RPC provider**, all of which serve TLS on 443. The brief's own tuning note says so, which makes the port clause an admitted-inert half of an `or`.
-6. **`quicknode.pro` is the marketing domain; the RPC endpoints are `*.quiknode.pro`.** One character, and the entry can never match.
-7. **ATT&CK: a credential-theft detection mapped to two C2 techniques**, and a supply-chain technique filed under the wrong tactic. Detail below.
-
-**And five of mine.**
-
-8. **My first fragment test was `has_any` on twenty delimiter-bearing needles** — the exact error I spend a section correcting, in the query that corrects it. The entry I spot-checked (`.npmrc`) was the one that happened to tokenize cleanly, so it passed.
-9. **`coalesce()` over two `extract()` calls.** `extract()` returns an empty string on no match, not null, and `coalesce()` takes the first non-null — so a miss on the first argument would have beaten a hit on the second, every time. Same root as last week's zero-versus-null byte counter, different function, one article later.
-10. **I built a `DeviceFileEvents` detection on a temp file npm stopped writing in 2022.** The `@npmcli/run-script` README still describes it. The source removed it in `4.2.1`. I read the documentation and not the code, which is the specific mistake last week's Act II exists to warn about.
-11. **My prefilter drifted from my authoritative list. Again.** Third article running. It's `array_concat` in all three queries now, which is the only version of this that survives contact with a future edit.
-12. **`take_any(iff(cond, x, ""))` is not `take_anyif(x, cond)`.** `take_any` picks an arbitrary row, and on a device where most rows are generation 1, the arbitrary row is usually the one where the `iff` returned an empty string — a sample column that is empty precisely when there's something to sample.
-
-**Twelve corrections, five of them mine**, and the pattern is the same as the last two weeks with one variation worth naming. Corrections 8 and 9 are not new mistakes — they're *the same two mistakes from last week's article*, made again, in the queries written to demonstrate the fixes. I didn't forget the rules. I applied them where I was looking and not where I wasn't, which is what a rule does when it lives in your head instead of in the query. Number 11 is the only one that stayed fixed, and it stayed fixed because it became an `array_concat` — a mechanism, not a memory.
-
-And one that isn't a bug: **the ATT&CK mappings for this cluster are wrong in a way that would inflate a coverage map.** [Friday's "GitHub Actions Runner Secret Extraction" — a credential-access detection](https://devsecopsdadattack.com/2026-08-07-detection-engineering-brief-friday-august-7-2026/) — is mapped to **T1071 Application Layer Protocol** and **T1090.001 Internal Proxy**, both Command and Control. An Ethereum RPC provider is many things; an internal proxy is not one of them. [Thursday's credential-store detection](https://devsecopsdadattack.com/2026-08-06-detection-engineering-brief-thursday-august-6-2026/) maps `.npmrc` access to **T1078 Valid Accounts** under Persistence and files **T1195 Supply Chain Compromise** under **Impact** — but T1195 is an Initial Access technique and has no Impact variant. Three detections, three plausible mappings, and plausible is the problem: nothing downstream ever contradicts a mapping that looks reasonable, so a coverage map fed by this week reports C2 coverage it doesn't have and credential-access coverage it never claimed.
 
 Every one of these came straight out of this week's daily briefs — each detection shipped with ATT&CK mappings, telemetry requirements, deployment gates, triage runbooks, false-positive notes, and an honest readiness call. Twenty-one this week, and once again the ones I disagreed with were the ones worth writing about.
 
@@ -887,6 +871,7 @@ External Sources:
 - MITRE ATT&CK. *Supply Chain Compromise: Compromise Software Supply Chain (T1195.002).* <https://attack.mitre.org/techniques/T1195/002/>
 - QuickNode Docs. *Ethereum API Endpoints.* <https://www.quicknode.com/docs/ethereum/endpoints>
 - Cloudflare. *Ethereum Gateway.* <https://developers.cloudflare.com/web3/ethereum-gateway/>
+- [😼 The Legend of Defender Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
 
 <br/>
 
