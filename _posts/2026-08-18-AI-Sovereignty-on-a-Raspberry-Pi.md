@@ -80,7 +80,7 @@ This is more accessible and more affordable than the current hype cycle around A
 
 Technically, calling what I'm running an **SLM — Small Language Model — is probably more honest**.
 
-Qwen3 is a family of language models ranging from tiny dense models all the way up to enormous mixture-of-experts models. Qwen released dense variants including 0.6B and 1.7B parameter models specifically small enough to make edge deployments interesting.
+Qwen3 is a family of language models ranging from tiny dense models all the way up to enormous mixture-of-experts models. Qwen released dense variants including 1.7B and 4b parameter models specifically small enough to make edge deployments interesting.
 
 Those are the two I'm interested in here:
 
@@ -89,11 +89,7 @@ qwen3:1.7b
 qwen3:4b
 ```
 
-Ollama currently packages the 0.6B model at roughly **523MB** and the 1.7B model at roughly **1.4GB**.
-
-That changes the economics of the whole experiment.
-
-We're not talking about trying to squeeze a 70-billion-parameter model onto a Raspberry Pi and calling the smoke coming out of the USB-C port "inference."
+Ollama currently packages the 1.7B model at roughly **1.4GB** and that changes the economics of the whole experiment - We're not talking about trying to squeeze a 70-billion-parameter model onto a Raspberry Pi and calling the smoke coming out of the USB-C port "inference."
 
 We're choosing the _right tool_ for the hardware; **Small model. Small machine. Private workload**.
 
