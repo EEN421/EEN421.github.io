@@ -36,7 +36,11 @@ So I grabbed a Raspberry Pi 4B, installed Ollama, pulled Qwen3, and started talk
 
 And, perhaps more importantly, no one else gets to decide **when** I can use it.
 
+<br/>
+
 ---
+
+<br/>
 
 ## The Little AI Box
 
@@ -70,6 +74,8 @@ This is more accessible and more affordable than the current hype cycle around A
 
 ---
 
+<br/>
+
 ## LLM or SLM?
 
 Technically, calling what I'm running an **SLM — Small Language Model — is probably more honest**.
@@ -97,8 +103,9 @@ We're choosing the _right tool_ for the hardware; **Small model. Small machine. 
 
 <br/>
 
-
 ---
+
+<br/>
 
 # Act I: Prepare the Pi
 
@@ -128,7 +135,12 @@ Ollama publishes an ARM64 Linux build, which is what makes this deployment pleas
 
 And boring infrastructure is good infrastructure.
 
+
+<br/>
+
 ---
+
+<br/>
 
 # Act II: About That Swap File
 
@@ -216,7 +228,11 @@ If your model is already running comfortably, however, don't create swap merely 
 
 More swap doesn't make your CPU faster.
 
+<br/>
+
 ---
+
+<br/>
 
 # Act III: Install Ollama
 
@@ -280,7 +296,11 @@ If what you need is a small private assistant that can summarize text, inspect a
 
 A Raspberry Pi.
 
+<br/>
+
 ---
+
+<br/>
 
 # Act V: Talk to It
 
@@ -314,9 +334,11 @@ And your Raspberry Pi will start generating the response locally.
 
 That's the entire reason I built this thing.
 
-
+<br/>
 
 ---
+
+<br/>
 
 # The Performance Reality
 
@@ -340,7 +362,11 @@ And the 8GB RAM in my Pi turned out to be more breathing room than necessity for
 
 Once the model fits, you're waiting on compute.
 
+<br/>
+
 ---
+
+<br/>
 
 # Act VI: Turn the Pi Into an API
 
@@ -462,7 +488,11 @@ Qwen
 
 That's exactly how I'd rather design it anyway.
 
+<br/>
+
 ---
+
+<br/>
 
 # The Use Cases Are More Interesting Than the Benchmark
 
@@ -496,6 +526,8 @@ That's where the local box starts making an awful **lot** of sense.
 <br/>
 
 ---
+
+<br/>
 
 # And Then Hugging Face Got Hacked
 
@@ -537,7 +569,11 @@ That is a genuinely difficult problem for hosted AI providers, but that difficul
 
 And if their service is unavailable — or if their classifier thinks your forensic analysis looks a little too much like an attack — neither your prompt engineering nor your subscription tier will make the API answer.
 
+<br/>
+
 ---
+
+<br/>
 
 # Self-Hosted Changes the Control Plane
 
@@ -579,7 +615,11 @@ That's not an argument against commercial AI, it's an argument for **resilience 
 
 Cloud AI and local AI solve different problems. Use both.
 
+<br/>
+
 ---
+
+<br/>
 
 # Your AI Doesn't Have to Be Huge to Be Yours
 
