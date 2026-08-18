@@ -268,7 +268,7 @@ Congratulations! - Your $75 Raspberry Pi is now an AI server (sort of)... We sti
 
 # Act IV: Give It a Brain
 
-For the Pi 4B, I'd start with Qwen3 0.6B:
+For the Pi 4B, I'd start with Qwen3 1.7B:
 
 ```bash
 ollama pull qwen3:1.7b
@@ -354,7 +354,7 @@ But "slow" and "useless" are not the same. 😜
 
 For interactive chat, experimentation, text analysis, small automation workflows, home-lab services, and privacy-sensitive jobs where a few seconds matter significantly less than where the data goes? **It works.**
 
-And the 8GB RAM in my Pi turned out to be more breathing room than necessity for the 0.6B model. It's the CPU where I feel the constraint. This is actually useful information when deciding what Pi to buy for this project. If you're choosing between a 4GB and 8GB board specifically for SLM inference, the 8GB gives you headroom to run the 1.7B model comfortably. _**But don't assume that jumping from 4GB to 8GB magically doubles inference speed, because it doesn't**_
+And the 8GB RAM in my Pi turned out to be more breathing room than necessity for the 1.7B model. It's the CPU where I feel the constraint. This is actually useful information when deciding what Pi to buy for this project. If you're choosing between a 4GB and 8GB board specifically for SLM inference, the 8GB gives you headroom to run the 1.7B model comfortably. _**But don't assume that jumping from 4GB to 8GB magically doubles inference speed, because it doesn't**_
 
 Once the model fits, you're waiting on compute.
 
