@@ -78,8 +78,10 @@ let lookback = 7d;
 let Bare = (s:string) {
     trim_end(@"\.(exe|cmd|bat|com|ps1)", tolower(extract(@"([^\\/]+)$", 1, tostring(s))))
 };
-// The children worth seeing. LOLBins, scripting engines, recon tools.
-// NOT a filter — a classifier. Everything under w3wp.exe appears; these get a label.
+// The children worth looking for. LOLBins, scripting engines, recon tools,
+// network tools. These lists define the DETECTION BOUNDARY — anything not
+// in them is dropped by the prefilter below. The case() classifier then
+// ranks what survives so analysts see structure instead of a flat list.
 let ShellsAndInterpreters = dynamic([
     "cmd","powershell","pwsh","cscript","wscript","mshta","bash","sh"
 ]);
@@ -95,23 +97,30 @@ let NetworkTools = dynamic([
     "curl","wget","powershell","pwsh","certutil","bitsadmin","ssh","scp"
 ]);
 // POST-EXPLOITATION FRAGMENTS. Two lists, because they need two operators.
-// Clean terms: single-word, no delimiters. These survive has_any.
+// Clean terms: true single terms with no delimiters. These survive has_any
+// because each entry is one contiguous alphanumeric token — no hyphens, no
+// dots, no spaces. If it contains punctuation, it belongs in Fragments.
 let PostExploitTerms = dynamic([
     "FromBase64","EncodedCommand","IEX","DownloadString","DownloadFile",
-    "WebClient","Invoke-Expression","Invoke-WebRequest","Invoke-RestMethod",
-    "nishang","powercat","mimikatz","rubeus"
+    "WebClient","nishang","powercat","mimikatz","rubeus"
 ]);
 // Delimiter-bearing fragments: must use contains, never has_any.
-// Every entry here has a dot, dash, space, or slash in it.
+// Every entry here has a dot, dash, space, or slash in it. The hyphenated
+// cmdlets (Invoke-Expression, etc.) belong here, not in PostExploitTerms:
+// a hyphen is a term delimiter, so has_any("Invoke-Expression") matches
+// any command line containing both "invoke" and "expression" as separate
+// terms, regardless of adjacency. contains matches the exact substring.
 let PostExploitFragments = dynamic([
+    "Invoke-Expression","Invoke-WebRequest","Invoke-RestMethod",
     "certutil -decode","certutil -urlcache","bitsadmin /transfer",
     "Start-Process","Net.WebClient","New-Object System.Net",
     "-nop -w hidden","-noni -nop -ep bypass","[Convert]::FromBase64",
     "powershell -e ","cmd /c echo","cmd.exe /c powershell"
 ]);
-// Prefilter: every term from both child-classification lists, derived so
-// the prefilter cannot drift from the authoritative test.
-let AllChildTerms = array_concat(ShellsAndInterpreters, ReconTools, LOLBins);
+// Prefilter: every term from ALL child-classification lists, derived so
+// the prefilter cannot drift from the authoritative classification. This
+// is the detection boundary — anything not in these lists is invisible.
+let AllChildTerms = array_concat(ShellsAndInterpreters, ReconTools, LOLBins, NetworkTools);
 DeviceProcessEvents
 | where Timestamp > ago(lookback)
 // THE SCOPING FIX: w3wp.exe announces its application pool in its own command
@@ -128,12 +137,15 @@ DeviceProcessEvents
 // analyst sees it and investigates instead of trusting a silent filter.
 | where AppPool contains "SharePoint"
      or AppPool contains "SecurityTokenService"
-// Indexed prefilter on the child image. Broad, fast, strict superset.
+// Indexed prefilter on the child image. This is the detection boundary:
+// anything not in AllChildTerms is dropped here and never classified.
 | where FileName has_any (AllChildTerms)
 | extend Self = Bare(FileName)
-// Classify the child process. Not filtered — classified. A whoami.exe under
-// w3wp.exe is a finding regardless of whether it's on a list, and the list
-// is here to rank the output, not gate it.
+// Classify the child process. The prefilter above is the gate; the case()
+// below is the label. A whoami.exe under w3wp.exe survived the prefilter
+// because it's in the list; now it gets ranked so the analyst sees
+// structure. "Other" catches anything the prefilter let through that
+// doesn't match a specific category (possible via has_any tokenization).
 | extend ChildClass = case(
       Self in (ShellsAndInterpreters), "ShellOrInterpreter",
       Self in (ReconTools),            "ReconTool",
@@ -203,7 +215,7 @@ Every `w3wp.exe` worker process carries its application pool name in the command
 
 Note what this buys: no device list. No watchlist. No device group. No phone call to the infrastructure team. No manual maintenance when a server is added or decommissioned. The scoping is derived from the data, which means it cannot drift from the data, which means it will still be correct on the day someone deploys a new SharePoint farm and forgets to update the detection.
 
-Note also that `AppPool` stays in the output when the test fails — when someone has renamed their SharePoint application pool to something that doesn't contain the word, or when the command line is truncated, or when the `-ap` argument is absent for a reason I haven't encountered. The analyst sees an empty `AppPool` column and investigates. That's a different outcome from a `where` clause that silently dropped the row, and it's the reason the pool name is extracted into a column rather than tested inline.
+Note the trade-off: this is high-precision scoping at the cost of renamed pools. An organisation that renames its SharePoint pool to `WebApp-Prod-01` disappears from this query entirely — the `where` drops the row, and the analyst never sees it. That is a real blind spot, and if you cannot trust your naming conventions, fall back to a device-name or device-group scope and accept the maintenance cost. The application pool approach works best when you control the convention; when you don't, it fails silently. `AppPool` stays in the output so that when the query *does* fire, the analyst sees which pool triggered it without pivoting — but it cannot show what the `where` already discarded.
 
 And note what this **isn't**: it isn't `InitiatingProcessFolderPath has @"\Windows\System32\inetsrv"`, which is [Friday's](https://devsecopsdadattack.com/2026-08-14-detection-engineering-brief-friday-august-14-2026/) improvement over the others. The path filter narrows from *everything* to *IIS*, which helps, but `inetsrv` is still every IIS application on the box. The application pool narrows from IIS to **this specific web application**, and that is the unit the CVE is about.
 
@@ -238,10 +250,10 @@ The brief pipeline produces detections per intelligence input. The CVE was repor
 
 ### Keeping it honest
 
-- **Application pool scoping assumes default names.** An organisation that renames its SharePoint pool to `WebApp-Prod-01` breaks the filter, and the query goes from SharePoint-specific to nothing. `AppPool` is in the output precisely so a blank row is investigated rather than discarded, but this is mitigation, not prevention. If you control your naming convention, this works. If you don't, add a device-name filter and accept the maintenance cost.
+- **Application pool scoping assumes default names.** An organisation that renames its SharePoint pool to `WebApp-Prod-01` breaks the filter, and the query goes from SharePoint-specific to nothing — the `where` drops the row silently. This is the cost of high-precision scoping: it fails closed. If you control your naming convention, this works. If you don't, add a device-name filter and accept the maintenance cost.
 - **`w3wp.exe → cmd.exe` is not novel, and this query does not make it novel.** This detection pattern has been the answer to every IIS RCE since ProxyShell, and most environments already have a version of it. The interesting question is not "should I write this query" — it's "do I already have it, and if so, does it already cover SharePoint?" If the answer to both is yes, the correct response to this week's eight detections is zero new rules.
 - **The `PostExploitFragments` list is what I could think of.** It is not exhaustive, it will not catch an attacker who uses a technique not on it, and adding entries to it is a subscription, not a solution. The classifier is a triage accelerator, not a detection boundary — the detection boundary is the `where`, not the `extend`.
-- **`SampleCmd` picks one row, arbitrarily.** `take_anyif` is convenient and lossy. A device with ninety-nine benign `cmd.exe` invocations and one `powershell -enc` invocation has a ~1% chance of surfacing the interesting one in this column. `make_set` of full command lines is prohibitively expensive; `take_anyif` with the `HasPostExploit` filter is a compromise, not a guarantee.
+- **`SampleCmd` picks one post-exploitation row, arbitrarily.** `take_anyif(ProcessCommandLine, HasPostExploit)` selects only from rows where the predicate is true, so it will not return a benign `cmd.exe` invocation when a `powershell -enc` row exists — the predicate ensures the sample comes from the post-exploitation set. The limitation is different: when *multiple* post-exploitation rows exist for the same device, `take_anyif` gives you an arbitrary example, not necessarily the most severe. `make_set` of full command lines is prohibitively expensive; a single arbitrary sample from the right subset is a compromise, not a guarantee.
 - **This query cannot see webshell execution.** A webshell that runs inside the `w3wp.exe` process (ASP.NET, ASPX) does not spawn a child process at all — it executes as managed code within the same worker. The only telemetry for that is file creation (the webshell itself being dropped) and network traffic. `DeviceProcessEvents` is the wrong table for it, and every query this week is blind to it by construction.
 
 <br/>
@@ -271,7 +283,7 @@ The brief's own caveats acknowledge this — *"the time-bucket join correlates o
 
 The fix requires an anchor between the two tables — a column that is present in both and that means "the same server." The problem is that OfficeActivity and DeviceProcessEvents do not share one cleanly. OfficeActivity has `ClientIP` (the user's source IP). DeviceProcessEvents has `DeviceName` (the server's hostname). What you need is the server's IP, which OfficeActivity doesn't have, or the client's IP, which DeviceProcessEvents doesn't have. The brief suggests a `DeviceNetworkInfo` lookup to map `DeviceName` to a public IP, which is the right idea and not trivial to implement.
 
-There's a simpler anchor, and it's already on the DeviceProcessEvents row.
+The honest answer is that there is no clean anchor. These two tables were not designed to be joined, and no column that exists in both means "the same server." What we can do is scope both sides tightly to SharePoint and then let a narrow temporal window do the correlation — not because time is a good join key, but because it's the only key available once both tables have been filtered to the same workload. The query below makes the constraint explicit rather than hiding it behind a join key that promises more than it delivers.
 
 <br/>
 
@@ -295,9 +307,8 @@ let PrivilegedOps = dynamic([
     "AddedToGroup","SiteAdminChangeRequest","FileUploaded","FileDeleted",
     "SiteCollectionCreated"
 ]);
-// STEP 1: Host-side signal. w3wp.exe child process, scoped to SharePoint by
-// application pool, with the SERVICE ACCOUNT extracted. The service account
-// is the anchor.
+// STEP 1: Host-side signal. w3wp.exe child process, scoped to SharePoint
+// by application pool.
 let HostSignal = DeviceProcessEvents
 | where Timestamp > ago(lookback)
 | where InitiatingProcessFileName =~ "w3wp.exe"
@@ -305,51 +316,75 @@ let HostSignal = DeviceProcessEvents
 | where AppPool contains "SharePoint" or AppPool contains "SecurityTokenService"
 | extend Self = Bare(FileName)
 | where Self in (SuspiciousChildren) or Self has_any (SuspiciousChildren)
-| extend
-    // The account running w3wp.exe is the SharePoint service account. In
-    // OfficeActivity, operations performed by the application itself (not a
-    // user) are logged under this same account identity. This is the anchor.
-    ServiceAccount = tolower(tostring(InitiatingProcessAccountName))
 | project
     ProcTimestamp = Timestamp,
     DeviceId, DeviceName,
-    AppPool, ServiceAccount,
+    AppPool,
+    // The service account is NOT the join key — see Step 3. It stays in the
+    // output because the analyst needs it: if the account running w3wp.exe
+    // is not the expected SharePoint service identity, that is a separate
+    // finding worth investigating.
+    ServiceAccount = tolower(tostring(InitiatingProcessAccountName)),
     ChildProcess = Self,
     ProcessCommandLine,
     InitiatingProcessCommandLine;
 // STEP 2: Application-layer signal. Privileged SharePoint operations.
+// UserId is the ACTOR — the identity performing the operation. After the
+// CVE-2026-55040 JWT auth bypass, this is the impersonated user (e.g.
+// alice@contoso.com), NOT the SharePoint service account. This distinction
+// is the reason you cannot join on ServiceAccount == UserId: the auth
+// bypass makes them different identities by design, and that join would
+// return nothing for exactly the attack scenario the detection is meant
+// to catch.
 let AppSignal = OfficeActivity
 | where TimeGenerated > ago(lookback)
 | where OfficeWorkload == "SharePoint"
 | where Operation in (PrivilegedOps)
-| extend ActorLower = tolower(UserId)
 | project
     OpTimestamp = TimeGenerated,
-    ActorLower,
+    Actor = tolower(UserId),
     ClientIP,
     Operation,
     SiteUrl,
     ResultStatus;
-// STEP 3: Correlate. The anchor is the SERVICE ACCOUNT identity:
-// OfficeActivity.UserId == DeviceProcessEvents.InitiatingProcessAccountName.
-// When the auth bypass fires, the attacker acts as a user whose operations are
-// logged in OfficeActivity; if exploitation follows, the w3wp.exe process
-// running under the service account spawns a child. The timing window is 10
-// minutes, not 30 — exploitation is not a lunch break.
+// STEP 3: Correlate on TIME within SharePoint-scoped events.
+//
+// CONSTRAINT: OfficeActivity and DeviceProcessEvents share no natural
+// device-level join key. OfficeActivity carries ClientIP (the user's
+// source address) and UserId (the impersonated identity). DeviceProcess-
+// Events carries DeviceName (the server hostname) and the service account
+// running w3wp.exe. No column present in both tables means "the same
+// server." This is a telemetry-boundary problem, not a query problem —
+// the tables were not designed to be joined.
+//
+// What makes this correlation viable despite the missing anchor: both
+// sides are already scoped to SharePoint. AppPool on the host side limits
+// to SharePoint worker processes. OfficeWorkload + PrivilegedOps on the
+// app side limits to high-privilege SharePoint audit events. The cross-
+// product is bounded: SharePoint process events × SharePoint audit events
+// in a narrow time window.
+//
+// In a single-farm environment this is high-signal — one farm's audit
+// events correlating with one farm's process events, both filtered to
+// SharePoint-only. In a multi-farm environment it cross-products across
+// farms. If you operate multiple SharePoint farms, add a DeviceNetworkInfo
+// lookup to resolve DeviceName to an IP and join against ClientIP, or
+// maintain a manual mapping of DeviceName to farm identity.
 HostSignal
-| join kind=inner (
-    AppSignal
-    // NOT joining on ActorLower == ServiceAccount. The actor in OfficeActivity
-    // is the IMPERSONATED user, not the service account. The correlation that
-    // matters is temporal + device, and we get the device anchor from the
-    // service account being the same across both tables for the same farm.
-) on $left.ServiceAccount == $right.ActorLower
-| where OpTimestamp between ((ProcTimestamp - 10m) .. (ProcTimestamp + 10m))
+| extend _sp = 1
+| join kind=inner (AppSignal | extend _sp = 1) on _sp
+| project-away _sp, _sp1
+// Temporal filter: the privileged operation precedes the process spawn.
+// The attack chain is auth bypass → privileged op → RCE → child process,
+// so the app-layer event comes first. 10-minute lookback with a 2-minute
+// forward margin for ingestion clock skew between OfficeActivity's
+// TimeGenerated and the device-local Timestamp.
+| where OpTimestamp between ((ProcTimestamp - 10m) .. (ProcTimestamp + 2m))
 | project
     ProcTimestamp, OpTimestamp,
-    DeviceName, AppPool,
+    DeviceName, AppPool, ServiceAccount,
     ChildProcess, ProcessCommandLine,
-    Operation, SiteUrl, ClientIP,
+    Actor, Operation, SiteUrl, ClientIP,
     ResultStatus
 | order by ProcTimestamp desc
 ```
@@ -363,23 +398,22 @@ HostSignal
 ### The line that does the work
 
 ```kql
-| join kind=inner (...) on $left.ServiceAccount == $right.ActorLower
-| where OpTimestamp between ((ProcTimestamp - 10m) .. (ProcTimestamp + 10m))
+| where OpTimestamp between ((ProcTimestamp - 10m) .. (ProcTimestamp + 2m))
 ```
 
-The join has an anchor: the SharePoint service account identity, which is present in both tables. On the host side it's `InitiatingProcessAccountName` on the `w3wp.exe` row — the account running the IIS worker. On the application side it's `UserId` in `OfficeActivity` — the identity that performed the SharePoint operation.
+There is no clever join key here, and that is the point. The original brief used `TimeBucket` — a 30-minute window with no device anchor. The natural instinct is to find a better key. But OfficeActivity and DeviceProcessEvents share no column that means "the same server": OfficeActivity has `ClientIP` (the user's source address, not the server's), and DeviceProcessEvents has `DeviceName` (the server's hostname, which OfficeActivity doesn't carry). You cannot join what is not there.
 
-This is not a perfect anchor. What I actually want is "the same SharePoint farm," and the service account is a proxy for it — one farm, one service account, one pool of workers, one set of audit events. It breaks when a farm has multiple service accounts (split roles), or when two farms share one (misconfiguration, but it happens). It is, however, vastly better than no anchor, and it is available on the row without a lookup table.
+What makes this correlation usable despite the missing anchor is the scoping on *both* sides. The host signal is already filtered to SharePoint by application pool. The application signal is already filtered to SharePoint by `OfficeWorkload` and to high-privilege operations by `PrivilegedOps`. The cross-product is not "every process × every audit event" — it is "SharePoint child-process spawns × SharePoint admin operations in a 10-minute window." In a single-farm environment, that is a small and meaningful set. The time window is asymmetric — 10 minutes backward, 2 minutes forward — because the attack chain has a direction (auth bypass → privileged operation → RCE → child process), and the forward margin exists only for ingestion clock skew between OfficeActivity's `TimeGenerated` and the device-local `Timestamp`.
 
-The time window is 10 minutes, not 30. Exploitation of a chained RCE is not a background correlation; it's a sequence: bypass authentication, perform a privileged operation, achieve code execution. If 10 minutes between the SharePoint operation and the child process spawn is too narrow, extend it — but test on your data first. The brief's 30-minute bucket was producing cross-products because the window was wide enough to catch unrelated activity, and the absence of a device anchor made every match equally plausible.
+Note that the `Actor` (the impersonated identity from OfficeActivity) and the `ServiceAccount` (the process identity from DeviceProcessEvents) both appear in the output but are *not* joined on. They will be different values in the auth-bypass scenario — the attacker acts as `alice@contoso.com` while `w3wp.exe` runs as `svc_sharepoint` — and showing both is the triage signal. If they are the *same* value, the operation was performed by the SharePoint application itself, which is a different investigation.
 
 <br/>
 
 ### Keeping it honest
 
-- **This join key is a heuristic, not an identity.** The SharePoint service account is not a device identifier. Two servers in the same farm running the same service account will both match, which is correct (same farm) but imprecise (different hosts). A split-role farm with different service accounts per tier will miss cross-tier correlations. I'm trading precision for availability, and the trade is worth it only because the alternative — no anchor at all — is a cross-product.
+- **There is no device-level join key. This is a scoped temporal correlation, not a keyed join.** In a single-farm environment the scoping is sufficient — one farm's SharePoint process events correlating with one farm's SharePoint audit events in a 10-minute window. In a multi-farm environment, this cross-products across farms: a privileged operation on Farm A correlates with a child process spawn on Farm B. If you operate multiple SharePoint farms, you need a `DeviceNetworkInfo` lookup to resolve `DeviceName` to a server IP and join it against the OfficeActivity `ClientIP` (when the operation was performed directly against the server), or maintain a manual mapping of `DeviceName` to farm identity. The query is honest about the constraint; the constraint is real.
+- **I am less confident in this query than in Act I.** The correlation between OfficeActivity and DeviceProcessEvents is crossing a telemetry boundary that was not designed to be crossed — one table is a cloud audit log, the other is a host-level process table, and they share no natural key. The scoped temporal correlation is the best available approach without a lookup table, and it is not great. If you have TLS inspection or reverse-proxy logs that carry both the client IP and the backend server identity, correlate against those instead — you will have an actual anchor.
 - **OfficeActivity covers SharePoint Online and has a different shape for on-premises SharePoint Server.** On-premises audit events require the Microsoft 365 audit log connector, which not every on-premises deployment has. If your SharePoint is on-prem and the connector isn't enabled, the `AppSignal` half of this query returns nothing, the join returns nothing, and the correlation looks clean. It isn't — it's blind.
-- **I am less confident in this query than in Act I.** The join between OfficeActivity and DeviceProcessEvents is crossing a telemetry boundary that was not designed to be crossed — one table is a cloud audit log, the other is a host-level process table, and they share no natural key. The service account is the best I could find and it is not great. If you have TLS inspection or reverse-proxy logs that carry both the client IP and the backend server identity, correlate against those instead.
 - **The `PrivilegedOps` list is scoped to CVE-2026-55040.** The auth bypass is the reason an attacker can perform site-admin operations without authenticating. A query that correlates *any* SharePoint operation with a child process spawn would catch more and mean less. The list is narrow on purpose.
 
 <br/>
