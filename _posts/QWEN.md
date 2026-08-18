@@ -12,35 +12,29 @@ author: DevSecOpsDad
 
 *No GPU. No API key. No expensive AI workstation. Just a Raspberry Pi, Ollama, and a small language model that answers to you.*
 
-There is a weird assumption developing around AI infrastructure.
+There is a weird assumption developing around AI infrastructure...
 
-You need a monster GPU.
+- You need a monster GPU.
 
-You need a Mac Mini with a pile of unified memory.
+- You need a Mac Mini with a pile of unified memory.
 
-You need one of NVIDIA's shiny new Spark boxes.
+- You need one of NVIDIA's shiny new Spark boxes.
 
-You need a cloud subscription.
+- You need a cloud subscription.
 
-You need an API key.
+- You need an API key.
 
-You need a datacenter somewhere doing something expensive on your behalf.
+- You need a datacenter somewhere doing something expensive on your behalf.
 
-For frontier models? Sure.
-
-For **every useful AI workload? Absolutely not.**
+For frontier models? Sure. For **every useful AI workload? Absolutely not.**
 
 I wanted something much simpler: a private model I could run inside my own network for tasks where sending the data to someone else's infrastructure was either undesirable or unnecessary.
 
 So I grabbed a Raspberry Pi 4B, installed Ollama, pulled Qwen3, and started talking to it.
 
-No GPU.
+**No GPU - No cloud inference - No monthly AI bill.**
 
-No cloud inference.
-
-No monthly AI bill.
-
-And, perhaps more importantly, no one else gets to decide when I can use it.
+And, perhaps more importantly, no one else gets to decide **when** I can use it.
 
 ---
 
@@ -48,11 +42,9 @@ And, perhaps more importantly, no one else gets to decide when I can use it.
 
 For this project, I sprung for the **8GB Raspberry Pi 4B**.
 
-Going into it, I assumed RAM would be the limiting factor.
+Going into it, I assumed RAM would be the limiting factor; **_It wasn't._**
 
-It wasn't.
-
-Once you've picked a model small enough to fit comfortably into memory, the much more obvious constraint on a Raspberry Pi is **compute**. Not how much data the board can hold — how fast its CPU can chew through transformer math without a GPU doing the heavy lifting.
+Once you've picked a model small enough to fit comfortably into memory, the much more obvious constraint on a Raspberry Pi is **compute**. Not how much data the board can hold — but how fast its CPU can chew through transformer math without a GPU doing the heavy lifting.
 
 Ollama supports ARM64 Linux, so running it on a 64-bit Raspberry Pi OS installation is straightforward. But there is no NVIDIA GPU hiding underneath the Pi's heatsink waiting to accelerate transformer inference. For this build, the work is being done entirely by the Cortex-A72. All four of them. Slowly.
 
@@ -64,19 +56,11 @@ It's more:
 
 > prompt → Raspberry Pi thinks very hard about its life choices → tokens start appearing
 
-And that's fine.
+And that's fine. The goal here isn't to build a Raspberry Pi competitor to a rack of H100s.
 
-The goal here isn't to build a Raspberry Pi competitor to a rack of H100s.
+The goal is to build a **private inference appliance**... Something quiet, something cheap, something sitting on your network that can answer questions _**without your prompt ever needing to leave the building**_.
 
-The goal is to build a **private inference appliance**.
-
-Something quiet.
-
-Something cheap.
-
-Something sitting on your network that can answer questions without your prompt ever needing to leave the building.
-
-This is more accessible and more affordable than the current hype cycle around AI chipmaking would have you believe. You don't need the NVIDIA Spark. You don't need a new Mac. You need a credit-card-sized board and about twenty minutes.
+This is more accessible and more affordable than the current hype cycle around AI chipmaking would have you believe. You don't need the NVIDIA Spark. You don't need a new Mac Mini. _**You need a credit-card-sized board and about twenty minutes.**_
 
 <br/>
 
@@ -95,8 +79,8 @@ Qwen3 is a family of language models ranging from tiny dense models all the way 
 Those are the two I'm interested in here:
 
 ```bash
-qwen3:0.6b
 qwen3:1.7b
+qwen3:4b
 ```
 
 Ollama currently packages the 0.6B model at roughly **523MB** and the 1.7B model at roughly **1.4GB**.
@@ -178,6 +162,10 @@ free -h
 swapon --show
 ```
 
+<br/>
+
+![memory](/assets/img/QWEN/swap.png)
+
 Here's the funny part.
 
 On my 8GB Pi running Trixie, swapon showed **2GB of zram swap already configured out of the box:**
@@ -242,6 +230,12 @@ Install Ollama:
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+<br/>
+
+![install](/assets/img/QWEN/install.png)
+
+<br/>
+
 That's the current Linux installation method published by Ollama. The script detects `aarch64`, pulls the ARM64 binary, creates a systemd service, and starts it. You'll see a warning about not finding a GPU — that's expected. There isn't one.
 
 Verify it:
@@ -256,13 +250,7 @@ And because the installer configures Ollama as a service on Linux, you can check
 systemctl status ollama --no-pager
 ```
 
-Congratulations.
-
-Your $75 Raspberry Pi is now an AI server.
-
-Sort of.
-
-We still need a brain.
+Congratulations! - Your $75 Raspberry Pi is now an AI server (sort of)... We still need a brain.
 
 ---
 
@@ -271,37 +259,24 @@ We still need a brain.
 For the Pi 4B, I'd start with Qwen3 0.6B:
 
 ```bash
-ollama pull qwen3:0.6b
-```
-
-If you've got the 8GB model and don't mind trading compute time for a more capable model, try:
-
-```bash
 ollama pull qwen3:1.7b
 ```
 
-The size difference isn't particularly scary.
+![Qwen3:1.7b](/assets/img/QWEN/3-1.7b.png)
 
-Again, Ollama currently lists them at approximately:
+<br/>
 
-```text
-qwen3:0.6b    523MB
-qwen3:1.7b    1.4GB
-```
+> Note: I found that Qwen3:4b reflected better, more accurate responses (less hallucinations). 
 
-That's part of what surprised me about this project.
+The size difference isn't particularly scary. That's part of what surprised me about this project.
 
 There is so much noise around AI hardware right now — trillions of dollars in chip investment, entire power plants being built for inference clusters, the AI infrastructure arms race playing out across every earnings call — that it's easy to develop a completely distorted idea of what running a model actually requires.
 
-Yes, training frontier models involves absurd amounts of compute.
-
-Yes, running massive models locally benefits enormously from expensive GPUs.
+Yes, training frontier models involves absurd amounts of compute. Yes, running massive models locally benefits enormously from expensive GPUs.
 
 But **those aren't the only models that exist**.
 
-If what you need is a small private assistant that can summarize text, inspect a configuration, reason about some code, transform data, or help analyze information you don't particularly want uploaded to a third party, the entry price is a Raspberry Pi and an SD card.
-
-Not an NVIDIA DGX. Not a cloud subscription. Not a Mac Studio.
+If what you need is a small private assistant that can summarize text, inspect a configuration, reason about some code, transform data, or help analyze information you don't particularly want uploaded to a third party, the entry price is a Raspberry Pi and an SD card. Not an NVIDIA DGX. Not a cloud subscription. Not a Mac Studio.
 
 A Raspberry Pi.
 
@@ -312,7 +287,7 @@ A Raspberry Pi.
 Run the model:
 
 ```bash
-ollama run qwen3:0.6b
+ollama run qwen3:4b
 ```
 
 You'll get a prompt.
@@ -320,38 +295,38 @@ You'll get a prompt.
 Ask it something.
 
 ```text
->>> Explain the difference between an IOC and a behavioral detection in cybersecurity.
+>>> tell me about your capabilities and what your were designed to do please.
 ```
+
+![](/assets/img/QWEN/Qwen3-4b.png)
 
 And your Raspberry Pi will start generating the response locally.
 
-No API token was exchanged.
+- No API token was exchanged.
 
-No request was sent to OpenAI.
+- No request was sent to OpenAI.
 
-No request was sent to Anthropic.
+- No request was sent to Anthropic.
 
-No prompt needed to leave your network.
+- No prompt needed to leave your network.
 
-Ollama states that when models are run locally, prompts and responses are processed locally rather than being sent back to Ollama's service.
+- Ollama states that when models are run locally, prompts and responses are processed locally rather than being sent back to Ollama's service.
 
 That's the entire reason I built this thing.
+
+
 
 ---
 
 # The Performance Reality
 
-Let's set expectations appropriately.
+Let's set expectations appropriately: The Raspberry Pi 4B is not secretly an AI workstation.
 
-The Raspberry Pi 4B is not secretly an AI workstation.
+With no supported GPU accelerator doing the inference work, you're asking _**four ARM CPU cores**_ to perform a job modern AI accelerators were explicitly designed to perform faster. **A lot faster**.
 
-With no supported GPU accelerator doing the inference work, you're asking four ARM CPU cores to perform a job modern AI accelerators were explicitly designed to perform faster. A lot faster.
+So yes: **It's slow.**
 
-So yes:
-
-**It's slow.**
-
-But "slow" and "useless" are not synonyms.
+But "slow" and "useless" are not the same. 😜
 
 <br/>
 
@@ -359,17 +334,9 @@ But "slow" and "useless" are not synonyms.
 
 <br/>
 
-For interactive chat, experimentation, text analysis, small automation workflows, home-lab services, and privacy-sensitive jobs where a few seconds matter significantly less than where the data goes?
+For interactive chat, experimentation, text analysis, small automation workflows, home-lab services, and privacy-sensitive jobs where a few seconds matter significantly less than where the data goes? **It works.**
 
-It works.
-
-And the 8GB RAM in my Pi turned out to be more breathing room than necessity for the 0.6B model.
-
-The CPU is where I feel the constraint.
-
-This is actually useful information when deciding what Pi to buy for this project. If you're choosing between a 4GB and 8GB board specifically for SLM inference, the 8GB gives you headroom to run the 1.7B model comfortably. But don't assume that jumping from 4GB to 8GB magically doubles inference speed.
-
-It doesn't.
+And the 8GB RAM in my Pi turned out to be more breathing room than necessity for the 0.6B model. It's the CPU where I feel the constraint. This is actually useful information when deciding what Pi to buy for this project. If you're choosing between a 4GB and 8GB board specifically for SLM inference, the 8GB gives you headroom to run the 1.7B model comfortably. _**But don't assume that jumping from 4GB to 8GB magically doubles inference speed, because it doesn't**_
 
 Once the model fits, you're waiting on compute.
 
@@ -377,11 +344,7 @@ Once the model fits, you're waiting on compute.
 
 # Act VI: Turn the Pi Into an API
 
-Running Qwen from an SSH session is neat.
-
-Turning the Pi into an AI service for the rest of your network is much more interesting.
-
-Ollama exposes a REST API on port `11434`, but by default it listens only on:
+Running Qwen from an SSH session is neat. Turning the Pi into an AI service for the rest of your network is much more interesting. Ollama exposes a REST API on port `11434`, but by default it listens only on:
 
 ```text
 127.0.0.1:11434
@@ -394,7 +357,7 @@ First test the API locally:
 ```bash
 curl http://localhost:11434/api/chat \
   -d '{
-    "model": "qwen3:0.6b",
+    "model": "qwen3:1.7b",
     "messages": [
       {
         "role": "user",
@@ -420,9 +383,7 @@ Add:
 Environment="OLLAMA_HOST=0.0.0.0:11434"
 ```
 
-Save it.
-
-Then reload systemd and restart Ollama:
+Save it, then reload systemd and restart Ollama:
 
 ```bash
 sudo systemctl daemon-reload
@@ -451,7 +412,7 @@ curl http://PI_IP_ADDRESS:11434/api/tags
 
 And suddenly the Pi isn't just running an SLM.
 
-It's providing an **AI service**.
+It's providing an **AI service** 😎
 
 ---
 
@@ -459,9 +420,7 @@ It's providing an **AI service**.
 
 ![](/assets/img/QWEN/7.png)
 
-This is DevSecOpsDad.
-
-So we're going to talk about the thing every tutorial eventually forgets.
+This is **_DevSecOpsDad_**. So we're going to talk about **security**.
 
 ```ini
 OLLAMA_HOST=0.0.0.0:11434
@@ -475,13 +434,11 @@ It does **not** mean:
 
 > Magically turn this into a secure production AI API.
 
-Those are very different statements.
+Those are **_very_** different statements.
 
 I would not port-forward `11434` through my router and expose Ollama directly to the Internet. Ollama has no authentication. No TLS. No rate limiting. If you expose it raw, anyone who finds the port can use your model, abuse your hardware, and read every prompt and response in transit.
 
-I don't need to.
-
-If I want to use this thing remotely, I already have a much better architectural pattern:
+I don't need to; if I want to use this thing remotely, I already have a much better architectural pattern:
 
 ```text
 Phone
@@ -497,11 +454,11 @@ Ollama
 Qwen
 ```
 
-The model stays private.
+- The model stays private.
 
-The API stays private.
+- The API stays private.
 
-Remote access is handled by the VPN.
+- Remote access is handled by the VPN.
 
 That's exactly how I'd rather design it anyway.
 
@@ -509,25 +466,15 @@ That's exactly how I'd rather design it anyway.
 
 # The Use Cases Are More Interesting Than the Benchmark
 
-This isn't going to replace ChatGPT.
+This isn't going to replace ChatGPT; that's not the point. I still want frontier models when the task deserves frontier-model capability, but there is another category of problem where capability isn't my only concern.
 
-That's not the point.
-
-I still want frontier models when the task deserves frontier-model capability.
-
-But there is another category of problem where capability isn't my only concern.
-
-Sometimes **data ownership** matters more.
-
-Say I want to review six months of exported banking transactions and ask:
+Sometimes **data ownership** matters more. Say I want to review six months of exported banking transactions and ask:
 
 ```text
 Where is my money actually going?
 ```
 
-I'd rather not upload raw financial records to another company's infrastructure just because I want some categories and percentages.
-
-Or maybe I want an AI assistant to inspect:
+I'd rather not upload raw financial records to another company's infrastructure just because I want some categories and percentages. Maybe I'd like to upload medical records such as X-Rays and ask questions. Or maybe I want an AI assistant to inspect:
 
 ```text
 index.html
@@ -538,19 +485,9 @@ nginx.conf
 
 from one of my projects.
 
-Maybe the repository contains internal hostnames.
+Maybe the repository contains internal hostnames, architecture, customer identifiers, API endpoints, or configuration patterns... Or perhaps I'm responding to an incident and want a model to chew on logs, commands, malicious scripts, or other content that a commercial model's cybersecurity safety system may decide it doesn't want to process.
 
-Architecture.
-
-Customer identifiers.
-
-API endpoints.
-
-Configuration patterns.
-
-Or perhaps I'm responding to an incident and want a model to chew on logs, commands, malicious scripts, or other content that a commercial model's cybersecurity safety system may decide it doesn't want to process.
-
-That's where the local box starts making an awful lot of sense.
+That's where the local box starts making an awful **lot** of sense.
 
 <br/>
 
@@ -570,7 +507,7 @@ OpenAI subsequently described it as an unprecedented cybersecurity incident.
 
 But there was another part of the story that caught my attention.
 
-During the response, Hugging Face's security team tried to use frontier AI models behind commercial APIs to analyze more than 17,000 log events — a completely reasonable thing to do when you're drowning in attack telemetry. The requests were blocked. The providers' safety guardrails could not distinguish between an incident responder reconstructing an intrusion and an attacker preparing one. The same exploit payloads, C2 artifacts, and attack commands that defenders need to analyze are exactly the content those classifiers are trained to refuse.
+During the response, Hugging Face's security team tried to use frontier AI models behind commercial APIs to analyze more than 17,000 log events — a completely reasonable thing to do when you're drowning in attack telemetry. **_The requests were blocked._** The providers' safety guardrails could not distinguish between an incident responder reconstructing an intrusion and an attacker preparing one. The same exploit payloads, C2 artifacts, and attack commands that defenders need to analyze are exactly the content those classifiers are trained to refuse.
 
 <br/>
 
@@ -586,25 +523,17 @@ That is an extraordinary real-world example of something defenders have been dis
 
 **It doesn't matter how capable your tool theoretically is if you aren't allowed to use it when you actually need it.**
 
-And I understand why those guardrails exist.
+And I understand why those guardrails exist... Cybersecurity is dual-use: **_the same model that explains how an exploit works to a defender can explain how it works to an attacker._**
 
-Cybersecurity is dual-use.
+That is a genuinely difficult problem for hosted AI providers, but that difficulty exposes another problem: **The provider owns the control plane.**
 
-The same model that explains how an exploit works to a defender can explain how it works to an attacker.
+- They decide the policy.
 
-That is a genuinely difficult problem for hosted AI providers.
+- They decide what the model will process.
 
-But that difficulty exposes another problem.
+- They decide whether your account can access a feature.
 
-**The provider owns the control plane.**
-
-They decide the policy.
-
-They decide what the model will process.
-
-They decide whether your account can access a feature.
-
-They decide whether a particular class of request is permitted.
+- They decide whether a particular class of request is permitted.
 
 And if their service is unavailable — or if their classifier thinks your forensic analysis looks a little too much like an attack — neither your prompt engineering nor your subscription tier will make the API answer.
 
@@ -618,19 +547,19 @@ And if their service is unavailable — or if their classifier thinks your foren
 
 <br/>
 
-This is where I think the humble Raspberry Pi becomes philosophically more interesting than its benchmark score.
+This is where I think the humble Raspberry Pi becomes philosophically more interesting than its benchmark score:
 
-My Qwen instance doesn't need to phone OpenAI before answering me.
+- My Qwen instance doesn't need to phone OpenAI before answering me.
 
-Anthropic can't disable it.
+- Anthropic can't disable it.
 
-OpenAI can't rate-limit it.
+- OpenAI can't rate-limit it.
 
-There isn't an account to suspend.
+- There isn't an account to suspend.
 
-There isn't an API key to expire.
+- There isn't an API key to expire.
 
-There isn't a safety classifier sitting between me and the model deciding whether my incident-response artifact looks too offensive to analyze.
+- There isn't a safety classifier sitting between me and the model deciding whether my incident-response artifact looks too offensive to analyze.
 
 Once the model weights are downloaded, inference doesn't depend on a model provider's service being reachable. It doesn't depend on their content policy. It doesn't depend on their uptime. It doesn't depend on their opinion about what I should be allowed to do with a language model.
 
@@ -646,13 +575,9 @@ The model
 
 I have inference.
 
-That's not an argument against commercial AI.
+That's not an argument against commercial AI, it's an argument for **resilience through ownership**.
 
-It's an argument for **resilience through ownership**.
-
-Cloud AI and local AI solve different problems.
-
-Use both.
+Cloud AI and local AI solve different problems. Use both.
 
 ---
 
@@ -660,59 +585,39 @@ Use both.
 
 The AI industry is currently obsessed with scale.
 
-More GPUs.
+- More GPUs.
 
-More parameters.
+- More parameters.
 
-More datacenters.
+- More datacenters.
 
-More power.
+- More power.
 
-More billions of dollars spent producing the next model.
+- More billions of dollars spent producing the next model.
 
-And all of that is fascinating.
+And all of that is fascinating, but there's another direction worth exploring: **smaller.**
 
-But there's another direction worth exploring:
+- A tiny computer.
 
-**smaller.**
+- A tiny model.
 
-A tiny computer.
+- A tiny API.
 
-A tiny model.
+- Sitting quietly on a shelf.
 
-A tiny API.
+- Answering questions for one household or one lab.
 
-Sitting quietly on a shelf.
+- Costing less than a decent pair of running shoes.
 
-Answering questions for one household or one lab.
-
-Costing less than a decent pair of running shoes.
-
-The interesting part isn't that a Raspberry Pi 4B can outperform a GPU server.
-
-It can't.
-
-The interesting part is that **it doesn't need one** to be useful.
-
-I bought the 8GB Pi expecting memory to be the challenge.
-
-It wasn't.
-
-I expected swap configuration to matter.
-
-It didn't — Trixie already had 2GB of zram configured.
-
-I expected running an AI model locally to involve significantly more engineering.
-
-It didn't.
+The interesting part isn't that a Raspberry Pi 4B can outperform a GPU server; **it can't**. The interesting part is that **it doesn't need one** to be useful. I bought the 8GB Pi expecting memory to be the challenge, and it wasn't. I expected swap configuration to matter, it didn't — Trixie already had 2GB of zram configured. I expected running an AI model locally to involve significantly more engineering, it didn't.
 
 What I ended up with was roughly:
 
 ```bash
 sudo apt update && sudo apt full-upgrade -y && sudo apt install -y curl
 curl -fsSL https://ollama.com/install.sh | sh
-ollama pull qwen3:0.6b
-ollama run qwen3:0.6b
+ollama pull qwen3:1.7b
+ollama run qwen3:1.7b
 ```
 
 Four commands between:
