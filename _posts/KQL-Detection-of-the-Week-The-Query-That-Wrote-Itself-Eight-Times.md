@@ -22,7 +22,7 @@ Thirty-four detections this week. Eight of them are the same query wearing diffe
 
 ## 🥇 Act I: One Query, Written Eight Times, Working Zero
 
-![Act I](/assets/img/TheQueryThatWroteItselfEightTimes/ActI.png)
+![Act I](/assets/img/TheQueryThatWroteItselfEightTimes/actI.png)
 
 Here are the core shapes of this week's `w3wp.exe` detections, drawn from [Wednesday's Detection 1](https://devsecopsdadattack.com/2026-08-12-detection-engineering-brief-wednesday-august-12-2026/), [Thursday's Detection 1](https://devsecopsdadattack.com/2026-08-13-detection-engineering-brief-thursday-august-13-2026/), [Friday's Detection 1](https://devsecopsdadattack.com/2026-08-14-detection-engineering-brief-friday-august-14-2026/), and five more across the remaining days:
 
@@ -185,6 +185,10 @@ DeviceProcessEvents
 
 <br/>
 
+![DevSecOpsDadAttack!](/assets/img/TheQueryThatWroteItselfEightTimes/actI_forgotten_field.png)
+
+<br/>
+
 ### The line that does the work
 
 ```kql
@@ -202,6 +206,10 @@ Note what this buys: no device list. No watchlist. No device group. No phone cal
 Note also that `AppPool` stays in the output when the test fails — when someone has renamed their SharePoint application pool to something that doesn't contain the word, or when the command line is truncated, or when the `-ap` argument is absent for a reason I haven't encountered. The analyst sees an empty `AppPool` column and investigates. That's a different outcome from a `where` clause that silently dropped the row, and it's the reason the pool name is extracted into a column rather than tested inline.
 
 And note what this **isn't**: it isn't `InitiatingProcessFolderPath has @"\Windows\System32\inetsrv"`, which is [Friday's](https://devsecopsdadattack.com/2026-08-14-detection-engineering-brief-friday-august-14-2026/) improvement over the others. The path filter narrows from *everything* to *IIS*, which helps, but `inetsrv` is still every IIS application on the box. The application pool narrows from IIS to **this specific web application**, and that is the unit the CVE is about.
+
+<br/>
+
+![DevSecOpsDadAttack!](/assets/img/TheQueryThatWroteItselfEightTimes/actI_coverage_depth.png)
 
 <br/>
 
@@ -244,7 +252,7 @@ The brief pipeline produces detections per intelligence input. The CVE was repor
 
 ## 🥈 Act II: The Correlation That Correlates Everything
 
-![Act II](/assets/img/TheQueryThatWroteItselfEightTimes/ActII.png)
+![Act II](/assets/img/TheQueryThatWroteItselfEightTimes/actII.png)
 
 [Friday's Detection 2](https://devsecopsdadattack.com/2026-08-14-detection-engineering-brief-friday-august-14-2026/) is the most ambitious query of the week. It correlates **OfficeActivity** (SharePoint application-layer audit events) with **DeviceProcessEvents** (host-level process telemetry) to find a compound signal: a suspicious SharePoint operation and a suspicious `w3wp.exe` child process in the same time window. If both fire together, the confidence goes up. The intent is exactly right.
 
@@ -348,6 +356,10 @@ HostSignal
 
 <br/>
 
+![DevSecOpsDadAttack!](/assets/img/TheQueryThatWroteItselfEightTimes/actII_join_needs_anchor.png)
+
+<br/>
+
 ### The line that does the work
 
 ```kql
@@ -378,7 +390,7 @@ The time window is 10 minutes, not 30. Exploitation of a chained RCE is not a ba
 
 ## 🎖 Honorable Mention: The Admin Who Has Never Administered
 
-![Honorable Mention](/assets/img/TheQueryThatWroteItselfEightTimes/Honorable_Mention.png)
+![Honorable Mention](/assets/img/TheQueryThatWroteItselfEightTimes/honorable_mention.png)
 
 [Wednesday's Detection 3](https://devsecopsdadattack.com/2026-08-12-detection-engineering-brief-wednesday-august-12-2026/) asks a different question from every other detection this week. It doesn't look for a process. It doesn't look for a network connection. It asks: **has this account ever performed a SharePoint admin operation before?**
 
@@ -488,7 +500,7 @@ Same `leftanti` pattern as the brief's original, and the same move as last week'
 
 ## ✨ Bonus: When the Pipeline Is the Finding
 
-![Bonus!](/assets/img/TheQueryThatWroteItselfEightTimes/Bonus.png)
+![Bonus!](/assets/img/TheQueryThatWroteItselfEightTimes/bonus.png)
 
 Eight instances of the same detection across five days is not a KQL problem. It's a pipeline problem, and it's one worth thinking about because most detection-engineering programs will have it.
 
@@ -514,7 +526,7 @@ The honest answer for this week: the pipeline did its job. It surfaced the CVE o
 
 ## The Bigger Lesson
 
-![](/assets/img/TheQueryThatWroteItselfEightTimes/Bigger_Lesson.png)
+![](/assets/img/TheQueryThatWroteItselfEightTimes/bigger_lesson.png)
 
 The common thread this week: **every new vulnerability was detectable by an old query**.
 
@@ -530,7 +542,7 @@ This kind of detection content is published _daily_ — fresh threat intel trans
 
 <br/>
 
-![Outro](/assets/img/TheQueryThatWroteItselfEightTimes/Outro.png)
+![Outro](/assets/img/TheQueryThatWroteItselfEightTimes/outro.png)
 
 <br/>
 
