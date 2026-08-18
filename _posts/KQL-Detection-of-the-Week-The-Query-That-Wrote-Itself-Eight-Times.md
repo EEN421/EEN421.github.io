@@ -504,7 +504,7 @@ Same `leftanti` pattern as the brief's original, and the same move as last week'
 
 Eight instances of the same detection across five days is not a KQL problem. It's a pipeline problem, and it's one worth thinking about because most detection-engineering programs will have it.
 
-The daily brief automation works like this: intelligence comes in, the pipeline processes it, and each intelligence item produces one or more detection candidates. If two intelligence reports reference the same CVE on consecutive days — because Rapid7 published analysis on Tuesday and SANS covered it on Wednesday — the pipeline produces two detection candidates for the same behaviour. Neither run knows about the other. The pipeline has no memory.
+The [daily brief automation](https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/) works like this: intelligence comes in, the pipeline processes it, and each intelligence item produces one or more detection candidates. If two intelligence reports reference the same CVE on consecutive days — because Rapid7 published analysis on Tuesday and SANS covered it on Wednesday — the pipeline produces two detection candidates for the same behaviour. Neither run knows about the other. The pipeline has no memory.
 
 This is fine when the intelligence is genuinely different — a new actor, a new exploitation technique, a variant payload. It is redundant when the intelligence is the same story re-reported, and the detection surface is the same `w3wp.exe → suspicious child` shape that was already emitted on day one.
 
