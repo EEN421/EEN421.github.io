@@ -1,3 +1,11 @@
+---
+layout: post
+title: "QWEN"
+subtitle: "QWEN Stuff"
+date: 2026-08-17
+author: DevSecOpsDad
+---
+
 # When the Cloud Says No: Running Qwen3 on a Raspberry Pi 4B with Ollama
 
 *No GPU. No API key. No expensive AI workstation. Just a Raspberry Pi, Ollama, and a small language model that answers to you.*
