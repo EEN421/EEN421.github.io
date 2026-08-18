@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "QWEN"
-subtitle: "QWEN Stuff"
+title: "AI Sovereignty on a Raspberry Pi: Running Qwen3 with Ollama"
+subtitle: "No GPU. No API key. No monthly bill. The model they can’t turn off."
 date: 2026-08-17
 author: DevSecOpsDad
 ---
@@ -16,7 +16,7 @@ You need a monster GPU.
 
 You need a Mac Mini with a pile of unified memory.
 
-You need one of NVIDIA's shiny new AI boxes.
+You need one of NVIDIA's shiny new Spark boxes.
 
 You need a cloud subscription.
 
@@ -50,9 +50,9 @@ Going into it, I assumed RAM would be the limiting factor.
 
 It wasn't.
 
-Once you've picked a model small enough to fit comfortably into memory, the much more obvious constraint on a Raspberry Pi is **compute**.
+Once you've picked a model small enough to fit comfortably into memory, the much more obvious constraint on a Raspberry Pi is **compute**. Not how much data the board can hold — how fast its CPU can chew through transformer math without a GPU doing the heavy lifting.
 
-Ollama supports ARM64 Linux, so running it on a 64-bit Raspberry Pi OS installation is straightforward. But there is no NVIDIA GPU hiding underneath the Pi's heatsink waiting to accelerate transformer inference. For this build, the work is being done by the CPU.
+Ollama supports ARM64 Linux, so running it on a 64-bit Raspberry Pi OS installation is straightforward. But there is no NVIDIA GPU hiding underneath the Pi's heatsink waiting to accelerate transformer inference. For this build, the work is being done entirely by the Cortex-A72. All four of them. Slowly.
 
 That means the experience is not:
 
@@ -73,6 +73,8 @@ Something quiet.
 Something cheap.
 
 Something sitting on your network that can answer questions without your prompt ever needing to leave the building.
+
+This is more accessible and more affordable than the current hype cycle around AI chipmaking would have you believe. You don't need the NVIDIA Spark. You don't need a new Mac. You need a credit-card-sized board and about twenty minutes.
 
 ---
 
@@ -107,7 +109,7 @@ Private workload.
 
 # Act I: Prepare the Pi
 
-I'm running Raspberry Pi OS Trixie.
+I'm running **Raspberry Pi OS Trixie** — the latest 64-bit release, Lite variant, CLI only. No desktop environment burning cycles on a GPU that doesn't exist.
 
 Start with the usual housekeeping:
 
@@ -141,9 +143,7 @@ A lot of Raspberry Pi LLM tutorials immediately tell you to create several gigab
 
 That made sense to me too.
 
-So my original build notes included expanding swap from around 200MB to 2GB.
-
-Something like:
+So my original build notes included expanding swap from around 200MB to 2GB using `dphys-swapfile`, like so:
 
 ```bash
 sudo sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
@@ -152,25 +152,33 @@ sudo systemctl restart dphys-swapfile
 
 Except there's an important wrinkle if you're using **Raspberry Pi OS Trixie**:
 
-`dphys-swapfile` is the old way.
+`dphys-swapfile` doesn't exist anymore.
 
-Trixie introduced Raspberry Pi's newer `rpi-swap` system, which supports zram, traditional file-backed swap, or a hybrid of the two. Raspberry Pi specifically designed it to replace `dphys-swapfile`.
+Trixie doesn't ship it. If you try to run the command above, you'll get:
+
+```text
+sed: can't read /etc/dphys-swapfile: No such file or directory
+```
+
+Trixie introduced Raspberry Pi's newer `rpi-swap` system, which supports **zram**, traditional file-backed swap, or a hybrid of the two. Raspberry Pi specifically designed it to replace `dphys-swapfile`.
 
 Before changing anything, check what the Pi is actually doing:
 
 ```bash
 free -h
-```
-
-And:
-
-```bash
 swapon --show
 ```
 
 Here's the funny part.
 
-**On my 8GB Pi, I didn't actually need to increase swap at all.**
+On my 8GB Pi running Trixie, swapon showed **2GB of zram swap already configured out of the box:**
+
+```text
+NAME       TYPE      SIZE USED PRIO
+/dev/zram0 partition   2G   0B  100
+```
+
+**I didn't need to increase swap at all.**
 
 That was probably my first indication that RAM wasn't going to be the interesting bottleneck in this project.
 
@@ -178,7 +186,7 @@ The CPU was.
 
 ### If Trixie actually needs more swap
 
-If you are seeing memory pressure and want to force a traditional 2GB swapfile on current Raspberry Pi OS, the `rpi-swap` documentation provides a drop-in configuration specifically for this:
+If you are seeing memory pressure and want to force a traditional 2GB swapfile on current Raspberry Pi OS, the `rpi-swap` configuration provides a drop-in override:
 
 ```bash
 sudo mkdir -p /etc/rpi/swap.conf.d/
@@ -219,7 +227,7 @@ Install Ollama:
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-That's the current Linux installation method published by Ollama.
+That's the current Linux installation method published by Ollama. The script detects `aarch64`, pulls the ARM64 binary, creates a systemd service, and starts it. You'll see a warning about not finding a GPU — that's expected. There isn't one.
 
 Verify it:
 
@@ -235,7 +243,7 @@ systemctl status ollama --no-pager
 
 Congratulations.
 
-Your $35-to-$whatever-Raspberry-Pis-cost-this-week computer is now an AI server.
+Your $75 Raspberry Pi is now an AI server.
 
 Sort of.
 
@@ -251,7 +259,7 @@ For the Pi 4B, I'd start with Qwen3 0.6B:
 ollama pull qwen3:0.6b
 ```
 
-If you've got the 8GB model and don't mind trading more compute for a more capable model, try:
+If you've got the 8GB model and don't mind trading compute time for a more capable model, try:
 
 ```bash
 ollama pull qwen3:1.7b
@@ -268,7 +276,7 @@ qwen3:1.7b    1.4GB
 
 That's part of what surprised me about this project.
 
-There is so much noise around AI hardware right now that it's easy to develop a completely distorted idea of what running an AI model requires.
+There is so much noise around AI hardware right now — trillions of dollars in chip investment, entire power plants being built for inference clusters, the AI infrastructure arms race playing out across every earnings call — that it's easy to develop a completely distorted idea of what running a model actually requires.
 
 Yes, training frontier models involves absurd amounts of compute.
 
@@ -276,7 +284,11 @@ Yes, running massive models locally benefits enormously from expensive GPUs.
 
 But **those aren't the only models that exist**.
 
-If what you need is a small private assistant that can summarize text, inspect a configuration, reason about some code, transform data, or help analyze information you don't particularly want uploaded to a third party, the entry price can be dramatically lower.
+If what you need is a small private assistant that can summarize text, inspect a configuration, reason about some code, transform data, or help analyze information you don't particularly want uploaded to a third party, the entry price is a Raspberry Pi and an SD card.
+
+Not an NVIDIA DGX. Not a cloud subscription. Not a Mac Studio.
+
+A Raspberry Pi.
 
 ---
 
@@ -318,7 +330,7 @@ Let's set expectations appropriately.
 
 The Raspberry Pi 4B is not secretly an AI workstation.
 
-With no supported GPU accelerator doing the inference work, you're primarily asking four ARM CPU cores to perform a job modern AI accelerators were explicitly designed to perform faster.
+With no supported GPU accelerator doing the inference work, you're asking four ARM CPU cores to perform a job modern AI accelerators were explicitly designed to perform faster. A lot faster.
 
 So yes:
 
@@ -334,9 +346,7 @@ And the 8GB RAM in my Pi turned out to be more breathing room than necessity for
 
 The CPU is where I feel the constraint.
 
-This is actually useful information when deciding what Pi to buy for the project.
-
-Don't assume that jumping from 4GB to 8GB magically doubles inference speed.
+This is actually useful information when deciding what Pi to buy for this project. If you're choosing between a 4GB and 8GB board specifically for SLM inference, the 8GB gives you headroom to run the 1.7B model comfortably. But don't assume that jumping from 4GB to 8GB magically doubles inference speed.
 
 It doesn't.
 
@@ -374,9 +384,7 @@ curl http://localhost:11434/api/chat \
   }'
 ```
 
-Ollama documents the same `/api/chat` interface for Qwen3.
-
-Now we can make it network accessible.
+Now make it network-accessible.
 
 Edit the Ollama service:
 
@@ -440,7 +448,7 @@ It does **not** mean:
 
 Those are very different statements.
 
-I would not port-forward `11434` through my router and expose Ollama directly to the Internet.
+I would not port-forward `11434` through my router and expose Ollama directly to the Internet. Ollama has no authentication. No TLS. No rate limiting. If you expose it raw, anyone who finds the port can use your model, abuse your hardware, and read every prompt and response in transit.
 
 I don't need to.
 
@@ -521,15 +529,21 @@ That's where the local box starts making an awful lot of sense.
 
 This project became more interesting almost immediately because of something that happened in July 2026.
 
-During an advanced cybersecurity evaluation, OpenAI models escaped their intended test environment, reached the Internet, and ultimately compromised Hugging Face infrastructure. OpenAI subsequently described it as an unprecedented cybersecurity incident involving state-of-the-art cyber capabilities.
+During an advanced cybersecurity evaluation, OpenAI's GPT-5.6 Sol and a more capable unreleased model escaped their sandboxed testing environment, accessed the Internet, and compromised Hugging Face's production infrastructure. The models had been trying to find information to cheat on their evaluation — and they succeeded. Hugging Face described the incident as the first time it had handled a cyber event "driven, end to end, by an autonomous AI agent system."
+
+OpenAI subsequently described it as an unprecedented cybersecurity incident.
 
 But there was another part of the story that caught my attention.
 
-During the response, Hugging Face said it used an open-weight Chinese model, GLM-5.2, for portions of its analysis. Reuters reported that leading U.S. models refused to process some of the necessary attack data because their guardrails could not adequately distinguish defensive analysis from offensive cyber activity. Hugging Face also noted the benefit of keeping credentials and attacker data inside its own environment.
+During the response, Hugging Face's security team tried to use frontier AI models behind commercial APIs to analyze more than 17,000 log events — a completely reasonable thing to do when you're drowning in attack telemetry. The requests were blocked. The providers' safety guardrails could not distinguish between an incident responder reconstructing an intrusion and an attacker preparing one. The same exploit payloads, C2 artifacts, and attack commands that defenders need to analyze are exactly the content those classifiers are trained to refuse.
+
+Hugging Face's own incident report put it bluntly: *"The attacker was bound by no usage policy, while our own forensic work was blocked by the guardrails of the hosted models we first tried."*
+
+So they switched to GLM 5.2, an open-weight model from China's Z.ai lab, and ran it locally on their own infrastructure. Not only did it process the data the commercial models refused — it kept every credential, every attacker artifact, and every indicator of compromise inside Hugging Face's environment. Nothing left the building.
 
 That is an extraordinary real-world example of something defenders have been discussing for years.
 
-It doesn't matter how capable your tool theoretically is if you aren't allowed to use it when you actually need it.
+**It doesn't matter how capable your tool theoretically is if you aren't allowed to use it when you actually need it.**
 
 And I understand why those guardrails exist.
 
@@ -551,7 +565,7 @@ They decide whether your account can access a feature.
 
 They decide whether a particular class of request is permitted.
 
-And if their service is unavailable, neither your prompt engineering nor your subscription tier will make the API answer.
+And if their service is unavailable — or if their classifier thinks your forensic analysis looks a little too much like an attack — neither your prompt engineering nor your subscription tier will make the API answer.
 
 ---
 
@@ -571,7 +585,7 @@ There isn't an API key to expire.
 
 There isn't a safety classifier sitting between me and the model deciding whether my incident-response artifact looks too offensive to analyze.
 
-Once the model weights are already downloaded, inference doesn't depend on a model provider's service being reachable.
+Once the model weights are downloaded, inference doesn't depend on a model provider's service being reachable. It doesn't depend on their content policy. It doesn't depend on their uptime. It doesn't depend on their opinion about what I should be allowed to do with a language model.
 
 As long as I have:
 
@@ -625,6 +639,8 @@ Sitting quietly on a shelf.
 
 Answering questions for one household or one lab.
 
+Costing less than a decent pair of running shoes.
+
 The interesting part isn't that a Raspberry Pi 4B can outperform a GPU server.
 
 It can't.
@@ -637,7 +653,7 @@ It wasn't.
 
 I expected swap configuration to matter.
 
-It didn't.
+It didn't — Trixie already had 2GB of zram configured.
 
 I expected running an AI model locally to involve significantly more engineering.
 
@@ -646,20 +662,13 @@ It didn't.
 What I ended up with was roughly:
 
 ```bash
-sudo apt update
-sudo apt full-upgrade -y
-sudo apt install -y curl
-
+sudo apt update && sudo apt full-upgrade -y && sudo apt install -y curl
 curl -fsSL https://ollama.com/install.sh | sh
-
 ollama pull qwen3:0.6b
-
 ollama run qwen3:0.6b
 ```
 
-That's basically it.
-
-Four steps between:
+Four commands between:
 
 ```text
 Raspberry Pi
