@@ -10,7 +10,7 @@ author: DevSecOpsDad
 
 The August 2026 Patch Tuesday dropped a pair of chained SharePoint vulnerabilities — an authentication bypass ([CVE-2026-55040](https://www.rapid7.com/blog/post/ra-microsoft-sharepoint-jwt-token-authentication-bypass-cve-2026-55040)) and a remote code execution ([CVE-2026-63520](https://www.rapid7.com/blog/post/etr-cve-2026-63520-microsoft-sharepoint-remote-code-execution-fixed)) — that together give an unauthenticated attacker arbitrary code execution on your SharePoint server. CISA added 63520 to KEV the same week. The briefs noticed.
 
-They noticed _repeatedly_. Across five days of Detection Engineering Briefs, the automation produced **eight separate detections** for the same behaviour: `w3wp.exe` spawns a suspicious child process. Eight queries, eight sets of tuning notes, eight triage runbooks — and every one of them hunts an IIS worker process spawning `cmd.exe` or `powershell.exe`, which is a pattern that predated these CVEs by about a decade. Meanwhile, the week's most interesting detection is a different shape entirely — a baseline query that catches the auth bypass by asking not what was executed, but **who has never administered SharePoint before today**.
+They noticed _repeatedly_. Across five days of Detection Engineering Briefs, the [automation](https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/) produced **eight separate detections** for the same behaviour: `w3wp.exe` spawns a suspicious child process. Eight queries, eight sets of tuning notes, eight triage runbooks — and every one of them hunts an IIS worker process spawning `cmd.exe` or `powershell.exe`, which is a pattern that predated these CVEs by about a decade. Meanwhile, the week's most interesting detection is a different shape entirely — a baseline query that catches the auth bypass by asking not what was executed, but **who has never administered SharePoint before today**.
 
 Thirty-four detections this week. Eight of them are the same query wearing different dates. Act I collapses them into one and fixes what none of them do: distinguish SharePoint's `w3wp.exe` from everyone else's. Act II takes apart a correlation between OfficeActivity and DeviceProcessEvents that looks high-fidelity and has no device-level join key. The honorable mention is the baseline — and as with last week's lifecycle script inventory, it's the one I'd ship first.
 
@@ -613,7 +613,8 @@ External Sources:
 - MITRE ATT&CK. *Exploit Public-Facing Application (T1190).* <https://attack.mitre.org/techniques/T1190/>
 - MITRE ATT&CK. *Additional Cloud Roles (T1098.003).* <https://attack.mitre.org/techniques/T1098/003/>
 - MITRE ATT&CK. *Exploitation for Privilege Escalation (T1068).* <https://attack.mitre.org/techniques/T1068/>
-- [😼 The Legend of Defender Ninja Cat](https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025)
+- DevSecOpsDad.com *From RSS Noise to CISO Signal: Automating Cyber Threat Intel.* <https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/>
+- Microsoft DevBlogs *😼 The Legend of Defender Ninja Cat* <https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025>
 
 <br/>
 
