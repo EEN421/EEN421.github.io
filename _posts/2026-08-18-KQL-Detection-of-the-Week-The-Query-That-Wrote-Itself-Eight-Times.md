@@ -132,9 +132,10 @@ DeviceProcessEvents
 | extend AppPool = extract(@'-ap\s+"([^"]+)"', 1, tostring(InitiatingProcessCommandLine))
 // "SharePoint" in the application pool name is the scoping test. The default
 // pool names are "SharePoint - 80", "SharePoint - 443", "SharePoint Web Services",
-// and "SecurityTokenServiceApplicationPool" (STS). A custom name breaks this,
-// which is why AppPool stays in the output: if it's empty or unexpected, the
-// analyst sees it and investigates instead of trusting a silent filter.
+// and "SecurityTokenServiceApplicationPool" (STS). Custom pool names are a
+// known blind spot: this filter fails closed. If your organisation renames
+// SharePoint pools, use device/farm scoping instead. AppPool remains in the
+// surviving output to make analyst triage immediate.
 | where AppPool contains "SharePoint"
      or AppPool contains "SecurityTokenService"
 // Indexed prefilter on the child image. This is the detection boundary:
@@ -281,9 +282,9 @@ In an environment with three SharePoint servers handling 500 users, this is a 30
 
 The brief's own caveats acknowledge this — *"the time-bucket join correlates on a 30-minute window globally, not per SharePoint server"* — but the detection still ships, rated `hunting-only`, with a 30-minute window that produces a match on every run in any moderately active SharePoint farm.
 
-The fix requires an anchor between the two tables — a column that is present in both and that means "the same server." The problem is that OfficeActivity and DeviceProcessEvents do not share one cleanly. OfficeActivity has `ClientIP` (the user's source IP). DeviceProcessEvents has `DeviceName` (the server's hostname). What you need is the server's IP, which OfficeActivity doesn't have, or the client's IP, which DeviceProcessEvents doesn't have. The brief suggests a `DeviceNetworkInfo` lookup to map `DeviceName` to a public IP, which is the right idea and not trivial to implement.
+The fix requires an anchor between the two tables — a column that is present in both and that means "the same server." The problem is that OfficeActivity and DeviceProcessEvents do not share one. OfficeActivity has `ClientIP`, which Microsoft defines as the IP address of the *device that performed the activity* — the user's workstation, or even an intermediary proxy. It is not the SharePoint server's address. DeviceProcessEvents has `DeviceName` (the server's hostname), which OfficeActivity doesn't carry. There is no column in either table that identifies the SharePoint server from the other table's perspective.
 
-The honest answer is that there is no clean anchor. These two tables were not designed to be joined, and no column that exists in both means "the same server." What we can do is scope both sides tightly to SharePoint and then let a narrow temporal window do the correlation — not because time is a good join key, but because it's the only key available once both tables have been filtered to the same workload. The query below makes the constraint explicit rather than hiding it behind a join key that promises more than it delivers.
+The honest answer is that there is no clean anchor. These two tables were not designed to be joined, and no column that exists in both means "the same server." What we can do is scope both sides tightly to SharePoint and then let a narrow temporal window do the correlation — not because time is a good join key, but because it's the only key available once both tables have been filtered to the same workload. If you have reverse-proxy, WAF, or IIS request logs that contain both the client source IP and the backend server identity, correlate against those — they provide the actual bridge between the user's session and the server that processed it. The query below works without that bridge, and makes the constraint explicit rather than hiding it behind a join key that promises more than it delivers.
 
 <br/>
 
@@ -304,8 +305,7 @@ let SuspiciousChildren = dynamic([
 // a site admin they never authenticated as.
 let PrivilegedOps = dynamic([
     "SiteCollectionAdminAdded","PermissionLevelAdded","PermissionLevelModified",
-    "AddedToGroup","SiteAdminChangeRequest","FileUploaded","FileDeleted",
-    "SiteCollectionCreated"
+    "AddedToGroup","SiteAdminChangeRequest","SiteCollectionCreated"
 ]);
 // STEP 1: Host-side signal. w3wp.exe child process, scoped to SharePoint
 // by application pool.
@@ -340,6 +340,7 @@ let AppSignal = OfficeActivity
 | where TimeGenerated > ago(lookback)
 | where OfficeWorkload == "SharePoint"
 | where Operation in (PrivilegedOps)
+| where ResultStatus == "Succeeded"
 | project
     OpTimestamp = TimeGenerated,
     Actor = tolower(UserId),
@@ -364,12 +365,15 @@ let AppSignal = OfficeActivity
 // product is bounded: SharePoint process events × SharePoint audit events
 // in a narrow time window.
 //
-// In a single-farm environment this is high-signal — one farm's audit
-// events correlating with one farm's process events, both filtered to
-// SharePoint-only. In a multi-farm environment it cross-products across
-// farms. If you operate multiple SharePoint farms, add a DeviceNetworkInfo
-// lookup to resolve DeviceName to an IP and join against ClientIP, or
-// maintain a manual mapping of DeviceName to farm identity.
+// In a single-farm environment this becomes a bounded hunting correlation
+// — one farm's audit events correlating with one farm's process events,
+// both filtered to SharePoint-only. In a multi-farm environment it cross-
+// products across farms. If you operate multiple SharePoint farms, you
+// need reverse-proxy, WAF, or IIS request logs that carry both the client
+// source IP and the backend server identity — those provide the actual
+// bridge. OfficeActivity.ClientIP is the user's source address (or a
+// proxy), not the SharePoint server's, so resolving DeviceName to a
+// server IP does not help.
 HostSignal
 | extend _sp = 1
 | join kind=inner (AppSignal | extend _sp = 1) on _sp
@@ -403,7 +407,7 @@ HostSignal
 
 There is no clever join key here, and that is the point. The original brief used `TimeBucket` — a 30-minute window with no device anchor. The natural instinct is to find a better key. But OfficeActivity and DeviceProcessEvents share no column that means "the same server": OfficeActivity has `ClientIP` (the user's source address, not the server's), and DeviceProcessEvents has `DeviceName` (the server's hostname, which OfficeActivity doesn't carry). You cannot join what is not there.
 
-What makes this correlation usable despite the missing anchor is the scoping on *both* sides. The host signal is already filtered to SharePoint by application pool. The application signal is already filtered to SharePoint by `OfficeWorkload` and to high-privilege operations by `PrivilegedOps`. The cross-product is not "every process × every audit event" — it is "SharePoint child-process spawns × SharePoint admin operations in a 10-minute window." In a single-farm environment, that is a small and meaningful set. The time window is asymmetric — 10 minutes backward, 2 minutes forward — because the attack chain has a direction (auth bypass → privileged operation → RCE → child process), and the forward margin exists only for ingestion clock skew between OfficeActivity's `TimeGenerated` and the device-local `Timestamp`.
+What makes this correlation usable despite the missing anchor is the scoping on *both* sides. The host signal is already filtered to SharePoint by application pool. The application signal is already filtered to SharePoint by `OfficeWorkload` and to high-privilege operations by `PrivilegedOps`. The cross-product is not "every process × every audit event" — it is "SharePoint child-process spawns × SharePoint admin operations in a 10-minute window." In a single-farm environment, that is a bounded hunting correlation. The time window is asymmetric — 10 minutes backward, 2 minutes forward — because the attack chain has a direction (auth bypass → privileged operation → RCE → child process), and the forward margin exists only for ingestion clock skew between OfficeActivity's `TimeGenerated` and the device-local `Timestamp`.
 
 Note that the `Actor` (the impersonated identity from OfficeActivity) and the `ServiceAccount` (the process identity from DeviceProcessEvents) both appear in the output but are *not* joined on. They will be different values in the auth-bypass scenario — the attacker acts as `alice@contoso.com` while `w3wp.exe` runs as `svc_sharepoint` — and showing both is the triage signal. If they are the *same* value, the operation was performed by the SharePoint application itself, which is a different investigation.
 
@@ -411,7 +415,7 @@ Note that the `Actor` (the impersonated identity from OfficeActivity) and the `S
 
 ### Keeping it honest
 
-- **There is no device-level join key. This is a scoped temporal correlation, not a keyed join.** In a single-farm environment the scoping is sufficient — one farm's SharePoint process events correlating with one farm's SharePoint audit events in a 10-minute window. In a multi-farm environment, this cross-products across farms: a privileged operation on Farm A correlates with a child process spawn on Farm B. If you operate multiple SharePoint farms, you need a `DeviceNetworkInfo` lookup to resolve `DeviceName` to a server IP and join it against the OfficeActivity `ClientIP` (when the operation was performed directly against the server), or maintain a manual mapping of `DeviceName` to farm identity. The query is honest about the constraint; the constraint is real.
+- **There is no device-level join key. This is a scoped temporal correlation, not a keyed join.** In a single-farm environment the scoping is sufficient — one farm's SharePoint process events correlating with one farm's SharePoint audit events in a 10-minute window. In a multi-farm environment, this cross-products across farms: a privileged operation on Farm A correlates with a child process spawn on Farm B. If you operate multiple SharePoint farms, you need reverse-proxy, WAF, or IIS request logs that carry both the client source IP and the backend server identity — those provide the bridge that neither table has. Note that `OfficeActivity.ClientIP` is the user's source address (or an intermediary proxy), not the SharePoint server's IP, so resolving `DeviceName` to a server IP via `DeviceNetworkInfo` does not create a usable join key. The query is honest about the constraint; the constraint is real.
 - **I am less confident in this query than in Act I.** The correlation between OfficeActivity and DeviceProcessEvents is crossing a telemetry boundary that was not designed to be crossed — one table is a cloud audit log, the other is a host-level process table, and they share no natural key. The scoped temporal correlation is the best available approach without a lookup table, and it is not great. If you have TLS inspection or reverse-proxy logs that carry both the client IP and the backend server identity, correlate against those instead — you will have an actual anchor.
 - **OfficeActivity covers SharePoint Online and has a different shape for on-premises SharePoint Server.** On-premises audit events require the Microsoft 365 audit log connector, which not every on-premises deployment has. If your SharePoint is on-prem and the connector isn't enabled, the `AppSignal` half of this query returns nothing, the join returns nothing, and the correlation looks clean. It isn't — it's blind.
 - **The `PrivilegedOps` list is scoped to CVE-2026-55040.** The auth bypass is the reason an attacker can perform site-admin operations without authenticating. A query that correlates *any* SharePoint operation with a child process spawn would catch more and mean less. The list is narrow on purpose.
