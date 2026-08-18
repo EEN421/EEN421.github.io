@@ -6,6 +6,8 @@ date: 2026-08-17
 author: DevSecOpsDad
 ---
 
+![](/assets/img/QWEN/1.png)
+
 # When the Cloud Says No: Running Qwen3 on a Raspberry Pi 4B with Ollama
 
 *No GPU. No API key. No expensive AI workstation. Just a Raspberry Pi, Ollama, and a small language model that answers to you.*
@@ -76,6 +78,12 @@ Something sitting on your network that can answer questions without your prompt 
 
 This is more accessible and more affordable than the current hype cycle around AI chipmaking would have you believe. You don't need the NVIDIA Spark. You don't need a new Mac. You need a credit-card-sized board and about twenty minutes.
 
+<br/>
+
+![](/assets/img/QWEN/2.png)
+
+<br/>
+
 ---
 
 ## LLM or SLM?
@@ -97,13 +105,14 @@ That changes the economics of the whole experiment.
 
 We're not talking about trying to squeeze a 70-billion-parameter model onto a Raspberry Pi and calling the smoke coming out of the USB-C port "inference."
 
-We're choosing the right tool for the hardware.
+We're choosing the _right tool_ for the hardware; **Small model. Small machine. Private workload**.
 
-Small model.
+<br/>
 
-Small machine.
+![](/assets/img/QWEN/3.png)
 
-Private workload.
+<br/>
+
 
 ---
 
@@ -177,6 +186,12 @@ On my 8GB Pi running Trixie, swapon showed **2GB of zram swap already configured
 NAME       TYPE      SIZE USED PRIO
 /dev/zram0 partition   2G   0B  100
 ```
+
+<br/>
+
+![](/assets/img/QWEN/4.png)
+
+<br/>
 
 **I didn't need to increase swap at all.**
 
@@ -338,6 +353,12 @@ So yes:
 
 But "slow" and "useless" are not synonyms.
 
+<br/>
+
+![](/assets/img/QWEN/5.png)
+
+<br/>
+
 For interactive chat, experimentation, text analysis, small automation workflows, home-lab services, and privacy-sensitive jobs where a few seconds matter significantly less than where the data goes?
 
 It works.
@@ -422,6 +443,12 @@ Now another machine on the network can test it:
 curl http://PI_IP_ADDRESS:11434/api/tags
 ```
 
+<br/>
+
+![](/assets/img/QWEN/6.png)
+
+<br/>
+
 And suddenly the Pi isn't just running an SLM.
 
 It's providing an **AI service**.
@@ -429,6 +456,8 @@ It's providing an **AI service**.
 ---
 
 # Act VII: Don't Put Port 11434 on the Internet
+
+![](/assets/img/QWEN/7.png)
 
 This is DevSecOpsDad.
 
@@ -523,6 +552,12 @@ Or perhaps I'm responding to an incident and want a model to chew on logs, comma
 
 That's where the local box starts making an awful lot of sense.
 
+<br/>
+
+![](/assets/img/QWEN/8.png)
+
+<br/>
+
 ---
 
 # And Then Hugging Face Got Hacked
@@ -536,6 +571,12 @@ OpenAI subsequently described it as an unprecedented cybersecurity incident.
 But there was another part of the story that caught my attention.
 
 During the response, Hugging Face's security team tried to use frontier AI models behind commercial APIs to analyze more than 17,000 log events — a completely reasonable thing to do when you're drowning in attack telemetry. The requests were blocked. The providers' safety guardrails could not distinguish between an incident responder reconstructing an intrusion and an attacker preparing one. The same exploit payloads, C2 artifacts, and attack commands that defenders need to analyze are exactly the content those classifiers are trained to refuse.
+
+<br/>
+
+![](/assets/img/QWEN/9.png)
+
+<br/>
 
 Hugging Face's own incident report put it bluntly: *"The attacker was bound by no usage policy, while our own forensic work was blocked by the guardrails of the hosted models we first tried."*
 
@@ -570,6 +611,12 @@ And if their service is unavailable — or if their classifier thinks your foren
 ---
 
 # Self-Hosted Changes the Control Plane
+
+<br/>
+
+![](/assets/img/QWEN/10.png)
+
+<br/>
 
 This is where I think the humble Raspberry Pi becomes philosophically more interesting than its benchmark score.
 
@@ -679,6 +726,12 @@ and:
 ```text
 Private AI server
 ```
+
+<br/>
+
+![](/assets/img/QWEN/11.png)
+
+<br/>
 
 The model isn't enormous.
 
