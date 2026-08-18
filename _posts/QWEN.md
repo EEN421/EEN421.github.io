@@ -693,3 +693,61 @@ The data is mine.
 And the off switch is mine too.
 
 **That's a feature no benchmark measures.**
+
+
+<br/>
+<br/>
+
+# 📚 Want to go deeper?
+
+My **Toolbox** books turn real Microsoft security telemetry into defensible operations:
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/ifIo6eT" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/PowerShell-Cover.jpg"
+      alt="PowerShell Toolbox: Hands-On Automation for Auditing and Defense"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🧰 <strong>PowerShell Toolbox</strong> Hands-On Automation for Auditing and Defense
+  </p>
+</div>
+
+<br/>
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/hZ1TVpO" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/KQL Toolbox Cover.jpg"
+      alt="KQL Toolbox: Turning Logs into Decisions in Microsoft Sentinel"
+      style="width: 215px; margin: 0 auto; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    🛠️ <strong>KQL Toolbox:</strong> Turning Logs into Decisions in Microsoft Sentinel
+  </p>
+</div>
+
+<br/>
+
+<div style="text-align:center; margin: 2.5em 0;">
+  <a href="https://a.co/d/4vveVCI" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="/assets/img/Ultimate%20XDR%20for%20Full%20Spectrum%20Cyber%20Defense/cover11.jpg"
+      alt="Ultimate Microsoft XDR for Full Spectrum Cyber Defense"
+      style="max-width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,.45); border-radius: 8px;"
+    />
+  </a>
+  <p style="margin-top: 0.75em; font-size: 0.95em; opacity: 0.85;">
+    📖 <strong>Ultimate Microsoft XDR for Full Spectrum Cyber Defense</strong><br/>
+    Real-world detections, Sentinel, Defender XDR, and Entra ID — end to end.
+  </p>
+</div>
+
+
+<br/>
+<br/>
+
+# 🔗 Helpful Links & Resources: 
