@@ -1181,6 +1181,7 @@ External Sources:
 - Microsoft Learn. *CEF and CommonSecurityLog field mapping.* <https://learn.microsoft.com/en-us/azure/sentinel/cef-name-mapping>
 - Microsoft Learn. *The Advanced Security Information Model (ASIM) Web Session normalization schema reference.* <https://learn.microsoft.com/en-us/azure/sentinel/normalization-schema-web>
 - Rapid7. *KindaRails2Shell: CVE-2026-66066, Critical Arbitrary File Read and Possible Remote Code Execution in Ruby on Rails.* <https://www.rapid7.com/blog/post/etr-kindarails2shell-cve-2026-66066-critical-arbitrary-file-read-and-possible-remote-code-execution-in-ruby-on-rails>
+- Microsoft DevBlogs *😼 The Legend of Defender Ninja Cat* <https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025>
 
 
 <br/>
