@@ -652,7 +652,7 @@ External Sources:
 - MITRE ATT&CK. *Additional Cloud Roles (T1098.003).* <https://attack.mitre.org/techniques/T1098/003/>
 - MITRE ATT&CK. *Exploitation for Privilege Escalation (T1068).* <https://attack.mitre.org/techniques/T1068/>
 - DevSecOpsDad.com *From RSS Noise to CISO Signal: Automating Cyber Threat Intel.* <https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/>
-- Microsoft DevBlogs *😼 The Legend of Defender Ninja Cat* <https://devblogs.microsoft.com/oldnewthing/20160804-00/?p=94025>
+
 
 <br/>
 
