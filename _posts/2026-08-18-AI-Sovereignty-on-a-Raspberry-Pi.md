@@ -103,7 +103,7 @@ We're choosing the _right tool_ for the hardware; **Small model. Small machine. 
 
 <br/>
 
-# Act I: Prepare the Pi
+#  Prepare the Pi
 
 I'm running **Raspberry Pi OS Trixie** — the latest 64-bit release, Lite variant, CLI only. No desktop environment burning cycles on a GPU that doesn't exist.
 
@@ -136,7 +136,7 @@ Ollama publishes an ARM64 Linux build, which is what makes this deployment pleas
 
 <br/>
 
-# Act II: About That Swap File
+# About That Swap File
 
 A lot of Raspberry Pi LLM tutorials immediately tell you to create several gigabytes of swap.
 
@@ -228,7 +228,7 @@ More swap doesn't make your CPU faster.
 
 <br/>
 
-# Act III: Install Ollama
+# Install Ollama
 
 This is the part where I expected some Raspberry-Pi-specific shenanigans. There really wasn't any.
 
@@ -260,9 +260,13 @@ systemctl status ollama --no-pager
 
 Congratulations! - Your $75 Raspberry Pi is now an AI server (sort of)... We still need a brain.
 
+<br/>
+
 ---
 
-# Act IV: Give It a Brain
+<br/>
+
+# Give It a Brain
 
 For the Pi 4B, I'd start with Qwen3 1.7B:
 
@@ -294,7 +298,7 @@ A Raspberry Pi.
 
 <br/>
 
-# Act V: Talk to It
+# Talk to It
 
 Run the model:
 
@@ -356,7 +360,7 @@ Once the model fits, you're waiting on compute.
 
 <br/>
 
-# Act VI: Turn the Pi Into an API
+# Turn the Pi Into an API
 
 Running Qwen from an SSH session is neat. Turning the Pi into an AI service for the rest of your network is much more interesting. Ollama exposes a REST API on port `11434`, but by default it listens only on:
 
@@ -426,9 +430,13 @@ And suddenly the Pi isn't just running an SLM.
 
 It's providing an **AI service** 😎
 
+<br/>
+
 ---
 
-# Act VII: Don't Put Port 11434 on the Internet
+<br/>
+
+# Don't Put Port 11434 on the Internet
 
 ![](/assets/img/QWEN/7.png)
 
@@ -450,10 +458,10 @@ Those are **_very_** different statements.
 
 I would not port-forward `11434` through my router and expose Ollama directly to the Internet. Ollama has no authentication. No TLS. No rate limiting. If you expose it raw, anyone who finds the port can use your model, abuse your hardware, and read every prompt and response in transit.
 
-I don't need to because if I want to use this thing remotely, I already have a much better architectural pattern:
+If you need remote access, [WireGuard](https://www.wireguard.com/) is a great integration for a much more secure architectural pattern:
 
 ```text
-Phone
+Phone/Device
    |
 WireGuard
    |
@@ -465,6 +473,8 @@ Ollama
    |
 Qwen
 ```
+
+<br/>
 
 - The model stays private.
 
@@ -559,7 +569,7 @@ And if their service is unavailable — or if their classifier thinks your foren
 
 <br/>
 
-# Self-Hosted Changes the Control Plane
+# Self-Hosting Changes the Control Plane
 
 <br/>
 
@@ -728,3 +738,11 @@ My **Toolbox** books turn real Microsoft security telemetry into defensible oper
   </p>
 </div>
 
+<br/>
+<br/>
+
+# 🔗 Helpful Links & Resources: 
+
+- WireGuard *wireguard vpn* <https://www.wireguard.com/>
+- Ollama *AI Platform* <https://ollama.com/>
+- QWEN *Open-Source LLM/SLM* <https://qwen.ai/home>
