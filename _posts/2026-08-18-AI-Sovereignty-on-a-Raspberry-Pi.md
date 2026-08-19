@@ -8,8 +8,6 @@ author: DevSecOpsDad
 
 ![](/assets/img/QWEN/1.png)
 
-# When the Cloud Says No: Running Qwen3 on a Raspberry Pi 4B with Ollama
-
 *No GPU. No API key. No expensive AI workstation. Just a Raspberry Pi, Ollama, and a small language model that answers to you.*
 
 There is a weird assumption developing around AI infrastructure...
