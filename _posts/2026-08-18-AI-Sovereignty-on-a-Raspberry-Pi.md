@@ -304,10 +304,10 @@ Run the model:
 ollama run qwen3:4b
 ```
 
-You'll get a prompt. Ask it something. You'll see it show you what it's 'thinking' as it formulates it's response in grey text before it finally responds in a white font, illustrated below...
+You'll get a prompt. Ask it something. You'll see it show you what it's 'thinking' as it formulates a response in grey text before it finally responds in a white font, illustrated below...
 
 ```text
->>> tell me about your capabilities and what your were designed to do please.
+>>> tell me about your capabilities and what you were designed to do please.
 ```
 
 ![](/assets/img/QWEN/Qwen3-4b.png)
@@ -496,7 +496,7 @@ Sometimes **data ownership** matters more. Say I want to review six months of ex
 Where is my money actually going?
 ```
 
-I'd rather not upload raw financial records to another company's infrastructure just because I want some categories and percentages. Maybe I'd like to upload medical records such as X-Rays and ask questions. Or maybe I want an AI assistant to inspect:
+I'd rather not upload raw financial records to another company's infrastructure just because I want some categories and percentages. Maybe I'd like to upload medical records and ask questions. Or maybe I want an AI assistant to inspect:
 
 ```text
 index.html
