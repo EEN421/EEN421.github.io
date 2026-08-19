@@ -127,9 +127,7 @@ You want:
 aarch64
 ```
 
-Ollama publishes an ARM64 Linux build, which is what makes this deployment pleasantly boring.
-
-And boring infrastructure is good infrastructure.
+Ollama publishes an ARM64 Linux build, which is what makes this deployment pleasantly boring. And boring infrastructure is good infrastructure.
 
 
 <br/>
@@ -232,9 +230,7 @@ More swap doesn't make your CPU faster.
 
 # Act III: Install Ollama
 
-This is the part where I expected some Raspberry-Pi-specific nonsense.
-
-There really wasn't any.
+This is the part where I expected some Raspberry-Pi-specific shenanigans. There really wasn't any.
 
 Install Ollama:
 
@@ -248,7 +244,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 <br/>
 
-That's the current Linux installation method published by Ollama. The script detects `aarch64`, pulls the ARM64 binary, creates a systemd service, and starts it. You'll see a warning about not finding a GPU — that's expected. There isn't one.
+That's the current Linux installation method published by Ollama. The script detects `aarch64`, pulls the ARM64 binary, creates a systemd service, and starts it. You'll see a warning about not finding a GPU — that's expected (there isn't one).
 
 Verify it:
 
@@ -306,9 +302,7 @@ Run the model:
 ollama run qwen3:4b
 ```
 
-You'll get a prompt.
-
-Ask it something.
+You'll get a prompt. Ask it something. You'll see it show you what it's 'thinking' as it formulates it's response in grey text before it finally responds in a white font, illustrated below...
 
 ```text
 >>> tell me about your capabilities and what your were designed to do please.
@@ -328,8 +322,6 @@ And your Raspberry Pi will start generating the response locally.
 
 - Ollama states that when models are run locally, prompts and responses are processed locally rather than being sent back to Ollama's service.
 
-That's the entire reason I built this thing.
-
 <br/>
 
 ---
@@ -338,13 +330,13 @@ That's the entire reason I built this thing.
 
 # The Performance Reality
 
-Let's set expectations appropriately: The Raspberry Pi 4B is not secretly an AI workstation.
+Let's set expectations appropriately: The Raspberry Pi 4B is **not** secretly an AI workstation.
 
 With no supported GPU accelerator doing the inference work, you're asking _**four ARM CPU cores**_ to perform a job modern AI accelerators were explicitly designed to perform faster. **A lot faster**.
 
 So yes: **It's slow.**
 
-But "slow" and "useless" are not the same. 😜
+But "slow" and "useless" are not the same 😜
 
 <br/>
 
@@ -390,9 +382,7 @@ curl http://localhost:11434/api/chat \
   }'
 ```
 
-Now make it network-accessible.
-
-Edit the Ollama service:
+Now make it network-accessible by editing the Ollama service:
 
 ```bash
 sudo systemctl edit ollama
@@ -460,7 +450,7 @@ Those are **_very_** different statements.
 
 I would not port-forward `11434` through my router and expose Ollama directly to the Internet. Ollama has no authentication. No TLS. No rate limiting. If you expose it raw, anyone who finds the port can use your model, abuse your hardware, and read every prompt and response in transit.
 
-I don't need to; if I want to use this thing remotely, I already have a much better architectural pattern:
+I don't need to because if I want to use this thing remotely, I already have a much better architectural pattern:
 
 ```text
 Phone
@@ -481,8 +471,6 @@ Qwen
 - The API stays private.
 
 - Remote access is handled by the VPN.
-
-That's exactly how I'd rather design it anyway.
 
 <br/>
 
@@ -740,8 +728,3 @@ My **Toolbox** books turn real Microsoft security telemetry into defensible oper
   </p>
 </div>
 
-
-<br/>
-<br/>
-
-# 🔗 Helpful Links & Resources: 
