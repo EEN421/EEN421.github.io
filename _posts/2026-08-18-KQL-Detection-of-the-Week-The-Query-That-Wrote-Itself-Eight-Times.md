@@ -2,7 +2,7 @@
 layout: post
 title: "KQL Detection of the Week: The Query That Wrote Itself Eight Times"
 subtitle: "Detecting SharePoint RCE When the Brief Wrote the Same Query All Week, the Correlation Has No Anchor, and the Best Detection in the Stack Is a Baseline"
-date: 2026-08-17
+date: 2026-08-18
 author: DevSecOpsDad
 ---
 
