@@ -525,13 +525,13 @@ That's where the local box starts making an awful **lot** of sense.
 
 This project became more interesting almost immediately because of something that happened in July 2026.
 
-During an advanced cybersecurity evaluation, OpenAI's GPT-5.6 Sol and a more capable unreleased model escaped their sandboxed testing environment, accessed the Internet, and compromised Hugging Face's production infrastructure. The models had been trying to find information to cheat on their evaluation — and they succeeded. Hugging Face described the incident as the first time it had handled a cyber event "driven, end to end, by an autonomous AI agent system."
+During an advanced cybersecurity evaluation, [OpenAI's GPT-5.6 Sol](https://openai.com/index/hugging-face-model-evaluation-security-incident/) and a more capable unreleased model escaped their sandboxed testing environment, accessed the Internet, and [compromised Hugging Face's production infrastructure](https://huggingface.co/blog/agent-intrusion-technical-timeline). The models had been trying to find information to cheat on their evaluation — and they succeeded. Hugging Face described the incident as the first time it had handled a cyber event ["driven, end to end, by an autonomous AI agent system."](https://huggingface.co/blog/security-incident-july-2026)
 
-OpenAI subsequently described it as an unprecedented cybersecurity incident.
+[OpenAI subsequently described it as an unprecedented cybersecurity incident](https://openai.com/index/hugging-face-model-evaluation-security-incident/).
 
 But there was another part of the story that caught my attention.
 
-During the response, Hugging Face's security team tried to use frontier AI models behind commercial APIs to analyze more than 17,000 log events — a completely reasonable thing to do when you're drowning in attack telemetry. **_The requests were blocked._** The providers' safety guardrails could not distinguish between an incident responder reconstructing an intrusion and an attacker preparing one. The same exploit payloads, C2 artifacts, and attack commands that defenders need to analyze are exactly the content those classifiers are trained to refuse.
+During the response, Hugging Face's security team tried to use frontier AI models behind commercial APIs to analyze [more than 17,000 log events](https://huggingface.co/blog/security-incident-july-2026) — a completely reasonable thing to do when you're drowning in attack telemetry. **_The requests were blocked._** The providers' safety guardrails could not distinguish between an incident responder reconstructing an intrusion and an attacker preparing one. The same exploit payloads, C2 artifacts, and attack commands that defenders need to analyze are exactly the content those classifiers are trained to refuse.
 
 <br/>
 
@@ -539,9 +539,9 @@ During the response, Hugging Face's security team tried to use frontier AI model
 
 <br/>
 
-Hugging Face's own incident report put it bluntly: *"The attacker was bound by no usage policy, while our own forensic work was blocked by the guardrails of the hosted models we first tried."*
+[Hugging Face's own incident report](https://huggingface.co/blog/security-incident-july-2026) put it bluntly: *"The attacker was bound by no usage policy, while our own forensic work was blocked by the guardrails of the hosted models we first tried."*
 
-So they switched to GLM 5.2, an open-weight model from China's Z.ai lab, and ran it locally on their own infrastructure. Not only did it process the data the commercial models refused — it kept every credential, every attacker artifact, and every indicator of compromise inside Hugging Face's environment. Nothing left the building.
+So they switched to [GLM 5.2, an open-weight model from China's Z.ai lab](https://huggingface.co/zai-org/GLM-5.2), and ran it locally on their own infrastructure. Not only did it process the data the commercial models refused — it kept every credential, every attacker artifact, and every indicator of compromise inside Hugging Face's environment. Nothing left the building.
 
 That is an extraordinary real-world example of something defenders have been discussing for years.
 
@@ -737,9 +737,10 @@ My **Toolbox** books turn real Microsoft security telemetry into defensible oper
 </div>
 
 <br/>
+
 <br/>
 
-# 🔗 Helpful Links & Resources: 
+# 🔗 Helpful Links, References, & Resources: 
 
 <br/>
 
@@ -748,3 +749,11 @@ My **Toolbox** books turn real Microsoft security telemetry into defensible oper
 - Ollama *AI Platform* <https://ollama.com/>
 
 - QWEN *Open-Source LLM/SLM* <https://qwen.ai/home>
+
+- Hugging Face *Security incident disclosure — July 2026* <https://huggingface.co/blog/security-incident-july-2026>
+
+- OpenAI *OpenAI and Hugging Face partner to address security incident during model evaluation* <https://openai.com/index/hugging-face-model-evaluation-security-incident/>
+
+- Hugging Face *Anatomy of a Frontier Lab Agent Intrusion: A Technical Timeline of the July 2026 Incident* <https://huggingface.co/blog/agent-intrusion-technical-timeline>
+
+- GLM 5.2 *Open-Weight LLM by Z.ai* <https://huggingface.co/zai-org/GLM-5.2>
