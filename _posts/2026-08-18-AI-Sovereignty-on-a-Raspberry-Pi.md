@@ -78,7 +78,7 @@ This is more accessible and more affordable than the current hype cycle around A
 
 Technically, calling what I'm running an **SLM — Small Language Model — is probably more honest**.
 
-Qwen3 is a family of language models ranging from tiny dense models all the way up to enormous mixture-of-experts models. Qwen released dense variants including 1.7B and 4b parameter models specifically small enough to make edge deployments interesting.
+Qwen3 is a family of language models ranging from tiny dense models all the way up to enormous mixture-of-experts models. Qwen released dense variants including 1.7B and 4B parameter models specifically small enough to make edge deployments interesting.
 
 Those are the two I'm interested in here:
 
@@ -276,7 +276,7 @@ ollama pull qwen3:1.7b
 
 <br/>
 
-> Note: I found that Qwen3:4b reflected better, more accurate responses (less hallucinations). 
+> Note: I found that Qwen3:4B produced better, more accurate responses (less hallucinations). 
 
 The size difference isn't particularly scary. That's part of what surprised me about this project.
 
