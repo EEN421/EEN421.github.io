@@ -324,6 +324,62 @@ And your Raspberry Pi will start generating the response locally.
 
 - Ollama states that when models are run locally, prompts and responses are processed locally rather than being sent back to Ollama's service.
 
+Here's more examples below (thinking text omitted for brevity)...👇
+
+```
+ian@brain:~ $ ollama run qwen3:4b
+>>> how long ago was the extinction event that wiped out the dinosaurs? 
+
+The extinction event that wiped out the non-avian dinosaurs (and most other species) is the **Cretaceous-Paleogene (K-Pg) extinction event**. This occurred **approximately 66 million years 
+ago** (with the most precise scientific consensus placing it at **66.043 million years ago**).
+
+### Key details for context:
+1. **Why it's called K-Pg**:  
+   - "K" = Cretaceous (the period ending with the extinction)  
+   - "Pg" = Paleogene (the period that followed)  
+   This boundary marks the **end of the Cretaceous period** and the **start of the Paleogene period** in Earth's geological timeline.
+
+2. **What caused it?**  
+   The dominant theory involves a **massive asteroid impact** (creating the Chicxulub crater in Mexico) combined with **intense volcanic activity** (Deccan Traps in India). This triggered 
+global climate chaos, wildfires, and a "nuclear winter" effect that wiped out ~76% of all species.
+
+3. **Why it's significant**:  
+   This event is the **most recent major mass extinction** in Earth's history. It killed the non-avian dinosaurs (including the famous *Tyrannosaurus rex*), pterosaurs, marine reptiles, 
+and many other species—but **birds survived** (they are descendants of small theropod dinosaurs).
+
+4. **How do we know the timing?**  
+   Scientists use **global geological layers** (specifically the K-Pg boundary layer) and **radiometric dating** of the Chicxulub crater and volcanic rocks. This precise dating confirms 
+the event happened **66.043 ± 0.001 million years ago**.
+
+### Why not older events?
+- The **Permian-Triassic extinction** (252 million years ago) wiped out ~90% of life but *did not* affect dinosaurs (they hadn't evolved yet).  
+- The K-Pg event is the **only one** that directly caused the demise of dinosaurs.
+
+**In short: The dinosaurs went extinct ~66 million years ago**—a pivotal moment in Earth's history that reshaped life on our planet. 🌍
+
+*Source: International Commission on Stratigraphy (ICS), NASA, and peer-reviewed studies (e.g., *Nature*, 2020).*
+```
+<br/>
+
+```
+>>> Tell me about the permian-triassic extinction. Keep it brief. Thank you!
+
+Here's the **super-short version** of the Permian-Triassic extinction (the one that wiped out **90% of all life** on Earth):
+
+- **When**: About **252 million years ago** (that’s *way* older than the dinosaur extinction—*which was 66 million years ago*).  
+- **What it did**: It’s the **biggest mass extinction in Earth’s history**—killed **90% of all species** (including most marine life, insects, and land animals).  
+- **Why it happened**: Massive volcanic eruptions in Siberia (the **Siberian Traps**) spewed so much gas and ash that Earth’s climate got **extremely hot** (like the hottest planet ever). 
+Oceans got toxic, and life collapsed.  
+- **Why it matters**: This is called the **"Great Dying"**—the *oldest* and *worst* mass extinction ever. **No dinosaurs existed yet** (they came later), but it wiped out *everything* that 
+was alive at the time.
+
+**In one sentence**:  
+> *The Permian-Triassic extinction (252 million years ago) killed 90% of Earth’s life due to massive volcanic eruptions that made the planet super hot—making it the worst mass extinction 
+in history.*
+
+No fluff, no jargon—just the facts you asked for. 😊 Let me know if you want a tiny bit more!
+```
+
 <br/>
 
 ---
