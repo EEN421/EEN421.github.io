@@ -87,6 +87,8 @@ qwen3:1.7b
 qwen3:4b
 ```
 
+*(I tested 8B too. Benchmarks below. Short version: it fits, but you don't want it.)*
+
 Ollama currently packages the 1.7B model at roughly **1.4GB** and that changes the economics of the whole experiment - We're not talking about trying to squeeze a 70-billion-parameter model onto a Raspberry Pi and calling the smoke coming out of the USB-C port "inference."
 
 We're choosing the _right tool_ for the hardware; **Small model. Small machine. Private workload**.
@@ -405,6 +407,44 @@ But "slow" and "useless" are not the same 😜
 For interactive chat, experimentation, text analysis, small automation workflows, home-lab services, and privacy-sensitive jobs where a few seconds matter significantly less than where the data goes? **It works.**
 
 And the 8GB RAM in my Pi turned out to be more breathing room than necessity for the 1.7B model. It's the CPU where I feel the constraint. This is actually useful information when deciding what Pi to buy for this project. If you're choosing between a 4GB and 8GB board specifically for SLM inference, the 8GB gives you headroom to run the 1.7B model comfortably. _**But don't assume that jumping from 4GB to 8GB magically doubles inference speed, because it doesn't**_
+
+<br/>
+
+### So I measured it.
+
+Same prompt, three model sizes, `--verbose` on:
+
+```text
+"Why is the sky blue? Answer in three short sentences for a child."
+```
+
+| Model | Load | Eval Rate | Total | Verdict |
+|---|---|---|---|---|
+| `qwen3:1.7b` | 36s | **3.02 tok/s** | 1m 55s | Fast enough to converse with |
+| `qwen3:4b` | 1m 03s | **1.42 tok/s** | 5m 50s | Better answers. You'll wait for them. |
+| `qwen3:8b` | 2m 06s | **0.74 tok/s** | 12m 40s | Fits in RAM. Won't fit in your patience. |
+
+Doubling the parameter count roughly **halves** the throughput. The 8B model fits comfortably in the 8GB of RAM the Pi 4B has to offer — but a **twelve-and-a-half-minute** response time for three sentences isn't inference, it's a coffee break.
+
+That's the shape of the constraint. RAM lets the model _exist_. The CPU decides whether it's _usable_.
+
+For reference, here's what "unusable but technically working" looks like:
+
+```text
+ian@brain:~ $ ollama run qwen3:8b --verbose "Why is the sky blue? Answer in three short sentences for a child."
+[...response omitted for brevity...]
+
+total duration:       12m39.56s
+load duration:        2m6.13s
+prompt eval count:    25 token(s)
+prompt eval duration: 13.81s
+prompt eval rate:     1.81 tokens/s
+eval count:           459 token(s)
+eval duration:        10m19.61s
+eval rate:            0.74 tokens/s
+```
+
+**1.7B is where the Pi 4B is comfortable. 4B is where it's honest. 8B is where it gives up.**
 
 Once the model fits, you're waiting on compute.
 
