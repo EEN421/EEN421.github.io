@@ -258,7 +258,7 @@ And because the installer configures Ollama as a service on Linux, you can check
 systemctl status ollama --no-pager
 ```
 
-Congratulations! - Your $75 Raspberry Pi is now an AI server (sort of)... We still need a brain.
+Congratulations! - Your $175 Raspberry Pi is now an AI server (sort of)... We still need a brain.
 
 <br/>
 
