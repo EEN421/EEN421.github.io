@@ -645,7 +645,7 @@ CVE-2026-19490 — the Citrix NetScaler ADC/Gateway authentication bypass — ap
 | Sun | Detection 2 | Repeated requests to auth bypass URL paths |
 | Sun | Detection 3 | External connections to management ports |
 
-Unlike last week's eight identical `w3wp.exe` queries, these four are *meaningfully different*. Thursday's `leftanti` baseline is the "has this IP ever failed before?" question — the auth bypass signature. Saturday's HTTP status code extraction looks at the response. Sunday's two queries look at the request paths and the ports. Four angles on the same CVE, each one targeting a different layer of the telemetry.
+Unlike last week's eight identical `w3wp.exe` queries, these four are *meaningfully different*. [Thursday's](https://devsecopsdadattack.com/2026-08-20-detection-engineering-brief-thursday-august-20-2026/) `leftanti` baseline is the "has this IP ever failed before?" question — the auth bypass signature. Saturday's HTTP status code extraction looks at the response. Sunday's two queries look at the request paths and the ports. Four angles on the same CVE, each one targeting a different layer of the telemetry.
 
 The shared problem is not redundancy — it's the table. All four query `CommonSecurityLog`, which is only populated when a CEF-compatible syslog connector is configured for Citrix NetScaler. If the connector isn't there, all four queries return nothing. And Saturday's cs-status extraction — `toint(extract(@"cs-status=(\d+)", 1, AdditionalExtensions))` — is parsing an unstructured string field with a regex against a key name that is not standardised across NetScaler firmware versions. If your NetScaler uses `sc-status` or `httpStatusCode` or embeds the response code in the message body, the extract returns null for every row, and the detection is blind.
 
@@ -776,6 +776,7 @@ External Sources:
 - MITRE ATT&CK. *Valid Accounts (T1078).* <https://attack.mitre.org/techniques/T1078/>
 - MITRE ATT&CK. *Exploit Public-Facing Application (T1190).* <https://attack.mitre.org/techniques/T1190/>
 - DevSecOpsDad.com *From RSS Noise to CISO Signal: Automating Cyber Threat Intel.* <https://www.hanley.cloud/2026-04-28-From-RSS-Noise-to-CISO-Signal-Automating-Cyber-Threat-Intelligence-That-Actually-Matters/>
+- DevSecOpsDad.com *Identify Your Exposed Internet-Facing Devices Before They Identify You!* <https://www.hanley.cloud/2025-11-25-Identify-Your-Exposed-Internet-Facing-Devices-Before-They-Identify-You/>
 
 
 <br/>
