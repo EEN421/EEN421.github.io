@@ -634,7 +634,7 @@ And `where OperationName in (SensitiveOps)` is the filter that makes the detecti
 
 ![Bonus!](/assets/img/TheFieldThatWasntThere/Bonus.png)
 
-Worth a brief section because it's the same pipeline pattern as last week, applied to a different CVE.
+Worth a brief section because it's the same pipeline pattern as last week, applied to a different CVE — and because there's a prerequisite step that none of the detections mention.
 
 CVE-2026-19490 — the Citrix NetScaler ADC/Gateway authentication bypass — appeared in [Thursday](https://devsecopsdadattack.com/2026-08-20-detection-engineering-brief-thursday-august-20-2026/), [Saturday](https://devsecopsdadattack.com/2026-08-22-detection-engineering-brief-saturday-august-22-2026/), and [Sunday](https://devsecopsdadattack.com/2026-08-23-detection-engineering-brief-sunday-august-23-2026/). Four detections across three days:
 
@@ -651,7 +651,12 @@ The shared problem is not redundancy — it's the table. All four query `CommonS
 
 This is the same telemetry-availability problem as Act I, applied to a network appliance instead of an endpoint agent. The detection is correct. The table might not exist. The field might not parse. And the failure mode is the same: zero rows that look like "nothing happened."
 
-The pipeline did its job — it surfaced the CVE from multiple intelligence sources and produced four complementary detections. The detection engineer's job is to validate the table, validate the field parsing, and deploy the subset that works in their environment. Thursday's `leftanti` baseline is the one I'd ship first: it doesn't depend on a parsed HTTP status code, it doesn't require a specific URL path list, and it asks the detection question that most directly matches the CVE — "did an IP succeed without ever failing?"
+But there is a step before the table and before the field: **do you know which of your NetScaler instances are internet-facing in the first place?** CVE-2026-19490 is an authentication bypass on a public-facing application (T1190). The entire attack surface is the set of NetScaler ADCs and Gateways reachable from the internet. If you don't have that inventory, you're deploying detections without knowing what you're defending — and you might be missing instances that are exposed but not feeding `CommonSecurityLog` at all.
+
+This is the same problem I wrote about last November in [Identify Your Exposed Internet-Facing Devices Before They Identify You](https://www.hanley.cloud/2025-11-25-Identify-Your-Exposed-Internet-Facing-Devices-Before-They-Identify-You/). That article's core thesis is that `IsInternetFacing == true` in `DeviceInfo` is a hint, not proof — and the fix is a multi-signal KQL approach that combines public IP assignment, inbound connection telemetry, remote-access port analysis, and Defender's own classification into a single composite view of what's actually exposed. The same logic applies here: before you write a single `CommonSecurityLog` detection for a Citrix auth bypass, you should already know which Citrix instances are internet-facing, whether they're forwarding CEF logs, and whether the CEF key names in `AdditionalExtensions` match the regex your detection expects. The detection is Step 2. The inventory is Step 1. And Step 1 is the one that most teams skip.
+
+The pipeline did its job — it surfaced the CVE from multiple intelligence sources and produced four complementary detections. The detection engineer's job is to validate the attack surface, validate the table, validate the field parsing, and deploy the subset that works in their environment. Thursday's `leftanti` baseline is the one I'd ship first: it doesn't depend on a parsed HTTP status code, it doesn't require a specific URL path list, and it asks the detection question that most directly matches the CVE — "did an IP succeed without ever failing?" But before Thursday's query runs, the internet-facing device inventory should already have told you where it needs to run.
+
 
 <br/>
 
