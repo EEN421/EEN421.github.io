@@ -6,7 +6,7 @@ date: 2026-08-24
 author: DevSecOpsDad
 ---
 
-![DevSecOpsDadAttack!](/assets/img/TheFieldThatWasntThere/intro.png)
+![The Field that Wasn't There!](/assets/img/TheFieldThatWasntThere/intro.png)
 
 Four Telegram session-theft detections across three days. Four Citrix NetScaler auth-bypass detections across three more. A Teams phishing correlation that joins two tables on a field the brief warns isn't populated. A three-table credential-compromise chain that requires a license half the industry doesn't have. Twenty-two detections this week, and more than half of them depend on a column, an ActionType, a risk score, or a URL field that may not exist in your environment — and every one of them fails silently when it doesn't.
 
@@ -22,7 +22,7 @@ Act I collapses the four Telegram data-theft detections into one and fixes the `
 
 ## 🥇 Act I: Four Ways to Miss Telegram Session Theft
 
-![Act I](/assets/img/TheFieldThatWasntThere/actI.png)
+![Act I](/assets/img/TheFieldThatWasntThere/ACTI_Telegram_Theft.png)
 
 The [Armored Likho / Still Toolkit](https://securelist.com/armored-likho-still-toolkit/121033/) reporting landed on Monday and the pipeline responded. Across Monday, Tuesday, and Wednesday, it produced four detections for Telegram data theft, distributed across two shapes:
 
@@ -192,7 +192,7 @@ DeviceFileEvents
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/TheFieldThatWasntThere/actI_actiontype_gate.png)
+![DevSecOpsDadAttack!](/assets/img/TheFieldThatWasntThere/ACTI_SignalNotGate.png)
 
 <br/>
 
@@ -264,7 +264,7 @@ If Validation 1 shows no `FileRead` rows, you know the original detections were 
 
 ## 🥈 Act II: The Phishing Message That Correlates With Every Login
 
-![Act II](/assets/img/TheFieldThatWasntThere/actII.png)
+![Act II](/assets/img/TheFieldThatWasntThere/ACTII_Phishing.png)
 
 [Saturday's Detection 2](https://devsecopsdadattack.com/2026-08-22-detection-engineering-brief-saturday-august-22-2026/) is the most interesting query of the week. It correlates **OfficeActivity** (Teams external messages) with **SigninLogs** (Entra authentication events) to detect a compound signal: a user receives an external Teams message containing a link, and within six hours, that same user signs in from a location they've never used before. The detection shape is exactly right — Teams phishing is the [delivery channel Unit 42 reported](https://unit42.paloaltonetworks.com/communication-channel-identity-risks/), and a new-location sign-in after a phishing lure is the credential-theft consequence.
 
@@ -425,7 +425,7 @@ RecentSignins
 
 <br/>
 
-![DevSecOpsDadAttack!](/assets/img/TheFieldThatWasntThere/actII_external_access.png)
+![DevSecOpsDadAttack!](/assets/img/TheFieldThatWasntThere/ACTII_Detail.png)
 
 <br/>
 
@@ -461,7 +461,7 @@ Note the `LocationStatus` classifier — `NeverSeen` vs `RarelySeen` vs `Known`.
 
 ## 🎖 Honorable Mention: The Three-Table Credential Compromise Chain
 
-![Honorable Mention](/assets/img/TheFieldThatWasntThere/honorable_mention.png)
+![Honorable Mention](/assets/img/TheFieldThatWasntThere/Honorable.png)
 
 [Sunday's Detection 4](https://devsecopsdadattack.com/2026-08-23-detection-engineering-brief-sunday-august-23-2026/) is the most operationally sophisticated query of the week. It chains three tables — **SigninLogs** (failed), **SigninLogs** (succeeded with elevated risk), and **AuditLogs** (post-sign-in action) — to find the compound signal: failed login attempts, followed by a risky successful login, followed by a sensitive operation within an hour. The detection is structurally right: the failed-then-succeeded pattern is the credential-theft signature, the risk score is the Identity Protection signal, and the audit action is the consequence.
 
@@ -632,7 +632,7 @@ And `where OperationName in (SensitiveOps)` is the filter that makes the detecti
 
 ## ✨ Bonus: The Citrix Cluster and the Schema You Didn't Check
 
-![Bonus!](/assets/img/TheFieldThatWasntThere/bonus.png)
+![Bonus!](/assets/img/TheFieldThatWasntThere/Bonus.png)
 
 Worth a brief section because it's the same pipeline pattern as last week, applied to a different CVE.
 
@@ -661,7 +661,7 @@ The pipeline did its job — it surfaced the CVE from multiple intelligence sour
 
 ## The Bigger Lesson
 
-![](/assets/img/TheFieldThatWasntThere/bigger_lesson.png)
+![](/assets/img/TheFieldThatWasntThere/Bigger_Lesson.png)
 
 The common thread this week: **the gap between the schema and the sensor.**
 
@@ -681,7 +681,7 @@ This kind of detection content is published _daily_ — fresh threat intel trans
 
 <br/>
 
-![Outro](/assets/img/TheFieldThatWasntThere/outro.png)
+![Outro](/assets/img/TheFieldThatWasntThere/Outro.png)
 
 <br/>
 
