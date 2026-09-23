@@ -16,7 +16,7 @@ That means testing detections against messy telemetry, investigating why perfect
 
 I'm the author of [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI), [KQL Toolbox](https://a.co/d/hZ1TVpO), and [PowerShell Toolbox](https://a.co/d/ifIo6eT).
 
-DevSecOpsDad is where I publish what I learn along the way: practical KQL, detection engineering, security research, automation, AI experimentation, and the occasional deep dive into something that behaved very differently than it was supposed to.
+[DevSecOpsDad.com](https://DevSecOpsDad.com/) is where I publish what I learn along the way: practical KQL, detection engineering, security research, automation, AI experimentation, and the occasional deep dive into something that behaved very differently than it was supposed to.
 
 I also run [DevSecOpsDadAttack.com](https://devsecopsdadattack.com/), where much of that work has evolved into automated threat intelligence, detection engineering research, and a growing open KQL detection library.
 
