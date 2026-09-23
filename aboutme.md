@@ -22,7 +22,7 @@ I also run [DevSecOpsDadAttack.com](https://devsecopsdadattack.com/), where much
 
 Outside of all of that, I'm a husband and dad. Parenthood has provided more hands-on experience with **incident response, chaos engineering, and risk management** than any certification ever could. 😁
 
-⚡ You can also find me on [LinkedIn](https://www.linkedin.com/in/ianhanley/) and [X](https://x.com/IanDHanley).
+⚡ You can also find me on [LinkedIn](https://www.linkedin.com/in/ianhanley/).
 
 Cheers,
 Ian D. Hanley
