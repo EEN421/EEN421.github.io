@@ -4,19 +4,26 @@ title: About me
 subtitle: Who Am I?
 ---
 
-I'm Ian Hanley, a security researcher and engineer focused on building security capabilities that work in production—not just in demos.
+Hi! 👋 I'm Ian Hanley.
 
-My background spans security research, detection engineering, threat intelligence, telemetry architecture, Microsoft security platforms, and large-scale automation. Increasingly, my work sits at the intersection of cybersecurity and AI: evaluating AI-assisted security systems, testing agent behavior, building automated research and detection pipelines, and figuring out where machine-speed analysis genuinely helps defenders—and where human judgment still matters.
+I'm a security researcher, engineer, author, and lifelong tinkerer who likes figuring out how security systems behave once they leave the whiteboard and meet the real world.
 
-I’m particularly interested in detection quality, security automation, AI and LLM evaluation, adversary behavior, and turning large volumes of telemetry into decisions defenders can actually trust.
+My background spans detection engineering, threat intelligence, telemetry architecture, Microsoft security platforms, security automation, and increasingly AI and LLM evaluation. A lot of what I work on revolves around a deceptively simple question:
 
-I’m also the author of Ultimate Microsoft XDR for Full Spectrum Cyber Defense, KQL Toolbox, and PowerShell Toolbox, and I publish practical security research through DevSecOpsDad and DevSecOpsDadAttack.
+**Does this actually work in production?**
 
-Much of my work comes back to the same question: **How do we build security systems that are not only technically correct, but operationally useful?**
+That means testing detections against messy telemetry, investigating why perfectly valid queries return the wrong answer, evaluating AI-assisted security workflows, automating threat research, breaking assumptions, and building systems that can operate at machine speed without losing the context and judgment defenders depend on.
 
-Outside of security, I’m a husband and dad—which has given me plenty of practical experience in incident response, resilience, and risk management. 😁
+I'm the author of [Ultimate Microsoft XDR for Full Spectrum Cyber Defense](https://a.co/d/4vveVCI), [KQL Toolbox](https://a.co/d/hZ1TVpO), and [PowerShell Toolbox](https://a.co/d/ifIo6eT).
 
-⚡ To learn more, follow me on [linkedin](https://www.linkedin.com/in/ianhanley/) or [X](https://X.com/IanDHanley).
+DevSecOpsDad is where I publish what I learn along the way: practical KQL, detection engineering, security research, automation, AI experimentation, and the occasional deep dive into something that behaved very differently than it was supposed to.
 
-Cheers,<br/>
+I also run [DevSecOpsDadAttack.com](https://devsecopsdadattack.com/), where much of that work has evolved into automated threat intelligence, detection engineering research, and a growing open KQL detection library.
+
+Outside of all of that, I'm a husband and dad. Parenthood has provided more hands-on experience with **incident response, chaos engineering, and risk management** than any certification ever could. 😁
+
+⚡ You can also find me on [LinkedIn](https://www.linkedin.com/in/ianhanley/) and [X](https://x.com/IanDHanley).
+
+Cheers,
 Ian D. Hanley
+
